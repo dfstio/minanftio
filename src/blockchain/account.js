@@ -23,7 +23,7 @@ const MetaMaskAccount = () => {
   const virtuosoBalance  = useSelector(({blockchain}) => blockchain.virtuosoBalance);
   const dispatch = useDispatch();
 
-  let metamaskText = "CONNECT WITH METAMASK";
+  let metamaskText = "CONNECT WITH AURA";
   let topupText = "";
   let topup = "";
   let blockExplorer = "";

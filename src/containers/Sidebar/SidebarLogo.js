@@ -38,7 +38,7 @@ const SidebarLogo = ({sidebarCollapsed, setSidebarCollapsed}) => {
 
                 style={{"font-size": "22px", "padding-left": "10px"}}
                 >
-            NFT Virtuoso
+            Mina NFT
             </text>
       </Link>
     </div>
