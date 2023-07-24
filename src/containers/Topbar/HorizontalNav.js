@@ -43,15 +43,16 @@ const HorizontalNav = () => {
       theme={themeType === THEME_TYPE_LITE ? 'lite' : 'dark'}
       mode="horizontal">
 
+
+      <Menu.Item  className="gx-menu-horizontal-flex gx-submenu-popup-curve" key="marketplace">
+            <Link to="/marketplace"><i className="icon icon-shopping-cart "/>
+            <IntlMessages id="sidebar.algolia"/></Link>
+      </Menu.Item>
       <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="mint">
           <Link to="/mint">
             <i className="icon icon-culture-calendar"/>
             <IntlMessages id="sidebar.samplePage"/>
           </Link>
-      </Menu.Item>
-      <Menu.Item  className="gx-menu-horizontal-flex gx-submenu-popup-curve" key="marketplace">
-            <Link to="/marketplace"><i className="icon icon-shopping-cart "/>
-            <IntlMessages id="sidebar.algolia"/></Link>
       </Menu.Item>
       <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="settings">
           <Link to="/settings">
