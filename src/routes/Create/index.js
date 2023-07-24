@@ -67,9 +67,9 @@ const Mint = () => {
               key="Create Post"
 
               />
+					</Col>
 
-
-                <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+            <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
             <MintMenuItem
               creator="Description of Mina NFT project"
               title="Description of Mina NFT project"
@@ -80,7 +80,7 @@ const Mint = () => {
               key="MinaNFT Description"
 
               />
-        </Col>
+        	</Col>
         </Row>
       )}
 
