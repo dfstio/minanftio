@@ -7,8 +7,8 @@ import { ExpandOutlined, CaretUpFilled, CaretDownFilled } from '@ant-design/icon
 import IntlMessages from "util/IntlMessages";
 import { metamaskLogin, virtuosoRegisterPublicKey, getVirtuosoUnlockableContentKey,
         getVirtuosoPublicKey, metamaskDecrypt, getSignature } from "../../blockchain/metamask";
-import  SellButton  from "../algolia/Sell";
-import  BuyButton  from "../algolia/Buy";
+import  SellButton  from "../Avatars/Sell";
+import  BuyButton  from "../Avatars/Buy";
 import ReactPlayer from 'react-player';
 import ReactJkMusicPlayer from 'react-jinke-music-player'
 import 'react-jinke-music-player/assets/index.css'
