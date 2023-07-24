@@ -86,7 +86,7 @@ const App = (props) => {
   }, [layoutType, navStyle]);
 
   if (location.pathname === '/') {
-    return (<Redirect to={'/marketplace'}/>);
+    return (<Redirect to={'/avatars'}/>);
   }
 
   const currentAppLocale = AppLocale[locale.locale];
