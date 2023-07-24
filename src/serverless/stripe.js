@@ -223,7 +223,7 @@ async function createCheckoutSession(body)
 			   payment_intent_data: { capture_method: 'manual'},
 			   metadata: {
 			        type: "buy",
-			        tokenId: body.tokenId,,
+			        tokenId: body.tokenId,
 			        currency: currency,
 			        name: token.name,
 			        price: token.price,
