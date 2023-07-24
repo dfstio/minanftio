@@ -1,10 +1,10 @@
 module.exports = {
-  footerText: 'Copyright © NFT Virtuoso 2021  ',
+  footerText: 'Copyright © Mina NFT 2023  ',
   footerAgreement: (` Terms and Conditions and Limited License `),
-  footerAgreementLink: `https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf`,
+  footerAgreementLink: `https://minanft.io/agreement/terms.pdf`,
   footerContact: ` Contact us `,
-  footerEmail: `mailto:hello@nftvirtuoso.io`,
-  accountingEmail: `mailto:accounting@nftvirtuoso.io`
+  footerEmail: `mailto:hello@minanft.io`,
+  accountingEmail: `mailto:accounting@minanft.io`
 }
 
 // https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf
