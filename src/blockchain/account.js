@@ -23,13 +23,13 @@ const MetaMaskAccount = () => {
   const virtuosoBalance  = useSelector(({blockchain}) => blockchain.virtuosoBalance);
   const dispatch = useDispatch();
 
-  let metamaskText = "CONNECT WITH AURA";
+  let metamaskText = "CONNECT WITH AURO";
   let topupText = "";
   let topup = "";
   let blockExplorer = "";
 
 
-
+/*
 const handleEvents = useCallback( async (params) => {
   if(DEBUG) console.log("handleEvents ", params);
 
@@ -117,19 +117,20 @@ const handleAccountsChanged = useCallback( async (accounts) => {
     // Do any other work!
   }
 }, []);
+*/
 
   useEffect(() => {
     async function fetchAddress() {
-              const newAddress = await initAccount(handleEvents, handleChainChanged, handleAccountsChanged );
+              const newAddress = await getAddress();
               dispatch(updateAddress(newAddress));
-              const newVirtuosoBalance = await getVirtuosoBalance(newAddress);
-              const newPublicKey = await getVirtuosoPublicKey(newAddress);
-              dispatch(updateVirtuosoBalance(newVirtuosoBalance));
-              dispatch(updatePublicKey(newPublicKey));
-              if(DEBUG) console.log(`useEffect Address ${newAddress} virtuosoBalance ${newVirtuosoBalance} publicKey ${newPublicKey}`);
+              //const newVirtuosoBalance = await getVirtuosoBalance(newAddress);
+              //const newPublicKey = await getVirtuosoPublicKey(newAddress);
+              //dispatch(updateVirtuosoBalance(newVirtuosoBalance));
+              //dispatch(updatePublicKey(newPublicKey));
+              //if(DEBUG) console.log(`useEffect Address ${newAddress} virtuosoBalance ${newVirtuosoBalance} publicKey ${newPublicKey}`);
     }
   fetchAddress()
-  },[dispatch, handleAccountsChanged, handleChainChanged, handleEvents])
+  },[dispatch])
 
 
   if(DEBUG) console.log(`Address ${address} ${virtuosoBalance/100}`);
@@ -150,14 +151,8 @@ const handleAccountsChanged = useCallback( async (accounts) => {
 
   if((address !== undefined) && (address !== ""))
   {
-    metamaskText = address.slice(0,6)+"..."+address.slice(38,42);
-    if( virtuosoBalance !== undefined)
-    {
-      const vb = virtuosoBalance/100;
-      topupText = "$" + vb.toFixed(2);
-      //topup = "/api/create-checkout-session?type=mint&address=" + address.toString();
-    };
-    blockExplorer = REACT_APP_NETWORK_EXPLORER + "address/" + address;
+    metamaskText = address.slice(0,6)+"..."+address.slice(51,55);
+    blockExplorer = "https://berkeley.minaexplorer.com/wallet/" + address;
     result =
     (
             <ul className="gx-login-list" >

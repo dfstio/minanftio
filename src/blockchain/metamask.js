@@ -105,19 +105,24 @@ export async function initAccount(handleEvents, handleChainChanged, handleAccoun
 {
 
      let address = "";
-      if( window.mina !== undefined)
-     {
-        const chainId =  await window.mina.requestNetwork();
-        let account = await window.mina.requestAccounts();
-        console.log("getAddress account", account, chainId);
+     try{
+					if( window.mina !== undefined)
+					{
+						 const chainId =  await window.mina.requestNetwork();
+						 let account = await window.mina.requestAccounts();
+						 console.log("getAddress account", account, chainId);
 
 
-         if((account.length > 0 ) && (chainId === "Berkeley"))
-         {
-           address = account[0];
+							if((account.length > 0 ) && (chainId === "Berkeley"))
+							{
+								address = account[0];
 
-         }
-     };
+							}
+					};
+		 } catch (error) {
+			 // if user reject, requestAccounts will throw an error with code and message filed
+			 console.log("getAddress", error.message, error.code)
+		 }
 		 console.log("getAddress address", address);
      return address;
 
@@ -178,19 +183,24 @@ export async function getAddress(force = false)
 {
      //if(DEBUG) console.log("getAddress called");
      let address = "";
-     if( window.mina !== undefined)
-     {
-        const chainId =  await window.mina.requestNetwork();
-        let account = await window.mina.requestAccounts();
-        console.log("getAddress account", account, chainId);
+     try{
+					if( window.mina !== undefined)
+					{
+						 const chainId =  await window.mina.requestNetwork();
+						 let account = await window.mina.requestAccounts();
+						 console.log("getAddress account", account, chainId);
 
 
-         if((account.length > 0 ) && (chainId === "Berkeley"))
-         {
-           address = account[0];
+							if((account.length > 0 ) && (chainId === "Berkeley"))
+							{
+								address = account[0];
 
-         }
-     };
+							}
+					};
+		 } catch (error) {
+			 // if user reject, requestAccounts will throw an error with code and message filed
+			 console.log("getAddress", error.message, error.code)
+		 }
 		 console.log("getAddress address", address);
      return address;
 };
