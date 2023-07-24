@@ -9,4 +9,3 @@ It is NFT Virtuoso 4 frontend & functions repo
 | `mumbai`                         | This branch is for testing on mumbai |
 
 
-npm run build
