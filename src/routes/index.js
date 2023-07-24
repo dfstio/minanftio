@@ -12,6 +12,7 @@ const App = ({match}) => (
        <Route path={`${match.url}mint`} component={asyncComponent(() => import('./Mint'))}/>
        <Route path={`${match.url}settings`} component={asyncComponent(() => import('./Settings'))}/>
        <Route path={`${match.url}token/:chainId/:contract/:tokenId`} component={asyncComponent(() => import('./token'))}/>
+       <Route path={`${match.url}@:tokenId`} component={asyncComponent(() => import('./token'))}/>
     </Switch>
   </div>
 );

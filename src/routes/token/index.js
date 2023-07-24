@@ -21,7 +21,8 @@ const Token = ({match}) => {
         const objectID = match.params.tokenId.toString();
         if(DEBUG) console.log("Token objectID", objectID);
         try {
-             const newItem = await searchIndex.getObject(objectID);
+             let newItem = await searchIndex.getObject(objectID);
+             if(!newItem) newItem = await searchIndex.getObject("@"+objectID);
              if(DEBUG) console.log("Token item received", newItem);
              setItem(newItem);
 
