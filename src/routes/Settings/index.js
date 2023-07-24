@@ -91,6 +91,15 @@ const Settings = () => {
   return (
     <div>
       <h2 className="title gx-mb-4"><IntlMessages id="sidebar.settings"/></h2>
+      <div className="gx-d-flex justify-content-center">
+        <Button
+        type="primary"
+        onClick={connect}
+        key="telegram"
+        >
+        Connect with @MinaNFT_bot
+        </Button>
+      </div>
 
       {address===""?
       (
