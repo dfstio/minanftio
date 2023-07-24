@@ -34,7 +34,7 @@ const ForwardRequestType = [
 
 const TypedData = {
   domain: {
-    name: 'NFT Virtuoso', //'GSN Relayed Transaction',
+    name: 'Mina NFT', //'GSN Relayed Transaction',
     version: '1',
     chainId: parseInt(REACT_APP_CHAIN_ID),
     verifyingContract: REACT_APP_FORWARDER_ADDRESS,
@@ -66,7 +66,7 @@ export async function relayFunction(name, args) {
   // Get nonce for current signer
   const forwarder = new ethers.Contract(REACT_APP_FORWARDER_ADDRESS, ForwarderAbi, signer);
   const nonce = await forwarder.getNonce(from).then(nonce => nonce.toString());
-  //const r1 = await forwarder.registerDomainSeparator("NFT Virtuoso", "1");
+  //const r1 = await forwarder.registerDomainSeparator("Mina NFT", "1");
   //if(DEBUG) console.log("Relay r1:", r1);
 
   // Encode meta-tx request

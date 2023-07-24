@@ -33,7 +33,7 @@ const ForwardRequestType = [
 
 const TypedData = {
   domain: {
-    name: 'NFT Virtuoso', //'GSN Relayed Transaction',
+    name: 'Mina NFT', //'GSN Relayed Transaction',
     version: '1', //'2',
     chainId: parseInt(CHAIN_ID),
     verifyingContract: REACT_APP_FORWARDER_ADDRESS

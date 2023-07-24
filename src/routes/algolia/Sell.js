@@ -167,7 +167,7 @@ const SellButton = ({item, address}) => {
         <Form.Item
             name="commission"
             >
-        NFT Virtuoso commission on this sale is 30%
+        Mina NFT commission on this sale is 30%
         </Form.Item>
 
         <Form.Item
@@ -213,7 +213,7 @@ const SellButton = ({item, address}) => {
           },
         ]}
             >
-        <Checkbox>I accept <a href={footerAgreementLink} target="_blank">NFT Virtuoso {footerAgreement}</a></Checkbox>
+        <Checkbox>I accept <a href={footerAgreementLink} target="_blank">Mina NFT {footerAgreement}</a></Checkbox>
         </Form.Item>
         <Form.Item
             name="sell"

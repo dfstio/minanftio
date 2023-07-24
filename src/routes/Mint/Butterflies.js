@@ -73,7 +73,7 @@ const mintJSON =
 "attachments":"",
 "media_count":0,
 "attachments_count":0,
-"license":"NFT Virtuoso TERMS AND CONDITIONS AND LIMITED LICENSE V1",
+"license":"Mina NFT TERMS AND CONDITIONS AND LIMITED LICENSE V1",
 "license_id":"1",
 "license_url":"https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf",
 "contains_unlockable_content":false,

@@ -33,7 +33,7 @@ const Mint = () => {
               title="Create your own private NFT token"
               link="/mint/custom"
               price="$10 for private NFT token or $100 for public NFT token"
-              description="Private NFT token will be visible only to you on NFT Virtuoso marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on NFT Virtuoso marketplace"
+              description="Private NFT token will be visible only to you on Mina NFT marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on Mina NFT marketplace"
               image="https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/https://content.nftvirtuoso.io/image/mintimages/private.png"
               key="Private Mint"
 
@@ -61,7 +61,7 @@ const Mint = () => {
               title="Create your own private NFT token"
               link="/mint/custom"
               price="$10 for private NFT token or $100 for public NFT token"
-              description="Private NFT token will be visible only to you on NFT Virtuoso marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on NFT Virtuoso marketplace"
+              description="Private NFT token will be visible only to you on Mina NFT marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on Mina NFT marketplace"
               image="https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/https://content.nftvirtuoso.io/image/mintimages/private.png"
               key="Private Mint"
 

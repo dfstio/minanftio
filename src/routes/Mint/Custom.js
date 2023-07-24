@@ -62,7 +62,7 @@ const startToken =
     "external_url": "nftvirtuoso.io",
     "animation_url": "",
     "description": "",
-    "license": "NFT Virtuoso Personal License Agreement V1",
+    "license": "Mina NFT Personal License Agreement V1",
     "license_id": "1",
     "license_url": "https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf",
     "contains_unlockable_content": false,
@@ -115,7 +115,7 @@ const STARTING_JSON = {
 "external_url":"nftvirtuoso.io",
 "animation_url":"",
 "description": "",
-"license": "NFT Virtuoso V1 personal",
+"license": "Mina NFT V1 personal",
 "license_id": "0",
 "title": "",
 "properties": { "image": "", "animation": ""},
@@ -133,8 +133,8 @@ const STARTING_JSON = {
 
 
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
-const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on NFT Virtuoso marketplace except for sale';
-const mintPublicText = '$100 to create one Public NFT token. Public NFT token will always be visible on NFT Virtuoso marketplace';
+const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
+const mintPublicText = '$100 to create one Public NFT token. Public NFT token will always be visible on Mina NFT marketplace';
 
 const MintPrivate = () => {
 
