@@ -243,7 +243,7 @@ export async function writeToken(token, writeToIPFS = true)
       "type": "object",
       "category": token.category,
       "type": token.type,
-      "url": tiken.url,
+      "url": token.url,
       "image": "",
       "external_url": "nftvirtuoso.io",
       "animation_url": "",
