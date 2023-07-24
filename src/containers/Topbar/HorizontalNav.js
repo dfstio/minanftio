@@ -54,6 +54,12 @@ const HorizontalNav = () => {
             <IntlMessages id="sidebar.samplePage"/>
           </Link>
       </Menu.Item>
+      <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="mint">
+          <Link to="/mint/custom">
+            <i className="icon icon-culture-calendar"/>
+            <IntlMessages id="sidebar.pro"/>
+          </Link>
+      </Menu.Item>
       <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="settings">
           <Link to="/settings">
             <i className="icon icon-components"/>
