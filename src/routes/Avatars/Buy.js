@@ -35,13 +35,13 @@ const BuyButton = ({item}) => {
                     const myaddress = await metamaskLogin(false);
                     dispatch(updateAddress(myaddress));
 
-                    if( myaddress !== item.owner)
+                    if( true ) //myaddress !== item.owner)
                     {
 
                            const data = {
                                 type:    "buy",
                                 address: (myaddress==="")?"generate":myaddress,
-                                saleID:  item.saleID.toString(),
+                                //saleID:  item.saleID.toString(),
                                 tokenId: item.tokenId.toString(),
                                 winstonMeta: JSON.stringify(logger.meta)
                               };

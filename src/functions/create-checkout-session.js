@@ -14,6 +14,7 @@ exports.handler = async(event, context) => {
     }
 
     try {
+        
         logger.initMeta();
         const params = event.queryStringParameters;
         const body = JSON.parse(decodeURIComponent(params.item));
@@ -22,9 +23,11 @@ exports.handler = async(event, context) => {
         logger.meta.frontendMeta.winstonIP = event.headers['x-bb-ip'];
         logger.meta.frontendMeta.winstonUserAgent = event.headers['user-agent'];
         logger.meta.frontendMeta.winstonBrowser = event.headers['sec-ch-ua'];
+        
+        console.log("createCheckoutSession", body)
 
         let result = await createCheckoutSession(body);
-        //console.log("createCheckoutSession redirect: ", result);
+        console.log("createCheckoutSession redirect: ", result);
         await logger.flush();
         return {
             statusCode: 303,

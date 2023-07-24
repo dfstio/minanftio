@@ -175,7 +175,7 @@ async function handleCheckoutCompleted(checkout )
 
 async function createCheckoutSession(body)
 {
-  //if(DEBUG) console.log("createCheckoutSession body", body);
+  console.log("createCheckoutSession body - stripe", body);
   const log = logm.child({body, wf: "createCheckoutSession"});
 
   let success_url = URL + "/token/"  + body.tokenId.toString() + "/checkout/success";
@@ -186,7 +186,7 @@ async function createCheckoutSession(body)
 
 		//const token =  await getTokenPrice(body.tokenId);
 		const token =  await getToken(body.tokenId);
-		//if(DEBUG) console.log("createCheckoutSession token:", token);
+		console.log("createCheckoutSession token:", token);
 
 
 		if( token.onSale )
