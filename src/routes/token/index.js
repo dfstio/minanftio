@@ -18,7 +18,7 @@ const Token = ({match}) => {
 
     useEffect(() => {
     async function getItem() {
-        const objectID = tokenId.toString();
+        const objectID = match.params.tokenId.toString();
         if(DEBUG) console.log("Token objectID", objectID);
         try {
              const newItem = await searchIndex.getObject(objectID);
