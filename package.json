@@ -106,7 +106,7 @@
     "chrome": "open -a \"Google Chrome\" --args --user-data-dir=\"/Users/mike/Library/Application Support/Google/ChromeB\" https://nftvirtuoso.io",
     "commit": "git commit -a -S -m",
     "archive": "git archive -o mvp04.zip HEAD",
-    "push": "git push -u Virtuoso4",
+    "push": "git status && git push -u originminanftio master",
     "dev": "netlify dev",
     "listenv": "netlify env:list --json"
   },
