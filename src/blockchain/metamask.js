@@ -105,6 +105,24 @@ export async function initAccount(handleEvents, handleChainChanged, handleAccoun
 {
 
      let address = "";
+      if( window.mina !== undefined)
+     {
+        const chainId =  await window.mina.requestNetwork();
+        let account = await window.mina.requestAccounts();
+        console.log("getAddress account", account, chainId);
+
+
+         if((account.length > 0 ) && (chainId === "Berkeley"))
+         {
+           address = account[0];
+
+         }
+     };
+		 console.log("getAddress address", address);
+     return address;
+
+  /*   
+     
      if( (window.ethereum !== undefined) && (window.ethereum.isMetaMask === true))
      {
 
@@ -128,8 +146,10 @@ export async function initAccount(handleEvents, handleChainChanged, handleAccoun
      //if(DEBUG) console.log("metamask initAccount address: ", address );
 
      return address;
+     */
 };
 
+/*
 export async function getAddress(force = false)
 {
      //if(DEBUG) console.log("getAddress called");
@@ -152,6 +172,31 @@ export async function getAddress(force = false)
 
      return address;
 };
+*/
+
+export async function getAddress(force = false)
+{
+     //if(DEBUG) console.log("getAddress called");
+     let address = "";
+     if( window.mina !== undefined)
+     {
+        const chainId =  await window.mina.requestNetwork();
+        let account = await window.mina.requestAccounts();
+        console.log("getAddress account", account, chainId);
+
+
+         if((account.length > 0 ) && (chainId === "Berkeley"))
+         {
+           address = account[0];
+
+         }
+     };
+		 console.log("getAddress address", address);
+     return address;
+};
+
+
+
 
 export async function metamaskDecrypt(key, address)
 {
@@ -180,6 +225,7 @@ export async function metamaskDecrypt(key, address)
 export async function getVirtuosoBalance(address)
 {
     let virtuosoBalance = 0;
+    /*
     if( readVirtuoso  && (address !== ""))
     {
            const chainId =  await window.ethereum.request({method: 'eth_chainId'});
@@ -190,7 +236,7 @@ export async function getVirtuosoBalance(address)
                 virtuosoBalance = await readVirtuoso.virtuosoBalances( address);
            };
     };
-
+	  */
     return virtuosoBalance;
 
 };
@@ -497,45 +543,21 @@ export async function metamaskLogin( openlink = true )
 
      try {
 
-           if( (window.ethereum !== undefined) && (window.ethereum.isMetaMask === true))
+           if( window.mina !== undefined)
            {
-              await initVirtuoso();
-              const account =  await window.ethereum.request({method: 'eth_requestAccounts'});
-              const chainId =  await window.ethereum.request({method: 'eth_chainId'});
+              //await initVirtuoso();
+              const chainId =  await window.mina.requestNetwork();
+        			const account = await window.mina.requestAccounts();
               log.debug("account", {account, chainId});
 
 
-               if(account.length > 0)
-               {
-                 if( chainId === REACT_APP_NETWORK_HEXCHAIN_ID)
-                 {
-                    address = ethers.utils.getAddress(account[0]);
-                 } else
-                 {
-                      //if(DEBUGM) message.info(`metamaskLogin switchchain`, 60);
-                      await switchChain();
-                      const chainIdNew =  await window.ethereum.request({method: 'eth_chainId'});
-
-                      log.info("metamaskLogin chain switched ", {chainIdNew });
-                      if( chainIdNew === REACT_APP_NETWORK_HEXCHAIN_ID)
-                      {
-                          initVirtuoso();
-                          const account1 =  await window.ethereum.request({method: 'eth_requestAccounts'});
-                          if(account1.length > 0)
-                          {
-                            address = ethers.utils.getAddress(account1[0]);
-                            //if(DEBUG) console.log("metamaskLogin address after chain switched ", address);
-                          };
-                      };
-                 };
-               } else { if( isMobile ) window.location.reload(true); };
-
+               if(account.length > 0 && chainId === 'Berkeley') address = account[0];
            }
            else
            {
               if( openlink )
               {
-                    const linkURL = "https://metamask.app.link/dapp/" + REACT_APP_VIRTUOSO_URL + window.location.pathname ;
+                    const linkURL = "https://chrome.google.com/webstore/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae" ;
                     window.open(linkURL);
               };
            }
@@ -543,7 +565,7 @@ export async function metamaskLogin( openlink = true )
 
            log.debug(`metamaskLogin: connected with address ${address}`, {address} );
     } catch (error) { log.error("catch", error );};
-
+     console.log("mina login", address)
      return address;
  };
 

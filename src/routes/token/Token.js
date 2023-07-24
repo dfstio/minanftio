@@ -1042,7 +1042,7 @@ function sleep(ms) {
         {item.onSale?(
         <div className="gx-product-price"  >
            <span >
-            Token {item.vrtTokenId}
+            {item.vrtTokenId}
              </span>
          <span style={{ float: "right"}}>
           {item.currency} {item.price}

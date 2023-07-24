@@ -168,9 +168,6 @@ const handleAccountsChanged = useCallback( async (accounts) => {
               >
               {metamaskText}
               </li>
-              <li>
-              {topupText}
-              </li>
             </ul>
 
     );
