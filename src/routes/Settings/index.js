@@ -100,7 +100,7 @@ const Settings = () => {
         onClick={connect}
         key="connect"
         >
-        Connect with Metamask
+        Connect with Aura
         </Button>
       </div>
       )
