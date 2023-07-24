@@ -36,40 +36,33 @@ const RadioGroup = Radio.Group;
 
 const startToken =
 {
-//  "contract": "0x49368c4ed51be6484705f07b63ebd92270923081",
-//  "chainId": 80001,
-  "tokenId": 17,
-  "vrtTokenId": "VRT1-17",
+  "tokenId": "@mynft",
   "updated": 1633284972170,
-//  "owner": "0xa73CC65aBfb96FD65D6EF407535CFDeBBF77fCbb",
+  "creator": "",
   "name": "",
   "description": "",
   "shortdescription": "",
-  "saleID": 0,
+  "saleID": "0",
   "onSale": false,
-  "saleStatus": "on sale",
-  "price": 101,
+  "saleStatus": "not on sale",
+  "price": 0,
   "currency": "USD",
   "category": "Music",
   "image": "",
-  "visibility": "private",
-  "contains_unlockable_content": false,
-  "unlockable_description": "",
+  "type": "individual",
+  "contains_private_content": false,
+  "private_description": "",
   "uri": {
     "name": "",
     "type": "object",
     "image": "",
-    "external_url": "nftvirtuoso.io",
+    "external_url": "minanft.io",
     "animation_url": "",
     "description": "",
-    "license": "Mina NFT Personal License Agreement V1",
+    "license": "Mina NFT License Agreement V1",
     "license_id": "1",
-    "license_url": "https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf",
-    "contains_unlockable_content": false,
-    "unlockable_content_encryption": {
-      "unlockableContentKey": "MetaMask.eth-sig-util.encrypt.x25519-xsalsa20-poly1305",
-      "unlockableContent": "crypto-js.AES.encrypt"
-    },
+    "license_url": "https://minanft.io/agreement/Agreement.pdf",
+    "contains_private_content": false,
     "properties": {
       "image": "",
       "animation": ""
@@ -79,18 +72,7 @@ const startToken =
         "trait_type": "Artist",
         "value": ""
       }
-    ]
-  },
-  "sale": {
-    "price": 100,
-    "type": "fixedprice",
-    "currency": "usd",
-    "comment": "test",
-    "contains_unlockable_content": false,
-    "operator": {
-      "address": "",
-      "time": 1632691467099
-    }
+    ],
   },
 //  "objectID": "80001.0x49368c4ed51be6484705f07b63ebd92270923081.17",
   "unlockable": {
@@ -107,21 +89,23 @@ const startToken =
 };
 
 const STARTING_JSON = {
-"name": "My NFT",
+"name": "@mynft",
+"description": "",
+"url": "",
 "type": "object",
 "image": "",
 "category": "",
-"visibility": "private",
-"external_url":"nftvirtuoso.io",
+"type": "individual",
+"external_url":"minanft.io",
 "animation_url":"",
-"description": "",
-"license": "Mina NFT V1 personal",
+
+"license": "Mina NFT V1",
 "license_id": "0",
 "title": "",
 "properties": { "image": "", "animation": ""},
-"unlockable_description": "",
-"contains_unlockable_content": false,
-"unlockable": {
+"private_content_description": "",
+"contains_private_content": false,
+"private": {
     "image": "",
     "video": "",
     "audio": "",
@@ -133,51 +117,33 @@ const STARTING_JSON = {
 
 
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
-const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
-const mintPublicText = '$100 to create one Public NFT token. Public NFT token will always be visible on Mina NFT marketplace';
+//const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
+const mintText = '$9 to create one Mina Avatar NFT token';
 
 const MintPrivate = () => {
 
   const address = useSelector(({blockchain}) => blockchain.address);
   const publicKey = useSelector(({blockchain}) => blockchain.publicKey);
+  const username = useSelector(({blockchain}) => blockchain.username);
   const dispatch = useDispatch();
 
   const [token, setToken] = useState(startToken);
+  const [ipfs, setIpfs] = useState("");
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showUnlockable, setShowUnlockable] = useState(false);
-  const [allowUnlockable, setAllowUnlockable] = useState(false);
   const [mintDisabled, setMintDisabled] = useState(true);
-  const [mintPrice, setMintPrice] = useState(mintPrivateText);
-  const [moderator, setModerator] = useState(false);
+  const [mintPrice, setMintPrice] = useState(mintText);
   const [form] = Form.useForm();
-
-      useEffect(() => {
-            async function checkModerator() {
-
-                  const newModerator = await isModerator(address);
-                  if( newModerator !== moderator) setModerator(newModerator);
-
-        }
-      checkModerator()
-      },[address]);
-
-
-
 
 
   const checkCanMint = () => {
 
         let newMintDisabled = true;
-        if( (token.name !== "" && token.description !== "" && token.main.image !== "" ) || moderator) newMintDisabled = false;
+        if( (token.name !== "" && token.description !== "" && token.main.image !== "" ) newMintDisabled = false;
         if( newMintDisabled !== mintDisabled ) setMintDisabled(newMintDisabled);
-
-        let newShowUnlockable = false;
-        if( allowUnlockable && address !== undefined && publicKey !== undefined && address !== "" && publicKey !== "") newShowUnlockable = true;
-        if( newShowUnlockable !== showUnlockable) setShowUnlockable(newShowUnlockable);
-
   };
 
   const onValuesChange = async (values) => {
@@ -185,16 +151,15 @@ const MintPrivate = () => {
     if(DEBUG) console.log("onValuesChange", values);
     let newToken = token;
 
-    if( values.name !== undefined) newToken.name = values.name;
+    if( values.name !== undefined) newToken.name = values.name; //TODO: check name
+    if( values.url !== undefined) newToken.url = values.url;
     if( values.description !== undefined) newToken.description = values.description;
     if( values.unlockable_description !== undefined) newToken.unlockable_description = values.unlockable_description;
     if( values.category !== undefined) newToken.category = values.category;
 
-    if( values.visibility !== undefined)
+    if( values.type !== undefined)
     {
-        newToken.visibility = values.visibility;
-        if( values.visibility == 'private') setMintPrice(mintPrivateText);
-        if( values.visibility == 'public') setMintPrice(mintPublicText);
+        newToken.type = values.type;
     };
 
     if( values.mainimage !== undefined) newToken.main.image = values.mainimage.file;
@@ -338,28 +303,29 @@ const MintPrivate = () => {
 
 
     setMinting(true);
-    const key = 'MintingCustomNFT';
-    if(moderator) message.loading({content: `Preparing JSON...`, key, duration: 240});
-    else message.loading({content: `Minting NFT token - uploading to IPFS`, key, duration: 240});
+    const key = 'Minting Mina Avatar NFT';
+    message.loading({content: `Minting Mina NFT token - uploading to IPFS`, key, duration: 240});
 
     try{
 
 
 
     let unlockableResult = { "path": "" };
-
-    if(token.contains_unlockable_content === true && !moderator)
+/*
+    if(token.contains_private_content === true && !moderator)
     {
         let key = publicKey;
         if (key === "") key = await register();
         const encryptedContent = await encryptUnlockableToken(token, key);
         if( encryptedContent.key !== "") unlockableResult = await addToIPFS(JSON.stringify(encryptedContent));
     };
-
-    const mintJSON = await writeToken(token, !moderator);
+*/
+    const mintJSON = await writeToken(token, true);
 
 
     let result = {path: ""};
+    result = await addToIPFS(JSON.stringify(mintJSON));
+    /*
     if( moderator )
     {
         const strJSON = JSON.stringify(mintJSON);
@@ -373,16 +339,18 @@ const MintPrivate = () => {
     {
         result = await addToIPFS(JSON.stringify(mintJSON));
     };
-
+*/
 
 
     if(DEBUG) console.log("ipfsHash uploaded - uri: ", result.path); //, " unlockable: ", unlockableResult.path);
-    if(DEBUG) console.log("Minting NFT with IPFS hashes ", result.path, unlockableResult.path )
+    if( result.path ) setIpfs(result.path);
+    //if(DEBUG) console.log("Minting NFT with IPFS hashes ", result.path, unlockableResult.path )
 
+		/*
     const myaddress = await metamaskLogin(false);
     const mybalance = await getVirtuosoBalance(myaddress);
 
-    if( token.visibility === 'private' && mybalance >= 100)
+    if( token.type === 'private' && mybalance >= 100)
     {
             message.loading({content: `Minting NFT token - sending transaction to blockchain with IPFS hash ${result.path}`, key, duration: 240});
 
@@ -401,7 +369,7 @@ const MintPrivate = () => {
                                 id: mintJSON.id,
                                 time: mintJSON.time,
                                 tokenId: 0,
-                                price: (token.visibility === 'private')?10:100,
+                                price: (token.type === 'private')?10:100,
                                 currency: "usd",
                                 image: mintJSON.image,
                                 name: token.name,
@@ -427,8 +395,11 @@ const MintPrivate = () => {
     //else message.error({content: `Error: NFT token was not minted`, key, duration: 10});
 
     //message.success({content: `NFT token minted successfully with transaction hash ${txresult.hash}`, key, duration: 10});
+    
+    */
     setToken(startToken);
     setMinting(false);
+    
 
     } catch (error)
     {
@@ -436,10 +407,6 @@ const MintPrivate = () => {
         setMinting(false);
         message.error({content: `Error minting NFT token: ${error}`, key, duration: 30});
     }
-
-
-
-
 }
 
   async function register()
@@ -608,11 +575,11 @@ const MintPrivate = () => {
 
                   <Form.Item
                 label="Visibility"
-                name="visibility"
+                name="type"
                 rules={[
                  {
                    required: true,
-                   message: 'Please choose visibility',
+                   message: 'Please choose type',
                  },
                ]}
 

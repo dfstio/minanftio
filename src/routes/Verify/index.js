@@ -15,7 +15,7 @@ import logger from "../../serverless/logger";
 const logm = logger.info.child({ winstonModule: 'Verify' });
 const { REACT_APP_DEBUG } = process.env;
 
-const Settings = () => {
+const Verify = () => {
 
   const address = useSelector(({blockchain}) => blockchain.address);
   const publicKey = useSelector(({blockchain}) => blockchain.publicKey);
@@ -94,73 +94,8 @@ const Settings = () => {
       <div className="gx-d-flex justify-content-center">
         <h4>You can verify any private file that was sealed to the Mina blocchain in the Mina NFT post</h4>
       </div>
-      <div className="gx-d-flex justify-content-center">
-        <Button
-        type="primary"
-        onClick={connect}
-        key="telegram"
-        >
-        Connect with @MinaNFT_bot
-        </Button>
-      </div>
-
-      {address===""?
-      (
-      <div className="gx-d-flex justify-content-center">
-        <Button
-        type="primary"
-        onClick={connect}
-        key="connect"
-        >
-        Verify file on MINA network
-        </Button>
-      </div>
-      )
-      :
-      (
-      <div>
-      <div className="gx-d-flex justify-content-center">
-        <h4>Your Virtuoso balance: {vb}</h4>
-      </div>
-      {showWithdaw?(
-       <div className="gx-d-flex justify-content-center">
-        <Button
-        type="primary"
-        onClick={(e) => {window.location = accountingEmail; e.preventDefault();}}
-        key = "withdraw"
-        >
-        Withdraw
-        </Button>
-      </div>):("")}
-      {REACT_APP_DEBUG==="true"?(
-      <div className="gx-d-flex justify-content-center">
-        <Button
-        type="primary"
-        onClick={test}
-        key = "testButton"
-        >
-        Test
-        </Button>
-      </div>):("")}
-      <div className="gx-d-flex justify-content-center">
-        <h4>Your Public Key {pb}</h4>
-      </div>
-      {(isChrome && isDesktop && (address!==""))?(
-        <div className="gx-d-flex justify-content-center">
-        <Button
-        type="primary"
-        onClick={register}
-        key="register"
-        >
-        Register public key
-        </Button>
-      </div>):("")}
-
-      </div>
-      )}
-
     </div>
   );
 };
 
-export default Settings;
+export default Verify;
