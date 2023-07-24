@@ -1,8 +1,13 @@
 {
   "app.announced": "Create new Mina Avatar NFT with the help of the telegram bot @MinaNFT_bot",
   "sidebar.main": "Main",
-  "sidebar.samplePage": "Create",
-  "sidebar.pro": "ProTool",
+  "sidebar.avatars": "Avatars",
+  "sidebar.posts": "Posts",
+  "sidebar.create": "Create",
+  "sidebar.createavatar": "Create Avatar",
+  "sidebar.createpost": "Create Post",
+  "sidebar.verify": "Verify",
+  "sidebar.settings": "Settings"
   "sidebar.dashboard": "Dashboard",
   "sidebar.dashboard.crm": "Crm",
   "sidebar.components": "Components",
@@ -311,6 +316,6 @@
   "sidebar.map.weather": "Weather map",
   "sidebar.extensions.shuffle": "Shuffle",
   "sidebar.extensions.profile": "Profile",
-  "sidebar.social": "Social Apps",
-  "sidebar.settings": "Settings"
+  "sidebar.social": "Social Apps"
+  
 }

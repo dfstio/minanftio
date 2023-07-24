@@ -43,27 +43,47 @@ const SidebarContent = ({sidebarCollapsed, setSidebarCollapsed}) => {
             theme={themeType === THEME_TYPE_LITE ? 'lite' : 'dark'}
             mode="inline">
 
-            <Menu.Item key="marketplace">
-                  <Link to="/marketplace"><i className="icon icon-shopping-cart "/>
-                  <IntlMessages id="sidebar.algolia"/></Link>
+            <Menu.Item key="avatars">
+                  <Link to="/avatars"><i className="icon icon-shopping-cart "/>
+                  <IntlMessages id="sidebar.avatars"/></Link>
+            </Menu.Item>
+            
+            <Menu.Item key="posts">
+                  <Link to="/posts"><i className="icon icon-shopping-cart "/>
+                  <IntlMessages id="sidebar.posts"/></Link>
             </Menu.Item>
 
-            <Menu.Item key="mint">
-              <Link to="/mint">
+            <Menu.Item key="creates">
+              <Link to="/create">
                 <i className="icon icon-culture-calendar"/>
-                <IntlMessages id="sidebar.samplePage"/>
+                <IntlMessages id="sidebar.create"/>
               </Link>
             </Menu.Item>
             
-            <Menu.Item key="pro">
-              <Link to="/pro">
+            <Menu.Item key="createavatar">
+              <Link to="/create/avatar">
                 <i className="icon icon-culture-calendar"/>
-                <IntlMessages id="sidebar.pro"/>
+                <IntlMessages id="sidebar.createavatar"/>
+              </Link>
+            </Menu.Item>
+            
+            <Menu.Item key="createpost">
+              <Link to="/create/post">
+                <i className="icon icon-culture-calendar"/>
+                <IntlMessages id="sidebar.createpost"/>
               </Link>
             </Menu.Item>
 
 
-               <Menu.Item key="settings">
+            <Menu.Item key="verify">
+              <Link to="/verify">
+                <i className="icon icon-components"/>
+                <IntlMessages id="sidebar.verify"/>
+              </Link>
+            </Menu.Item>
+            
+            
+            <Menu.Item key="settings">
               <Link to="/settings">
                 <i className="icon icon-components"/>
                 <IntlMessages id="sidebar.settings"/>
