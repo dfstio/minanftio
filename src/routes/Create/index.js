@@ -45,11 +45,11 @@ const Mint = () => {
 
       <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
             <MintMenuItem
-              creator="Create your own Mina Avatar NFT"
-              title="Create your own Mina Avatar NFT"
+              creator="Create Mina Avatar NFT"
+              title="Create Mina Avatar NFT"
               link="/create/avatar"
               price="$9 for deployment and $19-$999 for reservation of name for one year (regular name is $19, short names like @nft and @gold and are $49 and $99, exclusive name like @shopping is $999)"
-              description="MinaNFT is an innovative NFT project leveraging the Mina blockchain's unique privacy features and AI technology. Our platform allows users to create personalised avatar NFTs and use them as an identity symbol across various social media. By interacting with our Telegram bot, users can describe avatar idea by texting or sending voice message in any language, and our AI will generate a unique NFT. Additionally, our avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. Individuals and businesses are welcome to join MinaNFT, a space where art meets privacy, and personalize their digital footprint"
+              description="Create personalised avatar NFTs and use them as an identity symbol across various social media. Mina Avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. MinaNFT is a space where art meets privacy"
               image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
               key="Create Avatar"
 
@@ -58,11 +58,11 @@ const Mint = () => {
         
               <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
             <MintMenuItem
-              creator="Create new post on your Mina Avatar NFT"
-              title="Create new your Mina Avatar NFT"
+              creator="Create new post on MinaNFT"
+              title="Create new post on MinaNFT"
               link="/create/posts"
               price="$5 for deployment"
-              description="MinaNFT is an innovative NFT project leveraging the Mina blockchain's unique privacy features and AI technology. Our platform allows users to create personalised avatar NFTs and use them as an identity symbol across various social media. By interacting with our Telegram bot, users can describe avatar idea by texting or sending voice message in any language, and our AI will generate a unique NFT. Additionally, our avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. Individuals and businesses are welcome to join MinaNFT, a space where art meets privacy, and personalize their digital footprint"
+              description="Create new post on your Mina Avatar NFTs to host images and documents with verifiable proofs of authenticity. Youc can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. MinaNFT is a space where art meets privacy"
               image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
               key="Create Post"
 
@@ -71,12 +71,12 @@ const Mint = () => {
 
             <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
             <MintMenuItem
-              creator="Description of Mina NFT project"
+              creator="Description of the Mina NFT project"
               title="Description of Mina NFT project"
+              link=""
               price=""
               description="MinaNFT is an innovative NFT project leveraging the Mina blockchain's unique privacy features and AI technology. Our platform allows users to create personalised avatar NFTs and use them as an identity symbol across various social media. By interacting with our Telegram bot, users can describe avatar idea by texting or sending voice message in any language, and our AI will generate a unique NFT. Additionally, our avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. Individuals and businesses are welcome to join MinaNFT, a space where art meets privacy, and personalize their digital footprint"
               image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://content.nftvirtuoso.io/image/mintimages/deepnft.jpg"
-
               key="MinaNFT Description"
 
               />

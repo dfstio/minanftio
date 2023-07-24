@@ -9,7 +9,9 @@ const MintMenuItem = ({ title, creator, description, price, link, image }) => {
     <div className="gx-product-item gx-product-vertical" >
     <Card
         title={creator}
+          {(link !== '')?(
         extra={ <a href={link}><span className="gx-link">Create</span></a>}
+        )
         cover={<img alt="example" src={image}/>}
         bordered={false}
         >
