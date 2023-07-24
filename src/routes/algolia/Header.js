@@ -21,7 +21,7 @@ const AlgoliaHeader = ({onCloseFunction}) => (
           {value: 'tokenId', label: 'Creation date'},
           {value: 'virtuoso', label: 'Sale date'},
         ]}
-        defaultRefinement="virtuoso"
+        defaultRefinement="minanft"
       />
     </div>
   </div>
