@@ -41,6 +41,7 @@ const startToken =
   "creator": "",
   "name": "",
   "description": "",
+  "url": "",
   "shortdescription": "",
   "saleID": "0",
   "onSale": false,
@@ -51,7 +52,7 @@ const startToken =
   "image": "",
   "type": "individual",
   "contains_private_content": false,
-  "private_description": "",
+  "private_content_description": "",
   "uri": {
     "name": "",
     "type": "object",
@@ -142,7 +143,8 @@ const MintPrivate = () => {
   const checkCanMint = () => {
 
         let newMintDisabled = true;
-        if( (token.name !== "" && token.description !== "" && token.main.image !== "" ) newMintDisabled = false;
+        if( ipfs !== "" ) newMintDisabled = false;
+        else if( token.name !== "" && token.description !== "" && token.main.image !== "") newMintDisabled = false;
         if( newMintDisabled !== mintDisabled ) setMintDisabled(newMintDisabled);
   };
 
@@ -194,103 +196,6 @@ const MintPrivate = () => {
 
   };
 
-/*
-    const beforeUploadImage = async (file) => {
-
-        if(DEBUG) console.log("beforeUploadImage ", file);
-        setLoadingImage(true);
-        let newToken = token;
-        const key = 'IPFSimageloading';
-        message.loading({content: `Uploading ${file.name} to IPFS`, key});
-
-        const result = await addFileHashToIPFS(file);
-        if(DEBUG) console.log("Image File added to IPFS: ", result);
-        newToken.image = result.url;
-        newToken.uri.properties.image = result;
-        message.success({content: `File ${file.name} uploaded to ${result.url}`, key, duration: 5});
-        setToken(newToken);
-        setLoadingImage(false);
-        checkCanMint();
-        return false;
-  };
-
-    const beforeUploadVideo = async (file) => {
-        if(DEBUG) console.log("beforeUploadVideo ", file);
-        setLoadingVideo(true);
-        let newToken = token;
-        const key = 'IPFSvideoloading';
-        message.loading({content: `Uploading ${file.name} to IPFS`, key, duration: 60});
-        const result = await addFileHashToIPFS(file);
-        if(DEBUG) console.log("Video File added to IPFS: ", result);
-
-
-        newToken.uri.animation_url = result.url;
-        newToken.uri.properties.animation = result;
-        message.success({content: `File ${file.name} uploaded to ${result.url}`, key, duration: 5});
-        setToken(newToken);
-        setLoadingVideo(false);
-        checkCanMint();
-        return false;
-  };
-
-      const unlockableFiles = async (info) => {
-
-
-        let newToken = token;
-        newToken.unlockable.files = info.fileList;
-        newToken.unlockable.files_number = info.fileList.length;
-        setToken(newToken);
-        if(DEBUG) console.log("unlockableFiles: ", newToken.unlockable);
-
-        return false;
-  };
-
-
-
-  const beforeUploadUnlockableFiles = async (info) => {
-
-        if(DEBUG) console.log("before unlockableFiles ", info);
-        return false;
-  };
-
-  const beforeUnlockableImage = async (file) => {
-        let newToken = token;
-        newToken.unlockable.image = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockableImage: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-
-    const beforeUnlockableVideo = async (file) => {
-        let newToken = token;
-        newToken.unlockable.video = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockableVideo: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-
-    const beforeUnlockableAudio = async (file) => {
-        let newToken = token;
-        newToken.unlockable.audio = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockableAudio: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-
-    const beforeUnlockablePDF = async (file) => {
-        let newToken = token;
-        newToken.unlockable.pdf = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockablePDF: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-*/
-
-
     const beforeUpload = (file) => {
         return false;
   };
@@ -299,9 +204,14 @@ const MintPrivate = () => {
 
   const mint = async () => {
 
-    if(DEBUG) console.log("Mint token: ", token);
-
-
+    if(DEBUG) console.log("Mint token: ", ipfs, token);
+    if( ipfs !== "" ) 
+    {
+        const linkURL = "https://t.me/minanft_bot?start=" + ipfs ;
+        window.open(linkURL);
+        return;
+    }
+    
     setMinting(true);
     const key = 'Minting Mina Avatar NFT';
     message.loading({content: `Minting Mina NFT token - uploading to IPFS`, key, duration: 240});
@@ -324,6 +234,11 @@ const MintPrivate = () => {
 
 
     let result = {path: ""};
+    const strJSON = JSON.stringify(mintJSON);
+    const blob = new Blob([strJSON], {type: "text/plain;charset=utf-8"});
+    fileSaver.saveAs(blob, "minanft.json");
+    message.success({content: `Mina NFT JSON downloaded`, key, duration: 10});
+    
     result = await addToIPFS(JSON.stringify(mintJSON));
     /*
     if( moderator )
@@ -409,54 +324,6 @@ const MintPrivate = () => {
     }
 }
 
-  async function register()
-  {
-
-            if(DEBUG) console.log("Register clicked", address);
-            if( address !== undefined && address !== "")
-            {
-                 const key = 'RegisterPublicKeyMint';
-                 message.loading({content: `To add unlockable content please provide public key in Metamask and confirm transaction`, key, duration: 60});
-
-
-
-                const result = await virtuosoRegisterPublicKey(address);
-                if( result.publicKey !== "" && result.hash !== "")
-                {
-                    dispatch(updatePublicKey(result.publicKey));
-                    message.success({content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`, key, duration: 10});
-                    return publicKey;
-                }
-                else message.error({content: `Public key is not provided or written to blockchain`, key, duration: 10});
-
-            };
-            return "";
-  }
-
-    async function allowUnlockableContent()
-    {
-        if(isChrome===false || isDesktop===false)  { message.error("Please use desktop version of Chrome with MetaMask to add unlockable content"); return; }
-
-        if( address !== undefined && address !== "")
-        {
-            let allow = false;
-            if( publicKey === undefined || publicKey === "" || publicKey === 'a' )
-            {
-              const pk = await register();
-              if( pk !== "") allow = true;
-            } else if(publicKey !== '') allow = true;
-            if( allowUnlockable !== allow) setAllowUnlockable(allow);
-            if( allow )
-            {
-                    let newToken = token;
-                    newToken.contains_unlockable_content = true;
-                    setToken(newToken);
-            }
-
-
-        } else message.error("Please connect with MetaMask")
-    }
-
 
   checkCanMint();
 
@@ -508,7 +375,7 @@ const MintPrivate = () => {
               </Form.Item>
 
               <Form.Item
-                label="Name"
+                label="Name (like @myminanft)"
                 name="name"
                 rules={[
                  {
@@ -516,7 +383,7 @@ const MintPrivate = () => {
                    message: 'Please name your NFT',
                  },
                ]}
-                placeholder="Please name your NFT">
+                placeholder="Please name your NFT like @myminanft">
               <Input />
               </Form.Item>
 
@@ -574,7 +441,7 @@ const MintPrivate = () => {
                  </Form.Item>
 
                   <Form.Item
-                label="Visibility"
+                label="Type"
                 name="type"
                 rules={[
                  {
@@ -585,23 +452,11 @@ const MintPrivate = () => {
 
               >
                  <RadioGroup >
-                   <RadioButton value="private">Private</RadioButton>
-                   <RadioButton value="public">Public</RadioButton>
+                   <RadioButton value="individual">Individual</RadioButton>
+                   <RadioButton value="corporate">Corporate</RadioButton>
                  </RadioGroup>
 
-                </Form.Item>
-              {moderator?
-              (
-                <Form.Item
-                label="Folder"
-                name="folder"
-                placeholder="Enter folder name">
-              <Input />
-              </Form.Item>
-
-              )
-              :
-              (
+            </Form.Item>
               <Form.Item
                name="category"
                label="Category"
@@ -624,13 +479,15 @@ const MintPrivate = () => {
                  <Option value="Art">Art</Option>
                  <Option value="Dance">Dance</Option>
                  <Option value="Document">Document</Option>
+                 <Option value="Business">Document</Option>
+                 <Option value="Transaction">Document</Option>
                  <Option value="Technology">Technology</Option>
+                 <Option value="Blockchain">Technology</Option>
+                 <Option value="MINA protocol">Technology</Option>
                  <Option value="Health">Health</Option>
                  <Option value="Event">Event</Option>
-                 <Option value="Butterflies">Butterflies</Option>
                </Select>
                 </Form.Item>
-              )}
         </Col>
         </Row>
         <Row>
@@ -683,8 +540,7 @@ const MintPrivate = () => {
         </Col>
         </Row>
 
-              {showUnlockable?
-              (
+
         <Row>
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
@@ -745,14 +601,6 @@ const MintPrivate = () => {
 
         </Col>
         </Row>
-              ):(
-                <Button
-                 onClick={allowUnlockableContent}
-                 disabled={moderator}
-                 >
-                 Add Unlockable Content
-                 </Button>
-              )}
                 <Form.Item
                 label="Price"
                 name="price"
@@ -769,44 +617,16 @@ const MintPrivate = () => {
                  disabled={mintDisabled}
                  loading={minting}
                  >
-                 {moderator?"Create JSON":"Create NFT"}
+                 {ipfs==""?"Create Mina NFT":"Deploy NFT with @MinaNFT_bot"}
                  </Button>
         </Form.Item>
       </Form>
     </Card>
 
         </Col>
-
-{/*
-        <Col xxl={8} xl={8} lg={6} md={12} sm={24} xs={24}>
-            <TokenItem
-              item={token}
-              small={true}
-              preview={true}
-              key="MintSmallToken"
-
-              />
-        </Col>
-        <Col xxl={8}  xl={8} lg={12} md={12} sm={24} xs={24}>
-         <TokenItem
-              item={token}
-              key="MintBigToken"
-              preview={true}
-
-              />
-        </Col>
-        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
-         <TokenItem
-              item={token}
-              key="MintBigToken"
-              preview={true}
-
-              />
-        </Col>
-*/}
       </Row>
     </div>
-  );
+  )
 };
 
 export default MintPrivate;

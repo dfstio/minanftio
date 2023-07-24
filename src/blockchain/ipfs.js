@@ -242,7 +242,8 @@ export async function writeToken(token, writeToIPFS = true)
       "name": token.name,
       "type": "object",
       "category": token.category,
-      "visibility": token.visibility,
+      "type": token.type,
+      "url": tiken.url,
       "image": "",
       "external_url": "nftvirtuoso.io",
       "animation_url": "",
@@ -253,8 +254,8 @@ export async function writeToken(token, writeToIPFS = true)
       "attachments_count": 0,
       "license": "Mina NFT TERMS AND CONDITIONS AND LIMITED LICENSE V1",
       "license_id": "1",
-      "license_url": "https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf",
-      "contains_unlockable_content": token.contains_unlockable_content,
+      "license_url": "https://minanft.io/agreement/Agreement.pdf",
+      "contains_private_content": token.contains_private_content,
       "id": uuidv4(),
       "time": Date.now(),
       "properties": token.uri.properties,
@@ -317,8 +318,6 @@ export async function writeToken(token, writeToIPFS = true)
       } catch (error) {logm.error("catch", { token, writeToIPFS, error, wf:"writeToken"})}
 
       return content ;
-
-
 };
 
 
