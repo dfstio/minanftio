@@ -66,7 +66,7 @@ return (
 
 const CustomResults = connectStateResults(({searchState, searchResult}) => {
   if (searchResult && searchResult.nbHits === 0) {
-  //console.log("CustomResults1", searchState, searchResult );
+  console.log("CustomResults1", searchState, searchResult );
     return (
       <div className="gx-algolia-content-inner">
         <div className="gx-algolia-no-results">
@@ -76,7 +76,7 @@ const CustomResults = connectStateResults(({searchState, searchResult}) => {
       </div>
     );
   } else {
-    //console.log("CustomResults2", searchState, searchResult );
+    console.log("CustomResults2", searchState, searchResult );
     return (
       <div className="gx-algolia-content-inner">
         <Stats />
