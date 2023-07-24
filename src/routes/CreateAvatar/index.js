@@ -479,11 +479,11 @@ const MintPrivate = () => {
                  <Option value="Art">Art</Option>
                  <Option value="Dance">Dance</Option>
                  <Option value="Document">Document</Option>
-                 <Option value="Business">Document</Option>
-                 <Option value="Transaction">Document</Option>
+                 <Option value="Business">Business</Option>
+                 <Option value="Transaction">Transaction</Option>
                  <Option value="Technology">Technology</Option>
-                 <Option value="Blockchain">Technology</Option>
-                 <Option value="MINA protocol">Technology</Option>
+                 <Option value="Blockchain">Blockchain</Option>
+                 <Option value="MINA protocol">MINA protocol</Option>
                  <Option value="Health">Health</Option>
                  <Option value="Event">Event</Option>
                </Select>
@@ -545,9 +545,9 @@ const MintPrivate = () => {
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Description of unlockable content"
+               label="Description of private content"
                name="unlockable_description"
-               placeholder="This text and content below can see only the owner of NFT"
+               placeholder="This text and content below can see only the owner of NFTm"
                >
                 <TextArea
                 autoSize={{ minRows: 2, maxRows: 10 }}
@@ -555,7 +555,7 @@ const MintPrivate = () => {
               </Form.Item>
               <Form.Item
                name="umedia"
-               label="Unlockable Media">
+               label="Private Media - will NOT be uploaded to IPFS">
                  <Upload
                    name="unlockablemedia"
                    listType="picture-card"
@@ -581,7 +581,7 @@ const MintPrivate = () => {
         <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
              <Form.Item
                name="uattachments"
-               label="Unlockable Attachments">
+               label="Private Attachments - will NOT be uploaded to IPFS">
                  <Upload
                    name="uattachments"
                    listType="picture-card"

@@ -245,7 +245,7 @@ export async function writeToken(token, writeToIPFS = true)
       "type": token.type,
       "url": token.url,
       "image": "",
-      "external_url": "nftvirtuoso.io",
+      "external_url": "minanft.io",
       "animation_url": "",
       "description": token.description,
       "media": "",
@@ -294,8 +294,6 @@ export async function writeToken(token, writeToIPFS = true)
                    };
                    content.media_count = length;
                    content.media = filesJSON;
-
-
            };
 
            length = token.main.attachments.length;
@@ -310,11 +308,42 @@ export async function writeToken(token, writeToIPFS = true)
                    };
                    content.attachments_count = length;
                    content.attachments = filesJSON;
-
-
            };
 
+           if( token.unlockable_description && token.unlockable_description != "") {
+           		content.private_content_description = token.unlockable_description;
+           		content.contains_private_content = true;
+           	};
 
+           length = token.unlockable.media.length;
+           if( length > 0)
+           {
+                   let i;
+                   let filesJSON = [];
+                   for(i = 0; i<length; i++)
+                   {
+                        const newFile = await addFileHash(token.unlockable.media[i].originFileObj);
+                        filesJSON.push(newFile);
+                   };
+                   content.private_media_count = length;
+                   content.private_media = filesJSON;
+                   content.contains_private_content = true;
+           };
+
+           length = token.unlockable.attachments.length;
+           if( length > 0)
+           {
+                   let i;
+                   let filesJSON = [];
+                   for(i = 0; i<length; i++)
+                   {
+                        const newFile = await addFileHash(token.unlockable.attachments[i].originFileObj);
+                        filesJSON.push(newFile);
+                   };
+                   content.private_attachments_count = length;
+                   content.private_attachments = filesJSON;
+                   content.contains_private_content = true;
+           };
       } catch (error) {logm.error("catch", { token, writeToIPFS, error, wf:"writeToken"})}
 
       return content ;
@@ -401,6 +430,53 @@ export async function decryptUnlockableToken(data, password)
 */
 
 };
+
+
+export async function addFileHash(file)
+{
+
+     //if(DEBUG) console.log("addFileHashToIPFS file: ", file, writeToIPFS, folder);
+
+     try {
+     var binaryWA;
+     var md5Hash;
+     var sha256Hash;
+     var result = {
+        "MD5_Hash": "",
+        "SHA256_Hash": "",
+        "filetype": "",
+        "filename": "",
+        "size" : "",
+        "lastModified" : "",
+        "name":"",
+        "description":""
+        };
+
+
+
+      const binary = await readFileAsync(file);
+      binaryWA = CryptoJS.lib.WordArray.create(binary);
+
+      md5Hash = CryptoJS.MD5(binaryWA).toString();
+      sha256Hash = CryptoJS.SHA256(binaryWA).toString();
+      result.MD5_Hash = md5Hash;
+      result.SHA256_Hash = sha256Hash;
+      result.filename = (folder==="")? file.name : (folder + "/" + file.name);
+      result.name=file.name.replace(/\.[^/.]+$/, "");
+      result.description="";
+      result.filetype = file.type;
+      result.lastModified = file.lastModified;
+      result.size = file.size;
+
+      //if(DEBUG) console.log("addFileHashToIPFS result: ", result);
+      return result;
+
+
+    } catch (error) {
+      logm.error('catch', {error, wf:"addFileHash", file});
+    }
+};
+
 
 export async function addFileHashToIPFS(file, writeToIPFS = true, folder = "")
 {
