@@ -92,7 +92,7 @@ const Settings = () => {
     <div>
       <h2 className="title gx-mb-4"><IntlMessages id="sidebar.verify"/></h2>
       <div className="gx-d-flex justify-content-center">
-        <h4>Your can verify any private file that was sealed to the Mina blocchain in Mina NFT post</h4>
+        <h4>You can verify any private file that was sealed to the Mina blocchain in the Mina NFT post</h4>
       </div>
       <div className="gx-d-flex justify-content-center">
         <Button

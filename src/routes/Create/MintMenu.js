@@ -11,7 +11,7 @@ const MintMenuItem = ({ title, creator, description, price, link, image }) => {
         title={creator}
           {(link !== '')?(
         extra={ <a href={link}><span className="gx-link">Create</span></a>}
-        )
+        )}
         cover={<img alt="example" src={image}/>}
         bordered={false}
         >
