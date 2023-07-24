@@ -461,7 +461,7 @@ export async function addFileHash(file)
       sha256Hash = CryptoJS.SHA256(binaryWA).toString();
       result.MD5_Hash = md5Hash;
       result.SHA256_Hash = sha256Hash;
-      result.filename = (folder==="")? file.name : (folder + "/" + file.name);
+      result.filename = file.name ;
       result.name=file.name.replace(/\.[^/.]+$/, "");
       result.description="";
       result.filetype = file.type;
