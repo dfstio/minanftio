@@ -207,8 +207,8 @@ async function createCheckoutSession(body)
 				 price_data: {
 				   currency: currency,
 				   product_data: {
-					 name: token.name,
-					 description: token.description,
+					 name: "Mina NFT " + token.name,
+					 description: "Purchase of the MINA Avatar NFT name on MINA blockchain",
 					 images: [image]
 				   },
 				   unit_amount: amount,
