@@ -20,11 +20,11 @@ const MetaMaskAccount = () => {
 
 
   const address = useSelector(({blockchain}) => blockchain.address);
-  const username  = useSelector(({blockchain}) => blockchain.username);
+  const username = useSelector(({blockchain}) => blockchain.username);
   const dispatch = useDispatch();
 
   let metamaskText = "CONNECT WITH AURO";
-  let username = "";
+  let usernameText = "";
   let topup = "";
   let blockExplorer = "";
 
@@ -152,6 +152,7 @@ const handleAccountsChanged = useCallback( async (accounts) => {
   if((address !== undefined) && (address !== ""))
   {
     metamaskText = address.slice(0,6)+"..."+address.slice(51,55);
+    usernameText = username? username : "";
     blockExplorer = "https://berkeley.minaexplorer.com/wallet/" + address;
     result =
     (
