@@ -36,7 +36,7 @@ const MintMenuItem = ({ title, creator, description, price, link, image }) => {
       />
       </div>
     </Card>
-    )
+    )}
     </div>
 
   );
