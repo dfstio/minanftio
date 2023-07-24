@@ -1,7 +1,7 @@
 {
   "app.announced": "Create new MINA NFT with the help of telegram bot @MinaNFT_bot",
   "sidebar.main": "Main",
-  "sidebar.samplePage": "Create MINA NFT",
+  "sidebar.samplePage": "Create",
   "sidebar.dashboard": "Dashboard",
   "sidebar.dashboard.crm": "Crm",
   "sidebar.components": "Components",
@@ -283,7 +283,7 @@
   "sidebar.dashboard.listing": "Listing",
   "sidebar.dashboard.crypto": "Crypto",
   "sidebar.map": "Map",
-  "sidebar.algolia": "NFT Marketplace",
+  "sidebar.algolia": "Explore",
   "sidebar.algolia.owner": "Owner",
   "sidebar.algolia.onsale": "OnSale",
   "sidebar.algolia.category": "Category",
