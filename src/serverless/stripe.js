@@ -178,8 +178,8 @@ async function createCheckoutSession(body)
   console.log("createCheckoutSession body - stripe", body);
   const log = logm.child({body, wf: "createCheckoutSession"});
 
-  let success_url = URL + "/token/"  + body.tokenId.toString() + "/checkout/success";
-	let cancel_url  = URL + "/token/"  + body.tokenId.toString() + "/checkout/cancel";
+  let success_url = URL + "/"  + body.tokenId.toString() + "/checkout/success";
+	let cancel_url  = URL + "/"  + body.tokenId.toString() + "/checkout/cancel";
 
   if( body.type == "buy")
   {
