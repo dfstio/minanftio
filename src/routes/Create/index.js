@@ -48,7 +48,7 @@ const Mint = () => {
               creator="Create Mina Avatar NFT"
               title="Create Mina Avatar NFT"
               link="/create/avatar"
-              price="$9 for deployment and $19-$999 for reservation of name for one year (regular name is $19, short names like @nft and @gold and are $49 and $99, exclusive name like @shopping is $999)"
+              price="$9 for deployment of the Mina NFT and $19-$999 for reservation of name for one year (regular name is $19, short names like @sea and @gold are $49-$99, exclusive names like @shopping are $999)"
               description="Create personalised avatar NFTs and use them as an identity symbol across various social media. Mina Avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. MinaNFT is a space where art meets privacy"
               image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
               key="Create Avatar"

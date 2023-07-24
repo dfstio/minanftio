@@ -18,10 +18,11 @@ async function getToken(tokenId)
   const client = algoliasearch(REACT_APP_ALGOLIA_PROJECT, REACT_APP_ALGOLIA_KEY);
   const index = client.initIndex("minanft");
   const filterStr = ``;
-  const objects = await index.search("", { filters: filterStr});
-  log.info("Loaded token", {filterStr, objects})
-  if( objects.hits.length === 1) return objects.hits[0];
-  else return null;
+  let token = await searchIndex.getObject(tokenId);
+  if(!token) token = await searchIndex.getObject("@"+tokenId);
+  
+  log.info("Loaded token", {filterStr, token})
+  return token;
 
 };
 
@@ -177,27 +178,24 @@ async function createCheckoutSession(body)
   //if(DEBUG) console.log("createCheckoutSession body", body);
   const log = logm.child({body, wf: "createCheckoutSession"});
 
-  let success_url = URL + "/token/" + CHAIN_ID + "/" + CONTRACT_ADDRESS + "/" + body.tokenId.toString() + "/checkout/success";
-	let cancel_url  = URL + "/token/" + CHAIN_ID + "/" + CONTRACT_ADDRESS + "/" + body.tokenId.toString() + "/checkout/cancel";
+  let success_url = URL + "/token/"  + body.tokenId.toString() + "/checkout/success";
+	let cancel_url  = URL + "/token/"  + body.tokenId.toString() + "/checkout/cancel";
 
   if( body.type == "buy")
   {
 
-		const token =  await getTokenPrice(body.tokenId);
+		//const token =  await getTokenPrice(body.tokenId);
+		const token =  await getToken(body.tokenId);
 		//if(DEBUG) console.log("createCheckoutSession token:", token);
 
 
-		if( token.onSale && (token.saleID === body.saleID))
+		if( token.onSale )
 		{
-			  const currency = token.sale.currency;
-			  const amount = token.sale.price * 100;
+			  const currency = token.currency;
+			  const amount = token.price * 100;
 			  const image = `https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/${
-            token.uri.image
+            token.image
             }`;
-
-
-			  // CHANGE THIS CALCULATION !!!
-			  const creditAmount = (currency=='rub')?((amount / 75) * 70 /100):(amount * 70 / 100);
 
 
 			 const session = await stripe.checkout.sessions.create({
@@ -209,8 +207,8 @@ async function createCheckoutSession(body)
 				 price_data: {
 				   currency: currency,
 				   product_data: {
-					 name: token.uri.name,
-					 description: token.uri.description,
+					 name: token.name,
+					 description: token.description,
 					 images: [image]
 				   },
 				   unit_amount: amount,
@@ -221,19 +219,14 @@ async function createCheckoutSession(body)
 			   mode: 'payment',
 			   success_url: success_url,
 			   cancel_url: cancel_url,
-			   client_reference_id: body.address,
+			   client_reference_id: token.name,
 			   payment_intent_data: { capture_method: 'manual'},
-			   phone_number_collection: { enabled: true },
-			   shipping_address_collection: { allowed_countries: [ "CH", "FR"] },
 			   metadata: {
 			        type: "buy",
-			        address: body.address,
-			        tokenId: body.tokenId,
-			        saleID: body.saleID,
-			        credit: creditAmount,
+			        tokenId: body.tokenId,,
 			        currency: currency,
-			        name: token.uri.name,
-			        price: token.sale.price,
+			        name: token.name,
+			        price: token.price,
 			        image: image
 			        },
 			 });
