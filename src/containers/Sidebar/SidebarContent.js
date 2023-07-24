@@ -67,15 +67,6 @@ const SidebarContent = ({sidebarCollapsed, setSidebarCollapsed}) => {
                 <IntlMessages id="sidebar.verify"/>
               </Link>
             </Menu.Item>
-            
-            
-            <Menu.Item key="settings">
-              <Link to="/settings">
-                <i className="icon icon-components"/>
-                <IntlMessages id="sidebar.settings"/>
-              </Link>
-            </Menu.Item>
-
 
           </Menu>
         </CustomScrollbars>

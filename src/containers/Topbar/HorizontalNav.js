@@ -64,13 +64,6 @@ const HorizontalNav = () => {
             <IntlMessages id="sidebar.verify"/>
           </Link>
         </Menu.Item>
-      <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="settings">
-          <Link to="/settings">
-            <i className="icon icon-components"/>
-            <IntlMessages id="sidebar.settings"/>
-          </Link>
-      </Menu.Item>
-
 
     </Menu>
   );
