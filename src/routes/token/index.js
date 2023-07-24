@@ -18,11 +18,11 @@ const Token = ({match}) => {
 
     useEffect(() => {
     async function getItem() {
-        const objectID = match.params.tokenId.toString();
+        let objectID = match.params.tokenId.toString();
+        if( objectID[0] !== "@") objectID = "@" + objectID;
         if(DEBUG) console.log("Token objectID", objectID);
         try {
              let newItem = await searchIndex.getObject(objectID);
-             if(!newItem) newItem = await searchIndex.getObject("@"+objectID);
              if(DEBUG) console.log("Token item received", newItem);
              setItem(newItem);
 
