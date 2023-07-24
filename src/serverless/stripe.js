@@ -15,12 +15,12 @@ const { lambdaTransferToken, lambdaAddBalance, lambdaMintItem } = require("../se
 async function getToken(tokenId)
 {
   const log = logm.child({tokenId,  wf: "getToken"});
+  console.log("getToken",tokenId)
   const client = algoliasearch(REACT_APP_ALGOLIA_PROJECT, REACT_APP_ALGOLIA_KEY);
   const index = client.initIndex("minanft");
   const filterStr = ``;
-  let token = await searchIndex.getObject(tokenId);
-  if(!token) token = await searchIndex.getObject("@"+tokenId);
-  
+  let token = await index.getObject(tokenId);
+  console.log("getToken result",tokenId, token);
   log.info("Loaded token", {filterStr, token})
   return token;
 
