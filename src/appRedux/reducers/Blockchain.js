@@ -5,7 +5,8 @@ import {
       UPDATE_VIRTUOSO_BALANCE,
       UPDATE_BALANCE,
       UPDATE_VRT1,
-      UPDATE_PUBLIC_KEY
+      UPDATE_PUBLIC_KEY,
+      UPDATE_USERNAME
 } from "../../constants/Blockchain";
 
 const initialSettings = {
@@ -13,7 +14,8 @@ const initialSettings = {
   virtuosoBalance: 0,
   balance: 0,
   VRT1: 0,
-  publicKey: ""
+  publicKey: "",
+  username: ""
 };
 
 
@@ -48,6 +50,12 @@ const SettingsReducer = (state = initialSettings, action) => {
       return {
         ...state,
         publicKey: action.publicKey
+      };
+      
+    case UPDATE_USERNAME:
+      return {
+        ...state,
+        username: action.username
       };
 
     default:

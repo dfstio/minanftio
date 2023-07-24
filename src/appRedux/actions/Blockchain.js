@@ -3,7 +3,8 @@ import {
       UPDATE_VIRTUOSO_BALANCE,
       UPDATE_BALANCE,
       UPDATE_VRT1,
-      UPDATE_PUBLIC_KEY
+      UPDATE_PUBLIC_KEY,
+      UPDATE_USERNAME
 } from "../../constants/Blockchain";
 
 
@@ -34,5 +35,11 @@ export function updateVRT1(VRT1) {
 export function updatePublicKey(publicKey) {
   return (dispatch) => {
     dispatch({type: UPDATE_PUBLIC_KEY, publicKey});
+  }
+}
+
+export function updateUsername(username) {
+  return (dispatch) => {
+    dispatch({type: UPDATE_USERNAME, username});
   }
 }

@@ -20,11 +20,11 @@ const MetaMaskAccount = () => {
 
 
   const address = useSelector(({blockchain}) => blockchain.address);
-  const virtuosoBalance  = useSelector(({blockchain}) => blockchain.virtuosoBalance);
+  const username  = useSelector(({blockchain}) => blockchain.username);
   const dispatch = useDispatch();
 
   let metamaskText = "CONNECT WITH AURO";
-  let topupText = "";
+  let username = "";
   let topup = "";
   let blockExplorer = "";
 
@@ -133,7 +133,7 @@ const handleAccountsChanged = useCallback( async (accounts) => {
   },[dispatch])
 
 
-  if(DEBUG) console.log(`Address ${address} ${virtuosoBalance/100}`);
+  if(DEBUG) console.log(`Address ${address} ${username}`);
 
   let result = (
             <ul className="gx-login-list">
@@ -162,6 +162,9 @@ const handleAccountsChanged = useCallback( async (accounts) => {
                 }}
               >
               {metamaskText}
+              </li>
+              <li>
+              {username}
               </li>
             </ul>
 
