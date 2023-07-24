@@ -27,7 +27,7 @@ const App = props =>
 
 return (
   <InstantSearch className="gx-main-content"
-                 indexName="virtuoso"
+                 indexName="minanft"
                  searchState={props.searchState}
                  createURL={props.createURL}
                  searchClient={searchClient}
