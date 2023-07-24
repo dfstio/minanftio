@@ -31,7 +31,7 @@ const Mint = () => {
             <MintMenuItem
               creator="Your NFT Token"
               title="Create your own private NFT token"
-              link="/mint/custom"
+              link="/pro"
               price="$10 for private NFT token or $100 for public NFT token"
               description="Private NFT token will be visible only to you on Mina NFT marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on Mina NFT marketplace"
               image="https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
@@ -47,7 +47,7 @@ const Mint = () => {
             <MintMenuItem
               creator="Your NFT Token"
               title="Create your own private NFT token"
-              link="/mint/custom"
+              link="/pro"
               price="$10 for private NFT token or $100 for public NFT token"
               description="Private NFT token will be visible only to you on Mina NFT marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on Mina NFT marketplace"
               image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"

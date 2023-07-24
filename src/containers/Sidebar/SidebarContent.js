@@ -56,7 +56,7 @@ const SidebarContent = ({sidebarCollapsed, setSidebarCollapsed}) => {
             </Menu.Item>
             
             <Menu.Item key="pro">
-              <Link to="/mint/custom">
+              <Link to="/pro">
                 <i className="icon icon-culture-calendar"/>
                 <IntlMessages id="sidebar.pro"/>
               </Link>
