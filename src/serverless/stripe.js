@@ -17,7 +17,7 @@ async function getToken(tokenId)
   const log = logm.child({tokenId,  wf: "getToken"});
   const client = algoliasearch(REACT_APP_ALGOLIA_PROJECT, REACT_APP_ALGOLIA_KEY);
   const index = client.initIndex("minanft");
-  const filterStr = `chainId:${CHAIN_ID} AND tokenId:${tokenId} AND contract:${CONTRACT_ADDRESS} AND (onSale:true)`;
+  const filterStr = ``;
   const objects = await index.search("", { filters: filterStr});
   log.info("Loaded token", {filterStr, objects})
   if( objects.hits.length === 1) return objects.hits[0];

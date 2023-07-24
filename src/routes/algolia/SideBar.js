@@ -20,7 +20,9 @@ const Sidebar = () => {
 
     const address = useSelector(({blockchain}) => blockchain.address);
 
-    const [filter, setFilter] = useState(`(uri.visibility:public OR onSale:true) AND chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS}`);
+    const [filter, setFilter] = useState(``);
+
+    //const [filter, setFilter] = useState(`(uri.visibility:public OR onSale:true) AND chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS}`);
     const [disabled, setDisabled] = useState(true);
     //const [visible, setVisible] = useState(false);
 
@@ -33,13 +35,13 @@ const Sidebar = () => {
              if( e.target.checked === true )
              {
 
-               const filterStr = `chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS} AND owner:${address}`;
+               const filterStr = `owner:${address}`;
                setFilter(filterStr);
                //console.log("On change", e.target.checked, filterStr);
              }
              else
              {
-               const filterStr = `chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS} AND (uri.visibility:public OR onSale:true OR owner:${address})`;
+               const filterStr = ``;
                setFilter( filterStr );
 
             }
@@ -56,13 +58,13 @@ const Sidebar = () => {
       if (address == "")
       {
           setDisabled(true);
-          setFilter( `(uri.visibility:public OR onSale:true) AND chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS}`);
+          setFilter( ``);
 
       }
       else
       {
             setDisabled(false);
-            const filterStr = `chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS} AND (uri.visibility:public OR onSale:true OR owner:${address})`;
+            const filterStr = ``;
             setFilter( filterStr );
 
       }
