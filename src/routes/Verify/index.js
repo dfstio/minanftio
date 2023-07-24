@@ -12,7 +12,7 @@ import { metamaskLogin,
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
-const logm = logger.info.child({ winstonModule: 'Settings' });
+const logm = logger.info.child({ winstonModule: 'Verify' });
 const { REACT_APP_DEBUG } = process.env;
 
 const Settings = () => {
@@ -24,7 +24,7 @@ const Settings = () => {
   const dispatch = useDispatch();
 
 
-  const log = logm.child({ winstonComponent: 'Settings' });
+  const log = logm.child({ winstonComponent: 'Verify' });
 
 
   let vb = "$0";
@@ -90,7 +90,7 @@ const Settings = () => {
 
   return (
     <div>
-      <h2 className="title gx-mb-4"><IntlMessages id="sidebar.settings"/></h2>
+      <h2 className="title gx-mb-4"><IntlMessages id="sidebar.verify"/></h2>
       <div className="gx-d-flex justify-content-center">
         <h4>Your can verify any private file that was sealed to the Mina blocchain in Mina NFT post</h4>
       </div>
