@@ -1,6 +1,6 @@
 const algoliasearch = require('algoliasearch');
 const client = algoliasearch('KJYWN9CKS8', 'e362c0f63b9afb700db75abfafecb1aa');
-const index = client.initIndex('virtuoso');
+const index = client.initIndex('minanft');
 const removeMarkdown = require('remove-markdown');
 
 async function alWriteToken(tokenId, token, contract, chainId)

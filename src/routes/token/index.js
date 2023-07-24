@@ -3,7 +3,7 @@ import TokenItem from './Token';
 import algoliasearch from 'algoliasearch';
 const {REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT} = process.env;
 const searchClient = algoliasearch(REACT_APP_ALGOLIA_PROJECT, REACT_APP_ALGOLIA_KEY);
-const searchIndex = searchClient.initIndex('virtuoso');
+const searchIndex = searchClient.initIndex('minanft');
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
 
 const Token = ({match}) => {
