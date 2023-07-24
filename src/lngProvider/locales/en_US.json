@@ -290,7 +290,7 @@
   "sidebar.dashboard.crypto": "Crypto",
   "sidebar.map": "Map",
   "sidebar.algolia": "Explore",
-  "sidebar.algolia.owner": "Owner",
+  "sidebar.algolia.creator": "Creator",
   "sidebar.algolia.onsale": "OnSale",
   "sidebar.algolia.category": "Category",
   "sidebar.algolia.price": "Price",

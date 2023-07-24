@@ -135,11 +135,11 @@ return (
 
 
 
-        <Panel header=<span><IntlMessages id="sidebar.algolia.owner"/></span>>
+        <Panel header=<span><IntlMessages id="sidebar.algolia.creator"/></span>>
           <RefinementList className="gx-algolia-refinementList"
-                          attribute="owner"
+                          attribute="creator"
                           operator="or"
-                          limit={5}
+                          limit={10}
                           searchable
                           showMore
           />
