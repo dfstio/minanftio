@@ -60,7 +60,7 @@ const Mint = () => {
             <MintMenuItem
               creator="Create new post on MinaNFT"
               title="Create new post on MinaNFT"
-              link="/create/posts"
+              link="/create/post"
               price="$5 for deployment"
               description="Create new post on your Mina Avatar NFTs to host images and documents with verifiable proofs of authenticity. Youc can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. MinaNFT is a space where art meets privacy"
               image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
