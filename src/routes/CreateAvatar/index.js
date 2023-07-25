@@ -62,7 +62,7 @@ const startToken =
     "description": "",
     "license": "Mina NFT License Agreement V1",
     "license_id": "1",
-    "license_url": "https://minanft.io/agreement/Agreement.pdf",
+    "license_url": "https://minanft.io/agreement/MinaNFT_agreement_v1.pdf",
     "contains_private_content": false,
     "properties": {
       "image": "",

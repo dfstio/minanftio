@@ -256,7 +256,7 @@ export async function writeToken(token, writeToIPFS = true)
       "attachments_count": 0,
       "license": "Mina NFT TERMS AND CONDITIONS AND LIMITED LICENSE V1",
       "license_id": "1",
-      "license_url": "https://minanft.io/agreement/Agreement.pdf",
+      "license_url": "https://minanft.io/agreement/MinaNFT_agreement_v1.pdf",
       "contains_private_content": token.contains_private_content,
       "id": uuidv4(),
       "time": Date.now(),

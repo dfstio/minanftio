@@ -64,7 +64,7 @@ const startToken =
     "description": "",
     "license": "Mina NFT Personal License Agreement V1",
     "license_id": "1",
-    "license_url": "https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf",
+    "license_url": "https://minanft.io/agreement/MinaNFT_agreement_v1.pdf",
     "contains_unlockable_content": false,
     "unlockable_content_encryption": {
       "unlockableContentKey": "MetaMask.eth-sig-util.encrypt.x25519-xsalsa20-poly1305",
