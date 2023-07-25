@@ -5,7 +5,7 @@ import {accountingEmail } from "../../util/config";
 import {Button, message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../../appRedux/actions";
-import { metamaskLogin,
+import { minaLogin,
          virtuosoRegisterPublicKey
          } from "../../blockchain/mina";
 
@@ -84,7 +84,7 @@ const Settings = () => {
   {
 
             log.info("Connect clicked", {address, wf: "connect"});
-            const newAddress = await metamaskLogin();
+            const newAddress = await minaLogin();
             dispatch(updateAddress(newAddress));
   }
 

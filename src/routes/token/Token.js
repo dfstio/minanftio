@@ -5,7 +5,7 @@ import {updateAddress, updatePublicKey} from "../../appRedux/actions";
 import {message, Button, Row, Col, Card, Progress} from "antd";
 import { ExpandOutlined, CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 import IntlMessages from "util/IntlMessages";
-import { metamaskLogin, virtuosoRegisterPublicKey, getVirtuosoUnlockableContentKey,
+import { minaLogin, virtuosoRegisterPublicKey, getVirtuosoUnlockableContentKey,
         getVirtuosoPublicKey, metamaskDecrypt, getSignature } from "../../blockchain/mina";
 import  SellButton  from "../Avatars/Sell";
 import  BuyButton  from "../Avatars/Buy";

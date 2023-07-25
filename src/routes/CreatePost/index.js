@@ -13,7 +13,7 @@ import Markdown from 'markdown-to-jsx';
 
 
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../../appRedux/actions";
-import { metamaskLogin,
+import { minaLogin,
          virtuosoRegisterPublicKey,
          virtuosoMint,
          isModerator,
@@ -379,7 +379,7 @@ const MintPrivate = () => {
     if(DEBUG) console.log("ipfsHash uploaded - uri: ", result.path); //, " unlockable: ", unlockableResult.path);
     if(DEBUG) console.log("Minting NFT with IPFS hashes ", result.path, unlockableResult.path )
 
-    const myaddress = await metamaskLogin(false);
+    const myaddress = await minaLogin(false);
     const mybalance = await getVirtuosoBalance(myaddress);
 
     if( token.visibility === 'private' && mybalance >= 100)

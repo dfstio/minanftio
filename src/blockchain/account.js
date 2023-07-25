@@ -3,7 +3,7 @@ import {isMobile} from 'react-device-detect';
 import {useDispatch, useSelector} from "react-redux";
 import {message} from 'antd';
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../appRedux/actions";
-import { metamaskLogin,
+import { minaLogin,
          initAccount,
          getVirtuosoBalance,
          getVirtuosoPublicKey,
@@ -140,7 +140,7 @@ const handleAccountsChanged = useCallback( async (accounts) => {
               <li
                onClick={ async () => {
                     if(DEBUG) console.log("Connect to MetaMask clicked");
-                    const newAddress = await metamaskLogin();
+                    const newAddress = await minaLogin();
                     dispatch(updateAddress(newAddress));
                 }}
               >

@@ -2,7 +2,7 @@ import React from "react";
 import {Button, message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {updateAddress} from "../../appRedux/actions";
-import { metamaskLogin } from "../../blockchain/mina";
+import { minaLogin } from "../../blockchain/mina";
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
@@ -32,7 +32,7 @@ const BuyButton = ({item}) => {
                     log.info(`Buy clicked on token ${item.tokenId}`);
 
                     message.loading("Preparing checkout page", 10);
-                    const myaddress = await metamaskLogin(false);
+                    const myaddress = await minaLogin(false);
                     dispatch(updateAddress(myaddress));
 
                     if( true ) //myaddress !== item.owner)

@@ -5,7 +5,7 @@ import {updateAddress, updateVirtuosoBalance} from "../../appRedux/actions";
 import {Highlight,} from 'react-instantsearch-dom';
 import {Button} from "antd";
 import IntlMessages from "util/IntlMessages";
-import { metamaskLogin } from "../../blockchain/mina";
+import { minaLogin } from "../../blockchain/mina";
 import  SellButton  from "./Sell";
 import  BuyButton  from "./Buy";
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
@@ -63,7 +63,7 @@ const ProductItem = ({item}) => {
                     if(DEBUG) console.log("Buy clicked");
 
                     message.loading("Preparing checkout page", 10);
-                    const myaddress = await metamaskLogin(false);
+                    const myaddress = await minaLogin(false);
                     dispatch(updateAddress(myaddress));
 
                     if( myaddress !== item.owner)

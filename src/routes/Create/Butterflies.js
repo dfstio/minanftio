@@ -3,7 +3,7 @@ import {Card, Button, Row, Col, Select, Slider, Radio, message} from "antd";
 import Jimp from 'jimp';
 import { v4 as uuidv4 } from 'uuid';
 import api from "../../serverless/api";
-import { metamaskLogin,
+import { minaLogin,
          virtuosoMint
          } from "../../blockchain/mina";
 
@@ -347,7 +347,7 @@ const MintButterfly = () => {
 
       log.info(`Minting butterfly token ${title}`, {mintData});
       const result = await addToIPFS(JSON.stringify(mintData));
-      const myaddress = await metamaskLogin(false);
+      const myaddress = await minaLogin(false);
       message.loading( `Minting Butterfly NFT token - preparing checkout session`, 240);
 
       const data = {
