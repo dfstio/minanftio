@@ -22,7 +22,7 @@ const ProductItem = ({item}) => {
       buttonId = "sidebar.algolia.sell";
       canSell = true;
   }
-  const tokenPath = "/@" + item.tokenId;
+  const tokenPath = item.tokenId;
 
 
   return (
