@@ -64,6 +64,7 @@
     "react-draft-wysiwyg": "^1.14.5",
     "react-flip-move": "^3.0.4",
     "react-google-maps": "^9.4.5",
+    "react-gtm-module": "^2.0.11",
     "react-instantsearch": "^6.8.2",
     "react-instantsearch-dom": "^6.10.3",
     "react-intl": "^5.10.16",
