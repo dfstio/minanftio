@@ -22,7 +22,7 @@ const ProductItem = ({item}) => {
       buttonId = "sidebar.algolia.sell";
       canSell = true;
   }
-  const tokenPath = "/token/" + item.chainId + "/" + item.contract + "/" + item.tokenId;
+  const tokenPath = "/@" + item.tokenId;
 
 
   return (
@@ -30,7 +30,7 @@ const ProductItem = ({item}) => {
     <a href={tokenPath}>
       <div className="gx-product-image">
         <img
-          src={`https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/${item.image}`} alt=''
+          src={`https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/${item.image}`} alt=''
         />
       </div>
       </a>
