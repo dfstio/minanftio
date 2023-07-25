@@ -247,6 +247,8 @@ export async function writeToken(token, writeToIPFS = true)
       "image": "",
       "external_url": "minanft.io",
       "animation_url": "",
+      "timeCreated": Date.now(),
+      "creator": "",
       "description": token.description,
       "media": "",
       "attachments": "",
