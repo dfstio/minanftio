@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../../appRedux/actions";
 import { metamaskLogin,
          virtuosoRegisterPublicKey
-         } from "../../blockchain/metamask";
+         } from "../../blockchain/mina";
 
 import IntlMessages from "util/IntlMessages";
 

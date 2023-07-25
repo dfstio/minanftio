@@ -18,7 +18,7 @@ import { metamaskLogin,
          virtuosoMint,
          isModerator,
          getVirtuosoBalance
-         } from "../../blockchain/metamask";
+         } from "../../blockchain/mina";
 
 import logger from "../../serverless/logger";
 const logm = logger.info.child({ winstonModule: 'Mint' , winstonComponent: "Custom" });

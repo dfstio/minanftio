@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import api from "../../serverless/api";
 import { metamaskLogin,
          virtuosoMint
-         } from "../../blockchain/metamask";
+         } from "../../blockchain/mina";
 
 import logger from "../../serverless/logger";
 const log = logger.info.child({ winstonModule: 'Mint' , winstonComponent: "Butterflies" });

@@ -5,7 +5,7 @@ import {updateAddress, updateVirtuosoBalance} from "../../appRedux/actions";
 import {Highlight,} from 'react-instantsearch-dom';
 import {Button} from "antd";
 import IntlMessages from "util/IntlMessages";
-import { metamaskLogin } from "../../blockchain/metamask";
+import { metamaskLogin } from "../../blockchain/mina";
 import  SellButton  from "./Sell";
 import  BuyButton  from "./Buy";
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);

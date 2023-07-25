@@ -9,7 +9,7 @@ import { metamaskLogin,
          getVirtuosoPublicKey,
          convertAddress,
          getAddress,
-         initVirtuoso  } from "./metamask";
+         initVirtuoso  } from "./mina";
 
 const {URL, REACT_APP_NETWORK_EXPLORER, REACT_APP_NETWORK_HEXCHAIN_ID, REACT_APP_NETWORK_NAME } = process.env;
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);

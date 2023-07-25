@@ -2,7 +2,7 @@ import React from "react";
 import {Button, message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {updateAddress} from "../../appRedux/actions";
-import { metamaskLogin } from "../../blockchain/metamask";
+import { metamaskLogin } from "../../blockchain/mina";
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";

@@ -6,7 +6,7 @@ import {message, Button, Row, Col, Card, Progress} from "antd";
 import { ExpandOutlined, CaretUpFilled, CaretDownFilled } from '@ant-design/icons';
 import IntlMessages from "util/IntlMessages";
 import { metamaskLogin, virtuosoRegisterPublicKey, getVirtuosoUnlockableContentKey,
-        getVirtuosoPublicKey, metamaskDecrypt, getSignature } from "../../blockchain/metamask";
+        getVirtuosoPublicKey, metamaskDecrypt, getSignature } from "../../blockchain/mina";
 import  SellButton  from "../Avatars/Sell";
 import  BuyButton  from "../Avatars/Buy";
 import ReactPlayer from 'react-player';

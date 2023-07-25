@@ -1,5 +1,5 @@
 import api from "./api";
-import { getAddress } from "../blockchain/metamask";
+import { getAddress } from "../blockchain/mina";
 
 
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);

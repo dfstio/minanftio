@@ -1,6 +1,6 @@
 import api from "./api";
 import { getFromIPFS, addToIPFS} from "../blockchain/ipfs";
-import { getVirtuosoUnlockableContentKey, metamaskDecrypt, virtuosoSell } from "../blockchain/metamask";
+import { getVirtuosoUnlockableContentKey, metamaskDecrypt, virtuosoSell } from "../blockchain/mina";
 
 const EthCrypto = require('eth-crypto');
 const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
