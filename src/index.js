@@ -7,7 +7,7 @@ import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 
 const tagManagerArgs = {
-    gtmId: 'GTM-NQS8XXKH' //'G-K4Q0KRCMVX'
+    gtmId: 'G-K4Q0KRCMVX' //'GTM-NQS8XXKH'
 }
 TagManager.initialize(tagManagerArgs);
 ReactDOM.render(<NextApp />, document.getElementById('root'));
