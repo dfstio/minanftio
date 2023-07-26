@@ -993,7 +993,7 @@ function sleep(ms) {
             level='H'
             includeMargin={true}
             onClick={hideQRCodeFunction}
-            imageSettings={{src:`https://res.cloudinary.com/virtuoso/image/fetch/h_100,q_100,f_auto/${item.image}`,
+            imageSettings={{src:`https://res.cloudinary.com/minanft/image/fetch/h_100,q_100,f_auto/${item.image}`,
                             width: 100,
                             height: 100
                             }}
