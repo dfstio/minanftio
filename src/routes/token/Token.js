@@ -1052,7 +1052,7 @@ function sleep(ms) {
 
         ):(
             <div className="gx-product-price">
-             <a href={`https://berkeley.minaexplorer.com/wallet/{item.address}`} Token {item.address} target="_blank">
+             <a href={item.minaExplorer} Token {item.minaPublicKey} target="_blank">
             </div>
           )
         }
