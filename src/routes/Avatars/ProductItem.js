@@ -109,9 +109,6 @@ const ProductItem = ({item}) => {
 
         {item.onSale?(
         <div className="gx-product-price"  >
-           <span >
-            Token {item.vrtTokenId}
-             </span>
          <span style={{ float: "right"}}>
           {item.currency} {item.price}
            </span>
@@ -119,9 +116,6 @@ const ProductItem = ({item}) => {
           </div>
 
         ):(
-            <div className="gx-product-price">
-            Token {item.vrtTokenId}
-            </div>
           )
         }
         <div className="gx-mt-4" style={{"whiteSpace": "pre-wrap"}}>

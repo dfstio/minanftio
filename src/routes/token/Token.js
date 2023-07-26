@@ -1042,7 +1042,7 @@ function sleep(ms) {
         {item.onSale?(
         <div className="gx-product-price"  >
            <span >
-            {item.vrtTokenId}
+            <a href={`https://berkeley.minaexplorer.com/wallet/{item.address}`} Token {item.address} target="_blank">
              </span>
          <span style={{ float: "right"}}>
           {item.currency} {item.price}
@@ -1052,7 +1052,7 @@ function sleep(ms) {
 
         ):(
             <div className="gx-product-price">
-             {item.vrtTokenId}
+             <a href={`https://berkeley.minaexplorer.com/wallet/{item.address}`} Token {item.address} target="_blank">
             </div>
           )
         }

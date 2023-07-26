@@ -7,5 +7,3 @@ module.exports = {
   accountingEmail: `mailto:accounting@minanft.io`
 }
 
-// https://nftvirtuoso.io/agreement/NFTVirtuosoAgreement.pdf
-// hello@nftvirtuoso.io
