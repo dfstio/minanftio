@@ -1042,7 +1042,7 @@ function sleep(ms) {
         {item.onSale?(
         <div className="gx-product-price"  >
            <span >
-            <a href={item.minaExplorer} `Token {item.minaPublicKey}` target="_blank">
+            <a href={item.minaExplorer}  target="_blank"> Token {item.minaPublicKey}
              </span>
          <span style={{ float: "right"}}>
           {item.currency} {item.price}
@@ -1052,7 +1052,7 @@ function sleep(ms) {
 
         ):(
             <div className="gx-product-price">
-             <a href={item.minaExplorer} `Token {item.minaPublicKey}` target="_blank">
+             <a href={item.minaExplorer} target="_blank"> Token {item.minaPublicKey} 
             </div>
           )
         }
