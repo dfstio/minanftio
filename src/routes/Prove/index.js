@@ -90,7 +90,7 @@ const Prove = () => {
 
   return (
     <div>
-      <h2 className="title gx-mb-4"><IntlMessages id="sidebar.verify"/></h2>
+      <h2 className="title gx-mb-4"><IntlMessages id="sidebar.prove"/></h2>
       <div className="gx-d-flex justify-content-center">
         <h4>You can prove content of any private file that was sealed to the Mina blockchain in the Mina NFT. In case of text files less than 1k in size, you can prove any part of content by sanitizing parts of the text file that you do not want to disclose</h4>
       </div>
