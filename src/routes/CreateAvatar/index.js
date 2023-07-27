@@ -546,7 +546,7 @@ const MintPrivate = () => {
 
       <Row>
         <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-      <Card className="gx-card" title="Private data">
+      <Card className="gx-card" title="Private data"/>
        </Col>
       </Row>
         <Row>
@@ -591,7 +591,7 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain )"
+               label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain)"
                name="private_value2"
                placeholder="Some string (less than 30 chars)"
                >
