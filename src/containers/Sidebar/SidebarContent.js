@@ -54,7 +54,7 @@ const SidebarContent = ({sidebarCollapsed, setSidebarCollapsed}) => {
             </Menu.Item>
 
             <Menu.Item key="create">
-              <Link to="/create">
+              <Link to="/create/avatar">
                 <i className="icon icon-culture-calendar"/>
                 <IntlMessages id="sidebar.create"/>
               </Link>
