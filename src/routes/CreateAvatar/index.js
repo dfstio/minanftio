@@ -544,7 +544,11 @@ const MintPrivate = () => {
         </Col>
         </Row>
 
-
+      <Row>
+        <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+      <Card className="gx-card" title="Private data">
+       </Col>
+      </Row>
         <Row>
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
@@ -561,7 +565,7 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Private value 1 (will NOT be published to IPFS)"
+               label="Private value 1 (will NOT be published to IPFS, but will be verifiable on-chain)"
                name="private_value1"
                placeholder="Some string (less than 30 chars)"
                >
@@ -587,7 +591,7 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Private value 2 (will NOT be published to IPFS)"
+               label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain )"
                name="private_value2"
                placeholder="Some string (less than 30 chars)"
                >
@@ -601,7 +605,7 @@ const MintPrivate = () => {
         <Col>
               <Form.Item
                name="umedia"
-               label="Private Media - will NOT be uploaded to IPFS">
+               label="Private Media - will NOT be uploaded to IPFS. Use MinaNFT CLI tool to make media files verifiable on-chain">
                  <Upload
                    name="unlockablemedia"
                    listType="picture-card"
@@ -627,7 +631,7 @@ const MintPrivate = () => {
                <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
              <Form.Item
                name="uattachments"
-               label="Private Attachments - will NOT be uploaded to IPFS">
+               label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. For bigger text files and binary files, use MinaNFT CLI tool to make files verifiable on-chain">
                  <Upload
                    name="uattachments"
                    listType="picture-card"
