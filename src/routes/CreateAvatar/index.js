@@ -158,6 +158,10 @@ const MintPrivate = () => {
     if( values.description !== undefined) newToken.description = values.description;
     if( values.unlockable_description !== undefined) newToken.unlockable_description = values.unlockable_description;
     if( values.category !== undefined) newToken.category = values.category;
+    if( values.private_key1 !== undefined) newToken.private_key1 = values.private_key1;
+    if( values.private_key2 !== undefined) newToken.private_key2 = values.private_key2;
+    if( values.private_value1 !== undefined) newToken.private_value1 = values.private_value1;
+    if( values.private_value2 !== undefined) newToken.private_value2 = values.private_value2;
 
     if( values.type !== undefined)
     {
@@ -545,14 +549,56 @@ const MintPrivate = () => {
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Description of private content"
-               name="unlockable_description"
-               placeholder="This text and content below can see only the owner of NFTm"
+               label="Private key 1 (will be published to IPFS)"
+               name="private_key1"
+               placeholder="Some string (less than 30 chars)"
                >
                 <TextArea
-                autoSize={{ minRows: 2, maxRows: 10 }}
+                autoSize={{ minRows: 1, maxRows: 2 }}
                  />
               </Form.Item>
+        </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Private value 1 (will NOT be published to IPFS)"
+               name="private_value1"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+            </Col>
+       </Row>
+               <Row>
+        <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Private key 2 (will be published to IPFS)"
+               name="private_key2"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+        </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Private value 2 (will NOT be published to IPFS)"
+               name="private_value2"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+            </Col>
+       </Row>
+       <Row>
+        <Col>
               <Form.Item
                name="umedia"
                label="Private Media - will NOT be uploaded to IPFS">
@@ -577,8 +623,8 @@ const MintPrivate = () => {
                  </Upload>
               </Form.Item>
         </Col>
-
-        <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+        
+               <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
              <Form.Item
                name="uattachments"
                label="Private Attachments - will NOT be uploaded to IPFS">
@@ -600,7 +646,10 @@ const MintPrivate = () => {
 
 
         </Col>
-        </Row>
+
+
+
+         </Row>
                 <Form.Item
                 label="Price"
                 name="price"
