@@ -525,7 +525,7 @@ const TokenItem = ({item, small=false, preview=false}) => {
                 setFirstRun(false);
               };
 
-              const qrURL = "https://" + REACT_APP_VIRTUOSO_URL + "/" + item.tokenId.toString();
+              const qrURL = "https://" + REACT_APP_VIRTUOSO_URL + "/token/" + item.tokenId.toString();
               setQRCodeURL(qrURL);
 
               //if(DEBUG) console.log("Token window ", window.location.pathname);
