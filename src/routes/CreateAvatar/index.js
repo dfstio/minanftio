@@ -546,7 +546,7 @@ const MintPrivate = () => {
 
       <Row>
         <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-      <Card className="gx-card" title="Private data"/>
+      <Card className="gx-card" title="Private data - will be verifiable on-chain without disclosing content"/>
        </Col>
       </Row>
         <Row>
@@ -627,8 +627,10 @@ const MintPrivate = () => {
                  </Upload>
               </Form.Item>
         </Col>
+        </Row>
+        <Row>
         
-               <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+               <Col >
              <Form.Item
                name="uattachments"
                label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. For bigger text files and binary files, use MinaNFT CLI tool to make files verifiable on-chain">
