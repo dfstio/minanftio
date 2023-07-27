@@ -605,7 +605,7 @@ const MintPrivate = () => {
         <Col>
               <Form.Item
                name="umedia"
-               label="Private Media - will NOT be uploaded to IPFS. Use MinaNFT CLI tool to make media files verifiable on-chain">
+               label="Private Media - will NOT be uploaded to IPFS. Use MinaNFT offline CLI tool to make media, other binary files and big text files verifiable on-chain.">
                  <Upload
                    name="unlockablemedia"
                    listType="picture-card"
@@ -633,7 +633,7 @@ const MintPrivate = () => {
                <Col >
              <Form.Item
                name="uattachments"
-               label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. For bigger text files and binary files, use MinaNFT CLI tool to make files verifiable on-chain. You can put key-value pairs in text file, in this case both keys and values will NOT be uploaded to IPFS, but will be verifiable on-chain">
+               label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. You can put key-value pairs in text file, in this case both keys and values will NOT be uploaded to IPFS, but will be verifiable on-chain">
                  <Upload
                    name="uattachments"
                    listType="picture-card"
