@@ -607,7 +607,7 @@ const MintPrivate = () => {
                name="umedia"
                label={<span><span>Private Media - will NOT be uploaded to IPFS. To make media, other binary files and big text files verifiable on-chain use</span><span> <a href="https://github.com/dfstio/minanft-cli" target="_blank">
                    MinaNFT offline CLI tool
-                   </a></span></span>}
+                   </a></span></span>}>
                  <Upload
                    name="unlockablemedia"
                    listType="picture-card"
