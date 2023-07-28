@@ -31,6 +31,7 @@ const Edit = () => {
   const dispatch = useDispatch();
   
   const [form] = Form.useForm();
+  const [auth, setAuth] = useState("");
 
 
   const log = logm.child({ winstonComponent: 'Verify' });
@@ -207,6 +208,18 @@ const Edit = () => {
 
          </Row>
           <Row>
+              <Form.Item
+               label={<span><span>Authorisation code. </span><span> <a href="https://t.me/minanft_bot?start=auth" target="_blank">
+                   Get it here
+                   </a></span></span>}
+               name="auth"
+               placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+               >
+                <TextArea
+                autoSize={{ minRows: 2, maxRows: 3 }}
+                 />
+              </Form.Item>
+
               <Form.Item >
                  <Button
                  type="primary"
