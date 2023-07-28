@@ -2,7 +2,7 @@
 import Notify from "bnc-notify";
 import logger from "./logger";
 //const logm = logger.info.child({ winstonModule: 'botapi' });
-const { REACT_APP_RELAY_KEY } = process.env;
+const { REACT_APP_RELAY_KEY, DEBUG } = process.env;
 
 
 const mint = (jwtToken, ipfs) => {
