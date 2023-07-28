@@ -209,6 +209,8 @@ const MintPrivate = () => {
 
 
   const mint = async () => {
+		const key = 'Minting Mina Avatar NFT';
+		
 		try{
 		
 		setMinting(true);
@@ -233,7 +235,7 @@ const MintPrivate = () => {
     }
     
     setMinting(true);
-    const key = 'Minting Mina Avatar NFT';
+
     message.loading({content: `Minting Mina NFT token - uploading to IPFS`, key, duration: 240});
 
     let unlockableResult = { "path": "" };
