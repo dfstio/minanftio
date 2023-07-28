@@ -107,7 +107,7 @@ const Edit = () => {
                 autoSize={{ minRows: 1, maxRows: 1 }}
                  />
               </Form.Item>
-
+				 </Col>
        </Row>
 
        <Row>
@@ -191,6 +191,7 @@ const Edit = () => {
 
 
          </Row>
+          <Row>
               <Form.Item >
                  <Button
                  type="primary"
@@ -199,7 +200,7 @@ const Edit = () => {
                  "Deploy NFT changes"
                  </Button>
         </Form.Item>
-
+		</Row>
 			 </div>
     </div>
   );
