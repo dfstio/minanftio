@@ -67,7 +67,7 @@ const Edit = () => {
 
   async function notImplemented()
   {
-			message.error({content: `Not implemented yet`, `EditButton`, duration: 10});
+			message.error({content: `Not implemented yet`, key: `EditButton`, duration: 10});
   }
 
 
