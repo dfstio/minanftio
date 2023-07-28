@@ -2,7 +2,7 @@ import React from "react";
 import api from "../../serverless/api";
 import {isMobile, isDesktop, isChrome} from 'react-device-detect';
 import {accountingEmail } from "../../util/config";
-import {Button, message} from "antd";
+import {Button, message, Row, Col, Form, Input, Radio, Card, Upload, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../../appRedux/actions";
 import { minaLogin,
