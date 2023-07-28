@@ -209,27 +209,32 @@ const MintPrivate = () => {
 
 
   const mint = async () => {
-
+		try{
+		
+		setMinting(true);
+		
     if(DEBUG) console.log("Mint token: ", ipfs, token);
     if( ipfs !== ""  && auth == "") 
     {
+        message.loading({content: `Deploying Mina NFT token - open telegram`, key, duration: 240});
         const linkURL = "https://t.me/minanft_bot?start=" + ipfs ;
         window.open(linkURL);
+        setToken(startToken);
+    		setMinting(false);
         return;
     }
     else if( ipfs !== "" )
     {
+    	 message.loading({content: `Deploying Mina NFT token - see messages in telegram`, key, duration: 240});
     	 await botapi.mint(auth, ipfs);
+        setToken(startToken);
+    		setMinting(false);
     	 return;
     }
     
     setMinting(true);
     const key = 'Minting Mina Avatar NFT';
     message.loading({content: `Minting Mina NFT token - uploading to IPFS`, key, duration: 240});
-
-    try{
-
-
 
     let unlockableResult = { "path": "" };
 /*
