@@ -90,11 +90,14 @@ const Edit = () => {
   }
 
   return (
-    <div>
-      <h2 className="title gx-mb-4"><IntlMessages id="sidebar.edit"/></h2>
+      <div className="gx-main-content">
+      <Row>
+        <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+      <Card className="gx-card" title="Edit">
       <div className="gx-d-flex justify-content-center">
         <h4>You can add public key-values and private key-values to your existing MINA NFT here</h4>
       </div>
+
       <div>
         <Row>
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -203,6 +206,9 @@ const Edit = () => {
         </Form.Item>
 		</Row>
 			 </div>
+			     </Card>
+        </Col>
+      </Row>
     </div>
   );
 };
