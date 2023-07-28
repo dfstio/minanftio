@@ -3,6 +3,7 @@ import api from "../../serverless/api";
 import {isMobile, isDesktop, isChrome} from 'react-device-detect';
 import {accountingEmail } from "../../util/config";
 import {Button, message, Row, Col, Form, Input, Radio, Card, Upload, Select} from "antd";
+import {LoadingOutlined, PlusOutlined, InboxOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from "react-redux";
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../../appRedux/actions";
 import { minaLogin,
@@ -14,6 +15,12 @@ import IntlMessages from "util/IntlMessages";
 import logger from "../../serverless/logger";
 const logm = logger.info.child({ winstonModule: 'Verify' });
 const { REACT_APP_DEBUG } = process.env;
+
+const { TextArea } = Input;
+const { Option } = Select;
+const Dragger = Upload.Dragger;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const Edit = () => {
 
@@ -39,6 +46,9 @@ const Edit = () => {
   let pb = " is not registered";
   if( publicKey !== undefined && publicKey !== "") pb = " is " + publicKey;
 
+  const beforeUpload = (file) => {
+        return false;
+  };
 
   async function register()
   {
