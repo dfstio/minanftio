@@ -162,6 +162,7 @@ const MintPrivate = () => {
     if( values.private_key2 !== undefined) newToken.private_key2 = values.private_key2;
     if( values.private_value1 !== undefined) newToken.private_value1 = values.private_value1;
     if( values.private_value2 !== undefined) newToken.private_value2 = values.private_value2;
+    if( values.auth !== undefined) newToken.auth = values.auth;
 
     if( values.type !== undefined)
     {
@@ -720,7 +721,19 @@ const MintPrivate = () => {
                  {mintPrice}
 
                 </Form.Item>
-
+                
+               <Form.Item
+               label={<span><span>Authorisation code. </span><span> <a href="https://t.me/minanft_bot?start=auth" target="_blank">
+                   Get it here
+                   </a></span></span>}
+               name="auth"
+               placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+               >
+                <TextArea
+                autoSize={{ minRows: 2, maxRows: 3 }}
+                 />
+              </Form.Item>
+              
               <Form.Item >
                  <Button
                  type="primary"
