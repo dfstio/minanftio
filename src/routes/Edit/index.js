@@ -65,18 +65,9 @@ const Edit = () => {
             };
   }
 
-  async function test()
+  async function notImplemented()
   {
-            //logger.meta.address = address;
-            log.info("Test error clicked", {address, wf: "testerror"});
-            try{
-                throw new Error({message: "errortest"});
-           } catch (error) {
-
-             // return error
-             log.error("catch", {error});
-          }
-
+			message.error({content: `Not implemented yet`, `EditButton`, duration: 10});
   }
 
 
@@ -195,7 +186,7 @@ const Edit = () => {
               <Form.Item >
                  <Button
                  type="primary"
-                 onClick={ message.error({content: `Not implemented yet`, "EditButton", duration: 10});}
+                 onClick={ notImplemented }
                  >
                  "Deploy NFT changes"
                  </Button>
