@@ -59,6 +59,14 @@ const SidebarContent = ({sidebarCollapsed, setSidebarCollapsed}) => {
                 <IntlMessages id="sidebar.create"/>
               </Link>
             </Menu.Item>
+            
+            <Menu.Item key="edit">
+              <Link to="/edit">
+                <i className="icon icon-components"/>
+                <IntlMessages id="sidebar.edit"/>
+              </Link>
+            </Menu.Item>
+            
             <Menu.Item key="prove">
               <Link to="/prove">
                 <i className="icon icon-components"/>
@@ -70,6 +78,13 @@ const SidebarContent = ({sidebarCollapsed, setSidebarCollapsed}) => {
               <Link to="/verify">
                 <i className="icon icon-components"/>
                 <IntlMessages id="sidebar.verify"/>
+              </Link>
+            </Menu.Item>
+            
+            <Menu.Item key="tools">
+              <Link to="/tools">
+                <i className="icon icon-components"/>
+                <IntlMessages id="sidebar.tools"/>
               </Link>
             </Menu.Item>
 

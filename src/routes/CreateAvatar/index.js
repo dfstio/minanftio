@@ -494,6 +494,7 @@ const MintPrivate = () => {
                 </Form.Item>
         </Col>
         </Row>
+        
         <Row>
          <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
               <Form.Item
@@ -543,6 +544,59 @@ const MintPrivate = () => {
 
         </Col>
         </Row>
+                <Row>
+        <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Public key 1 (will be published to IPFS)"
+               name="public_key1"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+        </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Public value 1 (will be published to IPFS)"
+               name="public_value1"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+            </Col>
+       </Row>
+               <Row>
+        <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Public key 2 (will be published to IPFS)"
+               name="public_key2"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+        </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+
+               <Form.Item
+               label="Public value 2 (will be published to IPFS)"
+               name="public_value2"
+               placeholder="Some string (less than 30 chars)"
+               >
+                <TextArea
+                autoSize={{ minRows: 1, maxRows: 2 }}
+                 />
+              </Form.Item>
+            </Col>
+       </Row>
+
 
       <Row>
         <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
@@ -553,7 +607,7 @@ const MintPrivate = () => {
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Private key 1 (will be published to IPFS)"
+               label="Private key 1 (will NOT be published to IPFS)"
                name="private_key1"
                placeholder="Some string (less than 30 chars)"
                >
@@ -579,7 +633,7 @@ const MintPrivate = () => {
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
 
                <Form.Item
-               label="Private key 2 (will be published to IPFS)"
+               label="Private key 2 (will NOT be published to IPFS)"
                name="private_key2"
                placeholder="Some string (less than 30 chars)"
                >

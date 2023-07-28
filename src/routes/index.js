@@ -11,8 +11,10 @@ const App = ({match}) => (
        <Route path={`${match.url}create/avatar`} component={asyncComponent(() => import('./CreateAvatar'))}/>
        <Route path={`${match.url}create/post`} component={asyncComponent(() => import('./CreatePost'))}/>
        <Route path={`${match.url}create`} component={asyncComponent(() => import('./Create'))}/>
+       <Route path={`${match.url}edit`} component={asyncComponent(() => import('./Edit'))}/>
        <Route path={`${match.url}prove`} component={asyncComponent(() => import('./Prove'))}/>
        <Route path={`${match.url}verify`} component={asyncComponent(() => import('./Verify'))}/>
+       <Route path={`${match.url}tools`} component={asyncComponent(() => import('./Tools'))}/>
        <Route path={`${match.url}token/:chainId/:contract/:tokenId`} component={asyncComponent(() => import('./token'))}/>
        <Route path={`${match.url}token/:tokenId`} component={asyncComponent(() => import('./token'))}/>
        <Route path={`${match.url}@:tokenId`} component={asyncComponent(() => import('./token'))}/>

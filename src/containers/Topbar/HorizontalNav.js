@@ -58,6 +58,12 @@ const HorizontalNav = () => {
             <IntlMessages id="sidebar.create"/>
           </Link>
       </Menu.Item>
+      <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="edit">
+          <Link to="/edit">
+            <i className="icon icon-culture-calendar"/>
+            <IntlMessages id="sidebar.edit"/>
+          </Link>
+      </Menu.Item>
       <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="prove">
           <Link to="/prove">
             <i className="icon icon-components"/>
@@ -70,6 +76,12 @@ const HorizontalNav = () => {
             <IntlMessages id="sidebar.verify"/>
           </Link>
         </Menu.Item>
+              <Menu.Item className="gx-menu-horizontal-flex gx-submenu-popup-curve"  key="tools">
+          <Link to="/tools">
+            <i className="icon icon-culture-calendar"/>
+            <IntlMessages id="sidebar.tools"/>
+          </Link>
+      </Menu.Item>
 
     </Menu>
   );
