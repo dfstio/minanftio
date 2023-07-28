@@ -51,7 +51,6 @@ const startToken =
   "category": "Music",
   "image": "",
   "type": "individual",
-  "auth": ""
   "contains_private_content": false,
   "private_content_description": "",
   "uri": {
