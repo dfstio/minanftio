@@ -29,6 +29,8 @@ const Edit = () => {
   const balance = useSelector(({blockchain}) => blockchain.balance);
   const virtuosoBalance = useSelector(({blockchain}) => blockchain.virtuosoBalance);
   const dispatch = useDispatch();
+  
+  const [form] = Form.useForm();
 
 
   const log = logm.child({ winstonComponent: 'Verify' });
@@ -97,7 +99,16 @@ const Edit = () => {
       <div className="gx-d-flex justify-content-center">
         <h4>You can add public key-values and private key-values to your existing MINA NFT here</h4>
       </div>
-
+      <Form
+        form={form}
+        labelCol={{
+          span: 24
+        }}
+        wrapperCol={{
+          span: 24
+        }}
+        layout="horizontal"
+      >
       <div>
         <Row>
         <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -206,6 +217,7 @@ const Edit = () => {
         </Form.Item>
 		</Row>
 			 </div>
+			       </Form>
 			     </Card>
         </Col>
       </Row>
