@@ -207,8 +207,8 @@ const Edit = () => {
 
 
          </Row>
-          <Row>
-              <Form.Item
+         <Row>
+                  <Form.Item
                label={<span><span>Authorisation code. </span><span> <a href="https://t.me/minanft_bot?start=auth" target="_blank">
                    Get it here
                    </a></span></span>}
@@ -219,6 +219,9 @@ const Edit = () => {
                 autoSize={{ minRows: 2, maxRows: 3 }}
                  />
               </Form.Item>
+          </Row>
+          <Row>
+
 
               <Form.Item >
                  <Button
