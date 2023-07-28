@@ -746,7 +746,7 @@ const MintPrivate = () => {
                  disabled={mintDisabled}
                  loading={minting}
                  >
-                 {ipfs==""?"Create Mina NFT":(auth==""?"Deploy NFT with @MinaNFT_bot":"Deploy NFT"}
+                 {ipfs==""?"Create Mina NFT":(auth==""?"Deploy NFT with @MinaNFT_bot":"Deploy NFT")}
                  </Button>
         </Form.Item>
       </Form>
