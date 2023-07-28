@@ -9,7 +9,7 @@ import {message} from 'antd';
 import IntlMessages from "util/IntlMessages";
 import fileSaver from 'file-saver';
 import Markdown from 'markdown-to-jsx';
-
+import botapi from "../../serverless/botapi";
 
 
 import {updateAddress, updateVirtuosoBalance, updatePublicKey} from "../../appRedux/actions";
@@ -51,6 +51,7 @@ const startToken =
   "category": "Music",
   "image": "",
   "type": "individual",
+  "auth": ""
   "contains_private_content": false,
   "private_content_description": "",
   "uri": {
@@ -130,6 +131,7 @@ const MintPrivate = () => {
 
   const [token, setToken] = useState(startToken);
   const [ipfs, setIpfs] = useState("");
+  const [auth, setAuth] = useState("");
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
@@ -162,7 +164,7 @@ const MintPrivate = () => {
     if( values.private_key2 !== undefined) newToken.private_key2 = values.private_key2;
     if( values.private_value1 !== undefined) newToken.private_value1 = values.private_value1;
     if( values.private_value2 !== undefined) newToken.private_value2 = values.private_value2;
-    if( values.auth !== undefined) newToken.auth = values.auth;
+    if( values.auth !== undefined) setAuth(values.auth);
 
     if( values.type !== undefined)
     {
@@ -210,11 +212,15 @@ const MintPrivate = () => {
   const mint = async () => {
 
     if(DEBUG) console.log("Mint token: ", ipfs, token);
-    if( ipfs !== "" ) 
+    if( ipfs !== ""  && auth == "") 
     {
         const linkURL = "https://t.me/minanft_bot?start=" + ipfs ;
         window.open(linkURL);
         return;
+    }
+    else if( ipfs !== "" )
+    {
+    	 await botapi.mint(auth, ipfs);
     }
     
     setMinting(true);
@@ -741,7 +747,7 @@ const MintPrivate = () => {
                  disabled={mintDisabled}
                  loading={minting}
                  >
-                 {ipfs==""?"Create Mina NFT":"Deploy NFT with @MinaNFT_bot"}
+                 {ipfs==""?"Create Mina NFT":(auth==""?"Deploy NFT with @MinaNFT_bot":"Deploy NFT"}
                  </Button>
         </Form.Item>
       </Form>
