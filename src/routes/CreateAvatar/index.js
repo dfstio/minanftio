@@ -220,6 +220,7 @@ const MintPrivate = () => {
     else if( ipfs !== "" )
     {
     	 await botapi.mint(auth, ipfs);
+    	 return;
     }
     
     setMinting(true);
