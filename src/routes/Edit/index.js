@@ -196,7 +196,7 @@ const Edit = () => {
                    //onChange={this.handleChange}
                  >       <div>
                          <PlusOutlined/>
-                         <div className="ant-upload-text">Any files</div>
+                         <div className="ant-upload-text">private.json</div>
                          </div>
                  </Upload>
               </Form.Item>
