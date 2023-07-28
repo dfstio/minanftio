@@ -201,7 +201,7 @@ const Edit = () => {
                  type="primary"
                  onClick={ notImplemented }
                  >
-                 "Deploy NFT changes"
+                 Deploy NFT changes
                  </Button>
         </Form.Item>
 		</Row>
