@@ -1,44 +1,42 @@
 import api from "./api";
 import { getAddress } from "../blockchain/mina";
 
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
-
-
-export async function getOnLoad(tokenId, signature, time)
-{
-         //if (DEBUG) console.log('sellToken - received values of form: ', values);
+export async function getOnLoad(tokenId, signature, time) {
+    //if (DEBUG) console.log('sellToken - received values of form: ', values);
     const address = await getAddress();
     let contentJSON = {
-               tokenId: tokenId,
-               type: "onload",
-               address: address,
-               signature: signature,
-               time: time
-               };
+        tokenId: tokenId,
+        type: "onload",
+        address: address,
+        signature: signature,
+        time: time,
+    };
 
-		 const result = await api.content(tokenId, contentJSON);
-		 if (DEBUG) console.log('Content - result ', result);
-		 if( result.success === true && result.data.success === true) return result.data;
-		 else return {success: false};
-};
+    const result = await api.content(tokenId, contentJSON);
+    if (DEBUG) console.log("Content - result ", result);
+    if (result.success === true && result.data.success === true)
+        return result.data;
+    else return { success: false };
+}
 
-export async function getContentMessage(tokenId)
-{
-         //if (DEBUG) console.log('sellToken - received values of form: ', values);
+export async function getContentMessage(tokenId) {
+    //if (DEBUG) console.log('sellToken - received values of form: ', values);
     const address = await getAddress();
     let contentJSON = {
-               tokenId: tokenId,
-               type: "signature",
-               address: address,
-               signature: ""
-               };
+        tokenId: tokenId,
+        type: "signature",
+        address: address,
+        signature: "",
+    };
 
-		 const result = await api.content(tokenId, contentJSON);
-		 if (DEBUG) console.log('Signature - result ', result);
-		 if( result.success === true && result.data.success === true) return result.data;
-		 else return {success: false};
-};
+    const result = await api.content(tokenId, contentJSON);
+    if (DEBUG) console.log("Signature - result ", result);
+    if (result.success === true && result.data.success === true)
+        return result.data;
+    else return { success: false };
+}
 
 /*
 async function ethEncrypt(toEncrypt, publicKey)
@@ -57,6 +55,3 @@ async function ethDecrypt(toDecrypt, privateKey)
 };
 
 */
-
-
-

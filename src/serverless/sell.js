@@ -1,50 +1,61 @@
 import api from "./api";
-import { getFromIPFS, addToIPFS} from "../blockchain/ipfs";
-import { getVirtuosoUnlockableContentKey, metamaskDecrypt, virtuosoSell } from "../blockchain/mina";
+import { getFromIPFS, addToIPFS } from "../blockchain/ipfs";
+import {
+    getVirtuosoUnlockableContentKey,
+    metamaskDecrypt,
+    virtuosoSell,
+} from "../blockchain/mina";
 
-const EthCrypto = require('eth-crypto');
-const DEBUG = ("true"===process.env.REACT_APP_DEBUG);
-
+const EthCrypto = require("eth-crypto");
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const operator = async (values) => {
-         //if (DEBUG) console.log('sellToken - received values of form: ', values);
+    //if (DEBUG) console.log('sellToken - received values of form: ', values);
 
-         let sellJSON = {
-               price: "10",
-               type: "fixedprice",
-               currency: "usd",
-               comment: "",
-               contains_unlockable_content: false,
-               operator: "",
-               time: ""
-               };
+    let sellJSON = {
+        price: "10",
+        type: "fixedprice",
+        currency: "usd",
+        comment: "",
+        contains_unlockable_content: false,
+        operator: "",
+        time: "",
+    };
 
-         sellJSON.price = values.price;
-         sellJSON.currency = values.currency;
-         sellJSON.comment = values.comment;
+    sellJSON.price = values.price;
+    sellJSON.currency = values.currency;
+    sellJSON.comment = values.comment;
 
+    if (values.item.uri.contains_unlockable_content !== undefined)
+        sellJSON.contains_unlockable_content =
+            values.item.uri.contains_unlockable_content;
 
-         if( values.item.uri.contains_unlockable_content !== undefined ) sellJSON.contains_unlockable_content = values.item.uri.contains_unlockable_content;
+    const operator = await api.sell(
+        values.tokenId,
+        sellJSON,
+        values.email,
+        values.address,
+    );
+    if (DEBUG) console.log("sellToken - operator: ", operator);
+    sellJSON.operator = operator.data.operator.address;
+    sellJSON.time = operator.data.operator.time;
 
-		 const operator = await api.sell(values.tokenId, sellJSON, values.email, values.address);
-		 if (DEBUG) console.log('sellToken - operator: ', operator);
-		 sellJSON.operator = operator.data.operator.address;
-		 sellJSON.time = operator.data.operator.time;
-
-		 return { key: operator.data.key, sale: sellJSON };
+    return { key: operator.data.key, sale: sellJSON };
 };
 
 const ipfs = async (data) => {
-         const result = await addToIPFS(JSON.stringify(data))
-         if(DEBUG) console.log("Uploaded to IPFS with hash ", result.path );
-		 return result.path ;
+    const result = await addToIPFS(JSON.stringify(data));
+    if (DEBUG) console.log("Uploaded to IPFS with hash ", result.path);
+    return result.path;
 };
 
-async function ethEncrypt(toEncrypt, publicKey)
-{
-      const encrypted = await EthCrypto.encryptWithPublicKey(publicKey, toEncrypt);
-      return EthCrypto.cipher.stringify(encrypted);
-};
+async function ethEncrypt(toEncrypt, publicKey) {
+    const encrypted = await EthCrypto.encryptWithPublicKey(
+        publicKey,
+        toEncrypt,
+    );
+    return EthCrypto.cipher.stringify(encrypted);
+}
 
 /*
 async function ethDecrypt(toDecrypt, privateKey)
@@ -57,36 +68,51 @@ async function ethDecrypt(toDecrypt, privateKey)
 */
 
 const unlockable = async (sellData, operatorData, address) => {
-         let newSellKey = "";
-         const encryptedKey = await getVirtuosoUnlockableContentKey(sellData.tokenId, address);
-         if(DEBUG)  console.log("sell.unlockable key: ", encryptedKey);
+    let newSellKey = "";
+    const encryptedKey = await getVirtuosoUnlockableContentKey(
+        sellData.tokenId,
+        address,
+    );
+    if (DEBUG) console.log("sell.unlockable key: ", encryptedKey);
 
-         if( encryptedKey !== "")
-         {
-             if(DEBUG)  console.log("sell.unlockable encryptedKey: ", encryptedKey);
-             const unlockableIPFS = await getFromIPFS(encryptedKey);
-             if(DEBUG)  console.log("sell.unlockable unlockableIPFS: ", unlockableIPFS );
-             let unlockableJSON = JSON.parse(unlockableIPFS.toString());
+    if (encryptedKey !== "") {
+        if (DEBUG) console.log("sell.unlockable encryptedKey: ", encryptedKey);
+        const unlockableIPFS = await getFromIPFS(encryptedKey);
+        if (DEBUG)
+            console.log("sell.unlockable unlockableIPFS: ", unlockableIPFS);
+        let unlockableJSON = JSON.parse(unlockableIPFS.toString());
 
-             const password = await metamaskDecrypt( unlockableJSON.key, address );
-             if(DEBUG)  console.log("Sale - Decrypted password: ", password);
-             const encryptedData = await ethEncrypt(password, operatorData.key);
-             if(DEBUG)  console.log("Sale - Encrypted password: ", encryptedData);
-             unlockableJSON.key = encryptedData;
+        const password = await metamaskDecrypt(unlockableJSON.key, address);
+        if (DEBUG) console.log("Sale - Decrypted password: ", password);
+        const encryptedData = await ethEncrypt(password, operatorData.key);
+        if (DEBUG) console.log("Sale - Encrypted password: ", encryptedData);
+        unlockableJSON.key = encryptedData;
 
-             const newKeyResult = await addToIPFS(JSON.stringify(unlockableJSON));
-             newSellKey = newKeyResult.path;
-         };
+        const newKeyResult = await addToIPFS(JSON.stringify(unlockableJSON));
+        newSellKey = newKeyResult.path;
+    }
 
-         if(DEBUG) console.log("unlockable Uploaded to IPFS with hash ", newSellKey);
-		 return newSellKey ;
+    if (DEBUG)
+        console.log("unlockable Uploaded to IPFS with hash ", newSellKey);
+    return newSellKey;
 };
 
-const  blockchain = async (tokenId, ipfsHash, operatorAddress, unlockableIPFSHash, address) => {
-	     const txresult = await virtuosoSell(tokenId, ipfsHash, operatorAddress, unlockableIPFSHash, address);
-         if(DEBUG) console.log("sell.blockchain tx: ", txresult );
-         return txresult.hash;
-
+const blockchain = async (
+    tokenId,
+    ipfsHash,
+    operatorAddress,
+    unlockableIPFSHash,
+    address,
+) => {
+    const txresult = await virtuosoSell(
+        tokenId,
+        ipfsHash,
+        operatorAddress,
+        unlockableIPFSHash,
+        address,
+    );
+    if (DEBUG) console.log("sell.blockchain tx: ", txresult);
+    return txresult.hash;
 };
 /*
 
@@ -170,12 +196,9 @@ const  blockchain = async (tokenId, ipfsHash, operatorAddress, unlockableIPFSHas
 
                */
 
-
-
 export default {
-  operator: operator,
-  ipfs: ipfs,
-  unlockable: unlockable,
-  blockchain: blockchain
-}
-
+    operator: operator,
+    ipfs: ipfs,
+    unlockable: unlockable,
+    blockchain: blockchain,
+};

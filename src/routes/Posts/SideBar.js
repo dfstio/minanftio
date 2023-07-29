@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
-import {Layout, Checkbox} from "antd";
-import {useDispatch, useSelector} from "react-redux";
+import { Layout, Checkbox } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  ClearRefinements,
-  HierarchicalMenu,
-  Panel,
-  RangeInput,
-  RatingMenu,
-  RefinementList,
-  Configure
+    ClearRefinements,
+    HierarchicalMenu,
+    Panel,
+    RangeInput,
+    RatingMenu,
+    RefinementList,
+    Configure,
 } from "react-instantsearch-dom";
 import IntlMessages from "../../util/IntlMessages";
 
-const {REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID} = process.env;
+const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);
 
-const {Sider} = Layout;
+const { Sider } = Layout;
 const Sidebar = () => {
-
-    const address = useSelector(({blockchain}) => blockchain.address);
+    const address = useSelector(({ blockchain }) => blockchain.address);
 
     const [filter, setFilter] = useState(``);
 
@@ -26,61 +25,43 @@ const Sidebar = () => {
     const [disabled, setDisabled] = useState(true);
     //const [visible, setVisible] = useState(false);
 
-
     function onChange(e) {
-
-         if( address !== "")
-         {
-             setDisabled(false);
-             if( e.target.checked === true )
-             {
-
-               const filterStr = `owner:${address}`;
-               setFilter(filterStr);
-               //console.log("On change", e.target.checked, filterStr);
-             }
-             else
-             {
-               const filterStr = ``;
-               setFilter( filterStr );
-
+        if (address !== "") {
+            setDisabled(false);
+            if (e.target.checked === true) {
+                const filterStr = `owner:${address}`;
+                setFilter(filterStr);
+                //console.log("On change", e.target.checked, filterStr);
+            } else {
+                const filterStr = ``;
+                setFilter(filterStr);
             }
-         }
-         else
-         {
-               setDisabled(true);
-               setFilter("");
-         };
-
-    };
+        } else {
+            setDisabled(true);
+            setFilter("");
+        }
+    }
 
     useEffect(() => {
-      if (address == "")
-      {
-          setDisabled(true);
-          setFilter( ``);
-
-      }
-      else
-      {
+        if (address == "") {
+            setDisabled(true);
+            setFilter(``);
+        } else {
             setDisabled(false);
             const filterStr = ``;
-            setFilter( filterStr );
+            setFilter(filterStr);
+        }
+    }, [address]);
 
-      }
-
-
-  }, [address]);
-
-return (
-  <Sider  className="gx-algolia-sidebar">
-    <div className="gx-algolia-sidebar-content">
-      <ClearRefinements
-        translations={{
-          reset: 'Clear all filters',
-        }}
-      />
-{/*
+    return (
+        <Sider className="gx-algolia-sidebar">
+            <div className="gx-algolia-sidebar-content">
+                <ClearRefinements
+                    translations={{
+                        reset: "Clear all filters",
+                    }}
+                />
+                {/*
       <div className="gx-algolia-category-item">
         <div className="gx-algolia-category-title">Show results for</div>
         <HierarchicalMenu
@@ -89,90 +70,96 @@ return (
       </div>
 */}
 
-      <div className="gx-algolia-category-item">
-        <div className="gx-algolia-category-title">Refine By</div>
+                <div className="gx-algolia-category-item">
+                    <div className="gx-algolia-category-title">Refine By</div>
 
-          <div className="gx-algolia-refinementList">
-        <Checkbox
-          onChange={onChange}
-          disabled={disabled}
-          style={{marginBottom:"20px"}}
+                    <div className="gx-algolia-refinementList">
+                        <Checkbox
+                            onChange={onChange}
+                            disabled={disabled}
+                            style={{ marginBottom: "20px" }}
+                        >
+                            Only my NFTs
+                        </Checkbox>
+                    </div>
 
-          >Only my NFTs
+                    <Configure filters={filter} />
 
+                    <Panel
+                        header=<span>
+                            <IntlMessages id="sidebar.algolia.onsale" />
+                        </span>
+                    >
+                        <RefinementList
+                            className="gx-algolia-refinementList"
+                            attribute="saleStatus"
+                            operator="or"
+                            limit={5}
+                        />
+                    </Panel>
 
-          </Checkbox>
-          </div>
+                    <Panel
+                        header=<span>
+                            <IntlMessages id="sidebar.algolia.category" />
+                        </span>
+                    >
+                        <RefinementList
+                            className="gx-algolia-refinementList"
+                            attribute="category"
+                            operator="or"
+                            limit={5}
+                            searchable
+                            searchableIsAlwaysActive={false}
+                        />
+                    </Panel>
 
+                    <Panel
+                        header=<span>
+                            <IntlMessages id="sidebar.algolia.creator" />
+                        </span>
+                    >
+                        <RefinementList
+                            className="gx-algolia-refinementList"
+                            attribute="creator"
+                            operator="or"
+                            limit={10}
+                            searchable
+                            showMore
+                        />
+                    </Panel>
 
-        <Configure
-          filters={filter}
-
-          />
-
-         <Panel header=<span><IntlMessages id="sidebar.algolia.onsale"/></span>>
-          <RefinementList className="gx-algolia-refinementList"
-                          attribute="saleStatus"
-                          operator="or"
-                          limit={5}
-
-          />
-        </Panel>
-
-
-
-
-
-        <Panel header=<span><IntlMessages id="sidebar.algolia.category"/></span>>
-          <RefinementList className="gx-algolia-refinementList"
-                  attribute="category"
-                  operator="or"
-                  limit={5}
-                  searchable
-                  searchableIsAlwaysActive={false}
-                  />
-        </Panel>
-
-
-
-        <Panel header=<span><IntlMessages id="sidebar.algolia.creator"/></span>>
-          <RefinementList className="gx-algolia-refinementList"
-                          attribute="creator"
-                          operator="or"
-                          limit={10}
-                          searchable
-                          showMore
-          />
-        </Panel>
-
-{/*
+                    {/*
         <Panel header={<span>Owner</span>}>
           <RatingMenu className="gx-algolia-refinementList" attribute="owner" max={5}/>
         </Panel>
 */}
-        <Panel header=<span><IntlMessages id="sidebar.algolia.price"/></span>>
-          <RangeInput className="gx-algolia-refinementList" attribute="price"/>
-        </Panel>
+                    <Panel
+                        header=<span>
+                            <IntlMessages id="sidebar.algolia.price" />
+                        </span>
+                    >
+                        <RangeInput
+                            className="gx-algolia-refinementList"
+                            attribute="price"
+                        />
+                    </Panel>
 
-          <Panel header=<span><IntlMessages id="sidebar.algolia.currency"/></span>>
-          <RefinementList className="gx-algolia-refinementList"
-                          attribute="currency"
-                          operator="or"
-                          limit={5}
-          />
-        </Panel>
-
-
-
-
-
-      </div>
-
-
-    </div>
-  </Sider>
-)};
-
+                    <Panel
+                        header=<span>
+                            <IntlMessages id="sidebar.algolia.currency" />
+                        </span>
+                    >
+                        <RefinementList
+                            className="gx-algolia-refinementList"
+                            attribute="currency"
+                            operator="or"
+                            limit={5}
+                        />
+                    </Panel>
+                </div>
+            </div>
+        </Sider>
+    );
+};
 
 export default Sidebar;
-
