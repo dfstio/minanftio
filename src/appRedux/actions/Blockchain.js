@@ -1,45 +1,43 @@
 import {
-      UPDATE_ADDRESS,
-      UPDATE_VIRTUOSO_BALANCE,
-      UPDATE_BALANCE,
-      UPDATE_VRT1,
-      UPDATE_PUBLIC_KEY,
-      UPDATE_USERNAME
+    UPDATE_ADDRESS,
+    UPDATE_VIRTUOSO_BALANCE,
+    UPDATE_BALANCE,
+    UPDATE_VRT1,
+    UPDATE_PUBLIC_KEY,
+    UPDATE_USERNAME,
 } from "../../constants/Blockchain";
 
-
-
 export function updateAddress(address) {
-  return (dispatch) => {
-    dispatch({type: UPDATE_ADDRESS, address});
-  }
+    return (dispatch) => {
+        dispatch({ type: UPDATE_ADDRESS, address });
+    };
 }
 
 export function updateVirtuosoBalance(virtuosoBalance) {
-  return (dispatch) => {
-    dispatch({type: UPDATE_VIRTUOSO_BALANCE, virtuosoBalance});
-  }
+    return (dispatch) => {
+        dispatch({ type: UPDATE_VIRTUOSO_BALANCE, virtuosoBalance });
+    };
 }
 
 export function updateBalance(balance) {
-  return (dispatch) => {
-    dispatch({type: UPDATE_BALANCE, balance});
-  }
+    return (dispatch) => {
+        dispatch({ type: UPDATE_BALANCE, balance });
+    };
 }
 export function updateVRT1(VRT1) {
-  return (dispatch) => {
-    dispatch({type: UPDATE_VRT1, VRT1});
-  }
+    return (dispatch) => {
+        dispatch({ type: UPDATE_VRT1, VRT1 });
+    };
 }
 
 export function updatePublicKey(publicKey) {
-  return (dispatch) => {
-    dispatch({type: UPDATE_PUBLIC_KEY, publicKey});
-  }
+    return (dispatch) => {
+        dispatch({ type: UPDATE_PUBLIC_KEY, publicKey });
+    };
 }
 
 export function updateUsername(username) {
-  return (dispatch) => {
-    dispatch({type: UPDATE_USERNAME, username});
-  }
+    return (dispatch) => {
+        dispatch({ type: UPDATE_USERNAME, username });
+    };
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 //import TagManager from 'react-gtm-module'
-import NextApp from './NextApp';
-import * as serviceWorker from './registerServiceWorker';
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
+import NextApp from "./NextApp";
+import * as serviceWorker from "./registerServiceWorker";
+import "react-app-polyfill/ie11";
+import "react-app-polyfill/stable";
 
 /*
 const tagManagerArgs = {
@@ -13,7 +13,7 @@ const tagManagerArgs = {
 TagManager.initialize(tagManagerArgs);
 */
 
-ReactDOM.render(<NextApp />, document.getElementById('root'));
+ReactDOM.render(<NextApp />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -1,9 +1,9 @@
-const logger  = require("../serverless/winston");
-const logmodule = logger.debug.child({ winstonModule: 'test module' });
+const logger = require("../serverless/winston");
+const logmodule = logger.debug.child({ winstonModule: "test module" });
 
-exports.handler = async(event, context) => {
-    const log = logmodule.child({ winstonFunction: 'test function' });
-        // check for POST
+exports.handler = async (event, context) => {
+    const log = logmodule.child({ winstonFunction: "test function" });
+    // check for POST
     if (event.httpMethod !== "POST") {
         return {
             statusCode: 400,
@@ -16,10 +16,9 @@ exports.handler = async(event, context) => {
         // parse form data
         const body = JSON.parse(event.body);
         //log.debug("test debug", {body});
-        log.error("test debug 2", {body});
+        log.error("test debug 2", { body });
 
-
-       await logger.flush();
+        await logger.flush();
         // return success
         return {
             statusCode: 200,
@@ -27,7 +26,6 @@ exports.handler = async(event, context) => {
                 success: true,
             }),
         };
-
     } catch (error) {
         log.error(error);
         await logger.flush();
@@ -39,5 +37,4 @@ exports.handler = async(event, context) => {
             }),
         };
     }
-
 };
