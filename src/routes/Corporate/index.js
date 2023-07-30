@@ -120,11 +120,16 @@ const Corporate = () => {
         <div className="gx-main-content">
             <Row>
                 <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                    <Card className="gx-card" title="Edit">
+                    <Card className="gx-card" title="Create corporate account">
                         <div className="gx-d-flex justify-content-center">
                             <h4>
-                                You can add public key-values and private
-                                key-values to your existing MINA NFT here
+                                With corporate account, your employees can authorise with Auro on the minanft.io site
+                                and create Mina NFT that allows to:
+                                - Publish fully verifyable content to MINA blockchain
+                                - Make part of content private
+                                - Generate proofs off-chain and verify proofs off-chain and on-chain for any part of the content
+                                - Redact (sanitize) some content (text, Word files, PNG files) and prove on-chain this redacted content
+                                - Use many formats of content: texts, images, video, audio, documents  
                             </h4>
                         </div>
                         <Form
@@ -148,9 +153,9 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Mina NFT name (like @myminanft))"
+                                            label="Your corporation or SME name"
                                             name="mina_nft_name"
-                                            placeholder="Some string (less than 30 chars)"
+                                            placeholder="Write name of your corporation or SME"
                                         >
                                             <TextArea
                                                 autoSize={{
@@ -172,9 +177,9 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Public key 1 (will be published to IPFS)"
+                                            label="Short description of your business"
                                             name="public_key1"
-                                            placeholder="Some string (less than 30 chars)"
+                                            placeholder="Some string"
                                         >
                                             <TextArea
                                                 autoSize={{
@@ -193,7 +198,7 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Public value 1 (will be published to IPFS)"
+                                            label="Contact name"
                                             name="public_value1"
                                             placeholder="Some string (less than 30 chars)"
                                         >
@@ -217,7 +222,7 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Private key 1 (will NOT be published to IPFS)"
+                                            label="Contact phone"
                                             name="private_key1"
                                             placeholder="Some string (less than 30 chars)"
                                         >
@@ -238,7 +243,7 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Private value 1 (will NOT be published to IPFS, but will be verifiable on-chain)"
+                                            label="Contact e-mail"
                                             name="private_value1"
                                             placeholder="Some string (less than 30 chars)"
                                         >
@@ -255,14 +260,14 @@ const Corporate = () => {
                                     <Col>
                                         <Form.Item
                                             name="private-data-json"
-                                            label="Private data (upload the private-data.json file that was provided to you during NFT creation process)"
+                                            label="Your KYC docs"
                                         >
                                             <Upload
                                                 name="private-data-json"
                                                 listType="picture-card"
                                                 className="avatar-uploader"
                                                 showUploadList={true}
-                                                multiple={false}
+                                                multiple={true}
                                                 //action="//jsonplaceholder.typicode.com/posts/"
                                                 beforeUpload={beforeUpload}
                                                 //onChange={this.handleChange}
@@ -313,7 +318,7 @@ const Corporate = () => {
                                             type="primary"
                                             onClick={notImplemented}
                                         >
-                                            Deploy NFT changes
+                                            {account==""?"Connect with Auro":"Create corporate account"}
                                         </Button>
                                     </Form.Item>
                                 </Row>
