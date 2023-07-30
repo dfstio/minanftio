@@ -115,7 +115,8 @@ const Corporate = () => {
             dispatch(updateAddress(myaddress));
         } else {
             const message = JSON.stringify(token);
-            await getSignature(message);
+            const corpSignature = await getSignature(message);
+            if (DEBUG) console.log("corpSignature", corpSignature);
             message.error({
                 content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,
                 key: `CorporateButton`,

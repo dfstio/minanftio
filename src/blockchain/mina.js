@@ -368,14 +368,6 @@ export async function getSignature(message) {
     return signature;
 }
 
-try {
-    let signResult = await window.mina.signMessage({
-        message: "messages...",
-    });
-    console.log(signResult);
-} catch (error) {
-    console.log(error.message, error.code);
-}
 
 export function convertAddress(address) {
     if (address !== "") return ethers.utils.getAddress(address);
