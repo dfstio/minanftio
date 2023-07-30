@@ -133,26 +133,26 @@ const Corporate = () => {
                                 them to:
                                 <br />
                                 <br />
-                                Publish fully verifiable content to the MINA
+                                - Publish fully verifiable content to the MINA
                                 blockchain, ensuring transparency and trust.
-                                <br />
-                                Keep portions of the content private, giving
+                                <br /><br />
+                                - Keep portions of the content private, giving
                                 your team control over data visibility.
-                                <br />
-                                Generate proofs off-chain and validate them both
+                                <br /><br />
+                                - Generate proofs off-chain and validate them both
                                 off-chain and on-chain for any content segment,
                                 supporting data integrity.
-                                <br />
-                                Redact (sanitize) specific pieces of content
+                                <br /><br />
+                                - Redact (sanitize) specific pieces of content
                                 (such as text, Word files, PNG files), and
                                 validate this redacted content on-chain,
                                 maintaining security and confidentiality on
                                 request of your legal department or commercial
                                 department.
-                                <br />
-                                Use a wide variety of content formats including
+                                <br /><br />
+                                - Use a wide variety of content formats including
                                 text, images, videos, audio, and documents,
-                                promoting versatility in data representation.
+                                promoting versatility in data representation.<br />
                             </h4>
                         </div>
                         <Form
@@ -299,7 +299,7 @@ const Corporate = () => {
                                                 <div>
                                                     <PlusOutlined />
                                                     <div className="ant-upload-text">
-                                                        private.json
+                                                        KYC/AML docs
                                                     </div>
                                                 </div>
                                             </Upload>
@@ -342,7 +342,7 @@ const Corporate = () => {
                                             style={{ whiteSpace: "pre-wrap" }}
                                         >
                                             {address == ""
-                                                ? "Please connect with Auro before creating corporate account"
+                                                ? "Please connect with Auro on Berkeley network before creating corporate account"
                                                 : "You are creating corporate account with AURO address " +
                                                   address}
                                         </div>
