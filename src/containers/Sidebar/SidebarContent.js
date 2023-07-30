@@ -101,6 +101,13 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
                                 <IntlMessages id="sidebar.tools" />
                             </Link>
                         </Menu.Item>
+                        
+                        <Menu.Item key="corporate">
+                            <Link to="/corporate">
+                                <i className="icon icon-components" />
+                                <IntlMessages id="sidebar.corporate" />
+                            </Link>
+                        </Menu.Item>
                     </Menu>
                 </CustomScrollbars>
             </div>
