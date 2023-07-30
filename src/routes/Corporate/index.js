@@ -72,8 +72,20 @@ const Corporate = () => {
     const [auth, setAuth] = useState("");
     const [token, setToken] = useState(startToken);
     const [counter, setCounter] = useState(0);
+        const [createDisabled, setCreateDisabled] = useState(true);
 
     const log = logm.child({ winstonComponent: "Verify" });
+    
+    const checkCanCreate = () => {
+        let newCreateDisabled = true;
+        if (
+            token.corporate_name !== "" &&
+            token.contact_email !== ""
+        )
+            newCreateDisabled = false;
+        if (newCreateDisabled !== createDisabled) setCreateDisabled(newCreateDisabled);
+    };
+
 
     let vb = "$0";
     let showWithdaw = false;
@@ -107,6 +119,7 @@ const Corporate = () => {
 
         setToken(newToken);
         setCounter(counter + 1);
+        checkCanCreate();
     };
 
     async function corporateButton() {
@@ -209,6 +222,12 @@ const Corporate = () => {
                                         <Form.Item
                                             label="Your corporation or SME name"
                                             name="corporate_name"
+                                            rules={[
+                                            {
+                                                required: true,
+                                                message: "Please write name of your corporation or SME",
+                                            },
+                                        ]}
                                             placeholder="Write name of your corporation or SME"
                                         >
                                             <TextArea
@@ -300,6 +319,12 @@ const Corporate = () => {
                                             label="Contact e-mail"
                                             name="contact_email"
                                             placeholder="Some string (less than 30 chars)"
+                                            rules={[
+                                            {
+                                                required: true,
+                                                message: "Please write your contact e-mail",
+                                            },
+                                        ]}
                                         >
                                             <TextArea
                                                 autoSize={{
@@ -406,6 +431,7 @@ const Corporate = () => {
                                     <Form.Item>
                                         <Button
                                             type="primary"
+                                            disabled={createDisabled}
                                             onClick={corporateButton}
                                         >
                                             {address == ""
