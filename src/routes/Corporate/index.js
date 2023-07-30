@@ -57,6 +57,8 @@ const startToken = {
     contact_email: "",
     corporate_website: "",
 };
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+
 
 const Corporate = () => {
     const address = useSelector(({ blockchain }) => blockchain.address);
@@ -106,7 +108,6 @@ const Corporate = () => {
 
         setToken(newToken);
         setCounter(counter + 1);
-        checkCanMint();
     };
 
     async function corporateButton() {
