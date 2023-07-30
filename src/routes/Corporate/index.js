@@ -123,13 +123,17 @@ const Corporate = () => {
                     <Card className="gx-card" title="Create corporate account">
                         <div className="gx-d-flex justify-content-center">
                             <h4>
-                                With corporate account, your employees can authorise with Auro on the minanft.io site
-                                and create Mina NFT that allows to:
-                                - Publish fully verifyable content to MINA blockchain
-                                - Make part of content private
-                                - Generate proofs off-chain and verify proofs off-chain and on-chain for any part of the content
-                                - Redact (sanitize) some content (text, Word files, PNG files) and prove on-chain this redacted content
-                                - Use many formats of content: texts, images, video, audio, documents  
+                                With corporate account, your employees can
+                                authorise with Auro on the minanft.io site and
+                                create Mina NFT that allows to: - Publish fully
+                                verifyable content to MINA blockchain - Make
+                                part of content private - Generate proofs
+                                off-chain and verify proofs off-chain and
+                                on-chain for any part of the content - Redact
+                                (sanitize) some content (text, Word files, PNG
+                                files) and prove on-chain this redacted content
+                                - Use many formats of content: texts, images,
+                                video, audio, documents
                             </h4>
                         </div>
                         <Form
@@ -314,11 +318,27 @@ const Corporate = () => {
                                 </Row>
                                 <Row>
                                     <Form.Item>
+                                        <div
+                                            className="gx-mt-4"
+                                            style={{ whiteSpace: "pre-wrap" }}
+                                        >
+                                            {address == ""
+                                                ? "Please connect with Auro before creating corporate account"
+                                                : "You are creating corporate account with AURO address " +
+                                                  address}
+                                        </div>
+                                    </Form.Item>
+                                </Row>
+
+                                <Row>
+                                    <Form.Item>
                                         <Button
                                             type="primary"
                                             onClick={notImplemented}
                                         >
-                                            {account==""?"Connect with Auro":"Create corporate account"}
+                                            {address == ""
+                                                ? "Connect with Auro"
+                                                : "Create corporate account"}
                                         </Button>
                                     </Form.Item>
                                 </Row>

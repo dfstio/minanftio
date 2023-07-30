@@ -107,8 +107,8 @@
     "chrome": "open -a \"Google Chrome\" --args --user-data-dir=\"/Users/mike/Library/Application Support/Google/ChromeB\" https://nftvirtuoso.io",
     "commit": "git commit -a -S -m",
     "archive": "git archive -o mvp04.zip HEAD",
-    "push": "git status && git push -u originminanftio style",
-    "checkout": "git checkout -b minanft",
+    "push": "git status && git push -u originminanftio lib",
+    "checkout": "git checkout -b lib",
     "style": "prettier --tab-width 4 --write {,!(node_modules)/**/}*.js",
     "dev": "netlify dev",
     "listenv": "netlify env:list --json"
