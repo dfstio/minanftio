@@ -160,19 +160,15 @@ const Corporate = () => {
                                 generate unique Mina NFTs. These NFTs enable
                                 them to:
                                 <br />
-                                <br />
                                 - Publish fully verifiable content to the MINA
                                 blockchain, ensuring transparency and trust.
-                                <br />
                                 <br />
                                 - Keep portions of the content private, giving
                                 your team control over data visibility.
                                 <br />
-                                <br />
                                 - Generate proofs off-chain and validate them
                                 both off-chain and on-chain for any content
                                 segment, supporting data integrity.
-                                <br />
                                 <br />
                                 - Redact (sanitize) specific pieces of content
                                 (such as text, Word files, PNG files) to exclude
@@ -189,12 +185,11 @@ const Corporate = () => {
                                 request of your legal department or commercial
                                 department.
                                 <br />
-                                <br />
                                 - Use a wide variety of content formats
                                 including text, images, videos, audio, and
                                 documents, promoting versatility in data
                                 representation.
-                                <br />
+                                <br /><br />
                         </div>
                         <Form
                             form={form}
@@ -250,9 +245,15 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Short description of your business"
-                                            name="corporate_description"
-                                            placeholder="Some string"
+                                            label="Contact e-mail"
+                                            name="contact_email"
+                                            placeholder="Some string (less than 30 chars)"
+                                            rules={[
+                                            {
+                                                required: true,
+                                                message: "Please write your contact e-mail",
+                                            },
+                                        ]}
                                         >
                                             <TextArea
                                                 autoSize={{
@@ -262,6 +263,8 @@ const Corporate = () => {
                                             />
                                         </Form.Item>
                                     </Col>
+
+
                                     <Col
                                         xxl={12}
                                         xl={12}
@@ -307,7 +310,7 @@ const Corporate = () => {
                                             />
                                         </Form.Item>
                                     </Col>
-                                    <Col
+                                                                       <Col
                                         xxl={12}
                                         xl={12}
                                         lg={14}
@@ -316,15 +319,9 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Contact e-mail"
-                                            name="contact_email"
-                                            placeholder="Some string (less than 30 chars)"
-                                            rules={[
-                                            {
-                                                required: true,
-                                                message: "Please write your contact e-mail",
-                                            },
-                                        ]}
+                                            label="Short description of your business"
+                                            name="corporate_description"
+                                            placeholder="Some string"
                                         >
                                             <TextArea
                                                 autoSize={{
@@ -334,6 +331,8 @@ const Corporate = () => {
                                             />
                                         </Form.Item>
                                     </Col>
+ 
+
                                 </Row>
                                 <Row>
                                     <Col>
