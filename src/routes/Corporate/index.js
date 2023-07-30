@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import api from "../../serverless/api";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
-import { accountingEmail } from "../../util/config";
+import {
+    footerText,
+    footerAgreement,
+    footerContact,
+    footerAgreementLink,
+    footerEmail,
+    accountingEmail 
+} from "../../util/config";
 import {
     Button,
     message,
@@ -340,11 +347,25 @@ const Corporate = () => {
                                         <div
                                             className="gx-mt-4"
                                             style={{ whiteSpace: "pre-wrap" }}
-                                        >
+                                        ><span>
                                             {address == ""
                                                 ? "Please connect with Auro on Berkeley network before creating corporate account"
                                                 : "You are creating corporate account with AURO address " +
                                                   address}
+                                            <br />
+                                You will be requested to sign this form information with AURO wallet<br />
+                                After onboarding procedure we will open for you corporate account
+                                <br />
+                                Please make sure to read carefully
+                                </span> <span>
+                                                   
+                                                    <a
+                                        href={footerAgreementLink}
+                                        target="_blank"
+                                    >
+                                        {footerAgreement}
+                                    </a>
+                                                </span>
                                         </div>
                                     </Form.Item>
                                 </Row>
