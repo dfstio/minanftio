@@ -36,7 +36,7 @@ import {
     virtuosoMint,
     isModerator,
     getVirtuosoBalance,
-    getSignature
+    getSignature,
 } from "../../blockchain/mina";
 
 import logger from "../../serverless/logger";
@@ -370,7 +370,7 @@ const MintPrivate = () => {
     
     */
             setToken(startToken);
-            if( address !== "") await getSignature(strJSON);
+            if (address !== "") await getSignature(strJSON);
             setMinting(false);
         } catch (error) {
             console.log("Mint error", error);
