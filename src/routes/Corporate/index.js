@@ -283,11 +283,11 @@ const Corporate = () => {
                                 <Row>
                                     <Col>
                                         <Form.Item
-                                            name="private-data-json"
+                                            name="KYCdocs"
                                             label="Your KYC docs"
                                         >
                                             <Upload
-                                                name="private-data-json"
+                                                name="KYC/AML docs"
                                                 listType="picture-card"
                                                 className="avatar-uploader"
                                                 showUploadList={true}
