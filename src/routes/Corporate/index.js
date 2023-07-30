@@ -372,17 +372,14 @@ const Corporate = () => {
                                                     ? "Please connect with Auro on Berkeley network before creating corporate account"
                                                     : "You are creating corporate account with AURO address " +
                                                       address}
-                                                <br />
+                                                <br /><br />
                                                 You will be requested to sign
                                                 this form information with AURO
-                                                wallet
-                                                <br />
-                                                After onboarding procedure we
+                                                wallet and, after onboarding procedure we
                                                 will open for you corporate
                                                 account
-                                                <br />
-                                                Please make sure to read
-                                                carefully
+                                                <br /><br />
+                                                By clicking this button, you are confirming your agreement with our
                                             </span>{" "}
                                             <span>
                                                 <a
