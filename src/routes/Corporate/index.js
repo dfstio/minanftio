@@ -51,7 +51,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 const startToken = {
-    corporate_name: "Corporation name",
+    corporate_name: "",
     contact_name: "",
     contact_phone: "",
     contact_email: "",
@@ -115,8 +115,9 @@ const Corporate = () => {
             const myaddress = await minaLogin(true);
             dispatch(updateAddress(myaddress));
         } else {
-            const message = JSON.stringify(token);
-            const corpSignature = await getSignature(message);
+            const corpMessage = JSON.stringify(token);
+            if (DEBUG) console.log("corpMessage", corpMessage);
+            const corpSignature = await getSignature(corpMessage);
             if (DEBUG) console.log("corpSignature", corpSignature);
             message.error({
                 content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,

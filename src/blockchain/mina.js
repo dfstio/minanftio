@@ -4,7 +4,7 @@ import { message } from "antd";
 import { isMobile } from "react-device-detect";
 
 import logger from "../serverless/logger";
-const logm = logger.debug.child({ winstonModule: "metamask" });
+const logm = logger.debug.child({ winstonModule: "mina" });
 
 const MINIMUM_BALANCE = 1e17; // to switch to relay
 
