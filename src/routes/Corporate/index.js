@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import api from "../../serverless/api";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
 import { accountingEmail } from "../../util/config";
-import { minaLogin } from "../../blockchain/mina";
 import {
     Button,
     message,
