@@ -59,7 +59,6 @@ const startToken = {
 };
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-
 const Corporate = () => {
     const address = useSelector(({ blockchain }) => blockchain.address);
     const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
@@ -143,7 +142,6 @@ const Corporate = () => {
                 <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                     <Card className="gx-card" title="Create corporate account">
                         <div className="gx-d-flex justify-content-center">
-                            <h4>
                                 Utilizing our corporate accounts, your employees
                                 can access minanft.io website with Auro to
                                 generate unique Mina NFTs. These NFTs enable
@@ -164,7 +162,15 @@ const Corporate = () => {
                                 <br />
                                 <br />
                                 - Redact (sanitize) specific pieces of content
-                                (such as text, Word files, PNG files), and
+                                (such as text, Word files, PNG files) to exclude
+                                sensitive information such as personal
+                                information (social security number, etc),
+                                financial information (bank account details and balances,
+                                transfer details), security information
+                                (passwords, access codes, private keys),
+                                commercial confidential information (prices
+                                paid, some details of the proof of ownership, proof of product and
+                                proof of funds), and
                                 validate this redacted content on-chain,
                                 maintaining security and confidentiality on
                                 request of your legal department or commercial
@@ -176,7 +182,6 @@ const Corporate = () => {
                                 documents, promoting versatility in data
                                 representation.
                                 <br />
-                            </h4>
                         </div>
                         <Form
                             form={form}
@@ -372,14 +377,18 @@ const Corporate = () => {
                                                     ? "Please connect with Auro on Berkeley network before creating corporate account"
                                                     : "You are creating corporate account with AURO address " +
                                                       address}
-                                                <br /><br />
+                                                <br />
+                                                <br />
                                                 You will be requested to sign
                                                 this form information with AURO
-                                                wallet and, after onboarding procedure we
-                                                will open for you corporate
-                                                account
-                                                <br /><br />
-                                                By clicking this button, you are confirming your agreement with our
+                                                wallet and, after onboarding
+                                                procedure we will open for you
+                                                corporate account
+                                                <br />
+                                                <br />
+                                                By clicking this button, you are
+                                                confirming your agreement with
+                                                our
                                             </span>{" "}
                                             <span>
                                                 <a

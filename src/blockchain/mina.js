@@ -356,7 +356,7 @@ export async function getSignature(message) {
         const address = await getAddress();
         if (address == "") return "";
         const signResult = await window.mina.signMessage({
-            message
+            message,
         });
 
         log.debug("getSignature:", { signResult, address });
@@ -367,7 +367,6 @@ export async function getSignature(message) {
 
     return signature;
 }
-
 
 export function convertAddress(address) {
     if (address !== "") return ethers.utils.getAddress(address);
