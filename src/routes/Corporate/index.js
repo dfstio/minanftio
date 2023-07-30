@@ -159,17 +159,17 @@ const Corporate = () => {
                                 can access minanft.io website with Auro to
                                 generate unique Mina NFTs. These NFTs enable
                                 them to:
-                                <br />
+                                <br /><br />
                                 - Publish fully verifiable content to the MINA
                                 blockchain, ensuring transparency and trust.
-                                <br />
+                                <br /><br />
                                 - Keep portions of the content private, giving
                                 your team control over data visibility.
-                                <br />
+                                <br /><br />
                                 - Generate proofs off-chain and validate them
                                 both off-chain and on-chain for any content
                                 segment, supporting data integrity.
-                                <br />
+                                <br /><br />
                                 - Redact (sanitize) specific pieces of content
                                 (such as text, Word files, PNG files) to exclude
                                 sensitive information such as personal
@@ -184,7 +184,7 @@ const Corporate = () => {
                                 maintaining security and confidentiality on
                                 request of your legal department or commercial
                                 department.
-                                <br />
+                                <br /><br />
                                 - Use a wide variety of content formats
                                 including text, images, videos, audio, and
                                 documents, promoting versatility in data
@@ -326,7 +326,7 @@ const Corporate = () => {
                                             <TextArea
                                                 autoSize={{
                                                     minRows: 1,
-                                                    maxRows: 2,
+                                                    maxRows: 10,
                                                 }}
                                             />
                                         </Form.Item>
@@ -335,7 +335,14 @@ const Corporate = () => {
 
                                 </Row>
                                 <Row>
-                                    <Col>
+                                    <Col
+                                                                            xxl={12}
+                                        xl={12}
+                                        lg={14}
+                                        md={24}
+                                        sm={24}
+                                        xs={24}
+                                    >
                                         <Form.Item
                                             name="kyc docs"
                                             label="Your KYC docs"
@@ -360,8 +367,7 @@ const Corporate = () => {
                                             </Upload>
                                         </Form.Item>
                                     </Col>
-                                </Row>
-                                <Row>
+                                    <Col>
                                     <Form.Item
                                         label={
                                             <span>
@@ -389,6 +395,7 @@ const Corporate = () => {
                                             }}
                                         />
                                     </Form.Item>
+                                    </Col>
                                 </Row>
                                 <Row>
                                     <Form.Item>
