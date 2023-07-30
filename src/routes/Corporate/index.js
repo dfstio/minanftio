@@ -7,7 +7,7 @@ import {
     footerContact,
     footerAgreementLink,
     footerEmail,
-    accountingEmail 
+    accountingEmail,
 } from "../../util/config";
 import {
     Button,
@@ -32,7 +32,11 @@ import {
     updateVirtuosoBalance,
     updatePublicKey,
 } from "../../appRedux/actions";
-import { minaLogin, virtuosoRegisterPublicKey } from "../../blockchain/mina";
+import {
+    minaLogin,
+    virtuosoRegisterPublicKey,
+    getSignature,
+} from "../../blockchain/mina";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -46,6 +50,14 @@ const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
+const startToken = {
+    corporate_name: "Corporation name",
+    contact_name: "",
+    contact_phone: "",
+    contact_email: "",
+    corporate_website: "",
+};
+
 const Corporate = () => {
     const address = useSelector(({ blockchain }) => blockchain.address);
     const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
@@ -57,6 +69,8 @@ const Corporate = () => {
 
     const [form] = Form.useForm();
     const [auth, setAuth] = useState("");
+    const [token, setToken] = useState(startToken);
+    const [counter, setCounter] = useState(0);
 
     const log = logm.child({ winstonComponent: "Verify" });
 
@@ -75,51 +89,44 @@ const Corporate = () => {
         return false;
     };
 
-    async function register() {
-        log.info("Register clicked", { address, wf: "register" });
+    const onValuesChange = async (values) => {
+        if (DEBUG) console.log("onValuesChange", values);
+        let newToken = token;
 
-        if (address !== undefined && address !== "") {
-            log.profile(`Registered public key of address ${address}`);
-            const key = "RegisterPublicKey";
-            message.loading({
-                content: `Please provide public key in Metamask and confirm transaction`,
-                key,
-                duration: 60,
-            });
+        if (values.corporate_name !== undefined)
+            newToken.corporate_name = values.corporate_name; //TODO: check name
+        if (values.contact_name !== undefined)
+            newToken.contact_name = values.contact_name;
+        if (values.contact_phone !== undefined)
+            newToken.contact_phone = values.contact_phone;
+        if (values.contact_email !== undefined)
+            newToken.contact_email = values.contact_email;
+        if (values.corporate_website !== undefined)
+            newToken.corporate_website = values.corporate_website;
 
-            const result = await virtuosoRegisterPublicKey(address);
-            if (result.publicKey !== "" && result.hash !== "") {
-                dispatch(updatePublicKey(result.publicKey));
-                message.success({
-                    content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`,
-                    key,
-                    duration: 10,
-                });
-            } else
-                message.error({
-                    content: `Public key is not provided or written to blockchain`,
-                    key,
-                    duration: 10,
-                });
-            log.profile(`Registered public key of address ${address}`, {
-                address,
-                result,
-                wf: "register",
-            });
-        }
-    }
+        setToken(newToken);
+        setCounter(counter + 1);
+        checkCanMint();
+    };
 
     async function corporateButton() {
         if (address == "") {
             const myaddress = await minaLogin(true);
             dispatch(updateAddress(myaddress));
-        } else
+        } else {
+            const message = JSON.stringify(token);
+            await getSignature(message);
             message.error({
                 content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,
                 key: `CorporateButton`,
                 duration: 10,
             });
+        }
     }
+
+    const onFinish = async (values) => {
+        if (DEBUG) console.log("onFinish", values);
+    };
 
     async function connect() {
         log.info("Connect clicked", { address, wf: "connect" });
@@ -142,24 +149,30 @@ const Corporate = () => {
                                 <br />
                                 - Publish fully verifiable content to the MINA
                                 blockchain, ensuring transparency and trust.
-                                <br /><br />
+                                <br />
+                                <br />
                                 - Keep portions of the content private, giving
                                 your team control over data visibility.
-                                <br /><br />
-                                - Generate proofs off-chain and validate them both
-                                off-chain and on-chain for any content segment,
-                                supporting data integrity.
-                                <br /><br />
+                                <br />
+                                <br />
+                                - Generate proofs off-chain and validate them
+                                both off-chain and on-chain for any content
+                                segment, supporting data integrity.
+                                <br />
+                                <br />
                                 - Redact (sanitize) specific pieces of content
                                 (such as text, Word files, PNG files), and
                                 validate this redacted content on-chain,
                                 maintaining security and confidentiality on
                                 request of your legal department or commercial
                                 department.
-                                <br /><br />
-                                - Use a wide variety of content formats including
-                                text, images, videos, audio, and documents,
-                                promoting versatility in data representation.<br />
+                                <br />
+                                <br />
+                                - Use a wide variety of content formats
+                                including text, images, videos, audio, and
+                                documents, promoting versatility in data
+                                representation.
+                                <br />
                             </h4>
                         </div>
                         <Form
@@ -171,6 +184,9 @@ const Corporate = () => {
                                 span: 24,
                             }}
                             layout="horizontal"
+                            initialValues={token}
+                            onFinish={onFinish}
+                            onValuesChange={onValuesChange}
                         >
                             <div>
                                 <Row>
@@ -184,7 +200,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Your corporation or SME name"
-                                            name="mina_nft_name"
+                                            name="corporate_name"
                                             placeholder="Write name of your corporation or SME"
                                         >
                                             <TextArea
@@ -208,7 +224,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Short description of your business"
-                                            name="public_key1"
+                                            name="corporate_description"
                                             placeholder="Some string"
                                         >
                                             <TextArea
@@ -229,7 +245,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Contact name"
-                                            name="public_value1"
+                                            name="contact_name"
                                             placeholder="Some string (less than 30 chars)"
                                         >
                                             <TextArea
@@ -253,7 +269,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Contact phone"
-                                            name="private_key1"
+                                            name="contact_phone"
                                             placeholder="Some string (less than 30 chars)"
                                         >
                                             <TextArea
@@ -274,7 +290,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Contact e-mail"
-                                            name="private_value1"
+                                            name="contact_email"
                                             placeholder="Some string (less than 30 chars)"
                                         >
                                             <TextArea
@@ -289,11 +305,11 @@ const Corporate = () => {
                                 <Row>
                                     <Col>
                                         <Form.Item
-                                            name="KYCdocs"
+                                            name="kyc docs"
                                             label="Your KYC docs"
                                         >
                                             <Upload
-                                                name="KYC/AML docs"
+                                                name="kycdocs"
                                                 listType="picture-card"
                                                 className="avatar-uploader"
                                                 showUploadList={true}
@@ -347,25 +363,32 @@ const Corporate = () => {
                                         <div
                                             className="gx-mt-4"
                                             style={{ whiteSpace: "pre-wrap" }}
-                                        ><span>
-                                            {address == ""
-                                                ? "Please connect with Auro on Berkeley network before creating corporate account"
-                                                : "You are creating corporate account with AURO address " +
-                                                  address}
-                                            <br />
-                                You will be requested to sign this form information with AURO wallet<br />
-                                After onboarding procedure we will open for you corporate account
-                                <br />
-                                Please make sure to read carefully
-                                </span> <span>
-                                                   
-                                                    <a
-                                        href={footerAgreementLink}
-                                        target="_blank"
-                                    >
-                                        {footerAgreement}
-                                    </a>
-                                                </span>
+                                        >
+                                            <span>
+                                                {address == ""
+                                                    ? "Please connect with Auro on Berkeley network before creating corporate account"
+                                                    : "You are creating corporate account with AURO address " +
+                                                      address}
+                                                <br />
+                                                You will be requested to sign
+                                                this form information with AURO
+                                                wallet
+                                                <br />
+                                                After onboarding procedure we
+                                                will open for you corporate
+                                                account
+                                                <br />
+                                                Please make sure to read
+                                                carefully
+                                            </span>{" "}
+                                            <span>
+                                                <a
+                                                    href={footerAgreementLink}
+                                                    target="_blank"
+                                                >
+                                                    {footerAgreement}
+                                                </a>
+                                            </span>
                                         </div>
                                     </Form.Item>
                                 </Row>

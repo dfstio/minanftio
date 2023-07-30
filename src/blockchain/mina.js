@@ -353,21 +353,28 @@ export async function getSignature(message) {
     });
 
     try {
-        signer = provider && provider.getSigner();
-        const signerAddress = await signer.getAddress();
-        // Directly call the JSON RPC interface, since ethers does not support signTypedDataV4 yet
-        // See https://github.com/ethers-io/ethers.js/issues/830
-        log.debug("getSignature:", { signerAddress });
-        signature = await window.ethereum.request({
-            method: "eth_signTypedData_v4",
-            params: [signerAddress, message],
+        const address = await getAddress();
+        if (address == "") return "";
+        const signResult = await window.mina.signMessage({
+            message: "messages...",
         });
-        //signer.send('eth_signTypedData_v4', [signerAddress, message]);
+
+        log.debug("getSignature:", { signResult, address });
+        return signResult;
     } catch (error) {
         log.error("catch", error);
     }
 
     return signature;
+}
+
+try {
+    let signResult = await window.mina.signMessage({
+        message: "messages...",
+    });
+    console.log(signResult);
+} catch (error) {
+    console.log(error.message, error.code);
 }
 
 export function convertAddress(address) {
