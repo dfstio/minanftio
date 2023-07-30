@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../serverless/api";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
 import { accountingEmail } from "../../util/config";
+import { minaLogin } from "../../blockchain/mina";
 import {
     Button,
     message,
@@ -102,12 +103,16 @@ const Corporate = () => {
         }
     }
 
-    async function notImplemented() {
-        message.error({
-            content: `Not implemented yet`,
-            key: `EditButton`,
-            duration: 10,
-        });
+    async function corporateButton() {
+        if (address == "") {
+            const myaddress = await minaLogin(true);
+            dispatch(updateAddress(myaddress));
+        } else
+            message.error({
+                content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,
+                key: `CorporateButton`,
+                duration: 10,
+            });
     }
 
     async function connect() {
@@ -123,17 +128,32 @@ const Corporate = () => {
                     <Card className="gx-card" title="Create corporate account">
                         <div className="gx-d-flex justify-content-center">
                             <h4>
-                                With corporate account, your employees can
-                                authorise with Auro on the minanft.io site and
-                                create Mina NFT that allows to: - Publish fully
-                                verifyable content to MINA blockchain - Make
-                                part of content private - Generate proofs
-                                off-chain and verify proofs off-chain and
-                                on-chain for any part of the content - Redact
-                                (sanitize) some content (text, Word files, PNG
-                                files) and prove on-chain this redacted content
-                                - Use many formats of content: texts, images,
-                                video, audio, documents
+                                Utilizing our corporate accounts, your employees
+                                can access minanft.io website with Auro to
+                                generate unique Mina NFTs. These NFTs enable
+                                them to:
+                                <br />
+                                <br />
+                                Publish fully verifiable content to the MINA
+                                blockchain, ensuring transparency and trust.
+                                <br />
+                                Keep portions of the content private, giving
+                                your team control over data visibility.
+                                <br />
+                                Generate proofs off-chain and validate them both
+                                off-chain and on-chain for any content segment,
+                                supporting data integrity.
+                                <br />
+                                Redact (sanitize) specific pieces of content
+                                (such as text, Word files, PNG files), and
+                                validate this redacted content on-chain,
+                                maintaining security and confidentiality on
+                                request of your legal department or commercial
+                                department.
+                                <br />
+                                Use a wide variety of content formats including
+                                text, images, videos, audio, and documents,
+                                promoting versatility in data representation.
                             </h4>
                         </div>
                         <Form
@@ -334,7 +354,7 @@ const Corporate = () => {
                                     <Form.Item>
                                         <Button
                                             type="primary"
-                                            onClick={notImplemented}
+                                            onClick={corporateButton}
                                         >
                                             {address == ""
                                                 ? "Connect with Auro"
