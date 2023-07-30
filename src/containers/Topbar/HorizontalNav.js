@@ -106,6 +106,15 @@ const HorizontalNav = () => {
                     <IntlMessages id="sidebar.tools" />
                 </Link>
             </Menu.Item>
+                        <Menu.Item
+                className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+                key="corporate"
+            >
+                <Link to="/corporate">
+                    <i className="icon icon-culture-calendar" />
+                    <IntlMessages id="sidebar.corporate" />
+                </Link>
+            </Menu.Item>
         </Menu>
     );
 };

@@ -151,7 +151,6 @@ export async function initAccount(
     }
     console.log("getAddress address", address);
     return address;
-
 }
 
 export async function getAddress(force = false) {

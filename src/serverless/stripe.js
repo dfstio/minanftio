@@ -261,7 +261,7 @@ async function createCheckoutSession(body) {
             return session.url;
         } else log.error(`Token No ${body.tokenId} is not on sale`);
     } else if (body.type == "mintItem") {
-    /*
+        /*
 	else if(body.type == "mint" )
 	{
 		console.log("Mint order received from ", body.address);
