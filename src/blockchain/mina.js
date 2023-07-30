@@ -356,7 +356,7 @@ export async function getSignature(message) {
         const address = await getAddress();
         if (address == "") return "";
         const signResult = await window.mina.signMessage({
-            message: "messages...",
+            message
         });
 
         log.debug("getSignature:", { signResult, address });
