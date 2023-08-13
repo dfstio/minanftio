@@ -36,6 +36,7 @@ const BuyButton = ({ item }) => {
                 message.loading("Preparing checkout page", 10);
                 //const myaddress = await minaLogin(false);
                 //dispatch(updateAddress(myaddress));
+                const myaddress = address;
 
                 if (true) {
                     //myaddress !== item.owner)
