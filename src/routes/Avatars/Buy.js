@@ -34,8 +34,8 @@ const BuyButton = ({ item }) => {
                 log.info(`Buy clicked on token ${item.tokenId}`);
 
                 message.loading("Preparing checkout page", 10);
-                const myaddress = await minaLogin(false);
-                dispatch(updateAddress(myaddress));
+                //const myaddress = await minaLogin(false);
+                //dispatch(updateAddress(myaddress));
 
                 if (true) {
                     //myaddress !== item.owner)
