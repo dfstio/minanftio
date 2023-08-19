@@ -580,10 +580,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 "https://" +
                 REACT_APP_VIRTUOSO_URL +
                 "/token/" +
-                REACT_APP_CHAIN_ID +
-                "/" +
-                REACT_APP_CONTRACT_ADDRESS +
-                "/" +
                 item.tokenId.toString();
             setQRCodeURL(qrURL);
 
@@ -602,6 +598,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             let newMedia = [];
             let newAudio = [];
             let newAttachments = [];
+            
+
             const timedContent = await getOnLoad(
                 item.tokenId,
                 signature,
@@ -614,7 +612,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === undefined ||
                 timedContent.content.replace_media === false
             ) {
-                if (item.uri.properties.animation !== "") {
+                if (item.properties.animation !== "") {
                     const type = item.uri.properties.animation.filetype.replace(
                         /\/[^/.]+$/,
                         "",
@@ -630,30 +628,30 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                         newAudio.push(item.uri.properties.animation);
                 }
                 let count =
-                    item.uri.media_count === undefined
+                    item.media_count === undefined
                         ? 0
-                        : item.uri.media_count;
+                        : item.media_count;
 
                 if (count > 0) {
                     let i;
 
                     for (i = 0; i < count; i++) {
-                        const type = item.uri.media[i].filetype.replace(
+                        const type = item.media[i].filetype.replace(
                             /\/[^/.]+$/,
                             "",
                         );
                         const id = newMedia.length;
                         if (type === "video")
-                            newMedia.push({ data: item.uri.media[i], id: id });
+                            newMedia.push({ data: item.media[i], id: id });
                         if (type === "image")
-                            newMedia.push({ data: item.uri.media[i], id: id });
-                        if (type === "audio") newAudio.push(item.uri.media[i]);
+                            newMedia.push({ data: item.media[i], id: id });
+                        if (type === "audio") newAudio.push(item.media[i]);
                         if (type === "application") {
                             if (
-                                item.uri.media[i].filetype === "application/pdf"
+                                item.media[i].filetype === "application/pdf"
                             )
                                 newMedia.push({
-                                    data: item.uri.media[i],
+                                    data: item.media[i],
                                     id: id,
                                 });
                         }
@@ -675,10 +673,10 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_attachments === false
             ) {
                 let acount =
-                    item.uri.attachments_count === undefined
+                    item.attachments_count === undefined
                         ? 0
-                        : item.uri.attachments_count;
-                if (acount > 0) newAttachments = item.uri.attachments;
+                        : item.attachments_count;
+                if (acount > 0) newAttachments = item.attachments;
             }
 
             let show = false;
@@ -1231,6 +1229,13 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                                     </div>
                                     <div className="gx-mb-3">
                                         {item.category}
+                                        <a
+                                                href={item.minaExplorer}
+                                                target="_blank"
+                                            >
+                                                {" "}
+                                                Token {item.minaPublicKey}{" "}
+                                            </a>
                                     </div>
 
                                     {item.onSale ? (
