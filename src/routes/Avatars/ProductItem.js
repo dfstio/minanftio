@@ -111,7 +111,14 @@ const ProductItem = ({ item }) => {
                     ""
                 )}
                 <div className="gx-mt-4" style={{ whiteSpace: "pre-wrap" }}>
-                    <Highlight attribute="shortdescription" hit={item} />
+                    <a href={tokenPath}>
+                        <span>
+                            <Highlight
+                                attribute="shortdescription"
+                                hit={item}
+                            />
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>

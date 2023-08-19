@@ -196,7 +196,10 @@ const TokenMedia = ({
                 ) : (
                     <div>
                         {type === "image" ? (
-                            <img src={`https://res.cloudinary.com/minanft/image/fetch/${url}`} alt={media.name} />
+                            <img
+                                src={`https://res.cloudinary.com/minanft/image/fetch/${url}`}
+                                alt={media.name}
+                            />
                         ) : (
                             ""
                         )}
@@ -565,7 +568,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     useEffect(() => {
         async function loadMedia() {
             if (firstRun) {
-            		console.log("firstRun", item);
+                console.log("firstRun", item);
                 setName(item.name);
                 setDescription(item.description);
                 if (item.markdown !== undefined)
@@ -599,8 +602,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             let newMedia = [];
             let newAudio = [];
             let newAttachments = [];
-            
-/*
+
+            /*
             const timedContent = await getOnLoad(
                 item.tokenId,
                 signature,
@@ -614,60 +617,51 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === false
             ) {
 */
-                if (item.properties.animation !== "") {
-                    const type = item.uri.properties.animation.filetype.replace(
+            if (item.properties.animation !== "") {
+                const type = item.uri.properties.animation.filetype.replace(
+                    /\/[^/.]+$/,
+                    "",
+                );
+                if (type === "video") {
+                    const id = newMedia.length;
+                    newMedia.push({
+                        data: item.uri.properties.animation,
+                        id: id,
+                    });
+                }
+                if (type === "audio")
+                    newAudio.push(item.uri.properties.animation);
+            }
+            let count = item.media_count === undefined ? 0 : item.media_count;
+
+            if (count > 0) {
+                let i;
+                console.log("Media count", count);
+                for (i = 0; i < count; i++) {
+                    const type = item.media[i].filetype.replace(
                         /\/[^/.]+$/,
                         "",
                     );
-                    if (type === "video") {
-                        const id = newMedia.length;
-                        newMedia.push({
-                            data: item.uri.properties.animation,
-                            id: id,
-                        });
-                    }
-                    if (type === "audio")
-                        newAudio.push(item.uri.properties.animation);
-                }
-                let count =
-                    item.media_count === undefined
-                        ? 0
-                        : item.media_count;
-
-                if (count > 0) {
-                    let i;
-										console.log("Media count", count);
-                    for (i = 0; i < count; i++) {
-                        const type = item.media[i].filetype.replace(
-                            /\/[^/.]+$/,
-                            "",
-                        );
-                        const id = newMedia.length;
-                        if (type === "video")
-                            newMedia.push({ data: item.media[i], id: id });
-                        if (type === "image")
-                            newMedia.push({ data: item.media[i], id: id });
-                        if (type === "audio") newAudio.push(item.media[i]);
-                        if (type === "application") {
-                            if (
-                                item.media[i].filetype === "application/pdf"
-                            )
-                                newMedia.push({
-                                    data: item.media[i],
-                                    id: id,
-                                });
-                        }
+                    const id = newMedia.length;
+                    if (type === "video")
+                        newMedia.push({ data: item.media[i], id: id });
+                    if (type === "image")
+                        newMedia.push({ data: item.media[i], id: id });
+                    if (type === "audio") newAudio.push(item.media[i]);
+                    if (type === "application") {
+                        if (item.media[i].filetype === "application/pdf")
+                            newMedia.push({
+                                data: item.media[i],
+                                id: id,
+                            });
                     }
                 }
+            }
 
-                if (DEBUG)
-                    console.log(
-                        `TokenItem media ${count}:`,
-                        newMedia,
-                        newAudio,
-                    );
-//            }
-/*
+            if (DEBUG)
+                console.log(`TokenItem media ${count}:`, newMedia, newAudio);
+            //            }
+            /*
             if (
                 !timedContent.success ||
                 timedContent.content === undefined ||
@@ -675,12 +669,12 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_attachments === false
             ) {
 */
-                let acount =
-                    item.attachments_count === undefined
-                        ? 0
-                        : item.attachments_count;
-                if (acount > 0) newAttachments = item.attachments;
-//            }
+            let acount =
+                item.attachments_count === undefined
+                    ? 0
+                    : item.attachments_count;
+            if (acount > 0) newAttachments = item.attachments;
+            //            }
 
             let show = false;
             if (address === item.owner) show = true;
@@ -693,7 +687,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             let newName = item.name;
             let newImage = item.image;
             let newAnimation = item.animation_url; // USE IT LATER!!!
-/*
+            /*
             if (timedContent.success && timedContent.content !== undefined) {
                 if (timedContent.signed) setStreamingContent(true);
 
@@ -774,7 +768,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             setMedia(newMedia);
             setAudio(newAudio);
             setAttachments(newAttachments);
-            
+
             /*
             if (loadingStreaming) {
                 setLoadingStreaming(false);
@@ -1236,12 +1230,12 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                                     <div className="gx-mb-3">
                                         {item.category}
                                         <a
-                                                href={item.minaExplorer}
-                                                target="_blank"
-                                            >
-                                                {" "}
-                                                {item.minaPublicKey}{" "}
-                                            </a>
+                                            href={item.minaExplorer}
+                                            target="_blank"
+                                        >
+                                            {" "}
+                                            {item.minaPublicKey}{" "}
+                                        </a>
                                     </div>
 
                                     {item.onSale ? (
