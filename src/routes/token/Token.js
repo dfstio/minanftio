@@ -17,8 +17,8 @@ import {
     metamaskDecrypt,
     getSignature,
 } from "../../blockchain/mina";
-import SellButton from "../algolia/Sell";
-import BuyButton from "../algolia/Buy";
+import SellButton from "../Avatars/Sell";
+import BuyButton from "../Avatars/Buy";
 import ReactPlayer from "react-player";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import "react-jinke-music-player/assets/index.css";
