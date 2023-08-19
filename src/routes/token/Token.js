@@ -565,6 +565,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     useEffect(() => {
         async function loadMedia() {
             if (firstRun) {
+            		console.log("firstRun", item);
                 setName(item.name);
                 setDescription(item.description);
                 if (item.markdown !== undefined)
@@ -685,7 +686,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             if (address === item.owner) show = true;
             if (show !== showUnlockableButton) setShowUnlockableButton(show);
 
-            if (DEBUG) console.log(`TokenItem content`, timedContent);
+            //if (DEBUG) console.log(`TokenItem content`, timedContent);
 
             let newDescription =
                 item.markdown === undefined ? "" : item.markdown;
@@ -773,6 +774,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             setMedia(newMedia);
             setAudio(newAudio);
             setAttachments(newAttachments);
+            
+            /*
             if (loadingStreaming) {
                 setLoadingStreaming(false);
 
@@ -794,6 +797,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     });
                 }
             }
+            */
             setCounter(counter + 1);
         }
         loadMedia();
