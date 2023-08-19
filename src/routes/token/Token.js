@@ -599,7 +599,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             let newAudio = [];
             let newAttachments = [];
             
-
+/*
             const timedContent = await getOnLoad(
                 item.tokenId,
                 signature,
@@ -612,6 +612,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === undefined ||
                 timedContent.content.replace_media === false
             ) {
+*/
                 if (item.properties.animation !== "") {
                     const type = item.uri.properties.animation.filetype.replace(
                         /\/[^/.]+$/,
@@ -634,7 +635,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
 
                 if (count > 0) {
                     let i;
-
+										console.log("Media count", count);
                     for (i = 0; i < count; i++) {
                         const type = item.media[i].filetype.replace(
                             /\/[^/.]+$/,
@@ -664,20 +665,21 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                         newMedia,
                         newAudio,
                     );
-            }
-
+//            }
+/*
             if (
                 !timedContent.success ||
                 timedContent.content === undefined ||
                 timedContent.content.replace_attachments === undefined ||
                 timedContent.content.replace_attachments === false
             ) {
+*/
                 let acount =
                     item.attachments_count === undefined
                         ? 0
                         : item.attachments_count;
                 if (acount > 0) newAttachments = item.attachments;
-            }
+//            }
 
             let show = false;
             if (address === item.owner) show = true;
@@ -690,7 +692,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
             let newName = item.name;
             let newImage = item.image;
             let newAnimation = item.animation_url; // USE IT LATER!!!
-
+/*
             if (timedContent.success && timedContent.content !== undefined) {
                 if (timedContent.signed) setStreamingContent(true);
 
@@ -751,7 +753,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                                 });
                         }
                     }
-                }
+               }
 
                 let acount =
                     timedContent.content.attachments_count === undefined
@@ -763,7 +765,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                         ...timedContent.content.attachments,
                     ];
             }
-
+*/
             if (descriptionMarkdown !== newDescription)
                 setDescriptionMarkdown(newDescription);
             if (name !== newName) setName(newName);
@@ -1234,7 +1236,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                                                 target="_blank"
                                             >
                                                 {" "}
-                                                Token {item.minaPublicKey}{" "}
+                                                {item.minaPublicKey}{" "}
                                             </a>
                                     </div>
 
