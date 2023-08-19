@@ -202,7 +202,6 @@ const TokenMedia = ({
                         )}
                         {type === "video" ? (
                             <ReactPlayer
-                            https://cloudinary-marketing-res.cloudinary.com/video/upload/w_1000/q_auto/f_auto/
                                 url={`https://res.cloudinary.com/minanft/video/fetch/${url}`}
                                 controls={true}
                                 //light={true}

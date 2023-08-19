@@ -12,7 +12,7 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const ProductItem = ({ item }) => {
     //const icons = [];
-    //console.log("Item: ", item);
+    console.log("Item: ", item);
     const address = useSelector(({ blockchain }) => blockchain.address);
     const dispatch = useDispatch();
     let buttonId = "sidebar.algolia.buy";
