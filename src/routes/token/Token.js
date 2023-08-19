@@ -196,13 +196,14 @@ const TokenMedia = ({
                 ) : (
                     <div>
                         {type === "image" ? (
-                            <img src={url} alt={media.name} />
+                            <img src={`https://res.cloudinary.com/minanft/image/fetch/${url}`} alt={media.name} />
                         ) : (
                             ""
                         )}
                         {type === "video" ? (
                             <ReactPlayer
-                                url={url}
+                            https://cloudinary-marketing-res.cloudinary.com/video/upload/w_1000/q_auto/f_auto/
+                                url={`https://res.cloudinary.com/minanft/video/fetch/${url}`}
                                 controls={true}
                                 //light={true}
                                 width="100%"
