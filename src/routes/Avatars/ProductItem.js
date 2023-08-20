@@ -12,7 +12,7 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const ProductItem = ({ item }) => {
     //const icons = [];
-    //console.log("Item: ", item);
+    console.log("Item: ", item);
     const address = useSelector(({ blockchain }) => blockchain.address);
     const dispatch = useDispatch();
     let buttonId = "sidebar.algolia.buy";
@@ -111,7 +111,14 @@ const ProductItem = ({ item }) => {
                     ""
                 )}
                 <div className="gx-mt-4" style={{ whiteSpace: "pre-wrap" }}>
-                    <Highlight attribute="shortdescription" hit={item} />
+                    <a href={tokenPath}>
+                        <span>
+                            <Highlight
+                                attribute="shortdescription"
+                                hit={item}
+                            />
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>

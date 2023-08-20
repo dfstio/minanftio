@@ -106,7 +106,7 @@ const HorizontalNav = () => {
                     <IntlMessages id="sidebar.tools" />
                 </Link>
             </Menu.Item>
-                        <Menu.Item
+            <Menu.Item
                 className="gx-menu-horizontal-flex gx-submenu-popup-curve"
                 key="corporate"
             >

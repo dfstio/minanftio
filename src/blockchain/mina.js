@@ -4,7 +4,7 @@ import { message } from "antd";
 import { isMobile } from "react-device-detect";
 
 import logger from "../serverless/logger";
-const logm = logger.debug.child({ winstonModule: "metamask" });
+const logm = logger.debug.child({ winstonModule: "mina" });
 
 const MINIMUM_BALANCE = 1e17; // to switch to relay
 
@@ -353,16 +353,14 @@ export async function getSignature(message) {
     });
 
     try {
-        signer = provider && provider.getSigner();
-        const signerAddress = await signer.getAddress();
-        // Directly call the JSON RPC interface, since ethers does not support signTypedDataV4 yet
-        // See https://github.com/ethers-io/ethers.js/issues/830
-        log.debug("getSignature:", { signerAddress });
-        signature = await window.ethereum.request({
-            method: "eth_signTypedData_v4",
-            params: [signerAddress, message],
+        const address = await getAddress();
+        if (address == "") return "";
+        const signResult = await window.mina.signMessage({
+            message,
         });
-        //signer.send('eth_signTypedData_v4', [signerAddress, message]);
+
+        log.debug("getSignature:", { signResult, address });
+        return signResult;
     } catch (error) {
         log.error("catch", error);
     }

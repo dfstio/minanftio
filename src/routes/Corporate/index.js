@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import api from "../../serverless/api";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
-import { accountingEmail } from "../../util/config";
+import {
+    footerText,
+    footerAgreement,
+    footerContact,
+    footerAgreementLink,
+    footerEmail,
+    accountingEmail,
+} from "../../util/config";
 import {
     Button,
     message,
@@ -25,7 +32,11 @@ import {
     updateVirtuosoBalance,
     updatePublicKey,
 } from "../../appRedux/actions";
-import { minaLogin, virtuosoRegisterPublicKey } from "../../blockchain/mina";
+import {
+    minaLogin,
+    virtuosoRegisterPublicKey,
+    getSignature,
+} from "../../blockchain/mina";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -39,6 +50,15 @@ const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
+const startToken = {
+    corporate_name: "",
+    contact_name: "",
+    contact_phone: "",
+    contact_email: "",
+    corporate_website: "",
+};
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+
 const Corporate = () => {
     const address = useSelector(({ blockchain }) => blockchain.address);
     const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
@@ -50,8 +70,19 @@ const Corporate = () => {
 
     const [form] = Form.useForm();
     const [auth, setAuth] = useState("");
+    const [token, setToken] = useState(startToken);
+    const [counter, setCounter] = useState(0);
+    const [createDisabled, setCreateDisabled] = useState(true);
 
     const log = logm.child({ winstonComponent: "Verify" });
+
+    const checkCanCreate = () => {
+        let newCreateDisabled = true;
+        if (token.corporate_name !== "" && token.contact_email !== "")
+            newCreateDisabled = false;
+        if (newCreateDisabled !== createDisabled)
+            setCreateDisabled(newCreateDisabled);
+    };
 
     let vb = "$0";
     let showWithdaw = false;
@@ -68,47 +99,46 @@ const Corporate = () => {
         return false;
     };
 
-    async function register() {
-        log.info("Register clicked", { address, wf: "register" });
+    const onValuesChange = async (values) => {
+        if (DEBUG) console.log("onValuesChange", values);
+        let newToken = token;
 
-        if (address !== undefined && address !== "") {
-            log.profile(`Registered public key of address ${address}`);
-            const key = "RegisterPublicKey";
-            message.loading({
-                content: `Please provide public key in Metamask and confirm transaction`,
-                key,
-                duration: 60,
-            });
+        if (values.corporate_name !== undefined)
+            newToken.corporate_name = values.corporate_name; //TODO: check name
+        if (values.contact_name !== undefined)
+            newToken.contact_name = values.contact_name;
+        if (values.contact_phone !== undefined)
+            newToken.contact_phone = values.contact_phone;
+        if (values.contact_email !== undefined)
+            newToken.contact_email = values.contact_email;
+        if (values.corporate_website !== undefined)
+            newToken.corporate_website = values.corporate_website;
 
-            const result = await virtuosoRegisterPublicKey(address);
-            if (result.publicKey !== "" && result.hash !== "") {
-                dispatch(updatePublicKey(result.publicKey));
-                message.success({
-                    content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`,
-                    key,
-                    duration: 10,
-                });
-            } else
-                message.error({
-                    content: `Public key is not provided or written to blockchain`,
-                    key,
-                    duration: 10,
-                });
-            log.profile(`Registered public key of address ${address}`, {
-                address,
-                result,
-                wf: "register",
+        setToken(newToken);
+        setCounter(counter + 1);
+        checkCanCreate();
+    };
+
+    async function corporateButton() {
+        if (address == "") {
+            const myaddress = await minaLogin(true);
+            dispatch(updateAddress(myaddress));
+        } else {
+            const corpMessage = JSON.stringify(token);
+            if (DEBUG) console.log("corpMessage", corpMessage);
+            const corpSignature = await getSignature(corpMessage);
+            if (DEBUG) console.log("corpSignature", corpSignature);
+            message.error({
+                content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,
+                key: `CorporateButton`,
+                duration: 10,
             });
         }
     }
 
-    async function notImplemented() {
-        message.error({
-            content: `Not implemented yet`,
-            key: `EditButton`,
-            duration: 10,
-        });
-    }
+    const onFinish = async (values) => {
+        if (DEBUG) console.log("onFinish", values);
+    };
 
     async function connect() {
         log.info("Connect clicked", { address, wf: "connect" });
@@ -122,15 +152,43 @@ const Corporate = () => {
                 <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                     <Card className="gx-card" title="Create corporate account">
                         <div className="gx-d-flex justify-content-center">
-                            <h4>
-                                With corporate account, your employees can authorise with Auro on the minanft.io site
-                                and create Mina NFT that allows to:
-                                - Publish fully verifyable content to MINA blockchain
-                                - Make part of content private
-                                - Generate proofs off-chain and verify proofs off-chain and on-chain for any part of the content
-                                - Redact (sanitize) some content (text, Word files, PNG files) and prove on-chain this redacted content
-                                - Use many formats of content: texts, images, video, audio, documents  
-                            </h4>
+                            Utilizing our corporate accounts, your employees can
+                            access minanft.io website with Auro to generate
+                            unique Mina NFTs. These NFTs enable them to:
+                            <br />
+                            <br />
+                            - Publish fully verifiable content to the MINA
+                            blockchain, ensuring transparency and trust.
+                            <br />
+                            <br />
+                            - Keep portions of the content private, giving your
+                            team control over data visibility.
+                            <br />
+                            <br />
+                            - Generate proofs off-chain and validate them both
+                            off-chain and on-chain for any content segment,
+                            supporting data integrity.
+                            <br />
+                            <br />
+                            - Redact (sanitize) specific pieces of content (such
+                            as text, Word files, PNG files) to exclude sensitive
+                            information such as personal information (social
+                            security number, etc), financial information (bank
+                            account details and balances, transfer details),
+                            security information (passwords, access codes,
+                            private keys), commercial confidential information
+                            (prices paid, some details of the proof of
+                            ownership, proof of product and proof of funds), and
+                            validate this redacted content on-chain, maintaining
+                            security and confidentiality on request of your
+                            legal department or commercial department.
+                            <br />
+                            <br />
+                            - Use a wide variety of content formats including
+                            text, images, videos, audio, and documents,
+                            promoting versatility in data representation.
+                            <br />
+                            <br />
                         </div>
                         <Form
                             form={form}
@@ -141,6 +199,9 @@ const Corporate = () => {
                                 span: 24,
                             }}
                             layout="horizontal"
+                            initialValues={token}
+                            onFinish={onFinish}
+                            onValuesChange={onValuesChange}
                         >
                             <div>
                                 <Row>
@@ -154,7 +215,14 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Your corporation or SME name"
-                                            name="mina_nft_name"
+                                            name="corporate_name"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please write name of your corporation or SME",
+                                                },
+                                            ]}
                                             placeholder="Write name of your corporation or SME"
                                         >
                                             <TextArea
@@ -177,9 +245,16 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Short description of your business"
-                                            name="public_key1"
-                                            placeholder="Some string"
+                                            label="Contact e-mail"
+                                            name="contact_email"
+                                            placeholder="Some string (less than 30 chars)"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message:
+                                                        "Please write your contact e-mail",
+                                                },
+                                            ]}
                                         >
                                             <TextArea
                                                 autoSize={{
@@ -189,6 +264,7 @@ const Corporate = () => {
                                             />
                                         </Form.Item>
                                     </Col>
+
                                     <Col
                                         xxl={12}
                                         xl={12}
@@ -199,7 +275,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Contact name"
-                                            name="public_value1"
+                                            name="contact_name"
                                             placeholder="Some string (less than 30 chars)"
                                         >
                                             <TextArea
@@ -223,7 +299,7 @@ const Corporate = () => {
                                     >
                                         <Form.Item
                                             label="Contact phone"
-                                            name="private_key1"
+                                            name="contact_phone"
                                             placeholder="Some string (less than 30 chars)"
                                         >
                                             <TextArea
@@ -243,27 +319,34 @@ const Corporate = () => {
                                         xs={24}
                                     >
                                         <Form.Item
-                                            label="Contact e-mail"
-                                            name="private_value1"
-                                            placeholder="Some string (less than 30 chars)"
+                                            label="Short description of your business"
+                                            name="corporate_description"
+                                            placeholder="Some string"
                                         >
                                             <TextArea
                                                 autoSize={{
                                                     minRows: 1,
-                                                    maxRows: 2,
+                                                    maxRows: 10,
                                                 }}
                                             />
                                         </Form.Item>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col>
+                                    <Col
+                                        xxl={12}
+                                        xl={12}
+                                        lg={14}
+                                        md={24}
+                                        sm={24}
+                                        xs={24}
+                                    >
                                         <Form.Item
-                                            name="private-data-json"
+                                            name="kyc docs"
                                             label="Your KYC docs"
                                         >
                                             <Upload
-                                                name="private-data-json"
+                                                name="kycdocs"
                                                 listType="picture-card"
                                                 className="avatar-uploader"
                                                 showUploadList={true}
@@ -276,49 +359,110 @@ const Corporate = () => {
                                                 <div>
                                                     <PlusOutlined />
                                                     <div className="ant-upload-text">
-                                                        private.json
+                                                        KYC/AML docs
                                                     </div>
                                                 </div>
                                             </Upload>
                                         </Form.Item>
                                     </Col>
+                                    <Col
+                                        xxl={12}
+                                        xl={12}
+                                        lg={14}
+                                        md={24}
+                                        sm={24}
+                                        xs={24}
+                                    >
+                                        <Form.Item
+                                            label={
+                                                <span>
+                                                    <span>
+                                                        Authorisation code.{" "}
+                                                    </span>
+                                                    <span>
+                                                        {" "}
+                                                        <a
+                                                            href="https://t.me/minanft_bot?start=auth"
+                                                            target="_blank"
+                                                        >
+                                                            Get it here
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            }
+                                            name="auth"
+                                            placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+                                        >
+                                            <TextArea
+                                                autoSize={{
+                                                    minRows: 2,
+                                                    maxRows: 3,
+                                                }}
+                                            />
+                                        </Form.Item>
+                                    </Col>
                                 </Row>
                                 <Row>
-                                    <Form.Item
-                                        label={
-                                            <span>
+                                    <Col
+                                        xxl={24}
+                                        xl={24}
+                                        lg={24}
+                                        md={24}
+                                        sm={24}
+                                        xs={24}
+                                    >
+                                        <Form.Item>
+                                            <div
+                                                className="gx-mt-4"
+                                                style={{
+                                                    whiteSpace: "pre-wrap",
+                                                }}
+                                            >
                                                 <span>
-                                                    Authorisation code.{" "}
-                                                </span>
+                                                    {address == ""
+                                                        ? "Please connect with Auro on Berkeley network before creating corporate account"
+                                                        : "You are creating corporate account with AURO address " +
+                                                          address}
+                                                    <br />
+                                                    <br />
+                                                    You will be kindly requested
+                                                    to sign this form
+                                                    information with AURO
+                                                    wallet. Following the
+                                                    completion of our onboarding
+                                                    process, we will establish
+                                                    your corporate account.
+                                                    <br />
+                                                    <br />
+                                                    By clicking this button, you
+                                                    are confirming your
+                                                    agreement with our
+                                                </span>{" "}
                                                 <span>
-                                                    {" "}
                                                     <a
-                                                        href="https://t.me/minanft_bot?start=auth"
+                                                        href={
+                                                            footerAgreementLink
+                                                        }
                                                         target="_blank"
                                                     >
-                                                        Get it here
+                                                        {footerAgreement}
                                                     </a>
                                                 </span>
-                                            </span>
-                                        }
-                                        name="auth"
-                                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
-                                    >
-                                        <TextArea
-                                            autoSize={{
-                                                minRows: 2,
-                                                maxRows: 3,
-                                            }}
-                                        />
-                                    </Form.Item>
+                                            </div>
+                                        </Form.Item>
+                                    </Col>
                                 </Row>
+
                                 <Row>
                                     <Form.Item>
                                         <Button
                                             type="primary"
-                                            onClick={notImplemented}
+                                            disabled={createDisabled}
+                                            onClick={corporateButton}
                                         >
-                                            {account==""?"Connect with Auro":"Create corporate account"}
+                                            {address == ""
+                                                ? "Connect with Auro"
+                                                : "Create corporate account"}
                                         </Button>
                                     </Form.Item>
                                 </Row>
