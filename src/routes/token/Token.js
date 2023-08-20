@@ -205,7 +205,10 @@ const TokenMedia = ({
                         )}
                         {type === "video" ? (
                             <ReactPlayer
-                                url={url}
+                                url={url == "https://ipfs.io/ipfs/QmREhQ5U9v68xPnTZaHusGHxmzCHBcLYLNQFyA2pJTWMLG"?
+                                		`https://res.cloudinary.com/minanft/video/sp_auto/nft/@minanft/0.mov` :
+                                		url
+                                }
                                 controls={true}
                                 //light={true}
                                 width="100%"
