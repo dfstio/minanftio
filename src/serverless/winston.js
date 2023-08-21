@@ -51,9 +51,13 @@ const cloudwatchConfig = {
     level: "info",
     logGroupName: WINSTON_NAME,
     logStreamName: `${MINANFT_BRANCH}-${CHAIN_ID}`,
-    awsAccessKeyId: WINSTON_ID,
-    awsSecretKey: WINSTON_KEY,
-    awsRegion: WINSTON_REGION,
+    awsOptions: {
+        credentials: {
+            accessKeyId: WINSTON_ID,
+            secretAccessKey: WINSTON_KEY,
+        },
+        region: WINSTON_REGION,
+    },
     jsonMessage: true,
     //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
 };
