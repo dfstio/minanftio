@@ -16,13 +16,15 @@ exports.handler = async (event, context) => {
     try {
         // parse form data
         const body = JSON.parse(event.body);
+        
         logger.initMeta();
-        logger.meta.frontendMeta = body.winstonMeta;
+        //logger.meta.frontendMeta = body.winstonMeta;
         logger.meta.frontendMeta.winstonHost = event.headers.host;
         logger.meta.frontendMeta.winstonIP = event.headers["x-bb-ip"];
         logger.meta.frontendMeta.winstonUserAgent = event.headers["user-agent"];
         logger.meta.frontendMeta.winstonBrowser = event.headers["sec-ch-ua"];
-
+				
+				
         if (body.key === undefined || body.key !== REACT_APP_RELAY_KEY) {
             log.error("Relay call: wrong key");
             return {
