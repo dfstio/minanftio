@@ -4,22 +4,22 @@ const axios = require("axios");
 
 const { BOTAPIAUTH, BOTAPIURL } = process.env;
 
-async function lambda(command, body) {
-    const data = {
+async function lambda(command, data) {
+    const lambdaData = {
         auth: BOTAPIAUTH,
         command,
-        data: body,
+        data,
     };
-    console.log("functionsLambdaBot command", command, body);
+    console.log("functionsLambdaBot command", command, data);
 
     try {
-        const response = await axios.post(`${BOTAPIURL}`, data);
+        const response = await axios.post(`${BOTAPIURL}`, lambdaData);
         //console.log("functionsLambdaBot result", data, response);
-        return { response: response, success: true };
+        return { success: true };
     } catch (error) {
         logm.error("catch", { error, data });
         console.error("catch functionsLambdaBot", data, error);
-        return { error, success: false };
+        return { success: false };
     }
 }
 

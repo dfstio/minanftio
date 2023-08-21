@@ -92,7 +92,7 @@ const transportDebug = [
 
 const debug = new winston.createLogger({
     level: "debug",
-    format: winston.format.combine(winston.format.json(), winstonFormat()),
+    format: winston.format.combine(winston.format.timestamp(), winston.format.json(), winstonFormat()),
     defaultMeta: {
         winstonBranch: MINANFT_BRANCH,
         winstonChainId: CHAIN_ID,
@@ -107,7 +107,7 @@ const debug = new winston.createLogger({
 
 const info = new winston.createLogger({
     level: "info",
-    format: winston.format.combine(winston.format.json(), winstonFormat()),
+    format: winston.format.combine(winston.format.timestamp(), winston.format.json(), winstonFormat()),
     defaultMeta: {
         winstonBranch: MINANFT_BRANCH,
         winstonChainId: CHAIN_ID,
