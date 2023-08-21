@@ -1,6 +1,7 @@
 const WinstonCloudWatch = require("winston-cloudwatch");
 const logger = require("../serverless/winston");
 const log = logger.info.child({ winstonModule: "winston" });
+//const { lambda } = require("../serverless/botlambda");
 
 const {
     WINSTON_ID,
@@ -49,16 +50,23 @@ exports.handler = async (event, context) => {
         body.winstonTimer = wTimer;
         body.winstonTimerText = formatWinstonTime(wTimer);
         const cloudwatchConfig = {
-        		level: 'info',
+            level: "info",
             logGroupName: WINSTON_NAME,
             logStreamName: `${MINANFT_BRANCH}-${CHAIN_ID}`,
-            awsAccessKeyId: WINSTON_ID,
-            awsSecretKey: WINSTON_KEY,
-            awsRegion: WINSTON_REGION,
+            awsOptions: {
+                credentials: {
+                    accessKeyId: WINSTON_ID,
+                    secretAccessKey: WINSTON_KEY,
+                },
+                region: WINSTON_REGION,
+            },
             jsonMessage: true,
             //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
         };
-        console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
+        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig); 
+        //const result = await lambda("winston", body);
+        //console.log("Result", result);
+
         const transport = new WinstonCloudWatch(cloudwatchConfig);
         function myfunc(args) {}
         transport.log(body, myfunc);
@@ -68,8 +76,9 @@ exports.handler = async (event, context) => {
         });
 
         await logger.flush();
-        console.log("Winston end");
-        // return success
+
+        //console.log("Winston: finished");
+
         return {
             statusCode: 200,
             body: JSON.stringify({
