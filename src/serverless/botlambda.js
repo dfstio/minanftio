@@ -13,13 +13,13 @@ async function lambda(command, data) {
     console.log("functionsLambdaBot command", command, data);
 
     try {
-        const response = await axios.post(`${BOTAPIURL}`, JSON.stringify(lambdaData));
+        const response = await axios.post(`${BOTAPIURL}`, lambdaData);
         //console.log("functionsLambdaBot result", data, response);
-        return { response: response, success: true };
+        return { success: true };
     } catch (error) {
         logm.error("catch", { error, data });
         console.error("catch functionsLambdaBot", data, error);
-        return { error, success: false };
+        return { success: false };
     }
 }
 
