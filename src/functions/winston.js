@@ -63,7 +63,7 @@ exports.handler = async (event, context) => {
             jsonMessage: true,
             //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
         };
-        console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig); 
+        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig); 
         //const result = await lambda("winston", body);
         //console.log("Result", result);
 
@@ -77,7 +77,7 @@ exports.handler = async (event, context) => {
 
         await logger.flush();
 
-        console.log("Winston: finished");
+        //console.log("Winston: finished");
 
         return {
             statusCode: 200,

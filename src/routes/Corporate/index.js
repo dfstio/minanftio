@@ -130,6 +130,7 @@ const Corporate = () => {
             if (DEBUG) console.log("corpSignature", corpSignature);
             log.info("Corporate signature", {
                 address,
+                token,
                 corpMessage,
                 corpSignature,
                 wf: "corporateButton",
