@@ -19,6 +19,10 @@ function formatWinstonTime(ms) {
     return parseInt(ms / 1000 / 60 / 60) + " h";
 }
 
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 exports.handler = async (event, context) => {
     // check for POST
     if (event.httpMethod !== "POST") {
@@ -91,6 +95,3 @@ exports.handler = async (event, context) => {
     }
 };
 
-function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}

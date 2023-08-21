@@ -74,7 +74,7 @@ const Corporate = () => {
     const [counter, setCounter] = useState(0);
     const [createDisabled, setCreateDisabled] = useState(true);
 
-    const log = logm.child({ winstonComponent: "Verify" });
+    const log = logm.child({ winstonComponent: "Corporate" });
 
     const checkCanCreate = () => {
         let newCreateDisabled = true;
