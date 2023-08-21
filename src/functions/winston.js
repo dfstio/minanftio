@@ -7,7 +7,7 @@ const {
     WINSTON_KEY,
     WINSTON_NAME,
     WINSTON_REGION,
-    BRANCH,
+    MINANFT_BRANCH,
     CHAIN_ID,
 } = process.env;
 
@@ -38,7 +38,7 @@ exports.handler = async (event, context) => {
             body.winstonFrontendMeta &&
             body.winstonFrontendMeta.startTime &&
             Date.now() - body.winstonFrontendMeta.startTime;
-        body.winstonBranch = BRANCH;
+        body.winstonBranch = MINANFT_BRANCH;
         body.winstonChainId = CHAIN_ID;
         body.winstonLevel = "info";
         body.winstonRepo = "frontend";
@@ -49,15 +49,16 @@ exports.handler = async (event, context) => {
         body.winstonTimer = wTimer;
         body.winstonTimerText = formatWinstonTime(wTimer);
         const cloudwatchConfig = {
+        		level: 'info',
             logGroupName: WINSTON_NAME,
-            logStreamName: `${BRANCH}-${CHAIN_ID}`,
+            logStreamName: `${MINANFT_BRANCH}-${CHAIN_ID}`,
             awsAccessKeyId: WINSTON_ID,
             awsSecretKey: WINSTON_KEY,
             awsRegion: WINSTON_REGION,
             jsonMessage: true,
             //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
         };
-        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
+        console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
         const transport = new WinstonCloudWatch(cloudwatchConfig);
         function myfunc(args) {}
         transport.log(body, myfunc);
@@ -67,7 +68,7 @@ exports.handler = async (event, context) => {
         });
 
         await logger.flush();
-        //console.log("Winston end");
+        console.log("Winston end");
         // return success
         return {
             statusCode: 200,
