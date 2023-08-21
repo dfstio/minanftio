@@ -93,9 +93,9 @@
     "url-search-params": "^1.1.0",
     "victory": "^35.4.6",
     "web3-core": "^1.6.0",
-    "winston": "^3.3.3",
-    "winston-cloudwatch": "^3.1.1",
-    "winston-transport": "^4.4.0",
+    "winston": "^3.10.0",
+    "winston-cloudwatch": "^6.2.0",
+    "winston-transport": "^4.5.0",
     "yarn": "^1.22.11"
   },
   "scripts": {
@@ -109,6 +109,7 @@
     "archive": "git archive -o mvp04.zip HEAD",
     "push": "git status && git push -u originminanftio lib",
     "checkout": "git checkout -b lib",
+    "upgradeinteractive": "yarn upgrade-interactive",
     "style": "prettier --tab-width 4 --write {,!(node_modules)/**/}*.js",
     "dev": "netlify dev",
     "listenv": "netlify env:list --json"
