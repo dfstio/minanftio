@@ -48,6 +48,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
         // return error
         log.error("catch", { error, body: event.body });
+        console.error("botmint catch", event.body, error);
         await logger.flush();
         return {
             statusCode: error.statusCode || 500,
