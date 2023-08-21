@@ -49,6 +49,7 @@ exports.handler = async (event, context) => {
         body.winstonBrowser = event.headers["sec-ch-ua"];
         body.winstonTimer = wTimer;
         body.winstonTimerText = formatWinstonTime(wTimer);
+        body.winstonMessageTime = new Date().toISOString().replace(/T/, ' ');
         const cloudwatchConfig = {
             level: "info",
             logGroupName: WINSTON_NAME,
