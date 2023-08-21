@@ -57,17 +57,18 @@ exports.handler = async (event, context) => {
             jsonMessage: true,
             //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
         };
-        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
+        console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
         const transport = new WinstonCloudWatch(cloudwatchConfig);
         function myfunc(args) {}
         transport.log(body, myfunc);
-        //log.info("winston test", {cloudwatchConfig, body});
+        log.info("winston test", {cloudwatchConfig, body});
         await new Promise((resolve) => {
             transport.kthxbye(resolve);
         });
 
         await logger.flush();
-        //console.log("Winston end");
+        await sleep(1000);
+        console.log("Winston end");
         // return success
         return {
             statusCode: 200,
@@ -78,6 +79,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
         // return error
         log.error("catch", { error, body: event.body });
+        console.error("catch", error);
         await logger.flush();
         return {
             statusCode: error.statusCode || 500,
@@ -88,3 +90,7 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}

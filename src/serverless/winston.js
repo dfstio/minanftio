@@ -10,7 +10,7 @@ const {
     WINSTON_KEY,
     WINSTON_NAME,
     WINSTON_REGION,
-    BRANCH,
+    MINANFT_BRANCH,
     CHAIN_ID,
 } = process.env;
 
@@ -50,7 +50,7 @@ const winstonFormat = format((info, opts) => {
 const cloudwatchConfig = {
     level: "info",
     logGroupName: WINSTON_NAME,
-    logStreamName: `${BRANCH}-${CHAIN_ID}`,
+    logStreamName: `${MINANFT_BRANCH}-${CHAIN_ID}`,
     awsAccessKeyId: WINSTON_ID,
     awsSecretKey: WINSTON_KEY,
     awsRegion: WINSTON_REGION,
@@ -90,7 +90,7 @@ const debug = new winston.createLogger({
     level: "debug",
     format: winston.format.combine(winston.format.json(), winstonFormat()),
     defaultMeta: {
-        winstonBranch: BRANCH,
+        winstonBranch: MINANFT_BRANCH,
         winstonChainId: CHAIN_ID,
         winstonLevel: "debug",
         winstonRepo: "functions",
@@ -105,7 +105,7 @@ const info = new winston.createLogger({
     level: "info",
     format: winston.format.combine(winston.format.json(), winstonFormat()),
     defaultMeta: {
-        winstonBranch: BRANCH,
+        winstonBranch: MINANFT_BRANCH,
         winstonChainId: CHAIN_ID,
         winstonLevel: "info",
         winstonRepo: "functions",
