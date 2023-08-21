@@ -57,7 +57,7 @@ exports.handler = async (event, context) => {
             jsonMessage: true,
             //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
         };
-        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
+        console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
         const transport = new WinstonCloudWatch(cloudwatchConfig);
         function myfunc(args) {}
         transport.log(body, myfunc);
