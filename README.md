@@ -7,9 +7,10 @@ https://minanft.io
 ## Library on NPM
 https://www.npmjs.com/package/minanft
 
-# Winston configuration
-```
+## Winston configuration
+
 Create user with AWS IAM Policy:
+```
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -26,9 +27,9 @@ Create user with AWS IAM Policy:
         }
     ]
 }
-
+```
 and update WINSTON... environment variables with your AWS credentials and region
 
-```
+
  
  
