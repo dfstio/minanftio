@@ -68,7 +68,7 @@ exports.handler = async (event, context) => {
         });
 
         await logger.flush();
-        console.log("Winston end");
+        console.log("Winston: finished");
         // return success
         return {
             statusCode: 200,
