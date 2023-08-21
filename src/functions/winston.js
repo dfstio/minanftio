@@ -49,6 +49,7 @@ exports.handler = async (event, context) => {
         body.winstonTimer = wTimer;
         body.winstonTimerText = formatWinstonTime(wTimer);
         const cloudwatchConfig = {
+        		level: 'info',
             logGroupName: WINSTON_NAME,
             logStreamName: `${MINANFT_BRANCH}-${CHAIN_ID}`,
             awsAccessKeyId: WINSTON_ID,
@@ -67,7 +68,7 @@ exports.handler = async (event, context) => {
         });
 
         await logger.flush();
-        //console.log("Winston end");
+        console.log("Winston end");
         // return success
         return {
             statusCode: 200,
