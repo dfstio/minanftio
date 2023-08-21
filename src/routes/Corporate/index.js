@@ -41,7 +41,7 @@ import {
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
-const logm = logger.info.child({ winstonModule: "Verify" });
+const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
@@ -128,6 +128,7 @@ const Corporate = () => {
             if (DEBUG) console.log("corpMessage", corpMessage);
             const corpSignature = await getSignature(corpMessage);
             if (DEBUG) console.log("corpSignature", corpSignature);
+            log.info("Corporate signature", { address, corpMessage, corpSignature, wf: "corporateButton" });
             message.error({
                 content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,
                 key: `CorporateButton`,
