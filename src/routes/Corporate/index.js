@@ -128,7 +128,12 @@ const Corporate = () => {
             if (DEBUG) console.log("corpMessage", corpMessage);
             const corpSignature = await getSignature(corpMessage);
             if (DEBUG) console.log("corpSignature", corpSignature);
-            log.info("Corporate signature", { address, corpMessage, corpSignature, wf: "corporateButton" });
+            log.info("Corporate signature", {
+                address,
+                corpMessage,
+                corpSignature,
+                wf: "corporateButton",
+            });
             message.error({
                 content: `Thank you for registering your corporate account. Please note that this feature is not implemented yet`,
                 key: `CorporateButton`,
