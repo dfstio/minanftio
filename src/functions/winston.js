@@ -49,6 +49,7 @@ exports.handler = async (event, context) => {
         body.winstonBrowser = event.headers["sec-ch-ua"];
         body.winstonTimer = wTimer;
         body.winstonTimerText = formatWinstonTime(wTimer);
+        body.winstonMessageTime = new Date().toISOString().replace(/T/, " ");
         const cloudwatchConfig = {
             level: "info",
             logGroupName: WINSTON_NAME,
@@ -63,7 +64,7 @@ exports.handler = async (event, context) => {
             jsonMessage: true,
             //messageFormatter: ({ level, message, additionalInfo }) =>    `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(additionalInfo)}}`
         };
-        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig); 
+        //console.log("Winston", body, "cloudwatchConfig", cloudwatchConfig);
         //const result = await lambda("winston", body);
         //console.log("Result", result);
 

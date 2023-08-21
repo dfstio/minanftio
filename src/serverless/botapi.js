@@ -8,7 +8,7 @@ const mint = (jwtToken, ipfs) => {
     const data = {
         data: { jwtToken, ipfs },
         key: REACT_APP_RELAY_KEY,
-        winstonMeta: logger.meta,
+        //winstonMeta: logger.meta,
     };
     if (DEBUG) console.log("mint api: ", data);
     return fetch("/api/botmint", {

@@ -14,7 +14,7 @@ async function lambda(command, body) {
 
     try {
         const response = await axios.post(`${BOTAPIURL}`, data);
-        console.log("functionsLambdaBot result", data, response);
+        //console.log("functionsLambdaBot result", data, response);
         return { response: response, success: true };
     } catch (error) {
         logm.error("catch", { error, data });
