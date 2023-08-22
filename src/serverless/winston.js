@@ -18,11 +18,12 @@ var meta = {
     id: uuidv4(),
     type: "functions",
     startTime: Date.now(),
+    startFormattedTime: new Date().toISOString().replace(/T/, " "),
     updated: true,
 };
 
 function initMeta() {
-    meta = { id: uuidv4(), type: "functions", startTime: Date.now() };
+    meta = { id: uuidv4(), type: "functions", startTime: Date.now(), startFormattedTime : new Date().toISOString().replace(/T/, " ") };
 }
 
 const myFormat = printf(({ level, message, winstonModule, wf, timestamp }) => {
