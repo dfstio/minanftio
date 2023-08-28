@@ -1,5 +1,6 @@
 module.exports = {
-    footerText: "Copyright © Mina NFT 2023  ",
+    footerText: "Copyright © DFST 2023 ",
+    footerTextLink: "https://dfst.io",
     footerAgreement: ` Terms and Conditions and Limited License `,
     footerAgreementLink: `https://minanft.io/agreement/terms.pdf`,
     footerContact: ` Contact us `,

@@ -23,7 +23,12 @@ var meta = {
 };
 
 function initMeta() {
-    meta = { id: uuidv4(), type: "functions", startTime: Date.now(), startFormattedTime : new Date().toISOString().replace(/T/, " ") };
+    meta = {
+        id: uuidv4(),
+        type: "functions",
+        startTime: Date.now(),
+        startFormattedTime: new Date().toISOString().replace(/T/, " "),
+    };
 }
 
 const myFormat = printf(({ level, message, winstonModule, wf, timestamp }) => {
@@ -93,7 +98,11 @@ const transportDebug = [
 
 const debug = new winston.createLogger({
     level: "debug",
-    format: winston.format.combine(winston.format.timestamp(), winston.format.json(), winstonFormat()),
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+        winstonFormat(),
+    ),
     defaultMeta: {
         winstonBranch: MINANFT_BRANCH,
         winstonChainId: CHAIN_ID,
@@ -108,7 +117,11 @@ const debug = new winston.createLogger({
 
 const info = new winston.createLogger({
     level: "info",
-    format: winston.format.combine(winston.format.timestamp(), winston.format.json(), winstonFormat()),
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+        winstonFormat(),
+    ),
     defaultMeta: {
         winstonBranch: MINANFT_BRANCH,
         winstonChainId: CHAIN_ID,

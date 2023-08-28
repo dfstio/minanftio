@@ -105,7 +105,11 @@ const MainApp = () => {
                     <Footer>
                         <div className="gx-layout-footer-content">
                             <ul className="gx-login-list">
-                                <li>{footerText}</li>
+                                <li>
+                                    <a href={footerTextLink} target="_blank">
+                                        {footerText}
+                                    </a>
+                                </li>
                                 <li>
                                     <a
                                         href={footerAgreementLink}
