@@ -177,7 +177,7 @@ const MintPrivate = () => {
         if (DEBUG) console.log("onValuesChange", values);
         let newToken = token;
 
-        if (values.name !== undefined) newToken.name = values.name; //TODO: check name
+        if (values.name !== undefined) newToken.name = (values.name[0] == "@") ? values.name : "@" + values.name; //TODO: check name
         if (values.url !== undefined) newToken.url = values.url;
         if (values.description !== undefined)
             newToken.description = values.description;
@@ -521,7 +521,7 @@ const MintPrivate = () => {
                                             maxCount={1}
                                             //action="//jsonplaceholder.typicode.com/posts/"
                                             beforeUpload={beforeUpload}
-                                            //onChange={this.handleChange}
+                                        //onChange={this.handleChange}
                                         >
                                             <div>
                                                 <PlusOutlined />
@@ -621,7 +621,7 @@ const MintPrivate = () => {
                                             showUploadList={true}
                                             //action="//jsonplaceholder.typicode.com/posts/"
                                             beforeUpload={beforeUpload}
-                                            //onChange={this.handleChange}
+                                        //onChange={this.handleChange}
                                         >
                                             {" "}
                                             <div>
@@ -653,7 +653,7 @@ const MintPrivate = () => {
                                             multiple={true}
                                             //action="//jsonplaceholder.typicode.com/posts/"
                                             beforeUpload={beforeUpload}
-                                            //onChange={this.handleChange}
+                                        //onChange={this.handleChange}
                                         >
                                             {" "}
                                             <div>
@@ -893,7 +893,7 @@ const MintPrivate = () => {
                                             showUploadList={true}
                                             //action="//jsonplaceholder.typicode.com/posts/"
                                             beforeUpload={beforeUpload}
-                                            //onChange={this.handleChange}
+                                        //onChange={this.handleChange}
                                         >
                                             {" "}
                                             <div>
@@ -920,7 +920,7 @@ const MintPrivate = () => {
                                             multiple={true}
                                             //action="//jsonplaceholder.typicode.com/posts/"
                                             beforeUpload={beforeUpload}
-                                            //onChange={this.handleChange}
+                                        //onChange={this.handleChange}
                                         >
                                             {" "}
                                             <div>
@@ -970,8 +970,8 @@ const MintPrivate = () => {
                                     {ipfs == ""
                                         ? "Create Mina NFT"
                                         : auth == ""
-                                        ? "Deploy NFT with @MinaNFT_bot"
-                                        : "Deploy NFT"}
+                                            ? "Deploy NFT with @MinaNFT_bot"
+                                            : "Deploy NFT"}
                                 </Button>
                             </Form.Item>
                         </Form>

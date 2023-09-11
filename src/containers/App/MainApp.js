@@ -10,10 +10,15 @@ import BelowHeader from "../Topbar/BelowHeader/index";
 import Topbar from "../Topbar/index";
 import {
     footerText,
+    footerTextLink,
     footerAgreement,
     footerContact,
     footerAgreementLink,
     footerEmail,
+    footerTwitter,
+    footerTwitterLink,
+    footerGitHub,
+    footerGitHubLink,
 } from "../../util/config";
 import App from "../../routes/index";
 
@@ -105,7 +110,11 @@ const MainApp = () => {
                     <Footer>
                         <div className="gx-layout-footer-content">
                             <ul className="gx-login-list">
-                                <li>{footerText}</li>
+                                <li>
+                                    <a href={footerTextLink} target="_blank">
+                                        {footerText}
+                                    </a>
+                                </li>
                                 <li>
                                     <a
                                         href={footerAgreementLink}
@@ -116,6 +125,16 @@ const MainApp = () => {
                                 </li>
                                 <li>
                                     <a href={footerEmail}>{footerContact}</a>
+                                </li>
+                                <li>
+                                    <a href={footerTwitterLink} target="_blank">
+                                        {footerTwitter}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href={footerGitHubLink} target="_blank">
+                                        {footerGitHub}
+                                    </a>
                                 </li>
                             </ul>
                         </div>
