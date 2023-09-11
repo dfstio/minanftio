@@ -57,7 +57,7 @@
   .flex-display(flex, row, wrap);
   .align-items(center);
 
-  & > li {
+  &>li {
     font-size: 18px;
 
     &:not(:last-child) {
@@ -151,7 +151,7 @@
 }
 
 .@{class-prefix}-header-horizontal-main .@{class-prefix}-header-notifications li {
-  & > span {
+  &>span {
     color: @text-color;
 
     .@{class-prefix}-header-horizontal-dark & {
@@ -172,14 +172,14 @@
 }
 
 .@{class-prefix}-popover-lang-scroll {
-  height: 60px !important;
+  height: 100px !important;
   width: 160px !important;
   margin: 0 -16px;
 }
 
 .ant-popover-placement-bottomRight {
-  & > .ant-popover-content {
-    & > .ant-popover-arrow {
+  &>.ant-popover-content {
+    &>.ant-popover-arrow {
       right: 10px;
     }
   }
@@ -278,7 +278,7 @@
       }
     }
 
-    & > div {
+    &>div {
       position: relative;
       z-index: 2;
     }
