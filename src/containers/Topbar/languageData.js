@@ -8,7 +8,7 @@ const languageData = [
   {
     languageId: "italian",
     locale: "it",
-    name: "Italian",
+    name: "Italiano",
     icon: "it",
   },
   {
