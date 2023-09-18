@@ -9,7 +9,7 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
-import IntlMessages from "../../util/IntlMessages";
+
 import {
   Button,
   message,
