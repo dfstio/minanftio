@@ -101,7 +101,6 @@ const App = (props) => {
     >
       <IntlProvider
         locale={currentAppLocale.locale}
-        defaultLocale={{ languageId: "english", locale: "en", name: "English", icon: "us" }}
         messages={currentAppLocale.messages}
       >
         <Route path={`${match.url}`} component={MainApp} />
