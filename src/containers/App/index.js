@@ -102,7 +102,7 @@ const App = (props) => {
       <IntlProvider
         locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}
-      >
+      > defaultLocale={currentAppLocale.locale}
         <Route path={`${match.url}`} component={MainApp} />
       </IntlProvider>
     </ConfigProvider >
