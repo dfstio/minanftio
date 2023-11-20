@@ -57,9 +57,7 @@ const App = (props) => {
   const navStyle = useSelector(({ settings }) => settings.navStyle);
   const layoutType = useSelector(({ settings }) => settings.layoutType);
   const themeType = useSelector(({ settings }) => settings.themeType);
-  const isDirectionRTL = useSelector(
-    ({ settings }) => settings.isDirectionRTL,
-  );
+  const isDirectionRTL = useSelector(({ settings }) => settings.isDirectionRTL);
 
   useEffect(() => {
     if (isDirectionRTL) {
@@ -102,10 +100,11 @@ const App = (props) => {
       <IntlProvider
         locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}
-      > defaultLocale={currentAppLocale.locale}
+        defaultLocale={currentAppLocale.locale}
+      >
         <Route path={`${match.url}`} component={MainApp} />
       </IntlProvider>
-    </ConfigProvider >
+    </ConfigProvider>
   );
 };
 
