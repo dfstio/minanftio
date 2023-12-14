@@ -367,6 +367,7 @@ export async function minaLogin(openlink = true) {
   let address = "";
   const log = logm.child({ openlink, wf: "minaLogin" });
   log.debug("called: ", { ethereum: window.ethereum });
+  console.log("mina login start");
 
   try {
     if (window.mina !== undefined) {
