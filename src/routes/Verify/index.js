@@ -100,7 +100,7 @@ const Verify = () => {
       </h2>
       <div className="gx-d-flex justify-content-center">
         <h4>
-          You can verify any private file that was sealed to the Mina blocchain
+          You can verify any private file that was sealed to the Mina blockchain
           in the Mina NFT post
         </h4>
       </div>
