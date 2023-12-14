@@ -109,8 +109,7 @@
     "web3-core": "^1.6.0",
     "winston": "^3.10.0",
     "winston-cloudwatch": "^6.2.0",
-    "winston-transport": "^4.5.0",
-    "yarn": "^1.22.11"
+    "winston-transport": "^4.5.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
