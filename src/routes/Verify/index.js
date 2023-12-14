@@ -1,15 +1,9 @@
 import React from "react";
-import api from "../../serverless/api";
-import { isMobile, isDesktop, isChrome } from "react-device-detect";
-import { accountingEmail } from "../../util/config";
 import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateAddress,
-  updateVirtuosoBalance,
-  updatePublicKey,
-} from "../../appRedux/actions";
+import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin, virtuosoRegisterPublicKey } from "../../blockchain/mina";
+import { Field } from "o1js";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -89,6 +83,12 @@ const Verify = () => {
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
+    const a = Field(7);
+    const b = Field(3);
+    const c = a.add(b);
+    console.log("a", a.toJSON());
+    console.log("b", b.toJSON());
+    console.log("c", c.toJSON());
   }
 
   return (
@@ -101,6 +101,8 @@ const Verify = () => {
           You can verify any private file that was sealed to the Mina blocchain
           in the Mina NFT post
         </h4>
+      </div>
+      <div className="gx-d-flex justify-content-center">
         <Button type="primary" onClick={connect}>
           Connect
         </Button>
