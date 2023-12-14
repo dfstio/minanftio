@@ -147,5 +147,6 @@
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^0.9.1",
     "react-app-rewired": "^2.2.1"
-  }
+  },
+  "packageManager": "yarn@4.0.2"
 }
