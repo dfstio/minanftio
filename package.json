@@ -61,6 +61,7 @@
     "moment": "^2.29.4",
     "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
+    "o1js": "^0.15.0",
     "prop-types": "^15.8.1",
     "qrcode.react": "^1.0.1",
     "react": "^17.0.2",
