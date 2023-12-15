@@ -36,6 +36,9 @@ const addWebpackAwait = () => (config) => {
     new webpack.ProvidePlugin({
       process: "process/browser",
     }),
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
   ];
   return config;
 };
