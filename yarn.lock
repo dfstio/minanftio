@@ -6360,7 +6360,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-import@npm:^1.13.0":
+"babel-plugin-import@npm:^1.13.8":
   version: 1.13.8
   resolution: "babel-plugin-import@npm:1.13.8"
   dependencies:
@@ -15402,7 +15402,7 @@ __metadata:
     app-redux: "npm:^2.0.3"
     aws-sdk: "npm:^2.995.0"
     axios: "npm:^0.21.4"
-    babel-plugin-import: "npm:^1.13.0"
+    babel-plugin-import: "npm:^1.13.8"
     bl: "npm:^5.0.0"
     bnc-notify: "npm:^1.9.1"
     connected-react-router: "npm:^6.8.0"
