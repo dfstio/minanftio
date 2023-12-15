@@ -4393,7 +4393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^5.11.9":
+"@testing-library/jest-dom@npm:^5.17.0":
   version: 5.17.0
   resolution: "@testing-library/jest-dom@npm:5.17.0"
   dependencies:
@@ -4410,7 +4410,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^11.2.3":
+"@testing-library/react@npm:^11.2.7":
   version: 11.2.7
   resolution: "@testing-library/react@npm:11.2.7"
   dependencies:
@@ -4423,7 +4423,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^12.6.0":
+"@testing-library/user-event@npm:^12.8.3":
   version: 12.8.3
   resolution: "@testing-library/user-event@npm:12.8.3"
   dependencies:
@@ -15391,9 +15391,9 @@ __metadata:
     "@metamask/eth-sig-util": "npm:^4.0.0"
     "@metamask/jazzicon": "npm:^2.0.0"
     "@metamask/onboarding": "npm:^1.0.1"
-    "@testing-library/jest-dom": "npm:^5.11.9"
-    "@testing-library/react": "npm:^11.2.3"
-    "@testing-library/user-event": "npm:^12.6.0"
+    "@testing-library/jest-dom": "npm:^5.17.0"
+    "@testing-library/react": "npm:^11.2.7"
+    "@testing-library/user-event": "npm:^12.8.3"
     add: "npm:^2.0.6"
     algoliasearch: "npm:^4.8.5"
     amcharts3: "npm:^3.21.15"
