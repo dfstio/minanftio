@@ -22,9 +22,11 @@ module.exports = override(
   overrideProcessEnv({
     VERSION: JSON.stringify(require("./package.json").version),
   }),
+  /*
   addWebpackAlias({
     ["o1js"]: path.resolve(__dirname, "node_modules/o1js"),
   }),
+  */
   addBabelPlugin("@babel/plugin-syntax-top-level-await"),
   addWebpackExternals({
     o1js: "o1js",
