@@ -22,7 +22,7 @@
     "@ant-design/icons": "^4.8.1",
     "@babel/compat-data": "^7.23.5",
     "@metamask/detect-provider": "^1.2.0",
-    "@metamask/eth-sig-util": "^4.0.0",
+    "@metamask/eth-sig-util": "^4.0.1",
     "@metamask/jazzicon": "^2.0.0",
     "@metamask/onboarding": "^1.0.1",
     "@testing-library/jest-dom": "^5.17.0",

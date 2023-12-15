@@ -3776,7 +3776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/eth-sig-util@npm:^4.0.0":
+"@metamask/eth-sig-util@npm:^4.0.1":
   version: 4.0.1
   resolution: "@metamask/eth-sig-util@npm:4.0.1"
   dependencies:
@@ -15388,7 +15388,7 @@ __metadata:
     "@ant-design/icons": "npm:^4.8.1"
     "@babel/compat-data": "npm:^7.23.5"
     "@metamask/detect-provider": "npm:^1.2.0"
-    "@metamask/eth-sig-util": "npm:^4.0.0"
+    "@metamask/eth-sig-util": "npm:^4.0.1"
     "@metamask/jazzicon": "npm:^2.0.0"
     "@metamask/onboarding": "npm:^1.0.1"
     "@testing-library/jest-dom": "npm:^5.17.0"
