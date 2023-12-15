@@ -83,14 +83,13 @@ const Verify = () => {
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
-    /*
+
     const a = Field(7);
     const b = Field(3);
     const c = a.add(b);
     console.log("a", a.toJSON());
     console.log("b", b.toJSON());
     console.log("c", c.toJSON());
-    */
   }
 
   return (
