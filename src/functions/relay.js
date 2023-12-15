@@ -2,17 +2,18 @@
 // The server validates the request, and if accepted, will send the meta-tx via a Defender Relayer
 
 const {
-    RELAY_KEY,
-    RELAY_SECRET,
-    REACT_APP_FORWARDER_ADDRESS,
-    REACT_APP_CONTRACT_ADDRESS,
-    CHAIN_ID,
-    RPC_URL,
-    REACT_APP_RELAY_KEY,
+  RELAY_KEY,
+  RELAY_SECRET,
+  REACT_APP_FORWARDER_ADDRESS,
+  REACT_APP_CONTRACT_ADDRESS,
+  CHAIN_ID,
+  RPC_URL,
+  REACT_APP_RELAY_KEY,
 } = process.env;
 const logger = require("../serverless/winston");
 const logm = logger.debug.child({ winstonModule: "relay" });
 
+/*
 const { Relayer } = require("defender-relay-client");
 const { ethers } = require("ethers");
 const ForwarderAbi = require("../relay/IForwarder.json");
@@ -67,9 +68,11 @@ const DomainSeparator = bufferToHex(
 );
 const SuffixData = "0x";
 
+*/
 async function relay(relayData) {
-    // Unpack request
-    const log = logm.child({ relayData, wf: "relay" });
+  // Unpack request
+  const log = logm.child({ relayData, wf: "relay" });
+  /*
     const { to, from, value, gas, nonce, data } = relayData.request;
     const signature = relayData.signature;
     log.debug("Relay request");
@@ -115,26 +118,28 @@ async function relay(relayData) {
 
     log.debug(`Sent meta-tx: ${tx.hash}`);
     return tx;
+    */
+  return "";
 }
 
 // Handler for lambda function
 exports.handler = async function (event, context, callback) {
-    const body = JSON.parse(event.body);
-    try {
-        logger.initMeta();
-        logger.meta.frontendMeta = body.winstonMeta;
-        logger.meta.frontendMeta.winstonHost = event.headers.host;
-        logger.meta.frontendMeta.winstonIP = event.headers["x-bb-ip"];
-        logger.meta.frontendMeta.winstonUserAgent = event.headers["user-agent"];
-        logger.meta.frontendMeta.winstonBrowser = event.headers["sec-ch-ua"];
+  const body = JSON.parse(event.body);
+  try {
+    logger.initMeta();
+    logger.meta.frontendMeta = body.winstonMeta;
+    logger.meta.frontendMeta.winstonHost = event.headers.host;
+    logger.meta.frontendMeta.winstonIP = event.headers["x-bb-ip"];
+    logger.meta.frontendMeta.winstonUserAgent = event.headers["user-agent"];
+    logger.meta.frontendMeta.winstonBrowser = event.headers["sec-ch-ua"];
 
-        //if(DEBUG) console.log("Relay function:", data);
-        const response = await relay(body);
-        await logger.flush();
-        callback(null, { statusCode: 200, body: JSON.stringify(response) });
-    } catch (error) {
-        logm.error("catch", { error, body });
-        await logger.flush();
-        callback(error);
-    }
+    //if(DEBUG) console.log("Relay function:", data);
+    const response = await relay(body);
+    await logger.flush();
+    callback(null, { statusCode: 200, body: JSON.stringify(response) });
+  } catch (error) {
+    logm.error("catch", { error, body });
+    await logger.flush();
+    callback(error);
+  }
 };

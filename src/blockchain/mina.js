@@ -150,11 +150,11 @@ export async function getAddress(force = false) {
   let address = "";
   try {
     if (window.mina !== undefined) {
-      const chainId = await window.mina.requestNetwork();
-      let account = await window.mina.mina_accounts();
-      console.log("getAddress account", account, chainId);
+      const network = await window.mina.requestNetwork();
+      let account = await window.mina.requestAccounts();
+      console.log("getAddress account", account, network);
 
-      if (account.length > 0 && chainId === "Berkeley") {
+      if (account.length > 0 && network?.chainId === "testworld2") {
         address = account[0];
       }
     }
@@ -366,17 +366,21 @@ export function convertAddress(address) {
 export async function minaLogin(openlink = true) {
   let address = "";
   const log = logm.child({ openlink, wf: "minaLogin" });
-  log.debug("called: ", { ethereum: window.ethereum });
+  log.debug("called: ", { mina: window.mina });
   console.log("mina login start");
 
   try {
     if (window.mina !== undefined) {
       //await initVirtuoso();
-      const chainId = await window.mina.requestNetwork();
+      const network = await window.mina
+        .requestNetwork()
+        .catch((err) => console.log(err));
       const account = await window.mina.requestAccounts();
-      log.debug("account", { account, chainId });
+      log.debug("account", { account, network });
+      console.log("mina login account", account, network);
 
-      if (account.length > 0 && chainId === "Berkeley") address = account[0];
+      if (account.length > 0 && network?.chainId === "testworld2")
+        address = account[0];
     } else {
       if (openlink) {
         const linkURL =

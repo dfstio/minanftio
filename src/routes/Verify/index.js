@@ -3,7 +3,7 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin, virtuosoRegisterPublicKey } from "../../blockchain/mina";
-//import { Field } from "o1js";
+import { Field } from "o1js";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -83,14 +83,13 @@ const Verify = () => {
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
-    /*
+
     const a = Field(7);
     const b = Field(3);
     const c = a.add(b);
     console.log("a", a.toJSON());
     console.log("b", b.toJSON());
     console.log("c", c.toJSON());
-    */
   }
 
   return (
