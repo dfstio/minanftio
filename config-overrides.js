@@ -43,7 +43,36 @@ const addWebpackAwait = () => (config) => {
   return config;
 };
 
+const updateWebpackModuleRules = (config) => {
+  const sourceMapLoader = {
+    enforce: "pre",
+    exclude: /@babel(?:\/|\\{1,2})runtime/,
+    test: /\.(js|m?js|jsx|ts|tsx|css)$/,
+    use: [
+      {
+        loader: "source-map-loader",
+        options: {
+          filterSourceMappingUrl: (url, resourcePath) => {
+            if (/.*\/node_modules\/.*/.test(resourcePath)) {
+              return false;
+            }
+            return true;
+          },
+        },
+      },
+    ],
+    resolve: {
+      fullySpecified: false,
+    },
+  };
+
+  config.module.rules.splice(0, 1, sourceMapLoader);
+
+  return config;
+};
+
 module.exports = override(
+  updateWebpackModuleRules,
   /*
   addLessLoader({
     javascriptEnabled: true,
@@ -73,11 +102,12 @@ module.exports = override(
 
   addWebpackAwait(),
 
-  addBabelPlugin("@babel/plugin-syntax-top-level-await"),
-
+  addBabelPlugin("@babel/plugin-syntax-top-level-await")
+  /*
   addWebpackExternals({
     o1js: "o1js",
   })
+*/
 );
 
 /*
