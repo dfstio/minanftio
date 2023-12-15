@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 const {
   override,
   //addLessLoader,
@@ -29,6 +30,13 @@ const addWebpackAwait = () => (config) => {
     assert: require.resolve("assert/"),
     crypto: require.resolve("crypto-browserify"),
   };
+  config.plugins = [
+    ...config.plugins,
+    // fix "process is not defined" error:
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
+  ];
   return config;
 };
 
