@@ -152,7 +152,7 @@ export async function getAddress(force = false) {
     if (window.mina !== undefined) {
       const network = await window.mina.requestNetwork();
       let account = await window.mina.requestAccounts();
-      console.log("getAddress account", account, chainId);
+      console.log("getAddress account", account, network);
 
       if (account.length > 0 && network?.chainId === "testworld2") {
         address = account[0];
