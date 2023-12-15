@@ -39,7 +39,6 @@
     "bl": "^5.0.0",
     "bnc-notify": "^1.9.1",
     "connected-react-router": "^6.8.0",
-    "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",
     "d3-scale": "^3.2.3",
     "defender-relay-client": "^1.11.1",
@@ -112,8 +111,8 @@
     "winston-transport": "^4.5.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "react-app-rewired --openssl-legacy-provider start",
+    "build": "react-app-rewired --openssl-legacy-provider build",
     "test": "react-app-rewired --env=jsdom",
     "less": "lessc --js src/styles/wieldy.less public/css/style.css && lessc --js src/styles/wieldy.less public/css/style.min.css --compress -x",
     "balance": "cd ../paymaster && npx  hardhat run scripts/balance.js --network mumbai",
