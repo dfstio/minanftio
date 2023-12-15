@@ -15431,50 +15431,50 @@ __metadata:
     nprogress: "npm:^0.2.0"
     prop-types: "npm:^15.7.2"
     qrcode.react: "npm:^1.0.1"
-    react: "npm:^17.0.1"
+    react: "npm:^17.0.2"
     react-app-rewired: "npm:^2.2.1"
     react-big-calendar: "npm:^0.30.0"
     react-bootstrap-sweetalert: "npm:^5.2.0"
     react-ckeditor-component: "npm:^1.1.0"
     react-color: "npm:^2.19.3"
     react-custom-scrollbars: "npm:^4.2.1"
-    react-dev-utils: "npm:^11.0.1"
-    react-device-detect: "npm:^2.0.1"
+    react-dev-utils: "npm:^11.0.4"
+    react-device-detect: "npm:^2.2.3"
     react-dnd: "npm:^11.1.3"
     react-dnd-html5-backend: "npm:^11.1.3"
-    react-dom: "npm:^17.0.1"
-    react-draft-wysiwyg: "npm:^1.14.5"
-    react-flip-move: "npm:^3.0.4"
+    react-dom: "npm:^17.0.2"
+    react-draft-wysiwyg: "npm:^1.15.0"
+    react-flip-move: "npm:^3.0.5"
     react-google-maps: "npm:^9.4.5"
     react-gtm-module: "npm:^2.0.11"
-    react-instantsearch: "npm:^6.8.2"
-    react-instantsearch-dom: "npm:^6.10.3"
-    react-intl: "npm:^5.10.16"
+    react-instantsearch: "npm:^6.40.4"
+    react-instantsearch-dom: "npm:^6.40.4"
+    react-intl: "npm:^5.25.1"
     react-jinke-music-player: "npm:^4.24.2"
-    react-notifications: "npm:^1.7.2"
-    react-pdf: "npm:^5.4.0"
-    react-placeholder: "npm:^4.0.3"
-    react-player: "npm:^2.9.0"
-    react-redux: "npm:^7.2.2"
-    react-router-dom: "npm:^5.2.0"
+    react-notifications: "npm:^1.7.4"
+    react-pdf: "npm:^5.7.2"
+    react-placeholder: "npm:^4.1.0"
+    react-player: "npm:^2.14.0"
+    react-redux: "npm:^7.2.9"
+    react-router-dom: "npm:^5.3.4"
     react-router-redux: "npm:^4.0.8"
-    react-scripts: "npm:^4.0.1"
+    react-scripts: "npm:^4.0.3"
     react-simple-maps: "npm:^2.3.0"
     react-slick: "npm:^0.27.14"
     react-sortable-hoc: "npm:^1.11.0"
     react-star-rating-component: "npm:^1.4.1"
     react-stickies: "npm:^0.0.16"
-    recharts: "npm:^2.0.3"
-    redux: "npm:^4.0.5"
-    redux-saga: "npm:^1.1.3"
-    redux-thunk: "npm:^2.3.0"
+    recharts: "npm:^2.10.3"
+    redux: "npm:^4.2.1"
+    redux-saga: "npm:^1.2.3"
+    redux-thunk: "npm:^2.4.2"
     remove-markdown: "npm:^0.3.0"
     rheostat: "npm:^4.1.1"
     slick-carousel: "npm:^1.8.1"
     stripe: "npm:^8.174.0"
     url-search-params: "npm:^1.1.0"
     victory: "npm:^35.4.6"
-    web3-core: "npm:^1.6.0"
+    web3-core: "npm:^1.10.3"
     winston: "npm:^3.10.0"
     winston-cloudwatch: "npm:^6.2.0"
     winston-transport: "npm:^4.5.0"
@@ -19170,7 +19170,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dev-utils@npm:^11.0.1, react-dev-utils@npm:^11.0.3":
+"react-dev-utils@npm:^11.0.3, react-dev-utils@npm:^11.0.4":
   version: 11.0.4
   resolution: "react-dev-utils@npm:11.0.4"
   dependencies:
@@ -19202,7 +19202,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-device-detect@npm:^2.0.1":
+"react-device-detect@npm:^2.2.3":
   version: 2.2.3
   resolution: "react-device-detect@npm:2.2.3"
   dependencies:
@@ -19238,7 +19238,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^17.0.1":
+"react-dom@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -19251,7 +19251,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-draft-wysiwyg@npm:^1.14.5":
+"react-draft-wysiwyg@npm:^1.15.0":
   version: 1.15.0
   resolution: "react-draft-wysiwyg@npm:1.15.0"
   dependencies:
@@ -19312,7 +19312,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-flip-move@npm:^3.0.4":
+"react-flip-move@npm:^3.0.5":
   version: 3.0.5
   resolution: "react-flip-move@npm:3.0.5"
   peerDependencies:
@@ -19385,7 +19385,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-instantsearch-dom@npm:6.40.4, react-instantsearch-dom@npm:^6.10.3":
+"react-instantsearch-dom@npm:6.40.4, react-instantsearch-dom@npm:^6.40.4":
   version: 6.40.4
   resolution: "react-instantsearch-dom@npm:6.40.4"
   dependencies:
@@ -19418,7 +19418,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-instantsearch@npm:^6.8.2":
+"react-instantsearch@npm:^6.40.4":
   version: 6.40.4
   resolution: "react-instantsearch@npm:6.40.4"
   dependencies:
@@ -19433,7 +19433,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-intl@npm:^5.10.16":
+"react-intl@npm:^5.25.1":
   version: 5.25.1
   resolution: "react-intl@npm:5.25.1"
   dependencies:
@@ -19514,7 +19514,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-notifications@npm:^1.7.2":
+"react-notifications@npm:^1.7.4":
   version: 1.7.4
   resolution: "react-notifications@npm:1.7.4"
   dependencies:
@@ -19545,7 +19545,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:^5.4.0":
+"react-pdf@npm:^5.7.2":
   version: 5.7.2
   resolution: "react-pdf@npm:5.7.2"
   dependencies:
@@ -19566,7 +19566,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-placeholder@npm:^4.0.3":
+"react-placeholder@npm:^4.1.0":
   version: 4.1.0
   resolution: "react-placeholder@npm:4.1.0"
   peerDependencies:
@@ -19575,7 +19575,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-player@npm:^2.9.0":
+"react-player@npm:^2.14.0":
   version: 2.14.0
   resolution: "react-player@npm:2.14.0"
   dependencies:
@@ -19590,7 +19590,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^7.2.2":
+"react-redux@npm:^7.2.9":
   version: 7.2.9
   resolution: "react-redux@npm:7.2.9"
   dependencies:
@@ -19631,7 +19631,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^5.2.0":
+"react-router-dom@npm:^5.3.4":
   version: 5.3.4
   resolution: "react-router-dom@npm:5.3.4"
   dependencies:
@@ -19674,7 +19674,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:^4.0.1":
+"react-scripts@npm:^4.0.3":
   version: 4.0.3
   resolution: "react-scripts@npm:4.0.3"
   dependencies:
@@ -19918,7 +19918,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.1":
+"react@npm:^17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -20045,7 +20045,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recharts@npm:^2.0.3":
+"recharts@npm:^2.10.3":
   version: 2.10.3
   resolution: "recharts@npm:2.10.3"
   dependencies:
@@ -20098,7 +20098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-saga@npm:^1.1.3":
+"redux-saga@npm:^1.2.3":
   version: 1.2.3
   resolution: "redux-saga@npm:1.2.3"
   dependencies:
@@ -20107,7 +20107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux-thunk@npm:^2.3.0":
+"redux-thunk@npm:^2.4.2":
   version: 2.4.2
   resolution: "redux-thunk@npm:2.4.2"
   peerDependencies:
@@ -20116,7 +20116,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.0, redux@npm:^4.0.4, redux@npm:^4.0.5":
+"redux@npm:^4.0.0, redux@npm:^4.0.4, redux@npm:^4.2.1":
   version: 4.2.1
   resolution: "redux@npm:4.2.1"
   dependencies:
@@ -23855,7 +23855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-core@npm:^1.6.0":
+"web3-core@npm:^1.10.3":
   version: 1.10.3
   resolution: "web3-core@npm:1.10.3"
   dependencies:
