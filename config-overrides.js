@@ -73,12 +73,11 @@ module.exports = override(
 
   addWebpackAwait(),
 
-  addBabelPlugin("@babel/plugin-syntax-top-level-await")
-  /*
+  addBabelPlugin("@babel/plugin-syntax-top-level-await"),
+
   addWebpackExternals({
     o1js: "o1js",
   })
-  */
 );
 
 /*

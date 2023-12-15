@@ -64,6 +64,7 @@
     "moment": "^2.29.4",
     "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
+    "o1js": "^0.15.0",
     "path-browserify": "^1.0.1",
     "prop-types": "^15.8.1",
     "qrcode.react": "^1.0.1",
@@ -133,7 +134,10 @@
     "listenv": "netlify env:list --json"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-unused-vars": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -146,9 +150,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "rules": {
-    "no-unused-vars": "off"
   },
   "devDependencies": {
     "@babel/plugin-syntax-top-level-await": "^7.14.5",
