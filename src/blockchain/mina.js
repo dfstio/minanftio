@@ -366,15 +366,18 @@ export function convertAddress(address) {
 export async function minaLogin(openlink = true) {
   let address = "";
   const log = logm.child({ openlink, wf: "minaLogin" });
-  log.debug("called: ", { ethereum: window.ethereum });
+  log.debug("called: ", { mina: window.mina });
   console.log("mina login start");
 
   try {
     if (window.mina !== undefined) {
       //await initVirtuoso();
-      const chainId = await window.mina.requestNetwork();
+      const chainId = await window.mina
+        .requestNetwork()
+        .catch((err) => console.log(err));
       const account = await window.mina.requestAccounts();
       log.debug("account", { account, chainId });
+      console.log("mina login account", account, chainId);
 
       if (account.length > 0 && chainId === "Berkeley") address = account[0];
     } else {
