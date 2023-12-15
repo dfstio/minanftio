@@ -8,7 +8,7 @@ const {
 } = process.env;
 const { BufferList } = require("bl");
 const CryptoJS = require("crypto-js");
-const sigUtil = require("@metamask/eth-sig-util");
+//const sigUtil = require("@metamask/eth-sig-util");
 const { v4: uuidv4 } = require("uuid");
 
 const ipfsClient = require("ipfs-http-client");
@@ -158,11 +158,12 @@ async function encryptUnlockableContent(content, key) {
 
     const buf = Buffer.from(
       JSON.stringify(
-        sigUtil.encrypt({
+        //sigUtil.encrypt(
+        {
           publicKey: key,
           data: password,
           version: "x25519-xsalsa20-poly1305",
-        })
+        }
       ),
       "utf8"
     );
