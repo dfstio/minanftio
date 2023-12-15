@@ -318,7 +318,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/compat-data@npm:^7.12.7, @babel/compat-data@npm:^7.22.6, @babel/compat-data@npm:^7.23.3, @babel/compat-data@npm:^7.23.5":
+"@babel/compat-data@npm:^7.22.6, @babel/compat-data@npm:^7.23.3, @babel/compat-data@npm:^7.23.5":
   version: 7.23.5
   resolution: "@babel/compat-data@npm:7.23.5"
   checksum: 081278ed46131a890ad566a59c61600a5f9557bd8ee5e535890c8548192532ea92590742fd74bd9db83d74c669ef8a04a7e1c85cdea27f960233e3b83c3a957c
@@ -15386,7 +15386,7 @@ __metadata:
     "@amcharts/amcharts3-react": "npm:^3.1.0"
     "@ant-design/compatible": "npm:^1.0.8"
     "@ant-design/icons": "npm:^4.3.0"
-    "@babel/compat-data": "npm:^7.12.7"
+    "@babel/compat-data": "npm:^7.23.5"
     "@metamask/detect-provider": "npm:^1.2.0"
     "@metamask/eth-sig-util": "npm:^4.0.0"
     "@metamask/jazzicon": "npm:^2.0.0"
