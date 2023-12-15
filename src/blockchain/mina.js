@@ -372,14 +372,15 @@ export async function minaLogin(openlink = true) {
   try {
     if (window.mina !== undefined) {
       //await initVirtuoso();
-      const chainId = await window.mina
+      const network = await window.mina
         .requestNetwork()
         .catch((err) => console.log(err));
       const account = await window.mina.requestAccounts();
-      log.debug("account", { account, chainId });
-      console.log("mina login account", account, chainId);
+      log.debug("account", { account, network });
+      console.log("mina login account", account, network);
 
-      if (account.length > 0 && chainId === "Berkeley") address = account[0];
+      if (account.length > 0 && network?.chainId === "testworld2")
+        address = account[0];
     } else {
       if (openlink) {
         const linkURL =
