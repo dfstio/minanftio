@@ -30,7 +30,6 @@ const ProductItem = ({ item }) => {
           <img
             src={`https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/${item.image}`}
             alt=""
-            crossorigin
           />
         </div>
       </a>
