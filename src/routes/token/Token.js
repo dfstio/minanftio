@@ -610,7 +610,10 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === false
             ) {
 */
-      if (item.properties.animation !== "") {
+      if (
+        item.properties.animation !== "" &&
+        item.properties.animation !== undefined
+      ) {
         const type = item.uri.properties.animation.filetype.replace(
           /\/[^/.]+$/,
           ""

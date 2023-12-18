@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 import { Field, fetchAccount, PublicKey, Mina } from "o1js";
+import { accountBalanceMina } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -108,6 +109,8 @@ const Verify = () => {
     } else {
       console.log("no account");
     }
+    const balanceMina = await accountBalanceMina(publicKey);
+    console.log("balanceMina", balanceMina);
   }
 
   return (
