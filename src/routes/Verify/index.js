@@ -109,8 +109,8 @@ const Verify = () => {
     } else {
       console.log("no account");
     }
-    //const balanceMina = await accountBalanceMina(publicKey);
-    //console.log("balanceMina", balanceMina);
+    const balanceMina = await accountBalanceMina(publicKey);
+    console.log("balanceMina", balanceMina);
   }
 
   return (
