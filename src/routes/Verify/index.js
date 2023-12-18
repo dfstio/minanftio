@@ -84,7 +84,7 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
-    const { Field, fetchAccount, PublicKey, Mina } = require("o1js");
+    const { Field, fetchAccount, PublicKey, Mina } = await import("o1js");
 
     const network = Mina.Network({
       mina: "https://proxy.testworld.minaexplorer.com/graphql",
