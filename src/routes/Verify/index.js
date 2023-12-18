@@ -3,7 +3,7 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import { Field } from "o1js";
+import { Field, fetchAccount, PublicKey, Mina } from "o1js";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -92,6 +92,15 @@ const Verify = () => {
     console.log("a", a.toJSON());
     console.log("b", b.toJSON());
     console.log("c", c.toJSON());
+    const publicKey = PublicKey.fromBase58(newAddress);
+    await fetchAccount({ publicKey });
+    let balance = "0";
+    if (Mina.hasAccount(publicKey)) {
+      balance = Mina.getBalance(publicKey).toJSON();
+      console.log("balance", balance);
+    } else {
+      console.log("no account");
+    }
   }
 
   return (
