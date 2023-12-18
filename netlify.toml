@@ -1,6 +1,12 @@
 [build]
   functions = "src/functions/"
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cross-Origin-Embedder-Policy = "require-corp"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Resource-Policy = "cross-origin"
 
 [[redirects]]
   from = '/api/*'

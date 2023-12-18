@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 import { Field, fetchAccount, PublicKey, Mina } from "o1js";
+import { accountBalanceMina } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -82,6 +83,11 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
+    const network = Mina.Network({
+      mina: "https://proxy.testworld.minaexplorer.com/graphql",
+    });
+
+    Mina.setActiveInstance(network);
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
@@ -93,7 +99,9 @@ const Verify = () => {
     console.log("b", b.toJSON());
     console.log("c", c.toJSON());
     const publicKey = PublicKey.fromBase58(newAddress);
-    await fetchAccount({ publicKey });
+    console.log("publicKey", publicKey.toBase58());
+    const acc = await fetchAccount({ publicKey });
+    console.log("acc", acc);
     let balance = "0";
     if (Mina.hasAccount(publicKey)) {
       balance = Mina.getBalance(publicKey).toJSON();
@@ -101,6 +109,8 @@ const Verify = () => {
     } else {
       console.log("no account");
     }
+    //const balanceMina = await accountBalanceMina(publicKey);
+    //console.log("balanceMina", balanceMina);
   }
 
   return (

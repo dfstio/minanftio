@@ -610,7 +610,10 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === false
             ) {
 */
-      if (item.properties.animation !== "") {
+      if (
+        item.properties.animation !== "" &&
+        item.properties.animation !== undefined
+      ) {
         const type = item.uri.properties.animation.filetype.replace(
           /\/[^/.]+$/,
           ""
@@ -1147,7 +1150,12 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       }}
                     />
                   ) : (
-                    <img src={image} alt={name} onClick={showQRCodeFunction} />
+                    <img
+                      src={image}
+                      alt={name}
+                      onClick={showQRCodeFunction}
+                      crossorigin="anonymous"
+                    />
                   )}
                 </div>
               </Col>
