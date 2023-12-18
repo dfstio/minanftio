@@ -82,6 +82,11 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
+    const network = Mina.Network({
+      mina: "https://proxy.testworld.minaexplorer.com/graphql",
+    });
+
+    Mina.setActiveInstance(network);
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
