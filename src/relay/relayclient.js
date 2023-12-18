@@ -4,52 +4,53 @@
 import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "relayclient" });
 
-const ethers = require("ethers");
-const VirtuosoNFTJSON = require("../contract/NFTVirtuoso.json");
-const ForwarderAbi = require("./IForwarder.json");
+//const ethers = require("ethers");
+//const VirtuosoNFTJSON = require("../contract/NFTVirtuoso.json");
+//const ForwarderAbi = require("./IForwarder.json");
 
 const {
-    REACT_APP_CONTRACT_ADDRESS,
-    REACT_APP_FORWARDER_ADDRESS,
-    REACT_APP_CHAIN_ID,
-    REACT_APP_RELAY_KEY,
+  REACT_APP_CONTRACT_ADDRESS,
+  REACT_APP_FORWARDER_ADDRESS,
+  REACT_APP_CHAIN_ID,
+  REACT_APP_RELAY_KEY,
 } = process.env;
 const RelayUrl = "/api/relay";
 
 const EIP712DomainType = [
-    { name: "name", type: "string" },
-    { name: "version", type: "string" },
-    { name: "chainId", type: "uint256" },
-    { name: "verifyingContract", type: "address" },
+  { name: "name", type: "string" },
+  { name: "version", type: "string" },
+  { name: "chainId", type: "uint256" },
+  { name: "verifyingContract", type: "address" },
 ];
 
 const ForwardRequestType = [
-    { name: "from", type: "address" },
-    { name: "to", type: "address" },
-    { name: "value", type: "uint256" },
-    { name: "gas", type: "uint256" },
-    { name: "nonce", type: "uint256" },
-    { name: "data", type: "bytes" },
-    { name: "validUntil", type: "uint256" },
+  { name: "from", type: "address" },
+  { name: "to", type: "address" },
+  { name: "value", type: "uint256" },
+  { name: "gas", type: "uint256" },
+  { name: "nonce", type: "uint256" },
+  { name: "data", type: "bytes" },
+  { name: "validUntil", type: "uint256" },
 ];
 
 const TypedData = {
-    domain: {
-        name: "Mina NFT", //'GSN Relayed Transaction',
-        version: "1",
-        chainId: parseInt(REACT_APP_CHAIN_ID),
-        verifyingContract: REACT_APP_FORWARDER_ADDRESS,
-    },
-    primaryType: "ForwardRequest",
-    types: {
-        EIP712Domain: EIP712DomainType,
-        ForwardRequest: ForwardRequestType,
-    },
-    message: {},
+  domain: {
+    name: "Mina NFT", //'GSN Relayed Transaction',
+    version: "1",
+    chainId: parseInt(REACT_APP_CHAIN_ID),
+    verifyingContract: REACT_APP_FORWARDER_ADDRESS,
+  },
+  primaryType: "ForwardRequest",
+  types: {
+    EIP712Domain: EIP712DomainType,
+    ForwardRequest: ForwardRequestType,
+  },
+  message: {},
 };
 
 export async function relayFunction(name, args) {
-    const log = logm.child({ name, args, wf: "relayFunction" });
+  const log = logm.child({ name, args, wf: "relayFunction" });
+  /*
     var provider =
         window.ethereum && new ethers.providers.Web3Provider(window.ethereum);
     var signer = provider && provider.getSigner();
@@ -78,7 +79,7 @@ export async function relayFunction(name, args) {
     // Encode meta-tx request
     const virtuosoInterface = new ethers.utils.Interface(VirtuosoNFTJSON);
     const data = virtuosoInterface.encodeFunctionData(name, args);
-    /*
+    
   const gasEstimate = await provider.estimateGas({
            // Wrapped ETH address
            to: REACT_APP_CONTRACT_ADDRESS,
@@ -91,7 +92,7 @@ export async function relayFunction(name, args) {
          });
 
   if(DEBUG) console.log("Relay gas:", gasEstimate);
-*/
+
     // const nonceNumber = ethers.BigNumber.from(nonce).toHexString()
 
     const request = {
@@ -127,4 +128,6 @@ export async function relayFunction(name, args) {
     }).then((r) => r.json());
 
     return response;
+    */
+  return "";
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
-import { minaLogin, virtuosoRegisterPublicKey } from "../../blockchain/mina";
+import { minaLogin } from "../../blockchain/mina";
 import { Field } from "o1js";
 
 import IntlMessages from "util/IntlMessages";
@@ -45,6 +45,7 @@ const Verify = () => {
         duration: 60,
       });
 
+      /*
       const result = await virtuosoRegisterPublicKey(address);
       if (result.publicKey !== "" && result.hash !== "") {
         dispatch(updatePublicKey(result.publicKey));
@@ -64,6 +65,7 @@ const Verify = () => {
         result,
         wf: "register",
       });
+      */
     }
   }
 
