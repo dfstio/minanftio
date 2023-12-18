@@ -111,7 +111,7 @@ const Verify = () => {
     }
     //const balanceMina = await accountBalanceMina(publicKey);
     const { makeString } = require("minanft");
-    const balanceMina = makeString(10);
+    const balanceMina = makeString(12);
     console.log("balanceMina", balanceMina);
   }
 
