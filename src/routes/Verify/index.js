@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 import { Field, fetchAccount, PublicKey, Mina } from "o1js";
-import { makeString } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
+const { makeString } = require("minanft");
 const logm = logger.info.child({ winstonModule: "Verify" });
 const { REACT_APP_DEBUG } = process.env;
 
