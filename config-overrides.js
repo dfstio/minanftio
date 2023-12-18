@@ -40,9 +40,11 @@ const addWebpackAwait = () => (config) => {
       Buffer: ["buffer", "Buffer"],
     }),
   ];
-  config.headers = {
-    "Cross-Origin-Opener-Policy": "same-origin",
-    "Cross-Origin-Embedder-Policy": "require-corp",
+  config.devServer = {
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+    },
   };
   return config;
 };
