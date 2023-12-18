@@ -1147,7 +1147,12 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       }}
                     />
                   ) : (
-                    <img src={image} alt={name} onClick={showQRCodeFunction} />
+                    <img
+                      src={image}
+                      alt={name}
+                      onClick={showQRCodeFunction}
+                      crossorigin="anonymous"
+                    />
                   )}
                 </div>
               </Col>
