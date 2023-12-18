@@ -93,7 +93,9 @@ const Verify = () => {
     console.log("b", b.toJSON());
     console.log("c", c.toJSON());
     const publicKey = PublicKey.fromBase58(newAddress);
-    await fetchAccount({ publicKey });
+    console.log("publicKey", publicKey.toBase58());
+    const acc = await fetchAccount({ publicKey });
+    console.log("acc", acc);
     let balance = "0";
     if (Mina.hasAccount(publicKey)) {
       balance = Mina.getBalance(publicKey).toJSON();
