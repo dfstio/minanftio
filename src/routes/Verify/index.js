@@ -8,7 +8,7 @@ import { Field, fetchAccount, PublicKey, Mina } from "o1js";
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
-const { makeString } = require("minanft");
+
 const logm = logger.info.child({ winstonModule: "Verify" });
 const { REACT_APP_DEBUG } = process.env;
 
@@ -110,6 +110,7 @@ const Verify = () => {
       console.log("no account");
     }
     //const balanceMina = await accountBalanceMina(publicKey);
+    const { makeString } = require("minanft");
     const balanceMina = makeString(10);
     console.log("balanceMina", balanceMina);
   }
