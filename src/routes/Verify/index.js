@@ -3,8 +3,8 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import { Field, fetchAccount, PublicKey, Mina } from "o1js";
-import { makeString } from "minanft";
+//import { Field, fetchAccount, PublicKey, Mina } from "o1js";
+//import { makeString } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -84,6 +84,8 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
+    const { Field, fetchAccount, PublicKey, Mina } = require("o1js");
+
     const network = Mina.Network({
       mina: "https://proxy.testworld.minaexplorer.com/graphql",
     });
@@ -111,7 +113,7 @@ const Verify = () => {
       console.log("no account");
     }
     //const balanceMina = await accountBalanceMina(publicKey);
-    //const { makeString } = require("minanft");
+    const { makeString } = require("minanft");
     const balanceMina = makeString(12);
     console.log("balanceMina", balanceMina);
   }
