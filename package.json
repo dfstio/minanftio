@@ -42,7 +42,6 @@
     "crypto-js": "^4.2.0",
     "customize-cra-less-loader": "^2.0.0",
     "d3-scale": "^3.3.0",
-    "defender-relay-client": "^1.44.0",
     "draftjs-to-html": "^0.9.1",
     "file-saver": "^2.0.5",
     "firebase": "^8.10.1",
