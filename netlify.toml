@@ -4,7 +4,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Cross-Origin-Embedder-Policy = "unsafe-none"
+    Cross-Origin-Embedder-Policy = "no-cors"
     Cross-Origin-Opener-Policy = "same-origin"
     Cross-Origin-Resource-Policy = "cross-origin"
 
