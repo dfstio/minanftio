@@ -2,8 +2,8 @@ import React from "react";
 import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
-import { minaLogin, virtuosoRegisterPublicKey } from "../../blockchain/mina";
-import { Field } from "o1js";
+import { minaLogin } from "../../blockchain/mina";
+import { Field, fetchAccount, PublicKey, Mina } from "o1js";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -45,6 +45,7 @@ const Verify = () => {
         duration: 60,
       });
 
+      /*
       const result = await virtuosoRegisterPublicKey(address);
       if (result.publicKey !== "" && result.hash !== "") {
         dispatch(updatePublicKey(result.publicKey));
@@ -64,6 +65,7 @@ const Verify = () => {
         result,
         wf: "register",
       });
+      */
     }
   }
 
@@ -90,6 +92,15 @@ const Verify = () => {
     console.log("a", a.toJSON());
     console.log("b", b.toJSON());
     console.log("c", c.toJSON());
+    const publicKey = PublicKey.fromBase58(newAddress);
+    await fetchAccount({ publicKey });
+    let balance = "0";
+    if (Mina.hasAccount(publicKey)) {
+      balance = Mina.getBalance(publicKey).toJSON();
+      console.log("balance", balance);
+    } else {
+      console.log("no account");
+    }
   }
 
   return (

@@ -40,6 +40,12 @@ const addWebpackAwait = () => (config) => {
       Buffer: ["buffer", "Buffer"],
     }),
   ];
+  config.devServer = {
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+    },
+  };
   return config;
 };
 
@@ -109,15 +115,3 @@ module.exports = override(
   })
 */
 );
-
-/*
-  webpack(config) {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      o1js: require('path').resolve('node_modules/o1js'),
-    };
-    config.experiments = { ...config.experiments, topLevelAwait: true };
-    config.optimization.minimizer = [];
-    return config;
-  },
-*/

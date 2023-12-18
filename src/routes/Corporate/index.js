@@ -35,7 +35,7 @@ import {
 } from "../../appRedux/actions";
 import {
   minaLogin,
-  virtuosoRegisterPublicKey,
+  //virtuosoRegisterPublicKey,
   getSignature,
 } from "../../blockchain/mina";
 
@@ -66,7 +66,7 @@ const Corporate = () => {
   const balance = useSelector(({ blockchain }) => blockchain.balance);
   const [messageApi, contextHolder] = message.useMessage();
   const virtuosoBalance = useSelector(
-    ({ blockchain }) => blockchain.virtuosoBalance,
+    ({ blockchain }) => blockchain.virtuosoBalance
   );
   const dispatch = useDispatch();
 
@@ -138,9 +138,9 @@ const Corporate = () => {
         wf: "corporateButton",
       });
       messageApi.open({
-        type: 'warning',
-        content: (<IntlMessages id="corporate.thankyou" />),
-        key: `CorporateButton`
+        type: "warning",
+        content: <IntlMessages id="corporate.thankyou" />,
+        key: `CorporateButton`,
       });
       /*
       message.error({
@@ -169,43 +169,43 @@ const Corporate = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card className="gx-card" title=<IntlMessages id="corporate.createaccount" />>
+            <Card
+              className="gx-card"
+              title=<IntlMessages id="corporate.createaccount" />
+            >
               <div className="gx-d-flex justify-content-center">
-                Utilizing our corporate accounts, your employees can
-                access minanft.io website with Auro to generate
-                unique Mina NFTs. These NFTs enable them to:
+                Utilizing our corporate accounts, your employees can access
+                minanft.io website with Auro to generate unique Mina NFTs. These
+                NFTs enable them to:
                 <br />
                 <br />
-                - Publish fully verifiable content to the MINA
-                blockchain, ensuring transparency and trust.
+                - Publish fully verifiable content to the MINA blockchain,
+                ensuring transparency and trust.
                 <br />
                 <br />
-                - Keep portions of the content private, giving your
-                team control over data visibility.
+                - Keep portions of the content private, giving your team control
+                over data visibility.
                 <br />
                 <br />
-                - Generate proofs off-chain and validate them both
-                off-chain and on-chain for any content segment,
-                supporting data integrity.
+                - Generate proofs off-chain and validate them both off-chain and
+                on-chain for any content segment, supporting data integrity.
                 <br />
                 <br />
-                - Redact (sanitize) specific pieces of content (such
-                as text, Word files, PNG files) to exclude sensitive
-                information such as personal information (social
-                security number, etc), financial information (bank
-                account details and balances, transfer details),
-                security information (passwords, access codes,
-                private keys), commercial confidential information
-                (prices paid, some details of the proof of
-                ownership, proof of product and proof of funds), and
-                validate this redacted content on-chain, maintaining
-                security and confidentiality on request of your
-                legal department or commercial department.
+                - Redact (sanitize) specific pieces of content (such as text,
+                Word files, PNG files) to exclude sensitive information such as
+                personal information (social security number, etc), financial
+                information (bank account details and balances, transfer
+                details), security information (passwords, access codes, private
+                keys), commercial confidential information (prices paid, some
+                details of the proof of ownership, proof of product and proof of
+                funds), and validate this redacted content on-chain, maintaining
+                security and confidentiality on request of your legal department
+                or commercial department.
                 <br />
                 <br />
-                - Use a wide variety of content formats including
-                text, images, videos, audio, and documents,
-                promoting versatility in data representation.
+                - Use a wide variety of content formats including text, images,
+                videos, audio, and documents, promoting versatility in data
+                representation.
                 <br />
                 <br />
               </div>
@@ -224,14 +224,7 @@ const Corporate = () => {
               >
                 <div>
                   <Row>
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Your corporation or SME name"
                         name="corporate_name"
@@ -255,14 +248,7 @@ const Corporate = () => {
                   </Row>
 
                   <Row>
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Contact e-mail"
                         name="contact_email"
@@ -270,8 +256,7 @@ const Corporate = () => {
                         rules={[
                           {
                             required: true,
-                            message:
-                              "Please write your contact e-mail",
+                            message: "Please write your contact e-mail",
                           },
                         ]}
                       >
@@ -284,14 +269,7 @@ const Corporate = () => {
                       </Form.Item>
                     </Col>
 
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Contact name"
                         name="contact_name"
@@ -308,14 +286,7 @@ const Corporate = () => {
                   </Row>
 
                   <Row>
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Contact phone"
                         name="contact_phone"
@@ -329,14 +300,7 @@ const Corporate = () => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Short description of your business"
                         name="corporate_description"
@@ -352,18 +316,8 @@ const Corporate = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
-                      <Form.Item
-                        name="kyc docs"
-                        label="Your KYC docs"
-                      >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item name="kyc docs" label="Your KYC docs">
                         <Upload
                           name="kycdocs"
                           listType="picture-card"
@@ -372,32 +326,21 @@ const Corporate = () => {
                           multiple={true}
                           //action="//jsonplaceholder.typicode.com/posts/"
                           beforeUpload={beforeUpload}
-                        //onChange={this.handleChange}
+                          //onChange={this.handleChange}
                         >
                           {" "}
                           <div>
                             <PlusOutlined />
-                            <div className="ant-upload-text">
-                              KYC/AML docs
-                            </div>
+                            <div className="ant-upload-text">KYC/AML docs</div>
                           </div>
                         </Upload>
                       </Form.Item>
                     </Col>
-                    <Col
-                      xxl={12}
-                      xl={12}
-                      lg={14}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label={
                           <span>
-                            <span>
-                              Authorisation code.{" "}
-                            </span>
+                            <span>Authorisation code. </span>
                             <span>
                               {" "}
                               <a
@@ -422,14 +365,7 @@ const Corporate = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col
-                      xxl={24}
-                      xl={24}
-                      lg={24}
-                      md={24}
-                      sm={24}
-                      xs={24}
-                    >
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
                         <div
                           className="gx-mt-4"
@@ -441,29 +377,20 @@ const Corporate = () => {
                             {address == ""
                               ? "Please connect with Auro on Berkeley network before creating corporate account"
                               : "You are creating corporate account with AURO address " +
-                              address}
+                                address}
                             <br />
                             <br />
-                            You will be kindly requested
-                            to sign this form
-                            information with AURO
-                            wallet. Following the
-                            completion of our onboarding
-                            process, we will establish
-                            your corporate account.
+                            You will be kindly requested to sign this form
+                            information with AURO wallet. Following the
+                            completion of our onboarding process, we will
+                            establish your corporate account.
                             <br />
                             <br />
-                            By clicking this button, you
-                            are confirming your
+                            By clicking this button, you are confirming your
                             agreement with our
                           </span>{" "}
                           <span>
-                            <a
-                              href={
-                                footerAgreementLink
-                              }
-                              target="_blank"
-                            >
+                            <a href={footerAgreementLink} target="_blank">
                               {footerAgreement}
                             </a>
                           </span>

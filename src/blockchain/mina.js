@@ -8,8 +8,8 @@ const logm = logger.debug.child({ winstonModule: "mina" });
 
 const MINIMUM_BALANCE = 1e17; // to switch to relay
 
-const ethers = require("ethers");
-const VirtuosoNFTJSON = require("../contract/NFTVirtuoso.json");
+//const ethers = require("ethers");
+//const VirtuosoNFTJSON = require("../contract/NFTVirtuoso.json");
 
 const {
   REACT_APP_CONTRACT_ADDRESS,
@@ -22,12 +22,14 @@ const {
   REACT_APP_VIRTUOSO_URL,
 } = process.env;
 
+/*
 var provider =
   window.ethereum && new ethers.providers.Web3Provider(window.ethereum);
 var signer = provider && provider.getSigner();
 var readVirtuoso =
   provider &&
   new ethers.Contract(REACT_APP_CONTRACT_ADDRESS, VirtuosoNFTJSON, provider);
+
 
 async function virtuosoFunction(address, name, args) {
   const log = logm.child({ address, name, args, wf: "virtuosoFunction" });
@@ -120,6 +122,7 @@ export async function initVirtuoso(handleEvents) {
       REACT_APP_NETWORK_HEXCHAIN_ID,
     });
 }
+*/
 
 export async function initAccount(
   handleEvents,
@@ -166,6 +169,7 @@ export async function getAddress(force = false) {
   return address;
 }
 
+/*
 export async function metamaskDecrypt(key, address) {
   let result = "";
   if (window.ethereum !== undefined && window.ethereum.isMetaMask === true) {
@@ -186,7 +190,7 @@ export async function metamaskDecrypt(key, address) {
   //if(DEBUG) console.log("metamaskDecrypt called", key, address, result);
   return result;
 }
-
+*/
 export async function getVirtuosoBalance(address) {
   let virtuosoBalance = 0;
   /*
@@ -206,6 +210,7 @@ export async function getVirtuosoBalance(address) {
 
 export async function isModerator(address) {
   let moderator = false;
+  /*
   if (readVirtuoso && address !== "") {
     const chainId = await window.ethereum.request({
       method: "eth_chainId",
@@ -216,10 +221,11 @@ export async function isModerator(address) {
       moderator = await readVirtuoso.moderator(address);
     }
   }
-
+  */
   return moderator;
 }
 
+/*
 export async function getVirtuosoPublicKey(address) {
   let publicKey = "";
   if (readVirtuoso && address !== "") {
@@ -236,6 +242,7 @@ export async function getVirtuosoPublicKey(address) {
   return publicKey;
 }
 
+
 export async function getVirtuosoUnlockableContentKey(tokenId, address) {
   let key = "";
   if (readVirtuoso && address !== "") {
@@ -251,6 +258,7 @@ export async function getVirtuosoUnlockableContentKey(tokenId, address) {
 
   return key;
 }
+
 
 export async function virtuosoSell(
   tokenId,
@@ -334,6 +342,7 @@ export async function virtuosoRegisterPublicKey(address) {
   }
   return result;
 }
+*/
 
 export async function getSignature(message) {
   let signature = "";
@@ -358,10 +367,12 @@ export async function getSignature(message) {
   return signature;
 }
 
+/*
 export function convertAddress(address) {
   if (address !== "") return ethers.utils.getAddress(address);
   else return address;
 }
+*/
 
 export async function minaLogin(openlink = true) {
   let address = "";

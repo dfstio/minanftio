@@ -1,26 +1,27 @@
 const { getFromIPFS } = require("./ipfs");
-const ethers = require("ethers");
-const { Relayer } = require("defender-relay-client");
+//const ethers = require("ethers");
+//const { Relayer } = require("defender-relay-client");
 //const EthCrypto = require('eth-crypto');
-const VirtuosoNFTJSON = require("../contract/NFTVirtuoso.json");
-const ForwarderAbi = require("../relay/IForwarder.json");
+//const VirtuosoNFTJSON = require("../contract/NFTVirtuoso.json");
+//const ForwarderAbi = require("../relay/IForwarder.json");
 
 const {
-    RELAY_KEY,
-    RELAY_SECRET,
-    CHAIN_ID,
-    CONTRACT_ADDRESS,
-    REACT_APP_FORWARDER_ADDRESS,
-    RPC_URL,
-    URL,
+  RELAY_KEY,
+  RELAY_SECRET,
+  CHAIN_ID,
+  CONTRACT_ADDRESS,
+  REACT_APP_FORWARDER_ADDRESS,
+  RPC_URL,
+  URL,
 } = process.env;
 //const address= "0xbc356b91e24e0f3809fd1E455fc974995eF124dF";
 
-const provider = new ethers.providers.StaticJsonRpcProvider(RPC_URL);
+//const provider = new ethers.providers.StaticJsonRpcProvider(RPC_URL);
 //const moderatorKey = process.env.MODERATOR_KEY;
 const REFRESH_INTERVAL_SEC = process.env.REFRESH_INTERVAL_SEC;
 //const wallet = new ethers.Wallet(moderatorKey);
 //const signer = wallet.connect(provider);
+/*
 const virtuoso = new ethers.Contract(
     CONTRACT_ADDRESS,
     VirtuosoNFTJSON,
@@ -171,6 +172,7 @@ async function apiInitBackground(force)
 }
 */
 
+/*
 async function initAlgoliaTokens(force) {
     const totalSupply = await virtuoso.totalSupply();
     //const chainId = await provider.getChainId();
@@ -321,6 +323,8 @@ async function getToken(tokenId)
 
 }
 */
+
+/*
 async function getTokenPrice(tokenId) {
     const log = logm.child({ tokenId, wf: "getTokenPrice" });
     let token = TOKEN_JSON;
@@ -453,6 +457,8 @@ async function loadToken(tokenId, contract)
           const jsonManifestBuffer = await getFromIPFS(ipfsHash);
 
 */
+
+/*
 async function loadAlgoliaToken(tokenId, contract, chainId) {
     let loaded = await _loadAlgoliaToken(tokenId, contract, chainId);
     if (loaded === false) {
@@ -606,9 +612,10 @@ async function setBalance(params)
 */
 
 function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/*
 async function txBackground(body) {
     //console.log("txBackground contract background: ", body);
 
@@ -1070,7 +1077,7 @@ async function transferToken(tokenId, address, credit)
 	return false;
 }
 
-*/
+
 
 module.exports = {
     getBalance,
@@ -1080,3 +1087,5 @@ module.exports = {
     initAlgoliaTokens,
     relayCall,
 };
+
+*/

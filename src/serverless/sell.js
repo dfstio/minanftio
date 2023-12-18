@@ -1,10 +1,9 @@
 import api from "./api";
 import { getFromIPFS, addToIPFS } from "../blockchain/ipfs";
-import {
-  getVirtuosoUnlockableContentKey,
-  metamaskDecrypt,
-  virtuosoSell,
-} from "../blockchain/mina";
+import //getVirtuosoUnlockableContentKey,
+//metamaskDecrypt,
+//virtuosoSell,
+"../blockchain/mina";
 
 //const EthCrypto = require("eth-crypto");
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
@@ -104,6 +103,7 @@ const blockchain = async (
   unlockableIPFSHash,
   address
 ) => {
+  /*
   const txresult = await virtuosoSell(
     tokenId,
     ipfsHash,
@@ -113,6 +113,8 @@ const blockchain = async (
   );
   if (DEBUG) console.log("sell.blockchain tx: ", txresult);
   return txresult.hash;
+  */
+  return "";
 };
 /*
 
