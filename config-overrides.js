@@ -78,7 +78,7 @@ const updateWebpackModuleRules = (config) => {
 };
 
 module.exports = override(
-  updateWebpackModuleRules,
+  //updateWebpackModuleRules,
   /*
   addLessLoader({
     javascriptEnabled: true,
