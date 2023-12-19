@@ -3,22 +3,15 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import {
-  Field,
-  fetchAccount,
-  PublicKey,
-  Mina,
-  SmartContract,
-  PrivateKey,
-  Poseidon,
-} from "o1js";
+import { PrivateKey, Poseidon } from "o1js";
 import {
   MinaNFT,
   MapData,
   MinaNFTNameService,
-  MINANFT_NAME_SERVICE,
   accountBalanceMina,
   makeString,
+  Memory,
+  api,
 } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
@@ -26,7 +19,7 @@ import IntlMessages from "util/IntlMessages";
 import logger from "../../serverless/logger";
 
 const logm = logger.info.child({ winstonModule: "Verify" });
-const { REACT_APP_DEBUG } = process.env;
+const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 
 const Verify = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
@@ -95,6 +88,72 @@ const Verify = () => {
       // return error
       log.error("catch", { error });
     }
+  }
+
+  async function mintNFTapi() {
+    const blockchainInstance = "testworld2";
+    const includeFiles = false;
+    const pinataJWT = REACT_APP_PINATA_JWT;
+    MinaNFT.minaInit(blockchainInstance);
+
+    const ownerPrivateKey = PrivateKey.random();
+    const ownerPublicKey = ownerPrivateKey.toPublicKey();
+    const owner = Poseidon.hash(ownerPublicKey.toFields());
+
+    const nft = new MinaNFT({ name: `@test_${makeString(20)}`, owner });
+    nft.updateText({
+      key: `description`,
+      text: "This is my long description of the NFT. Can be of any length, supports markdown.",
+    });
+    nft.update({ key: `twitter`, value: `@builder` });
+    nft.update({ key: `secret`, value: `mysecretvalue`, isPrivate: true });
+    if (includeFiles)
+      await nft.updateImage({
+        filename: "./images/image.jpg",
+        pinataJWT,
+      });
+    /*
+    await nft.updateFile({
+      key: "sea",
+      filename: "./images/sea.png",
+      pinataJWT,
+    });
+    */
+    const map = new MapData();
+    map.update({ key: `level2-1`, value: `value21` });
+    map.update({ key: `level2-2`, value: `value22` });
+    map.updateText({
+      key: `level2-3`,
+      text: `This is text on level 2. Can be very long`,
+    });
+    /*
+    await map.updateFile({
+      key: "woman",
+      filename: "./images/woman.png",
+      pinataJWT,
+    });
+    */
+    const mapLevel3 = new MapData();
+    mapLevel3.update({ key: `level3-1`, value: `value31` });
+    mapLevel3.update({ key: `level3-2`, value: `value32`, isPrivate: true });
+    mapLevel3.update({ key: `level3-3`, value: `value33` });
+    map.updateMap({ key: `level2-4`, map: mapLevel3 });
+    nft.updateMap({ key: `level 2 and 3 data`, map });
+    const data = nft.exportToString({
+      increaseVersion: false,
+      includePrivateData: true,
+    });
+    console.log("data", data);
+    Memory.info(`created`);
+    const minanft = new api(REACT_APP_JWT);
+    const uri = nft.exportToString({
+      increaseVersion: true,
+      includePrivateData: false,
+    });
+    //console.log("uri", uri);
+    const result = await minanft.mint({ uri });
+    console.log("mint result", result);
+    Memory.info(`minted`);
   }
 
   async function mintNFT() {
@@ -226,7 +285,7 @@ const Verify = () => {
     console.log("balanceMina", balanceMina, makeString(12));
 
     */
-    await mintNFT();
+    await mintNFTapi();
   }
 
   return (
