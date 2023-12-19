@@ -14379,15 +14379,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minanft@npm:^1.2.19":
-  version: 1.2.19
-  resolution: "minanft@npm:1.2.19"
+"minanft@npm:^1.2.20":
+  version: 1.2.20
+  resolution: "minanft@npm:1.2.20"
   dependencies:
     axios: "npm:^1.6.2"
     form-data: "npm:^4.0.0"
     mime: "npm:^3.0.0"
     o1js: "npm:^0.15.0"
-  checksum: abc7bfc8eaddbe73cd4b0f0ef639fd3ea2c2f00481eb5403424eaba0874d5bbf3b5488338ec8dc371f478b3526de4dbd46eff2030a6ff6579522cb4fa45dcec3
+  checksum: e945174291814db16bf614e38956d80cb1384bccb75dbf80ed6e9d492b310583827193ddcf2661bf5504019552c806ad9689235b67b2a670f4e61ac886329c2d
   languageName: node
   linkType: hard
 
@@ -14438,7 +14438,7 @@ __metadata:
     logform: "npm:^2.6.0"
     mailgun-js: "npm:^0.22.0"
     markdown-to-jsx: "npm:^7.3.2"
-    minanft: "npm:^1.2.19"
+    minanft: "npm:^1.2.20"
     moment: "npm:^2.29.4"
     node-fetch: "npm:^3.3.2"
     nprogress: "npm:^0.2.0"
