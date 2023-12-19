@@ -62,6 +62,7 @@ const updateWebpackModuleRules = (config) => {
         options: {
           filterSourceMappingUrl: (url, resourcePath) => {
             //if (/.*\/node_modules\/.*/.test(resourcePath)) { return false; }
+
             return true;
           },
         },
@@ -78,7 +79,7 @@ const updateWebpackModuleRules = (config) => {
 };
 
 module.exports = override(
-  //updateWebpackModuleRules,
+  updateWebpackModuleRules,
   /*
   addLessLoader({
     javascriptEnabled: true,
@@ -100,15 +101,18 @@ module.exports = override(
     VERSION: JSON.stringify(require("./package.json").version),
   }),
 
+  /*
   addWebpackAlias({
     ["o1js"]: path.resolve(__dirname, "node_modules/o1js"),
   }),
+  */
 
-  addWebpackAwait(),
+  addWebpackAwait()
 
-  addBabelPlugin("@babel/plugin-syntax-top-level-await"),
-
+  //addBabelPlugin("@babel/plugin-syntax-top-level-await")
+  /*
   addWebpackExternals({
     o1js: "o1js",
   })
+*/
 );
