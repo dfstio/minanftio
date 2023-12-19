@@ -3,12 +3,13 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import { Field, fetchAccount, PublicKey, Mina } from "o1js";
-import { accountBalanceMina } from "minanft";
+import { Field, fetchAccount, PublicKey, Mina, SmartContract } from "o1js";
+import { makeString, accountBalanceMina } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
+
 const logm = logger.info.child({ winstonModule: "Verify" });
 const { REACT_APP_DEBUG } = process.env;
 
@@ -83,6 +84,7 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
+
     const network = Mina.Network({
       mina: "https://proxy.testworld.minaexplorer.com/graphql",
     });
@@ -109,8 +111,9 @@ const Verify = () => {
     } else {
       console.log("no account");
     }
-    //const balanceMina = await accountBalanceMina(publicKey);
-    //console.log("balanceMina", balanceMina);
+
+    const balanceMina = await accountBalanceMina(publicKey);
+    console.log("balanceMina", balanceMina, makeString(12));
   }
 
   return (
