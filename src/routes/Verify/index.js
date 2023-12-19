@@ -10,7 +10,6 @@ import {
   MinaNFTNameService,
   accountBalanceMina,
   makeString,
-  Memory,
   api,
 } from "minanft";
 
@@ -144,7 +143,6 @@ const Verify = () => {
       includePrivateData: true,
     });
     console.log("data", data);
-    Memory.info(`created`);
     const minanft = new api(REACT_APP_JWT);
     const uri = nft.exportToString({
       increaseVersion: true,
@@ -153,7 +151,6 @@ const Verify = () => {
     //console.log("uri", uri);
     const result = await minanft.mint({ uri });
     console.log("mint result", result);
-    Memory.info(`minted`);
   }
 
   async function mintNFT() {
