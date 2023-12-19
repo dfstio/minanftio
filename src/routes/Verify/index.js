@@ -3,8 +3,8 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-//import { Field, fetchAccount, PublicKey, Mina, SmartContract } from "o1js";
-import { makeString } from "minanft";
+import { Field, fetchAccount, PublicKey, Mina, SmartContract } from "o1js";
+import { makeString, accountBalanceMina } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -84,19 +84,15 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
-    /*
-    const { Field, fetchAccount, PublicKey, Mina } = await import("o1js");
 
     const network = Mina.Network({
       mina: "https://proxy.testworld.minaexplorer.com/graphql",
     });
 
     Mina.setActiveInstance(network);
-    */
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
-    /*
 
     const a = Field(7);
     const b = Field(3);
@@ -115,12 +111,9 @@ const Verify = () => {
     } else {
       console.log("no account");
     }
-    */
-    //const balanceMina = await accountBalanceMina(publicKey);
-    //const { makeString } = require("minanft");
-    //await import("minanft");
-    const balanceMina = makeString(12);
-    console.log("balanceMina", balanceMina);
+
+    const balanceMina = await accountBalanceMina(publicKey);
+    console.log("balanceMina", balanceMina, makeString(12));
   }
 
   return (
