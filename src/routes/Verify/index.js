@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 import { Field, fetchAccount, PublicKey, Mina, SmartContract } from "o1js";
-import minanft from "minanft";
+import * as minanft from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
