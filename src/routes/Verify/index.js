@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 import { Field, fetchAccount, PublicKey, Mina, SmartContract } from "o1js";
-import * as minanft from "minanft";
+//import { makeString } from "minanft";
 
 import IntlMessages from "util/IntlMessages";
 
@@ -117,8 +117,8 @@ const Verify = () => {
     }
     */
     //const balanceMina = await accountBalanceMina(publicKey);
-    //const { makeString } = await import("minanft");
-    const balanceMina = minanft.makeString(12);
+    const { makeString } = await import("minanft");
+    const balanceMina = makeString(12);
     console.log("balanceMina", balanceMina);
   }
 
