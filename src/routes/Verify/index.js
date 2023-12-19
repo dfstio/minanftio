@@ -84,6 +84,7 @@ const Verify = () => {
 
   async function connect() {
     log.info("Connect clicked", { address, wf: "connect" });
+    /*
     const { Field, fetchAccount, PublicKey, Mina } = await import("o1js");
 
     const network = Mina.Network({
@@ -91,9 +92,11 @@ const Verify = () => {
     });
 
     Mina.setActiveInstance(network);
+    */
     const newAddress = await minaLogin();
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
+    /*
 
     const a = Field(7);
     const b = Field(3);
@@ -112,6 +115,7 @@ const Verify = () => {
     } else {
       console.log("no account");
     }
+    */
     //const balanceMina = await accountBalanceMina(publicKey);
     const { makeString } = await import("minanft");
     const balanceMina = makeString(12);
