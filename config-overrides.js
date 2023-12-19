@@ -40,12 +40,14 @@ const addWebpackAwait = () => (config) => {
       Buffer: ["buffer", "Buffer"],
     }),
   ];
+  /*
   config.devServer = {
     headers: {
       "Cross-Origin-Opener-Policy": "same-origin",
       "Cross-Origin-Embedder-Policy": "require-corp",
     },
   };
+  */
   return config;
 };
 
@@ -59,9 +61,7 @@ const updateWebpackModuleRules = (config) => {
         loader: "source-map-loader",
         options: {
           filterSourceMappingUrl: (url, resourcePath) => {
-            if (/.*\/node_modules\/.*/.test(resourcePath)) {
-              return false;
-            }
+            //if (/.*\/node_modules\/.*/.test(resourcePath)) { return false; }
             return true;
           },
         },
