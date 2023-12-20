@@ -21,7 +21,7 @@ import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import botapi from "../../serverless/botapi";
 import { mintNFT, waitForMint } from "./mint";
-
+import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 
@@ -252,13 +252,21 @@ const MintPrivate = () => {
       const name = token.name[0] === "@" ? token.name : "@" + token.name;
       let mintResult = await mintNFT(address, auth, token);
       console.log("Mint result", mintResult);
-      if (mintResult?.success === true && mintResult?.jobId !== undefined)
+      if (
+        mintResult?.success === true &&
+        mintResult?.jobId !== undefined &&
+        mintResult?.json !== undefined
+      ) {
         message.loading({
           content: `Started mint job ${mintResult.jobId}`,
           key,
           duration: 240,
         });
-      else {
+        const blob = new Blob([mintResult.json], {
+          type: "text/plain;charset=utf-8",
+        });
+        fileSaver.saveAs(blob, name + ".json");
+      } else {
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
@@ -278,7 +286,9 @@ const MintPrivate = () => {
           duration: 240,
         });
         const linkURL = "https://minanft.io/" + name;
-        window.open(linkURL);
+        console.log("linkURL", linkURL);
+        const openResult = window.open(linkURL, "_blank");
+        console.log("openResult", openResult);
       } else
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${

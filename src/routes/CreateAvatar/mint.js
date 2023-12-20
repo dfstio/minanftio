@@ -7,7 +7,6 @@ import {
   makeString,
   api,
 } from "minanft";
-import fileSaver from "file-saver";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 
@@ -160,12 +159,11 @@ export async function mintNFT(address, auth, token) {
     increaseVersion: true,
     includePrivateData: true,
   });
-  const blob = new Blob([json], { type: "text/plain;charset=utf-8" });
-  fileSaver.saveAs(blob, nft.name + ".json");
 
   return {
     success: true,
     jobId,
+    json,
   };
 }
 
