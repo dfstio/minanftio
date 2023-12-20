@@ -151,6 +151,14 @@ const Verify = () => {
     //console.log("uri", uri);
     const result = await minanft.mint({ uri });
     console.log("mint result", result);
+    const jobId = result.jobId;
+    if (jobId === undefined) {
+      console.error("JobId is undefined");
+      return;
+    }
+
+    const txData = await minanft.waitForProofResult({ jobId });
+    console.log("txData", txData);
   }
 
   async function mintNFT() {
