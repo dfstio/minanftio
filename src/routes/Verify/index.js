@@ -174,7 +174,7 @@ const Verify = () => {
       return;
     }
 
-    const txData = await minanft.waitForProofResult({ jobId });
+    const txData = await minanft.waitForJobResult({ jobId });
     console.log("txData", txData);
   }
 
