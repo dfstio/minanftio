@@ -1,6 +1,6 @@
 import { MerkleTree, Field, Encoding } from "o1js";
 import { FileData } from "minanft";
-import { createHash } from "crypto";
+//import { createHash } from "crypto";
 import axios from "axios";
 
 export async function getFileData(file, pinataJWT) {
