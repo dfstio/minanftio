@@ -20,6 +20,19 @@ function readFileAsync(file) {
 
 export async function getFileData(file, pinataJWT) {
   const binary = await readFileAsync(file);
+  const bytes = new Uint8Array(binary.byteLength);
+  const fields = [];
+  bytes.set(binary);
+  fields.push(...Encoding.bytesToFields(bytes));
+
+  const height = Math.ceil(Math.log2(fields.length + 2)) + 1;
+  const tree = new MerkleTree(height);
+  if (fields.length > tree.leafCount)
+    throw new Error(`File is too big for this Merkle tree`);
+  // First field is the height, second number is the number of fields
+  tree.fill([Field.from(height), Field.from(fields.length), ...fields]);
+  const root = tree.getRoot();
+
   const binaryWA = CryptoJS.lib.WordArray.create(binary);
   console.log("binary", binary);
   var sha3_512 = CryptoJS.SHA3(binaryWA, { outputLength: 512 }).toString(
@@ -33,11 +46,9 @@ export async function getFileData(file, pinataJWT) {
     return undefined;
   }
   const storage = `i:${hash}`;
-  const fileRoot = Field(543924798349593);
-  const height = 10;
 
   return new FileData({
-    fileRoot,
+    fileRoot: root,
     height,
     size: file.size,
     mimeType: file.type,
