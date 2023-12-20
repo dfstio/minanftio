@@ -21,6 +21,7 @@ function readFileAsync(file) {
 export async function getFileData(file, pinataJWT) {
   const binary = await readFileAsync(file);
   const binaryWA = CryptoJS.lib.WordArray.create(binary);
+  console.log("binary", binary);
   var sha3_512 = CryptoJS.SHA3(binaryWA, { outputLength: 512 }).toString(
     CryptoJS.enc.Base64
   );
