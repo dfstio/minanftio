@@ -2,10 +2,27 @@ import { MerkleTree, Field, Encoding } from "o1js";
 import { FileData } from "minanft";
 //import { createHash } from "crypto";
 import axios from "axios";
+const CryptoJS = require("crypto-js");
+
+function readFileAsync(file) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsArrayBuffer(file);
+  });
+}
 
 export async function getFileData(file, pinataJWT) {
-  const sha3_512 =
-    "UBSdn4FVQRB1q6qAT7gjVb6TbNAC+Rqo3PS5GpDSaBzLLI4yHuJB8lQV7GFFvxSZKLo/commzF9LsaUGE4Sv3Q==";
+  const binary = await readFileAsync(file);
+  const binaryWA = CryptoJS.lib.WordArray.create(binary);
+  var sha3_512 = CryptoJS.SHA3(binaryWA, { outputLength: 512 }).toString();
+  //  "UBSdn4FVQRB1q6qAT7gjVb6TbNAC+Rqo3PS5GpDSaBzLLI4yHuJB8lQV7GFFvxSZKLo/commzF9LsaUGE4Sv3Q==";
   const hash = await pinFile(file, pinataJWT);
   if (hash === undefined) {
     console.error("getFileData error: hash is undefined");
