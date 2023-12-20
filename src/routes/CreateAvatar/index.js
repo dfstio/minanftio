@@ -925,16 +925,16 @@ const MintPrivate = () => {
                 </Button>
               </Form.Item>
               <Form.Item label="Minted:" name="mintedlink" hidden={!showLink}>
-                <span>
+                <div>
                   <a href={link} target="_blank">
                     {link}
                   </a>
-                </span>
-                <span>
+                </div>
+                <div>
                   <a href={hash} target="_blank">
                     {hash}
                   </a>
-                </span>
+                </div>
               </Form.Item>
             </Form>
           </Card>
