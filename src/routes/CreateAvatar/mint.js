@@ -19,7 +19,7 @@ export async function mintNFT(address, auth, token) {
     console.error("Token name is undefined");
     return;
   }
-  const JWT = auth ?? REACT_APP_JWT;
+  const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const blockchainInstance = "testworld2";
   const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
