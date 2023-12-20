@@ -143,14 +143,31 @@ export async function mintNFT(address, auth, token) {
     privateKey: nftPrivateKey.toBase58(),
   });
 
-  console.log("mint result", result);
+  console.log("mint job result", result);
 
   const jobId = result.jobId;
   if (jobId === undefined) {
     console.error("JobId is undefined");
-    return;
+    return {
+      success: false,
+      error: "JobId is undefined",
+      reason: result.error,
+    };
   }
 
   const txData = await minanft.waitForProofResult({ jobId });
   console.log("txData", txData);
+  if (txData?.result?.result === undefined || txData.result?.result === "") {
+    console.error("txData is undefined");
+    return {
+      success: false,
+      error: "Mint error",
+      reason: txData.error,
+    };
+  }
+
+  return {
+    success: true,
+    hash: txData.result.result,
+  };
 }

@@ -252,7 +252,7 @@ const MintPrivate = () => {
       });
       const mintResult = await mintNFT(address, auth, token);
       console.log("Mint result", mintResult);
-      if (mintResult.success === true)
+      if (mintResult?.success === true && mintResult?.hash !== undefined)
         message.success({
           content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
           key,
@@ -260,8 +260,8 @@ const MintPrivate = () => {
         });
       else
         message.error({
-          content: `Error minting NFT token: ${mintResult.error ?? ""} ${
-            mintResult.reason ?? ""
+          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
           }`,
           key,
           duration: 20,
