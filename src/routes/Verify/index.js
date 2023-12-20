@@ -3,7 +3,7 @@ import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress, updatePublicKey } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import { PrivateKey, Poseidon } from "o1js";
+import { PrivateKey, Poseidon, PublicKey } from "o1js";
 import {
   MinaNFT,
   MapData,
@@ -16,6 +16,7 @@ import {
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
+import { add } from "lodash";
 
 const logm = logger.info.child({ winstonModule: "Verify" });
 const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
@@ -90,16 +91,22 @@ const Verify = () => {
   }
 
   async function mintNFTapi() {
+    if (address === undefined || address === "") {
+      console.error("Address is undefined");
+      return;
+    }
     const blockchainInstance = "testworld2";
     const includeFiles = false;
     const pinataJWT = REACT_APP_PINATA_JWT;
     MinaNFT.minaInit(blockchainInstance);
 
-    const ownerPrivateKey = PrivateKey.random();
-    const ownerPublicKey = ownerPrivateKey.toPublicKey();
+    const name = "@test_" + makeString(10);
+    const ownerPublicKey = PublicKey.fromBase58(address);
+    const nftPrivateKey = PrivateKey.random();
+    const nftPublicKey = nftPrivateKey.toPublicKey();
     const owner = Poseidon.hash(ownerPublicKey.toFields());
 
-    const nft = new MinaNFT({ name: `@test_${makeString(20)}`, owner });
+    const nft = new MinaNFT({ name, owner });
     nft.updateText({
       key: `description`,
       text: "This is my long description of the NFT. Can be of any length, supports markdown.",
@@ -144,12 +151,22 @@ const Verify = () => {
     });
     console.log("data", data);
     const minanft = new api(REACT_APP_JWT);
+    const reserved = await minanft.reserveName({
+      name,
+      publicKey: nftPublicKey.toBase58(),
+    });
+    console.log("Reserved:", reserved);
+
     const uri = nft.exportToString({
       increaseVersion: true,
       includePrivateData: false,
     });
-    //console.log("uri", uri);
-    const result = await minanft.mint({ uri });
+
+    const result = await minanft.mint({
+      uri,
+      signature: reserved.signature,
+      privateKey: nftPrivateKey.toBase58(),
+    });
     console.log("mint result", result);
     const jobId = result.jobId;
     if (jobId === undefined) {
