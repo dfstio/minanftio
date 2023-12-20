@@ -21,7 +21,10 @@ function readFileAsync(file) {
 export async function getFileData(file, pinataJWT) {
   const binary = await readFileAsync(file);
   const binaryWA = CryptoJS.lib.WordArray.create(binary);
-  var sha3_512 = CryptoJS.SHA3(binaryWA, { outputLength: 512 }).toString();
+  var sha3_512 = CryptoJS.SHA3(binaryWA, { outputLength: 512 }).toString(
+    CryptoJS.enc.Base64
+  );
+  console.log("sha3_512", sha3_512);
   //  "UBSdn4FVQRB1q6qAT7gjVb6TbNAC+Rqo3PS5GpDSaBzLLI4yHuJB8lQV7GFFvxSZKLo/commzF9LsaUGE4Sv3Q==";
   const hash = await pinFile(file, pinataJWT);
   if (hash === undefined) {
