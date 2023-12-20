@@ -18,10 +18,9 @@ import {
 } from "@ant-design/icons";
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
-import fileSaver from "file-saver";
 import Markdown from "markdown-to-jsx";
 import botapi from "../../serverless/botapi";
-import { mintNFT } from "./mint";
+import { mintNFT, waitForMint } from "./mint";
 
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
@@ -250,21 +249,43 @@ const MintPrivate = () => {
         key,
         duration: 240,
       });
-      const mintResult = await mintNFT(address, auth, token);
+      const name = token.name[0] === "@" ? token.name : "@" + token.name;
+      let mintResult = await mintNFT(address, auth, token);
       console.log("Mint result", mintResult);
-      if (mintResult?.success === true && mintResult?.hash !== undefined)
-        message.success({
-          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
+      if (mintResult?.success === true && mintResult?.jobId !== undefined)
+        message.loading({
+          content: `Started mint job ${mintResult.jobId}`,
           key,
-          duration: 20,
+          duration: 240,
         });
-      else
+      else {
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           key,
           duration: 20,
+        });
+        setMinting(false);
+        return;
+      }
+      const jobId = mintResult.jobId;
+      mintResult = await waitForMint(jobId, auth);
+      if (mintResult?.success === true && mintResult?.hash !== undefined) {
+        message.success({
+          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
+          key,
+          duration: 240,
+        });
+        const linkURL = "https://minanft.io/" + name;
+        window.open(linkURL);
+      } else
+        message.error({
+          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          key,
+          duration: 60,
         });
 
       /*

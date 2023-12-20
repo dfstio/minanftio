@@ -7,6 +7,7 @@ import {
   makeString,
   api,
 } from "minanft";
+import fileSaver from "file-saver";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 
@@ -155,6 +156,29 @@ export async function mintNFT(address, auth, token) {
     };
   }
 
+  const json = nft.exportToString({
+    increaseVersion: true,
+    includePrivateData: true,
+  });
+  const blob = new Blob([json], { type: "text/plain;charset=utf-8" });
+  fileSaver.saveAs(blob, nft.name + ".json");
+
+  return {
+    success: true,
+    jobId,
+  };
+}
+
+export async function waitForMint(jobId, auth) {
+  if (jobId === undefined || jobId === "") {
+    console.error("JobId is undefined");
+    return {
+      success: false,
+      error: "JobId is undefined",
+    };
+  }
+  const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
+  const minanft = new api(JWT);
   const txData = await minanft.waitForProofResult({ jobId });
   console.log("txData", txData);
   if (txData?.result?.result === undefined || txData.result?.result === "") {
