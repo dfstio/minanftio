@@ -26,6 +26,7 @@ import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 
 import logger from "../../serverless/logger";
+import { set } from "lodash";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -144,6 +145,8 @@ const MintPrivate = () => {
   const [token, setToken] = useState(startToken);
   const [ipfs, setIpfs] = useState("");
   const [auth, setAuth] = useState("");
+  const [link, setLink] = useState("");
+  const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
@@ -289,6 +292,8 @@ const MintPrivate = () => {
         console.log("linkURL", linkURL);
         const openResult = window.open(linkURL, "_blank");
         console.log("openResult", openResult);
+        setLink(linkURL);
+        setShowLink(true);
       } else
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
@@ -856,7 +861,7 @@ const MintPrivate = () => {
                 </Col>
               </Row>
               <Row>
-                <Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="uattachments"
                     label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. You can put key-value pairs in text file, in this case both keys and values will NOT be uploaded to IPFS, but will be verifiable on-chain"
@@ -916,6 +921,13 @@ const MintPrivate = () => {
                 >
                   {address === "" ? "Connect with AURO" : "Mint NFT"}
                 </Button>
+              </Form.Item>
+              <Form.Item label="Minted:" name="mintedlink" hidden={!showLink}>
+                <span>
+                  <a href={link} target="_blank">
+                    {link}
+                  </a>
+                </span>
               </Form.Item>
             </Form>
           </Card>
