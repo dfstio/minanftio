@@ -12,8 +12,8 @@ export async function getFileData(file, pinataJWT) {
     return undefined;
   }
   const storage = `i:${hash}`;
-  const fileRoot = Field(1);
-  const height = 1;
+  const fileRoot = Field(543924798349593);
+  const height = 10;
 
   return new FileData({
     fileRoot,
