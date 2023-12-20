@@ -760,7 +760,7 @@ const MintPrivate = () => {
                 </Col>
               </Row>
               <Row>
-                <Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     label={<span>Private description</span>}
                     name="unlockable_description"
@@ -780,7 +780,7 @@ const MintPrivate = () => {
                     />
                   </Form.Item>
                 </Col>
-                <Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="umedia"
                     label={
@@ -849,9 +849,11 @@ const MintPrivate = () => {
                   </Form.Item>
                 </Col>
               </Row>
+              {/*
               <Form.Item label="Price" name="price">
                 {mintPrice}
               </Form.Item>
+                  */}
 
               <Form.Item
                 label={
