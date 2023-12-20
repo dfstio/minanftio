@@ -146,6 +146,7 @@ const MintPrivate = () => {
   const [ipfs, setIpfs] = useState("");
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
+  const [hash, setHash] = useState("");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
@@ -293,6 +294,7 @@ const MintPrivate = () => {
         const openResult = window.open(linkURL, "_blank");
         console.log("openResult", openResult);
         setLink(linkURL);
+        setHash("https://minascan.io/testworld/tx/" + mintResult.hash);
         setShowLink(true);
       } else
         message.error({
@@ -926,6 +928,11 @@ const MintPrivate = () => {
                 <span>
                   <a href={link} target="_blank">
                     {link}
+                  </a>
+                </span>
+                <span>
+                  <a href={hash} target="_blank">
+                    {hash}
                   </a>
                 </span>
               </Form.Item>
