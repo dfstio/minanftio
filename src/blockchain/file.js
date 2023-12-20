@@ -4,7 +4,8 @@ import { FileData } from "minanft";
 import axios from "axios";
 
 export async function getFileData(file, pinataJWT) {
-  const sha3_512 = "";
+  const sha3_512 =
+    "UBSdn4FVQRB1q6qAT7gjVb6TbNAC+Rqo3PS5GpDSaBzLLI4yHuJB8lQV7GFFvxSZKLo/commzF9LsaUGE4Sv3Q==";
   const hash = await pinFile(file, pinataJWT);
   if (hash === undefined) {
     console.error("getFileData error: hash is undefined");
