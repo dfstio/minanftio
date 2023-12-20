@@ -24,6 +24,7 @@ import { mintNFT, waitForMint } from "./mint";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
+import { getFileData } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
 import { set } from "lodash";
@@ -132,6 +133,7 @@ const STARTING_JSON = {
 */
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+const { REACT_APP_PINATA_JWT } = process.env;
 //const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
 const mintText = "Free to create Mina NFT token for Christmas and New Year";
 //"$9 to create one Mina Avatar NFT token";
@@ -236,6 +238,10 @@ const MintPrivate = () => {
   };
 
   const mint = async () => {
+    const file = await getFileData(token.main.image, REACT_APP_PINATA_JWT);
+    console.log("file", file);
+    return;
+
     if (address === "") {
       const newAddress = await minaLogin();
       console.log("newAddress", newAddress);
@@ -924,7 +930,11 @@ const MintPrivate = () => {
                   {address === "" ? "Connect with AURO" : "Mint NFT"}
                 </Button>
               </Form.Item>
-              <Form.Item label="Minted:" name="mintedlink" hidden={!showLink}>
+              <Form.Item
+                label="NFT is minted: "
+                name="mintedlink"
+                hidden={!showLink}
+              >
                 <div>
                   <a href={link} target="_blank">
                     {link}
