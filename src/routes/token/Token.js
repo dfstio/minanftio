@@ -208,12 +208,7 @@ const TokenMedia = ({
             )}
             {type === "video" ? (
               <ReactPlayer
-                url={
-                  url ==
-                  "https://ipfs.io/ipfs/QmcyYnz3suNhT2wRj2RKeipt7hZ9isrV8fko7JdzujTv2T"
-                    ? `https://res.cloudinary.com/minanft/video/upload/nft/@minanft/eiobsdaj2bjicxudkwzr`
-                    : url
-                }
+                url={url}
                 controls={true}
                 //light={true}
                 width="100%"
@@ -336,7 +331,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
           let url =
             media[i].storage === undefined
               ? ""
-              : "https://ipfs.io/ipfs/" + media[i].storage;
+              : "https://gateway.pinata.cloud/ipfs/" + media[i].storage;
           /*
           if (
             url === "" &&
