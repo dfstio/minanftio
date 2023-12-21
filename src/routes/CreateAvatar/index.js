@@ -831,7 +831,7 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="uattachments"
-                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. You can put key-value pairs in text file, in this case both keys and values will NOT be uploaded to IPFS, but will be verifiable on-chain"
+                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) in case checkbox below is checked"
                   >
                     <Upload
                       name="uattachments"
