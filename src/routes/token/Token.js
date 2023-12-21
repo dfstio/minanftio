@@ -456,7 +456,7 @@ const Attachments = ({ attachments }) => {
             >
               <Attachment
                 attachment={attachment}
-                key={"attachment" + attachment.IPFShash}
+                key={"attachment" + attachment.storage}
               />
             </Col>
           ))}
@@ -493,7 +493,11 @@ const Attachment = ({ attachment }) => {
   async function onClick() {
     if (DEBUG) console.log("Attachment clicked", attachment.filename, size);
     setLoading(true);
-    let url = attachment.url === undefined ? "" : attachment.url;
+    let url =
+      attachment.storage === undefined
+        ? ""
+        : "https://gateway.pinata.cloud/ipfs/" + attachment.storage;
+    /*
     if (
       url === "" &&
       attachment.password !== undefined &&
@@ -506,6 +510,7 @@ const Attachment = ({ attachment }) => {
         loadPercent
       );
     }
+    */
     if (url !== "") fileSaver.saveAs(url, name);
     setLoading(false);
   }
@@ -794,7 +799,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       console.log("metadata", metadata);
       setMedia(metadata.media);
       setAudio(metadata.audio);
-      //setAttachments(metadata.attachments);
+      setAttachments(metadata.attachments);
       setTexts(metadata.texts);
       setStrings(metadata.strings);
 
