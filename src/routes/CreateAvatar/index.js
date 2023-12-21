@@ -11,6 +11,7 @@ import {
   Upload,
   Select,
   Checkbox,
+  Input,
 } from "antd";
 import {
   LoadingOutlined,
@@ -622,6 +623,7 @@ const MintPrivate = () => {
                       <Option value="Blockchain">Blockchain</Option>
                       <Option value="Health">Health</Option>
                       <Option value="Event">Event</Option>
+                      <Option value="Other">Other</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -637,7 +639,6 @@ const MintPrivate = () => {
                       accept="image/*,video/*,audio/*,.pdf"
                       showUploadList={true}
                       multiple={true}
-                      showUploadList={true}
                       //action="//jsonplaceholder.typicode.com/posts/"
                       beforeUpload={beforeUpload}
                       //onChange={this.handleChange}
@@ -680,10 +681,10 @@ const MintPrivate = () => {
                     name="public_key1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
+                    <Input
+                      count={{
+                        show: true,
+                        max: 10,
                       }}
                     />
                   </Form.Item>
@@ -697,7 +698,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>
@@ -713,7 +714,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>
@@ -727,7 +728,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>
@@ -752,7 +753,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>
@@ -766,7 +767,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>
@@ -782,7 +783,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>
@@ -796,7 +797,7 @@ const MintPrivate = () => {
                     <TextArea
                       autoSize={{
                         minRows: 1,
-                        maxRows: 2,
+                        maxRows: 1,
                       }}
                     />
                   </Form.Item>

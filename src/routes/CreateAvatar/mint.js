@@ -53,6 +53,7 @@ export async function mintNFT(address, auth, token) {
   }
 
   const nft = new MinaNFT({ name, owner, address: nftPublicKey });
+  console.log("token", token);
 
   if (token.description !== undefined && token.description !== "") {
     nft.updateText({
