@@ -680,12 +680,7 @@ const MintPrivate = () => {
                     name="public_key1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <Input
-                      count={{
-                        show: true,
-                        max: 30,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
