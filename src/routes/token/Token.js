@@ -217,7 +217,7 @@ const TokenMedia = ({
                 controls={true}
                 //light={true}
                 width="100%"
-                height="100%"
+                height={type === "audio" ? "50px" : "100%"}
                 key={"VideoPlayer" + media.id}
                 crossorigin="anonymous"
                 config={{
