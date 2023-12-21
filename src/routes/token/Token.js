@@ -452,11 +452,11 @@ const Attachments = ({ attachments }) => {
               md={24}
               sm={24}
               xs={24}
-              key={"attachmentcol" + attachment.filename}
+              key={"attachmentcol" + attachment.data.filename}
             >
               <Attachment
-                attachment={attachment}
-                key={"attachment" + attachment.storage}
+                attachment={attachment.data}
+                key={"attachment" + attachment.data.storage}
               />
             </Col>
           ))}
