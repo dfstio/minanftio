@@ -534,7 +534,7 @@ const Attachment = ({ attachment }) => {
   );
 };
 
-const Strings = ({ strings }) => {
+const Strings = ({ strings, markdown }) => {
   if (DEBUG) console.log("Strings", strings);
 
   return (
@@ -552,6 +552,7 @@ const Strings = ({ strings }) => {
             >
               <StringItem
                 attachment={attachment}
+                markdown={markdown}
                 key={"stringitem" + attachment.id}
               />
             </Col>
@@ -564,7 +565,7 @@ const Strings = ({ strings }) => {
   );
 };
 
-const StringItem = ({ attachment }) => {
+const StringItem = ({ attachment, markdown }) => {
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -575,7 +576,11 @@ const StringItem = ({ attachment }) => {
     setText();
   }, [attachment]);
 
-  return <div style={{ position: "relative" }}>{name}</div>;
+  return (
+    <div style={{ position: "relative" }}>
+      {markdown ? <Markdown>{name}</Markdown> : { name }}
+    </div>
+  );
 };
 
 const TokenItem = ({ item, small = false, preview = false }) => {
@@ -1313,8 +1318,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     <Markdown>{descriptionMarkdown}</Markdown>
                   )}
                   <Attachments attachments={attachments} />
-                  <Strings strings={strings} />
-                  <Strings strings={texts} />
+                  <Strings strings={strings} markdown={false} />
+                  <Strings strings={texts} markdown={true} />
 
                   {/*
          <div className="gx-mt-4" style={{position: "relative"}}>
