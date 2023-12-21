@@ -540,7 +540,7 @@ const Strings = ({ strings, markdown }) => {
   return (
     <div id="strings" className="gx-mt-2">
       {strings.length > 0 ? (
-        <Row key={"stringsrow"}>
+        <Row key={"stringsrow" + markdown.toString()}>
           {strings.map((attachment) => (
             <Col
               xl={24}
@@ -548,12 +548,12 @@ const Strings = ({ strings, markdown }) => {
               md={24}
               sm={24}
               xs={24}
-              key={"stringcol" + attachment.id}
+              key={"stringcol" + attachment.id + markdown.toString()}
             >
               <StringItem
                 attachment={attachment}
                 markdown={markdown}
-                key={"stringitem" + attachment.id}
+                key={"stringitem" + attachment.id + markdown.toString()}
               />
             </Col>
           ))}
@@ -578,7 +578,15 @@ const StringItem = ({ attachment, markdown }) => {
 
   return (
     <div style={{ position: "relative" }}>
-      {markdown ? <Markdown>{name}</Markdown> : { name }}
+      {markdown ? (
+        <Markdown
+          key={"stringitemmarkdown" + attachment.id + markdown.toString()}
+        >
+          {name}
+        </Markdown>
+      ) : (
+        { name }
+      )}
     </div>
   );
 };
