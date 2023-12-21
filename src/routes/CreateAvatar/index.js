@@ -215,6 +215,8 @@ const MintPrivate = () => {
       newToken.unlockable.attachments = values.uattachments.fileList;
 
     if (values.folder !== undefined) newToken.folder = values.folder;
+    if (values.calculateroot !== undefined)
+      newToken.calculateroot = values.calculateroot;
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -888,7 +890,7 @@ const MintPrivate = () => {
                       </div>
                     </Upload>
                   </Form.Item>
-                  <Form.Item name="root" valuePropName="checked">
+                  <Form.Item name="calculateroot" valuePropName="checked">
                     <Checkbox>
                       Calculate Merkle Tree root of the private attachments
                       (takes time)
