@@ -515,7 +515,7 @@ const MintPrivate = () => {
                     ]}
                     placeholder="Please name your NFT like @myminanft"
                   >
-                    <Input />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
 
                   <Form.Item
@@ -689,12 +689,7 @@ const MintPrivate = () => {
                     name="public_value1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -705,12 +700,7 @@ const MintPrivate = () => {
                     name="public_key2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -719,12 +709,7 @@ const MintPrivate = () => {
                     name="public_value2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -744,12 +729,7 @@ const MintPrivate = () => {
                     name="private_key1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -758,12 +738,7 @@ const MintPrivate = () => {
                     name="private_value1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -774,12 +749,7 @@ const MintPrivate = () => {
                     name="private_key2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -788,12 +758,7 @@ const MintPrivate = () => {
                     name="private_value2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 1,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
