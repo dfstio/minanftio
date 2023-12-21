@@ -40,7 +40,7 @@ export async function mintNFT(address, auth, token) {
     });
   }
 
-  const imageData = await getFileData(token.main.image, pinataJWT);
+  const imageData = await getFileData(token.main.image, pinataJWT, true);
   nft.updateFileData({ key: `image`, type: "image", fileData: imageData });
 
   if (
