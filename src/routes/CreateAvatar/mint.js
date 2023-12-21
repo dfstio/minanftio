@@ -73,22 +73,28 @@ export async function mintNFT(address, auth, token) {
   }
 
   if (token.public_key1 !== undefined && token.public_key1 !== "")
-    nft.update({ key: token.public_key1, value: token.public_value1 ?? "" });
+    nft.update({
+      key: token.public_key1.substring(0, 30),
+      value: token.public_value1?.substring(0, 30) ?? "",
+    });
 
   if (token.public_key2 !== undefined && token.public_key2 !== "")
-    nft.update({ key: token.public_key2, value: token.public_value2 ?? "" });
+    nft.update({
+      key: token.public_key2.substring(0, 30),
+      value: token.public_value2?.substring(0, 30) ?? "",
+    });
 
   if (token.private_key1 !== undefined && token.private_key1 !== "")
     nft.update({
-      key: token.private_key1,
-      value: token.private_value1 ?? "",
+      key: token.private_key1.substring(0, 30),
+      value: token.private_value1?.substring(0, 30) ?? "",
       isPrivate: true,
     });
 
   if (token.private_key2 !== undefined && token.private_key2 !== "")
     nft.update({
-      key: token.private_key2,
-      value: token.private_value2 ?? "",
+      key: token.private_key2.substring(0, 30),
+      value: token.private_value2?.substring(0, 30) ?? "",
       isPrivate: true,
     });
 
@@ -111,7 +117,7 @@ export async function mintNFT(address, auth, token) {
     }
     console.log("fileData", fileData);
     nft.updateFileData({
-      key: file.name,
+      key: file.name.substring(0, 30),
       type: "file",
       data: fileData,
       isPrivate: isPrivate ?? false,
