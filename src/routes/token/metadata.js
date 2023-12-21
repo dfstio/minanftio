@@ -86,7 +86,7 @@ export function prepareMetadata(token) {
                     });
                   break;
                 default:
-                  console.log("default", properties[key].linkedObject);
+                  //console.log("default", properties[key].linkedObject);
                   attachments.push({
                     data: properties[key].linkedObject,
                     id: attachments.length,

@@ -476,6 +476,7 @@ const Attachment = ({ attachment }) => {
 
   useEffect(() => {
     async function setText() {
+      console.log("Attachment", attachment);
       const size1 = formatBytes(attachment.size);
       setSize(" (" + size1 + ")");
       const splitName = attachment.filename.split("/");
@@ -496,7 +497,7 @@ const Attachment = ({ attachment }) => {
     let url =
       attachment.storage === undefined
         ? ""
-        : "https://gateway.pinata.cloud/ipfs/" + attachment.storage;
+        : "https://gateway.pinata.cloud/ipfs/" + attachment.storage.slice(2);
     /*
     if (
       url === "" &&
