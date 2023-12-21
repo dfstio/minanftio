@@ -7,6 +7,7 @@ import {
   makeString,
   api,
 } from "minanft";
+import { getFileData } from "../../blockchain/file";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 
@@ -38,6 +39,9 @@ export async function mintNFT(address, auth, token) {
       text: token.description,
     });
   }
+
+  const imageData = await getFileData(token.main.image, pinataJWT);
+  nft.updateFileData({ key: `image`, type: "image", fileData: imageData });
 
   if (
     token.unlockable_description !== undefined &&

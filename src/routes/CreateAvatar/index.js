@@ -238,10 +238,6 @@ const MintPrivate = () => {
   };
 
   const mint = async () => {
-    const file = await getFileData(token.main.image, REACT_APP_PINATA_JWT);
-    console.log("file", file);
-    return;
-
     if (address === "") {
       const newAddress = await minaLogin();
       console.log("newAddress", newAddress);
