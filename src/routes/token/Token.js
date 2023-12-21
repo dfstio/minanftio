@@ -411,6 +411,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
           showMiniProcessBar={true}
           onAudioPlay={onAudioPlay}
           onAudioPause={onAudioPause}
+          crossorigin="anonymous"
         />
       ) : (
         ""
