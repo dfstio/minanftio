@@ -39,7 +39,7 @@ export function prepareMetadata(token) {
               break;
             case "string":
               strings.push({
-                data: properties[key].linkedObject,
+                data: properties[key],
                 id: strings.length,
               });
               break;
