@@ -110,7 +110,12 @@ export async function mintNFT(address, auth, token) {
   nft.updateFileData({ key: `image`, type: "image", data: imageData });
 
   async function addFile(file, isPrivate = false, calculateRoot = false) {
-    const fileData = await getFileData(file, pinataJWT);
+    const fileData = await getFileData(
+      file,
+      pinataJWT,
+      isPrivate,
+      calculateRoot
+    );
     if (fileData === undefined) {
       console.error("getFileData error: fileData is undefined");
       throw new Error("Cannot get file data");
@@ -159,7 +164,7 @@ export async function mintNFT(address, auth, token) {
         await addFile(
           token.unlockable.attachments[i].originFileObj,
           true,
-          true
+          token.calculateroot === true
         );
       }
     }

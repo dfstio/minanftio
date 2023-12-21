@@ -254,7 +254,7 @@ const MintPrivate = () => {
     try {
       setMinting(true);
       message.loading({
-        content: `Minting NFT token - sending transaction to blockchain`,
+        content: `Minting NFT token: creating token metadata`,
         key,
         duration: 240,
       });
