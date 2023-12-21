@@ -10,6 +10,7 @@ import {
   Card,
   Upload,
   Select,
+  Checkbox,
 } from "antd";
 import {
   LoadingOutlined,
@@ -214,6 +215,8 @@ const MintPrivate = () => {
       newToken.unlockable.attachments = values.uattachments.fileList;
 
     if (values.folder !== undefined) newToken.folder = values.folder;
+    if (values.calculateroot !== undefined)
+      newToken.calculateroot = values.calculateroot;
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -251,7 +254,7 @@ const MintPrivate = () => {
     try {
       setMinting(true);
       message.loading({
-        content: `Minting NFT token - sending transaction to blockchain`,
+        content: `Minting NFT token: creating token metadata`,
         key,
         duration: 240,
       });
@@ -512,7 +515,7 @@ const MintPrivate = () => {
                     ]}
                     placeholder="Please name your NFT like @myminanft"
                   >
-                    <Input />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
 
                   <Form.Item
@@ -619,6 +622,7 @@ const MintPrivate = () => {
                       <Option value="Blockchain">Blockchain</Option>
                       <Option value="Health">Health</Option>
                       <Option value="Event">Event</Option>
+                      <Option value="Other">Other</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -634,7 +638,6 @@ const MintPrivate = () => {
                       accept="image/*,video/*,audio/*,.pdf"
                       showUploadList={true}
                       multiple={true}
-                      showUploadList={true}
                       //action="//jsonplaceholder.typicode.com/posts/"
                       beforeUpload={beforeUpload}
                       //onChange={this.handleChange}
@@ -677,12 +680,7 @@ const MintPrivate = () => {
                     name="public_key1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -691,12 +689,7 @@ const MintPrivate = () => {
                     name="public_value1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -707,12 +700,7 @@ const MintPrivate = () => {
                     name="public_key2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -721,12 +709,7 @@ const MintPrivate = () => {
                     name="public_value2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -746,12 +729,7 @@ const MintPrivate = () => {
                     name="private_key1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -760,12 +738,7 @@ const MintPrivate = () => {
                     name="private_value1"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -776,12 +749,7 @@ const MintPrivate = () => {
                     name="private_key2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
@@ -790,12 +758,7 @@ const MintPrivate = () => {
                     name="private_value2"
                     placeholder="Some string (less than 30 chars)"
                   >
-                    <TextArea
-                      autoSize={{
-                        minRows: 1,
-                        maxRows: 2,
-                      }}
-                    />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -868,7 +831,7 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="uattachments"
-                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. You can put key-value pairs in text file, in this case both keys and values will NOT be uploaded to IPFS, but will be verifiable on-chain"
+                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) in case checkbox below is checked"
                   >
                     <Upload
                       name="uattachments"
@@ -886,6 +849,12 @@ const MintPrivate = () => {
                         <div className="ant-upload-text">Any files</div>
                       </div>
                     </Upload>
+                  </Form.Item>
+                  <Form.Item name="calculateroot" valuePropName="checked">
+                    <Checkbox>
+                      Calculate Merkle Tree root of the private attachments
+                      (takes time)
+                    </Checkbox>
                   </Form.Item>
                 </Col>
               </Row>

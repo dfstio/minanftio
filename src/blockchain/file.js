@@ -18,10 +18,16 @@ function readFileAsync(file) {
   });
 }
 
-export async function getFileData(file, pinataJWT, calculateRoot = false) {
+export async function getFileData(
+  file,
+  pinataJWT,
+  isPrivate = false,
+  calculateRoot = false
+) {
   const binary = await readFileAsync(file);
   let height = 0;
   let root = Field(0);
+  let storage = "";
   if (calculateRoot) {
     const bytes = new Uint8Array(binary.byteLength);
     const fields = [];
@@ -42,20 +48,23 @@ export async function getFileData(file, pinataJWT, calculateRoot = false) {
     CryptoJS.enc.Base64
   );
   //  "UBSdn4FVQRB1q6qAT7gjVb6TbNAC+Rqo3PS5GpDSaBzLLI4yHuJB8lQV7GFFvxSZKLo/commzF9LsaUGE4Sv3Q==";
-  const hash = await pinFile(file, pinataJWT);
-  if (hash === undefined) {
-    console.error("getFileData error: hash is undefined");
-    return undefined;
+
+  if (isPrivate !== true) {
+    const hash = await pinFile(file, pinataJWT);
+    if (hash === undefined) {
+      console.error("getFileData error: hash is undefined");
+      return undefined;
+    }
+    storage = `i:${hash}`;
   }
-  const storage = `i:${hash}`;
 
   return new FileData({
     fileRoot: root,
     height,
     size: file.size,
-    mimeType: file.type,
+    mimeType: file.type.substring(0, 30),
     sha3_512,
-    filename: file.name,
+    filename: file.name.substring(0, 30),
     storage,
   });
 }
