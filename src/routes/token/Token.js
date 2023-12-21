@@ -220,6 +220,12 @@ const TokenMedia = ({
                 height="100%"
                 key={"VideoPlayer" + media.id}
                 crossorigin="anonymous"
+                config={{
+                  file: {
+                    attributes: { crossorigin: "anonymous" },
+                    forceVideo: true,
+                  },
+                }}
               />
             ) : (
               ""
