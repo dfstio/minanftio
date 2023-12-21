@@ -32,21 +32,34 @@ export async function mintNFT(address, auth, token) {
   const nftPublicKey = nftPrivateKey.toPublicKey();
   const owner = Poseidon.hash(ownerPublicKey.toFields());
 
+  const minanft = new api(JWT);
+  const reserved = await minanft.reserveName({
+    name,
+    publicKey: nftPublicKey.toBase58(),
+  });
+  console.log("Reserved:", reserved);
+  if (
+    reserved === undefined ||
+    reserved.isReserved !== true ||
+    reserved.signature === undefined ||
+    reserved.signature === ""
+  ) {
+    console.error("Name is not reserved");
+    return {
+      success: false,
+      error: "Name is not reserved",
+      reason: reserved.reason,
+    };
+  }
+
   const nft = new MinaNFT({ name, owner });
+
   if (token.description !== undefined && token.description !== "") {
     nft.updateText({
       key: `description`,
       text: token.description,
     });
   }
-
-  const imageData = await getFileData(token.main.image, pinataJWT, true);
-  if (imageData === undefined) {
-    console.error("getFileData error: imageData is undefined");
-    return;
-  }
-  console.log("imageData", imageData);
-  nft.updateFileData({ key: `image`, type: "image", data: imageData });
 
   if (
     token.unlockable_description !== undefined &&
@@ -79,67 +92,85 @@ export async function mintNFT(address, auth, token) {
       isPrivate: true,
     });
 
-  /*
-  nft.update({ key: `twitter`, value: `@builder` });
-  nft.update({ key: `secret`, value: `mysecretvalue`, isPrivate: true });
-  if (includeFiles)
-    await nft.updateImage({
-      filename: "./images/image.jpg",
-      pinataJWT,
-    });
+  const imageData = await getFileData(token.main.image, pinataJWT);
+  if (imageData === undefined) {
+    console.error("getFileData error: imageData is undefined");
+    return {
+      success: false,
+      error: "Cannot get image data",
+    };
+  }
+  console.log("imageData", imageData);
+  nft.updateFileData({ key: `image`, type: "image", data: imageData });
 
-    await nft.updateFile({
-      key: "sea",
-      filename: "./images/sea.png",
-      pinataJWT,
+  async function addFile(file, isPrivate = false, calculateRoot = false) {
+    const fileData = await getFileData(file, pinataJWT);
+    if (fileData === undefined) {
+      console.error("getFileData error: fileData is undefined");
+      throw new Error("Cannot get file data");
+    }
+    console.log("fileData", fileData);
+    nft.updateFileData({
+      key: file.name,
+      type: "file",
+      data: fileData,
+      isPrivate: isPrivate ?? false,
     });
+  }
 
-  const map = new MapData();
-  map.update({ key: `level2-1`, value: `value21` });
-  map.update({ key: `level2-2`, value: `value22` });
-  map.updateText({
-    key: `level2-3`,
-    text: `This is text on level 2. Can be very long`,
-  });
-  
-    await map.updateFile({
-      key: "woman",
-      filename: "./images/woman.png",
-      pinataJWT,
-    });
-    
-  const mapLevel3 = new MapData();
-  mapLevel3.update({ key: `level3-1`, value: `value31` });
-  mapLevel3.update({ key: `level3-2`, value: `value32`, isPrivate: true });
-  mapLevel3.update({ key: `level3-3`, value: `value33` });
-  map.updateMap({ key: `level2-4`, map: mapLevel3 });
-  nft.updateMap({ key: `level 2 and 3 data`, map });
-  */
+  try {
+    if (token.main.video !== undefined && token.main.video !== "")
+      await addFile(token.main.video);
+
+    let length = token.main.media.length;
+    if (length > 0) {
+      let i;
+      for (i = 0; i < length; i++) {
+        await addFile(token.main.media[i].originFileObj);
+      }
+    }
+
+    length = token.main.attachments.length;
+    if (length > 0) {
+      let i;
+      for (i = 0; i < length; i++) {
+        await addFile(token.main.attachments[i].originFileObj);
+      }
+    }
+
+    length = token.unlockable.media.length;
+    if (length > 0) {
+      let i;
+      for (i = 0; i < length; i++) {
+        await addFile(token.unlockable.media[i].originFileObj, true);
+      }
+    }
+
+    length = token.unlockable.attachments.length;
+    if (length > 0) {
+      let i;
+      for (i = 0; i < length; i++) {
+        await addFile(
+          token.unlockable.attachments[i].originFileObj,
+          true,
+          true
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error while adding files to IPFS", error);
+    return {
+      success: false,
+      error: "Error while adding files to IPFS",
+      reason: error.toString(),
+    };
+  }
 
   const data = nft.exportToString({
     increaseVersion: false,
     includePrivateData: true,
   });
   console.log("data", data);
-  const minanft = new api(JWT);
-  const reserved = await minanft.reserveName({
-    name,
-    publicKey: nftPublicKey.toBase58(),
-  });
-  console.log("Reserved:", reserved);
-  if (
-    reserved === undefined ||
-    reserved.isReserved !== true ||
-    reserved.signature === undefined ||
-    reserved.signature === ""
-  ) {
-    console.error("Name is not reserved");
-    return {
-      success: false,
-      error: "Name is not reserved",
-      reason: reserved.reason,
-    };
-  }
 
   const uri = nft.exportToString({
     increaseVersion: true,
