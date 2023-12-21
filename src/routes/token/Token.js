@@ -301,6 +301,7 @@ const AudioList = ({hits}) => {
 
 */
 
+/*
 const TokenAudio = ({ media, onLoadAudio, image }) => {
   if (DEBUG) console.log("TokenAudio: ", media.length, media);
 
@@ -368,7 +369,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
             //newMedia[i].url = url;
           }
           */
-
+/*
           let track = {
             name: media[i].filename,
             musicSrc: url,
@@ -425,6 +426,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
     </div>
   );
 };
+*/
 
 function formatBytes(bytes, decimals = 0) {
   if (bytes === 0) return "0 Bytes";
@@ -476,7 +478,7 @@ const Attachment = ({ attachment }) => {
 
   useEffect(() => {
     async function setText() {
-      console.log("Attachment", attachment);
+      //console.log("Attachment", attachment);
       const size1 = formatBytes(attachment.size);
       setSize(" (" + size1 + ")");
       const splitName = attachment.filename.split("/");
@@ -528,6 +530,62 @@ const Attachment = ({ attachment }) => {
           {name} {size}
         </Button>
       </span>
+    </div>
+  );
+};
+
+const Strings = ({ strings, markdown }) => {
+  if (DEBUG) console.log("Strings", strings);
+
+  return (
+    <div id="strings" className="gx-mt-2">
+      {strings.length > 0 ? (
+        <Row key={"stringsrow" + markdown.toString()}>
+          {strings.map((attachment) => (
+            <Col
+              xl={24}
+              lg={24}
+              md={24}
+              sm={24}
+              xs={24}
+              key={"stringcol" + attachment.id + markdown.toString()}
+            >
+              <StringItem
+                attachment={attachment}
+                markdown={markdown}
+                key={"stringitem" + attachment.id + markdown.toString()}
+              />
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        ""
+      )}
+    </div>
+  );
+};
+
+const StringItem = ({ attachment, markdown }) => {
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    async function setText() {
+      //console.log("String", attachment);
+      setName(attachment.key + ": " + attachment.data);
+    }
+    setText();
+  }, [attachment]);
+
+  return (
+    <div style={{ position: "relative" }}>
+      {/*markdown ? (
+        <Markdown
+          key={"stringitemmarkdown" + attachment.id + markdown.toString()}
+        >
+          {name}
+        </Markdown>
+      ) : (*/}
+      {name}
     </div>
   );
 };
@@ -1149,13 +1207,14 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       ) : (
         ""
       )}
+      {/*
       <TokenAudio
         media={audio}
         onLoadAudio={onLoadAudio}
         image={item.image}
         key="tokenaudioplayer"
       />
-
+      */}
       {currentMedia !== null ? (
         <div>
           <i
@@ -1265,6 +1324,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   ) : (
                     <Markdown>{descriptionMarkdown}</Markdown>
                   )}
+                  <Strings strings={strings} markdown={false} />
+                  <Strings strings={texts} markdown={true} />
                   <Attachments attachments={attachments} />
 
                   {/*
