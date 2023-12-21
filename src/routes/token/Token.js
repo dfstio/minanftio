@@ -301,6 +301,7 @@ const AudioList = ({hits}) => {
 
 */
 
+/*
 const TokenAudio = ({ media, onLoadAudio, image }) => {
   if (DEBUG) console.log("TokenAudio: ", media.length, media);
 
@@ -368,7 +369,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
             //newMedia[i].url = url;
           }
           */
-
+/*
           let track = {
             name: media[i].filename,
             musicSrc: url,
@@ -425,6 +426,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
     </div>
   );
 };
+*/
 
 function formatBytes(bytes, decimals = 0) {
   if (bytes === 0) return "0 Bytes";
@@ -530,6 +532,50 @@ const Attachment = ({ attachment }) => {
       </span>
     </div>
   );
+};
+
+const Strings = ({ strings }) => {
+  if (DEBUG) console.log("Strings", strings);
+
+  return (
+    <div id="strings" className="gx-mt-2">
+      {strings.length > 0 ? (
+        <Row key={"stringsrow"}>
+          {strings.map((attachment) => (
+            <Col
+              xl={24}
+              lg={24}
+              md={24}
+              sm={24}
+              xs={24}
+              key={"stringcol" + attachment.id}
+            >
+              <StringItem
+                attachment={attachment}
+                key={"stringitem" + attachment.id}
+              />
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        ""
+      )}
+    </div>
+  );
+};
+
+const StringItem = ({ attachment }) => {
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    async function setText() {
+      console.log("String", attachment);
+      setName(attachment.key + ": " + attachment.data);
+    }
+    setText();
+  }, [attachment]);
+
+  return <div style={{ position: "relative" }}>{name}</div>;
 };
 
 const TokenItem = ({ item, small = false, preview = false }) => {
@@ -1149,13 +1195,14 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       ) : (
         ""
       )}
+      {/*
       <TokenAudio
         media={audio}
         onLoadAudio={onLoadAudio}
         image={item.image}
         key="tokenaudioplayer"
       />
-
+      */}
       {currentMedia !== null ? (
         <div>
           <i
@@ -1266,6 +1313,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     <Markdown>{descriptionMarkdown}</Markdown>
                   )}
                   <Attachments attachments={attachments} />
+                  <Strings strings={strings} />
 
                   {/*
          <div className="gx-mt-4" style={{position: "relative"}}>
