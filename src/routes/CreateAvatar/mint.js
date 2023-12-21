@@ -40,7 +40,7 @@ export async function mintNFT(address, auth, token) {
     });
   }
 
-  const imageData = await getFileData(token.main.image, pinataJWT);
+  const imageData = await getFileData(token.main.image, pinataJWT, true);
   if (imageData === undefined) {
     console.error("getFileData error: imageData is undefined");
     return;
