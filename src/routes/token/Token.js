@@ -184,12 +184,14 @@ const TokenMedia = ({
               className="gx-product-image"
               key={"DocumentPDF" + media.SHA3_512}
               onLoadSuccess={onDocumentLoadSuccess}
+              crossorigin="anonymous"
             >
               <Page
                 pageNumber={pageNumber}
                 key={"PagePDF" + media.SHA3_512}
                 className="gx-product-name"
                 width={800}
+                crossorigin="anonymous"
               />
             </Document>
           </div>
@@ -199,6 +201,7 @@ const TokenMedia = ({
               <img
                 src={`https://res.cloudinary.com/minanft/image/fetch/${url}`}
                 alt={media.filename}
+                crossorigin="anonymous"
               />
             ) : (
               ""
@@ -216,6 +219,7 @@ const TokenMedia = ({
                 width="100%"
                 height="100%"
                 key={"VideoPlayer" + media.id}
+                crossorigin="anonymous"
               />
             ) : (
               ""
