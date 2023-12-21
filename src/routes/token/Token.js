@@ -29,6 +29,7 @@ import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
 import api from "../../serverless/api";
 import { getOnLoad, getContentMessage } from "../../serverless/content";
+import { prepareMetadata } from "./metadata";
 //import '../../styles/token/audio-player.less';
 
 const {
@@ -137,7 +138,7 @@ const TokenMedia = ({
       const size1 = formatBytes(media.size);
       setFileSize(size1 + "  ");
 
-      const type = media.filetype.replace(/\/[^/.]+$/, "");
+      const type = media.mimeType.replace(/\/[^/.]+$/, "");
 
       switch (type) {
         case "image":
@@ -152,6 +153,7 @@ const TokenMedia = ({
           break;
       }
 
+      /*
       if (media.url === undefined && media.password !== undefined) {
         const newURL = await getEncryptedFileFromIPFS(
           media.IPFShash,
@@ -163,7 +165,9 @@ const TokenMedia = ({
         onLoadMedia(mediaId, newURL);
         if (DEBUG)
           console.log("TokenMedia useEffect url: ", media.name, newURL);
-      } else setURL(media.url);
+      } else 
+      */
+      setURL("https://ipfs.io/ipfs/" + media.storage.slice(2));
       setLoading(false);
       //if(DEBUG) console.log("TokenMedia useEffect percent: ", percent);
     }
@@ -178,12 +182,12 @@ const TokenMedia = ({
             <Document
               file={url}
               className="gx-product-image"
-              key={"DocumentPDF" + media.IPFShash}
+              key={"DocumentPDF" + media.SHA3_512}
               onLoadSuccess={onDocumentLoadSuccess}
             >
               <Page
                 pageNumber={pageNumber}
-                key={"PagePDF" + media.IPFShash}
+                key={"PagePDF" + media.SHA3_512}
                 className="gx-product-name"
                 width={800}
               />
@@ -194,7 +198,7 @@ const TokenMedia = ({
             {type === "image" ? (
               <img
                 src={`https://res.cloudinary.com/minanft/image/fetch/${url}`}
-                alt={media.name}
+                alt={media.filename}
               />
             ) : (
               ""
@@ -264,7 +268,7 @@ const TokenMedia = ({
           </span>
         </div>
 
-        <div className="gx-mt-4">{media.description}</div>
+        <div className="gx-mt-4">{media.filename}</div>
       </div>
     </div>
   );
@@ -356,7 +360,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
             singer: media[i].artist === undefined ? "" : media[i].artist,
           };
           if (image !== "")
-            track.cover = `https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/${image}`;
+            track.cover = `https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/${image}`;
           newAudio.push(track);
         }
         //onLoadAudio(newMedia);
@@ -534,6 +538,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const [showUnlockableButton, setShowUnlockableButton] = useState(false);
 
   const [media, setMedia] = useState([]);
+  const [texts, setTexts] = useState([]);
+  const [strings, setStrings] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [uattachments, setUAttachments] = useState([]);
 
@@ -569,7 +575,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setDescription(item.description);
         if (item.markdown !== undefined) setDescriptionMarkdown(item.markdown);
         setImage(
-          "https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/" +
+          "https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/" +
             item.image
         );
         setFirstRun(false);
@@ -592,9 +598,22 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         if (path[path.length - 1] === "failure")
           setCheckout("Your payment was cancelled. Please try again later");
       }
+
+      let newDescription = item.markdown === undefined ? "" : item.markdown;
+      let newName = item.name;
+      let newImage = item.image;
+
+      /*
+      let newAnimation = item.animation_url; // USE IT LATER!!!
+
       let newMedia = [];
       let newAudio = [];
       let newAttachments = [];
+      let newTexts = [];
+      let newStrings = [];
+      */
+
+      const metadata = prepareMetadata(item);
 
       /*
             const timedContent = await getOnLoad(
@@ -610,6 +629,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === false
             ) {
 */
+      /*
       if (
         item.properties.animation !== "" &&
         item.properties.animation !== undefined
@@ -658,6 +678,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_attachments === false
             ) {
 */
+      /*
       let acount =
         item.attachments_count === undefined ? 0 : item.attachments_count;
       if (acount > 0) newAttachments = item.attachments;
@@ -751,9 +772,15 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setDescriptionMarkdown(newDescription);
       if (name !== newName) setName(newName);
       if (image !== newImage) setImage(newImage);
-      setMedia(newMedia);
-      setAudio(newAudio);
-      setAttachments(newAttachments);
+      //setMedia(newMedia);
+      //setAudio(newAudio);
+      //setAttachments(newAttachments);
+      console.log("metadata", metadata);
+      setMedia(metadata.media);
+      //setAudio(metadata.audio);
+      //setAttachments(metadata.attachments);
+      setTexts(metadata.texts);
+      setStrings(metadata.strings);
 
       /*
             if (loadingStreaming) {
@@ -842,7 +869,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     }
     return false;
   }
-
+  /*
   const fetchUnlockable = async (newMedia, initial_count, count) => {
     let i;
     let media2 = newMedia;
@@ -996,12 +1023,13 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     await sleep(1000);
     setCounter(counter + 1);
      */
-  };
+  //};
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  /*
   async function showUnlockableContent() {
     if (DEBUG) console.log("showUnlockableContent", publicKey, address);
     if (isChrome === false || isDesktop === false) {
@@ -1064,7 +1092,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       }
     } else message.error("Please connect with MetaMask");
   }
-
+*/
   function onSelect(id) {
     if (DEBUG) console.log("onSelect current", currentMedia, "selected", id);
     if (currentMedia !== null) setCurrentMedia(null);
@@ -1144,7 +1172,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       includeMargin={true}
                       onClick={hideQRCodeFunction}
                       imageSettings={{
-                        src: `https://res.cloudinary.com/virtuoso/image/fetch/h_100,q_100,f_auto/${item.image}`,
+                        src: `https://res.cloudinary.com/minanft/image/fetch/h_100,q_100,f_auto/${item.image}`,
                         width: 100,
                         height: 100,
                       }}
@@ -1269,7 +1297,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   ) : (
                     ""
                   )}
-                  {showUnlockableButton &&
+                  {/*showUnlockableButton &&
                   small === false &&
                   preview === false &&
                   streamingContent === true &&
@@ -1287,7 +1315,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </div>
                   ) : (
                     ""
-                  )}
+                  )*/}
                 </div>
               </Col>
             </Row>
