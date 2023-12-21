@@ -29,6 +29,7 @@ import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
 import api from "../../serverless/api";
 import { getOnLoad, getContentMessage } from "../../serverless/content";
+import { prepareMetadata } from "./metadata";
 //import '../../styles/token/audio-player.less';
 
 const {
@@ -137,7 +138,7 @@ const TokenMedia = ({
       const size1 = formatBytes(media.size);
       setFileSize(size1 + "  ");
 
-      const type = media.filetype.replace(/\/[^/.]+$/, "");
+      const type = media.mimeType.replace(/\/[^/.]+$/, "");
 
       switch (type) {
         case "image":
@@ -146,12 +147,18 @@ const TokenMedia = ({
         case "video":
           setType("video");
           break;
+        case "audio":
+          setType("audio");
+          break;
+        default:
+          console.error("Unknown media type", type, media.mimeType);
 
         case "application":
-          if (media.filetype === "application/pdf") setType("pdf");
+          if (media.mimeType === "application/pdf") setType("pdf");
           break;
       }
 
+      /*
       if (media.url === undefined && media.password !== undefined) {
         const newURL = await getEncryptedFileFromIPFS(
           media.IPFShash,
@@ -163,7 +170,9 @@ const TokenMedia = ({
         onLoadMedia(mediaId, newURL);
         if (DEBUG)
           console.log("TokenMedia useEffect url: ", media.name, newURL);
-      } else setURL(media.url);
+      } else 
+      */
+      setURL("https://gateway.pinata.cloud/ipfs/" + media.storage.slice(2));
       setLoading(false);
       //if(DEBUG) console.log("TokenMedia useEffect percent: ", percent);
     }
@@ -178,14 +187,16 @@ const TokenMedia = ({
             <Document
               file={url}
               className="gx-product-image"
-              key={"DocumentPDF" + media.IPFShash}
+              key={"DocumentPDF" + media.SHA3_512}
               onLoadSuccess={onDocumentLoadSuccess}
+              crossorigin="anonymous"
             >
               <Page
                 pageNumber={pageNumber}
-                key={"PagePDF" + media.IPFShash}
+                key={"PagePDF" + media.SHA3_512}
                 className="gx-product-name"
                 width={800}
+                crossorigin="anonymous"
               />
             </Document>
           </div>
@@ -194,24 +205,27 @@ const TokenMedia = ({
             {type === "image" ? (
               <img
                 src={`https://res.cloudinary.com/minanft/image/fetch/${url}`}
-                alt={media.name}
+                alt={media.filename}
+                crossorigin="anonymous"
               />
             ) : (
               ""
             )}
-            {type === "video" ? (
+            {type === "video" || type === "audio" ? (
               <ReactPlayer
-                url={
-                  url ==
-                  "https://ipfs.io/ipfs/QmREhQ5U9v68xPnTZaHusGHxmzCHBcLYLNQFyA2pJTWMLG"
-                    ? `https://res.cloudinary.com/minanft/video/upload/nft/@minanft/eiobsdaj2bjicxudkwzr`
-                    : url
-                }
+                url={url}
                 controls={true}
                 //light={true}
                 width="100%"
-                height="100%"
+                height={type === "audio" ? "50px" : "100%"}
                 key={"VideoPlayer" + media.id}
+                crossorigin="anonymous"
+                config={{
+                  file: {
+                    attributes: { crossorigin: "anonymous" },
+                    //forceVideo: true,
+                  },
+                }}
               />
             ) : (
               ""
@@ -264,7 +278,7 @@ const TokenMedia = ({
           </span>
         </div>
 
-        <div className="gx-mt-4">{media.description}</div>
+        <div className="gx-mt-4">{media.filename}</div>
       </div>
     </div>
   );
@@ -319,7 +333,11 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
         //let msg = false;
 
         for (i = 0; i < count; i++) {
-          let url = media[i].url === undefined ? "" : media[i].url;
+          let url =
+            media[i].storage === undefined
+              ? ""
+              : "https://gateway.pinata.cloud/ipfs/" + media[i].storage;
+          /*
           if (
             url === "" &&
             media[i].password !== undefined &&
@@ -349,14 +367,15 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
 
             //newMedia[i].url = url;
           }
+          */
 
           let track = {
-            name: media[i].name,
+            name: media[i].filename,
             musicSrc: url,
             singer: media[i].artist === undefined ? "" : media[i].artist,
           };
           if (image !== "")
-            track.cover = `https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/${image}`;
+            track.cover = `https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/${image}`;
           newAudio.push(track);
         }
         //onLoadAudio(newMedia);
@@ -398,6 +417,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
           showMiniProcessBar={true}
           onAudioPlay={onAudioPlay}
           onAudioPause={onAudioPause}
+          crossorigin="anonymous"
         />
       ) : (
         ""
@@ -432,11 +452,11 @@ const Attachments = ({ attachments }) => {
               md={24}
               sm={24}
               xs={24}
-              key={"attachmentcol" + attachment.filename}
+              key={"attachmentcol" + attachment.data.filename}
             >
               <Attachment
-                attachment={attachment}
-                key={"attachment" + attachment.IPFShash}
+                attachment={attachment.data}
+                key={"attachment" + attachment.data.storage}
               />
             </Col>
           ))}
@@ -456,6 +476,7 @@ const Attachment = ({ attachment }) => {
 
   useEffect(() => {
     async function setText() {
+      console.log("Attachment", attachment);
       const size1 = formatBytes(attachment.size);
       setSize(" (" + size1 + ")");
       const splitName = attachment.filename.split("/");
@@ -473,7 +494,11 @@ const Attachment = ({ attachment }) => {
   async function onClick() {
     if (DEBUG) console.log("Attachment clicked", attachment.filename, size);
     setLoading(true);
-    let url = attachment.url === undefined ? "" : attachment.url;
+    let url =
+      attachment.storage === undefined
+        ? ""
+        : "https://gateway.pinata.cloud/ipfs/" + attachment.storage.slice(2);
+    /*
     if (
       url === "" &&
       attachment.password !== undefined &&
@@ -486,6 +511,7 @@ const Attachment = ({ attachment }) => {
         loadPercent
       );
     }
+    */
     if (url !== "") fileSaver.saveAs(url, name);
     setLoading(false);
   }
@@ -534,6 +560,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const [showUnlockableButton, setShowUnlockableButton] = useState(false);
 
   const [media, setMedia] = useState([]);
+  const [texts, setTexts] = useState([]);
+  const [strings, setStrings] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [uattachments, setUAttachments] = useState([]);
 
@@ -569,7 +597,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setDescription(item.description);
         if (item.markdown !== undefined) setDescriptionMarkdown(item.markdown);
         setImage(
-          "https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/" +
+          "https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/" +
             item.image
         );
         setFirstRun(false);
@@ -592,9 +620,22 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         if (path[path.length - 1] === "failure")
           setCheckout("Your payment was cancelled. Please try again later");
       }
+
+      let newDescription = item.markdown === undefined ? "" : item.markdown;
+      let newName = item.name;
+      let newImage = item.image;
+
+      /*
+      let newAnimation = item.animation_url; // USE IT LATER!!!
+
       let newMedia = [];
       let newAudio = [];
       let newAttachments = [];
+      let newTexts = [];
+      let newStrings = [];
+      */
+
+      const metadata = prepareMetadata(item);
 
       /*
             const timedContent = await getOnLoad(
@@ -610,6 +651,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_media === false
             ) {
 */
+      /*
       if (
         item.properties.animation !== "" &&
         item.properties.animation !== undefined
@@ -658,6 +700,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                 timedContent.content.replace_attachments === false
             ) {
 */
+      /*
       let acount =
         item.attachments_count === undefined ? 0 : item.attachments_count;
       if (acount > 0) newAttachments = item.attachments;
@@ -751,9 +794,15 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setDescriptionMarkdown(newDescription);
       if (name !== newName) setName(newName);
       if (image !== newImage) setImage(newImage);
-      setMedia(newMedia);
-      setAudio(newAudio);
-      setAttachments(newAttachments);
+      //setMedia(newMedia);
+      //setAudio(newAudio);
+      //setAttachments(newAttachments);
+      console.log("metadata", metadata);
+      setMedia(metadata.media);
+      setAudio(metadata.audio);
+      setAttachments(metadata.attachments);
+      setTexts(metadata.texts);
+      setStrings(metadata.strings);
 
       /*
             if (loadingStreaming) {
@@ -842,7 +891,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     }
     return false;
   }
-
+  /*
   const fetchUnlockable = async (newMedia, initial_count, count) => {
     let i;
     let media2 = newMedia;
@@ -996,12 +1045,13 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     await sleep(1000);
     setCounter(counter + 1);
      */
-  };
+  //};
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  /*
   async function showUnlockableContent() {
     if (DEBUG) console.log("showUnlockableContent", publicKey, address);
     if (isChrome === false || isDesktop === false) {
@@ -1064,7 +1114,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       }
     } else message.error("Please connect with MetaMask");
   }
-
+*/
   function onSelect(id) {
     if (DEBUG) console.log("onSelect current", currentMedia, "selected", id);
     if (currentMedia !== null) setCurrentMedia(null);
@@ -1144,7 +1194,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       includeMargin={true}
                       onClick={hideQRCodeFunction}
                       imageSettings={{
-                        src: `https://res.cloudinary.com/virtuoso/image/fetch/h_100,q_100,f_auto/${item.image}`,
+                        src: `https://res.cloudinary.com/minanft/image/fetch/h_100,q_100,f_auto/${item.image}`,
                         width: 100,
                         height: 100,
                       }}
@@ -1250,7 +1300,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     ""
                   )}
 
-                  {showUnlockableButton &&
+                  {/*showUnlockableButton &&
                   small === false &&
                   preview === false &&
                   item.uri.contains_unlockable_content === true &&
@@ -1268,8 +1318,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </div>
                   ) : (
                     ""
-                  )}
-                  {showUnlockableButton &&
+                  )*/}
+                  {/*showUnlockableButton &&
                   small === false &&
                   preview === false &&
                   streamingContent === true &&
@@ -1287,7 +1337,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </div>
                   ) : (
                     ""
-                  )}
+                  )*/}
                 </div>
               </Col>
             </Row>
