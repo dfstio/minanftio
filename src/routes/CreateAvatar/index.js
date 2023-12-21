@@ -10,6 +10,7 @@ import {
   Card,
   Upload,
   Select,
+  Checkbox,
 } from "antd";
 import {
   LoadingOutlined,
@@ -886,6 +887,12 @@ const MintPrivate = () => {
                         <div className="ant-upload-text">Any files</div>
                       </div>
                     </Upload>
+                  </Form.Item>
+                  <Form.Item name="root" valuePropName="checked">
+                    <Checkbox>
+                      Calculate Merkle Tree root of the private attachments
+                      (takes time)
+                    </Checkbox>
                   </Form.Item>
                 </Col>
               </Row>
