@@ -54,7 +54,7 @@ export function prepareMetadata(token) {
                 properties[key].linkedObject.mimeType.replace(/\/[^/.]+$/, "")
               ) {
                 case "audio":
-                  audio.push({
+                  media.push({
                     data: properties[key].linkedObject,
                     id: audio.length,
                   });

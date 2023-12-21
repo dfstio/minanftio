@@ -147,6 +147,11 @@ const TokenMedia = ({
         case "video":
           setType("video");
           break;
+        case "audio":
+          setType("audio");
+          break;
+        default:
+          console.error("Unknown media type", type, media.mimeType);
 
         case "application":
           if (media.mimeType === "application/pdf") setType("pdf");
@@ -206,7 +211,7 @@ const TokenMedia = ({
             ) : (
               ""
             )}
-            {type === "video" ? (
+            {type === "video" || type === "audio" ? (
               <ReactPlayer
                 url={url}
                 controls={true}
