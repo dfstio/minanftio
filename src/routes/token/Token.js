@@ -149,7 +149,7 @@ const TokenMedia = ({
           break;
 
         case "application":
-          if (media.filetype === "application/pdf") setType("pdf");
+          if (media.mimeType === "application/pdf") setType("pdf");
           break;
       }
 
