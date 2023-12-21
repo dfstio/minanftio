@@ -167,7 +167,7 @@ const TokenMedia = ({
           console.log("TokenMedia useEffect url: ", media.name, newURL);
       } else 
       */
-      setURL("https://ipfs.io/ipfs/" + media.storage.slice(2));
+      setURL("https://gateway.pinata.cloud/ipfs/" + media.storage.slice(2));
       setLoading(false);
       //if(DEBUG) console.log("TokenMedia useEffect percent: ", percent);
     }
