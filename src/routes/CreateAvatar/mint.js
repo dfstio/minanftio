@@ -99,6 +99,17 @@ export async function mintNFT(address, auth, token) {
       isPrivate: true,
     });
 
+  if (token.category !== undefined && token.category !== "")
+    nft.update({
+      key: "category",
+      value: token.category?.substring(0, 30) ?? "",
+    });
+
+  if (token.type !== undefined && token.type !== "")
+    nft.update({
+      key: "type",
+      value: token.type?.substring(0, 30) ?? "",
+    });
   const imageData = await getFileData(token.main.image, pinataJWT);
   if (imageData === undefined) {
     console.error("getFileData error: imageData is undefined");
