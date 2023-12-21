@@ -478,7 +478,7 @@ const Attachment = ({ attachment }) => {
 
   useEffect(() => {
     async function setText() {
-      console.log("Attachment", attachment);
+      //console.log("Attachment", attachment);
       const size1 = formatBytes(attachment.size);
       setSize(" (" + size1 + ")");
       const splitName = attachment.filename.split("/");
@@ -569,7 +569,7 @@ const StringItem = ({ attachment }) => {
 
   useEffect(() => {
     async function setText() {
-      console.log("String", attachment);
+      //console.log("String", attachment);
       setName(attachment.key + ": " + attachment.data);
     }
     setText();
@@ -1314,6 +1314,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   )}
                   <Attachments attachments={attachments} />
                   <Strings strings={strings} />
+                  <Strings strings={texts} />
 
                   {/*
          <div className="gx-mt-4" style={{position: "relative"}}>

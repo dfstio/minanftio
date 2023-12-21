@@ -14,9 +14,10 @@ export function prepareMetadata(token) {
       console.log(`key:`, key, properties[key]);
       switch (key) {
         case "description":
-          if (level > 0) {
+          if (level === 0) {
             texts.push({
-              data: properties[key].linkedObject,
+              key: key,
+              data: properties[key].linkedObject.text,
               id: texts.length,
             });
           }
@@ -33,7 +34,8 @@ export function prepareMetadata(token) {
           switch (properties[key].kind) {
             case "text":
               texts.push({
-                data: properties[key].linkedObject,
+                key: key,
+                data: properties[key].linkedObject.text,
                 id: texts.length,
               });
               break;
