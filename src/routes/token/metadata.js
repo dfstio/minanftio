@@ -14,7 +14,7 @@ export function prepareMetadata(token) {
       console.log(`key:`, key, properties[key]);
       switch (key) {
         case "description":
-          if (level === 0) {
+          if (level > 0) {
             texts.push({
               key: key,
               data: properties[key].linkedObject.text,

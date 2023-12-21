@@ -1324,9 +1324,9 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   ) : (
                     <Markdown>{descriptionMarkdown}</Markdown>
                   )}
-                  <Attachments attachments={attachments} />
                   <Strings strings={strings} markdown={false} />
                   <Strings strings={texts} markdown={true} />
+                  <Attachments attachments={attachments} />
 
                   {/*
          <div className="gx-mt-4" style={{position: "relative"}}>
