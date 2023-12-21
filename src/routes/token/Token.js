@@ -578,15 +578,14 @@ const StringItem = ({ attachment, markdown }) => {
 
   return (
     <div style={{ position: "relative" }}>
-      {markdown ? (
+      {/*markdown ? (
         <Markdown
           key={"stringitemmarkdown" + attachment.id + markdown.toString()}
         >
           {name}
         </Markdown>
-      ) : (
-        { name }
-      )}
+      ) : (*/}
+      {name}
     </div>
   );
 };
