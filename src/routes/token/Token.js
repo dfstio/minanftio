@@ -1278,7 +1278,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     ""
                   )}
 
-                  {showUnlockableButton &&
+                  {/*showUnlockableButton &&
                   small === false &&
                   preview === false &&
                   item.uri.contains_unlockable_content === true &&
@@ -1296,7 +1296,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </div>
                   ) : (
                     ""
-                  )}
+                  )*/}
                   {/*showUnlockableButton &&
                   small === false &&
                   preview === false &&
