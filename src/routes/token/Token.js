@@ -218,7 +218,7 @@ const TokenMedia = ({
                 config={{
                   file: {
                     attributes: { crossorigin: "anonymous" },
-                    forceVideo: true,
+                    //forceVideo: true,
                   },
                 }}
               />
