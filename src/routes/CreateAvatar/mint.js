@@ -41,6 +41,10 @@ export async function mintNFT(address, auth, token) {
   }
 
   const imageData = await getFileData(token.main.image, pinataJWT);
+  if (imageData === undefined) {
+    console.error("getFileData error: imageData is undefined");
+    return;
+  }
   console.log("imageData", imageData);
   nft.updateFileData({ key: `image`, type: "image", fileData: imageData });
 
