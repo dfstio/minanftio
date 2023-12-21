@@ -55,7 +55,7 @@ export async function getFileData(file, pinataJWT, calculateRoot = false) {
     size: file.size,
     mimeType: file.type,
     sha3_512,
-    filename: file.name,
+    filename: file.name.substring(0, 31),
     storage,
   });
 }
