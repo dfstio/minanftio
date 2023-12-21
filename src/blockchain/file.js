@@ -62,7 +62,7 @@ export async function getFileData(
     fileRoot: root,
     height,
     size: file.size,
-    mimeType: file.type,
+    mimeType: file.type.substring(0, 30),
     sha3_512,
     filename: file.name.substring(0, 30),
     storage,
