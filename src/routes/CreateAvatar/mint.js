@@ -46,7 +46,7 @@ export async function mintNFT(address, auth, token) {
     return;
   }
   console.log("imageData", imageData);
-  nft.updateFileData({ key: `image`, type: "image", fileData: imageData });
+  nft.updateFileData({ key: `image`, type: "image", data: imageData });
 
   if (
     token.unlockable_description !== undefined &&
