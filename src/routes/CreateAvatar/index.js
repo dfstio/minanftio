@@ -11,7 +11,6 @@ import {
   Upload,
   Select,
   Checkbox,
-  Input,
 } from "antd";
 import {
   LoadingOutlined,
@@ -684,7 +683,7 @@ const MintPrivate = () => {
                     <Input
                       count={{
                         show: true,
-                        max: 10,
+                        max: 30,
                       }}
                     />
                   </Form.Item>
