@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { isMobile, isDesktop, isChrome } from "react-device-detect";
+import api from "../../serverless/api";
 import {
   Button,
   Row,
@@ -11,6 +13,7 @@ import {
   Upload,
   Select,
 } from "antd";
+import TokenItem from "../token/Token";
 import {
   LoadingOutlined,
   PlusOutlined,
@@ -18,30 +21,36 @@ import {
 } from "@ant-design/icons";
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
+import fileSaver from "file-saver";
 import Markdown from "markdown-to-jsx";
 import botapi from "../../serverless/botapi";
-import { mintNFT, waitForMint } from "./mint";
-import fileSaver from "file-saver";
-import { updateAddress } from "../../appRedux/actions";
-import { minaLogin } from "../../blockchain/mina";
-import { getFileData } from "../../blockchain/file";
+
+import {
+  updateAddress,
+  updateVirtuosoBalance,
+  updatePublicKey,
+} from "../../appRedux/actions";
+import {
+  minaLogin,
+  //virtuosoRegisterPublicKey,
+  //virtuosoMint,
+  isModerator,
+  getVirtuosoBalance,
+  getSignature,
+} from "../../blockchain/mina";
 
 import logger from "../../serverless/logger";
-import { set } from "lodash";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
 
-/*
 const {
   addFileHashToIPFS,
   addToIPFS,
   encryptUnlockableToken,
   writeToken,
 } = require("../../blockchain/ipfs");
-const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
-*/
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -62,7 +71,7 @@ const startToken = {
   saleStatus: "not on sale",
   price: 0,
   currency: "USD",
-  category: "MINA protocol",
+  category: "Music",
   image: "",
   type: "individual",
   contains_private_content: false,
@@ -103,7 +112,6 @@ const startToken = {
   folder: "",
 };
 
-/*
 const STARTING_JSON = {
   name: "@mynft",
   description: "",
@@ -130,13 +138,10 @@ const STARTING_JSON = {
     files_number: 0,
   },
 };
-*/
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
-const { REACT_APP_PINATA_JWT } = process.env;
 //const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
-const mintText = "Free to create Mina NFT token for Christmas and New Year";
-//"$9 to create one Mina Avatar NFT token";
+const mintText = "$9 to create one Mina Avatar NFT token";
 
 const MintPrivate = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
@@ -147,9 +152,6 @@ const MintPrivate = () => {
   const [token, setToken] = useState(startToken);
   const [ipfs, setIpfs] = useState("");
   const [auth, setAuth] = useState("");
-  const [link, setLink] = useState("");
-  const [hash, setHash] = useState("");
-  const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
@@ -161,8 +163,12 @@ const MintPrivate = () => {
 
   const checkCanMint = () => {
     let newMintDisabled = true;
-    if (address === "") newMintDisabled = false;
-    else if (token.name !== "" && token.main.image !== "")
+    if (ipfs !== "") newMintDisabled = false;
+    else if (
+      token.name !== "" &&
+      token.description !== "" &&
+      token.main.image !== ""
+    )
       newMintDisabled = false;
     if (newMintDisabled !== mintDisabled) setMintDisabled(newMintDisabled);
   };
@@ -173,20 +179,12 @@ const MintPrivate = () => {
 
     if (values.name !== undefined)
       newToken.name = values.name[0] == "@" ? values.name : "@" + values.name; //TODO: check name
-    //if (values.url !== undefined) newToken.url = values.url;
+    if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
       newToken.description = values.description;
     if (values.unlockable_description !== undefined)
       newToken.unlockable_description = values.unlockable_description;
     if (values.category !== undefined) newToken.category = values.category;
-    if (values.public_key1 !== undefined)
-      newToken.public_key1 = values.public_key1;
-    if (values.public_key2 !== undefined)
-      newToken.public_key2 = values.public_key2;
-    if (values.public_value1 !== undefined)
-      newToken.public_value1 = values.public_value1;
-    if (values.public_value2 !== undefined)
-      newToken.public_value2 = values.public_value2;
     if (values.private_key1 !== undefined)
       newToken.private_key1 = values.private_key1;
     if (values.private_key2 !== undefined)
@@ -238,76 +236,10 @@ const MintPrivate = () => {
   };
 
   const mint = async () => {
-    if (address === "") {
-      const newAddress = await minaLogin();
-      console.log("newAddress", newAddress);
-      dispatch(updateAddress(newAddress));
-      checkCanMint();
-      return;
-    }
-
     const key = "Minting Mina Avatar NFT";
 
     try {
       setMinting(true);
-      message.loading({
-        content: `Minting NFT token - sending transaction to blockchain`,
-        key,
-        duration: 240,
-      });
-      const name = token.name[0] === "@" ? token.name : "@" + token.name;
-      let mintResult = await mintNFT(address, auth, token);
-      console.log("Mint result", mintResult);
-      if (
-        mintResult?.success === true &&
-        mintResult?.jobId !== undefined &&
-        mintResult?.json !== undefined
-      ) {
-        message.loading({
-          content: `Started mint job ${mintResult.jobId}`,
-          key,
-          duration: 240,
-        });
-        const blob = new Blob([mintResult.json], {
-          type: "text/plain;charset=utf-8",
-        });
-        fileSaver.saveAs(blob, name + ".json");
-      } else {
-        message.error({
-          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 20,
-        });
-        setMinting(false);
-        return;
-      }
-      const jobId = mintResult.jobId;
-      mintResult = await waitForMint(jobId, auth);
-      if (mintResult?.success === true && mintResult?.hash !== undefined) {
-        message.success({
-          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
-          key,
-          duration: 240,
-        });
-        const linkURL = "https://minanft.io/" + name;
-        console.log("linkURL", linkURL);
-        const openResult = window.open(linkURL, "_blank");
-        console.log("openResult", openResult);
-        setLink(linkURL);
-        setHash("https://minascan.io/testworld/tx/" + mintResult.hash);
-        setShowLink(true);
-      } else
-        message.error({
-          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
-
-      /*
 
       if (DEBUG) console.log("Mint token: ", ipfs, token);
       if (ipfs !== "" && auth == "") {
@@ -350,7 +282,7 @@ const MintPrivate = () => {
         const encryptedContent = await encryptUnlockableToken(token, key);
         if( encryptedContent.key !== "") unlockableResult = await addToIPFS(JSON.stringify(encryptedContent));
     };
-
+*/
       const mintJSON = await writeToken(token, true);
 
       let result = { path: "" };
@@ -366,7 +298,7 @@ const MintPrivate = () => {
       });
 
       result = await addToIPFS(JSON.stringify(mintJSON));
-
+      /*
     if( moderator )
     {
         const strJSON = JSON.stringify(mintJSON);
@@ -380,13 +312,13 @@ const MintPrivate = () => {
     {
         result = await addToIPFS(JSON.stringify(mintJSON));
     };
-
+*/
 
       if (DEBUG) console.log("ipfsHash uploaded - uri: ", result.path); //, " unlockable: ", unlockableResult.path);
       if (result.path) setIpfs(result.path);
       //if(DEBUG) console.log("Minting NFT with IPFS hashes ", result.path, unlockableResult.path )
 
-
+      /*
     const myaddress = await minaLogin(false);
     const mybalance = await getVirtuosoBalance(myaddress);
 
@@ -437,8 +369,8 @@ const MintPrivate = () => {
     //message.success({content: `NFT token minted successfully with transaction hash ${txresult.hash}`, key, duration: 10});
     
     */
-      //setToken(startToken);
-      //if (address !== "") await getSignature(strJSON);
+      setToken(startToken);
+      if (address !== "") await getSignature(strJSON);
       setMinting(false);
     } catch (error) {
       console.log("Mint error", error);
@@ -533,7 +465,7 @@ const MintPrivate = () => {
                     name="description"
                     rules={[
                       {
-                        required: false,
+                        required: true,
                         message: "Please describe your NFT",
                       },
                     ]}
@@ -607,7 +539,6 @@ const MintPrivate = () => {
                       placeholder="Please select a category"
                       onChange={categoryChange}
                     >
-                      <Option value="MINA protocol">MINA protocol</Option>
                       <Option value="Music">Music</Option>
                       <Option value="Video">Video</Option>
                       <Option value="Art">Art</Option>
@@ -617,6 +548,7 @@ const MintPrivate = () => {
                       <Option value="Transaction">Transaction</Option>
                       <Option value="Technology">Technology</Option>
                       <Option value="Blockchain">Blockchain</Option>
+                      <Option value="MINA protocol">MINA protocol</Option>
                       <Option value="Health">Health</Option>
                       <Option value="Event">Event</Option>
                     </Select>
@@ -800,27 +732,7 @@ const MintPrivate = () => {
                 </Col>
               </Row>
               <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label={<span>Private description</span>}
-                    name="unlockable_description"
-                    rules={[
-                      {
-                        required: false,
-                        message: "Please enter private description",
-                      },
-                    ]}
-                    placeholder="Please enter private description"
-                  >
-                    <TextArea
-                      autoSize={{
-                        minRows: 2,
-                        maxRows: 10,
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                <Col>
                   <Form.Item
                     name="umedia"
                     label={
@@ -849,6 +761,7 @@ const MintPrivate = () => {
                       accept="image/*,video/*,audio/*,.pdf"
                       showUploadList={true}
                       multiple={true}
+                      showUploadList={true}
                       //action="//jsonplaceholder.typicode.com/posts/"
                       beforeUpload={beforeUpload}
                       //onChange={this.handleChange}
@@ -865,7 +778,7 @@ const MintPrivate = () => {
                 </Col>
               </Row>
               <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                <Col>
                   <Form.Item
                     name="uattachments"
                     label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) for text files less than 1k in size. You can put key-value pairs in text file, in this case both keys and values will NOT be uploaded to IPFS, but will be verifiable on-chain"
@@ -889,11 +802,9 @@ const MintPrivate = () => {
                   </Form.Item>
                 </Col>
               </Row>
-              {/*
               <Form.Item label="Price" name="price">
                 {mintPrice}
               </Form.Item>
-                  */}
 
               <Form.Item
                 label={
@@ -923,24 +834,12 @@ const MintPrivate = () => {
                   disabled={mintDisabled}
                   loading={minting}
                 >
-                  {address === "" ? "Connect with AURO" : "Mint NFT"}
+                  {ipfs == ""
+                    ? "Create Mina NFT"
+                    : auth == ""
+                    ? "Deploy NFT with @MinaNFT_bot"
+                    : "Deploy NFT"}
                 </Button>
-              </Form.Item>
-              <Form.Item
-                label="NFT is minted: "
-                name="mintedlink"
-                hidden={!showLink}
-              >
-                <div>
-                  <a href={link} target="_blank">
-                    {link}
-                  </a>
-                </div>
-                <div>
-                  <a href={hash} target="_blank">
-                    {hash}
-                  </a>
-                </div>
               </Form.Item>
             </Form>
           </Card>
