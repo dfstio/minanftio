@@ -327,7 +327,11 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
         //let msg = false;
 
         for (i = 0; i < count; i++) {
-          let url = media[i].url === undefined ? "" : media[i].url;
+          let url =
+            media[i].storage === undefined
+              ? ""
+              : "https://ipfs.io/ipfs/" + media[i].storage;
+          /*
           if (
             url === "" &&
             media[i].password !== undefined &&
@@ -357,9 +361,10 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
 
             //newMedia[i].url = url;
           }
+          */
 
           let track = {
-            name: media[i].name,
+            name: media[i].filename,
             musicSrc: url,
             singer: media[i].artist === undefined ? "" : media[i].artist,
           };
@@ -781,7 +786,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       //setAttachments(newAttachments);
       console.log("metadata", metadata);
       setMedia(metadata.media);
-      //setAudio(metadata.audio);
+      setAudio(metadata.audio);
       //setAttachments(metadata.attachments);
       setTexts(metadata.texts);
       setStrings(metadata.strings);
