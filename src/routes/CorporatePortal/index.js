@@ -55,7 +55,7 @@ const Mint = () => {
             link="https://docs.minanft.io"
             button=<IntlMessages id="corporate.docsbutton" />
             description=<IntlMessages id="corporate.docsdescription" />
-            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateBilling.png"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateDocs.png"
             key="Create Corporate Account"
           />
         </Col>
@@ -67,7 +67,7 @@ const Mint = () => {
             link="https://github.com/dfstio/minanft-lib"
             button=<IntlMessages id="corporate.librarybutton" />
             description=<IntlMessages id="corporate.librarydescription" />
-            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateBilling.png"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateLibrary.png"
             key="Corporate Library"
           />
         </Col>
@@ -79,7 +79,7 @@ const Mint = () => {
             link="mailto:hello@minanft.io"
             button=<IntlMessages id="corporate.supportbutton" />
             description=<IntlMessages id="corporate.supportdescription" />
-            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateBilling.png"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateSupport.png"
             key="Corporate Support"
           />
         </Col>
