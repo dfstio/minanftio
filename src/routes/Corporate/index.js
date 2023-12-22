@@ -306,6 +306,39 @@ const Corporate = () => {
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
+                        label={
+                          <span>
+                            <span>Authorisation code. </span>
+                            <span>
+                              {" "}
+                              <a
+                                href="https://t.me/minanft_bot?start=auth"
+                                target="_blank"
+                              >
+                                Get it here
+                              </a>
+                            </span>
+                          </span>
+                        }
+                        name="auth"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter authorisation code",
+                          },
+                        ]}
+                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+                      >
+                        <TextArea
+                          autoSize={{
+                            minRows: 2,
+                            maxRows: 3,
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
                         label="Contact phone"
                         name="contact_phone"
                         placeholder="Some string (less than 30 chars)"
@@ -341,39 +374,6 @@ const Corporate = () => {
                       </Form.Item>
                     </Col>
                         */}
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label={
-                          <span>
-                            <span>Authorisation code. </span>
-                            <span>
-                              {" "}
-                              <a
-                                href="https://t.me/minanft_bot?start=auth"
-                                target="_blank"
-                              >
-                                Get it here
-                              </a>
-                            </span>
-                          </span>
-                        }
-                        name="auth"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter authorisation code",
-                          },
-                        ]}
-                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
-                      >
-                        <TextArea
-                          autoSize={{
-                            minRows: 2,
-                            maxRows: 3,
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
                   </Row>
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
@@ -386,7 +386,7 @@ const Corporate = () => {
                         >
                           <span>
                             {address == ""
-                              ? "Please connect with Auro on Berkeley network before creating corporate account"
+                              ? "Please connect with Auro before creating corporate account"
                               : "You are creating corporate account with AURO address " +
                                 address}
                             <br />
