@@ -48,6 +48,10 @@ const App = ({ match }) => (
       />
       <Route
         path={`${match.url}corporate`}
+        component={asyncComponent(() => import("./CorporatePortal"))}
+      />
+      <Route
+        path={`${match.url}corporate/kyc`}
         component={asyncComponent(() => import("./Corporate"))}
       />
       <Route
