@@ -464,9 +464,7 @@ const Corporate = () => {
                         disabled={createDisabled}
                         onClick={corporateButton}
                       >
-                        {address == ""
-                          ? "Connect with Auro"
-                          : "Create corporate account"}
+                        {address == "" ? "Connect with Auro" : "Submit"}
                       </Button>
                     </Form.Item>
                   </Row>
