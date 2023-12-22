@@ -191,21 +191,25 @@ const Corporate = () => {
                 on-chain for any content segment, supporting data integrity.
                 <br />
                 <br />
-                - Redact (sanitize) specific pieces of content (such as text,
-                Word files, PNG files) to exclude sensitive information such as
-                personal information (social security number, etc), financial
-                information (bank account details and balances, transfer
-                details), security information (passwords, access codes, private
-                keys), commercial confidential information (prices paid, some
-                details of the proof of ownership, proof of product and proof of
-                funds), and validate this redacted content on-chain, maintaining
-                security and confidentiality on request of your legal department
-                or commercial department.
+                - Redact (sanitize) specific pieces of file's content to exclude
+                sensitive information such as personal information (social
+                security number, etc), financial information (bank account
+                details and balances, transfer details), security information
+                (passwords, access codes, private keys), commercial confidential
+                information (prices paid, some details of the proof of
+                ownership, proof of product and proof of funds), and validate
+                this redacted content on-chain, maintaining security and
+                confidentiality on request of your legal department or
+                commercial department.
                 <br />
                 <br />
                 - Use a wide variety of content formats including text, images,
                 videos, audio, and documents, promoting versatility in data
                 representation.
+                <br />
+                <br />
+                - All the communication in regard to the corporate account
+                should be in English language.
                 <br />
                 <br />
               </div>
@@ -316,6 +320,7 @@ const Corporate = () => {
                     </Col>
                   </Row>
                   <Row>
+                    {/*
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item name="kyc docs" label="Your KYC docs">
                         <Upload
@@ -336,6 +341,7 @@ const Corporate = () => {
                         </Upload>
                       </Form.Item>
                     </Col>
+                        */}
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label={
@@ -353,6 +359,12 @@ const Corporate = () => {
                           </span>
                         }
                         name="auth"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter authorisation code",
+                          },
+                        ]}
                         placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
                       >
                         <TextArea
