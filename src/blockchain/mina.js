@@ -353,10 +353,12 @@ export async function getSignature(message) {
 
   try {
     const address = await getAddress();
-    if (address == "") return "";
-    const signResult = await window.mina.signMessage({
-      message,
-    });
+    if (address === "") return "";
+    const signResult = await window.mina
+      .signJsonMessage({
+        message,
+      })
+      .catch((err) => console.log(err));
 
     log.debug("getSignature:", { signResult, address });
     return signResult;
@@ -383,9 +385,21 @@ export async function minaLogin(openlink = true) {
   try {
     if (window.mina !== undefined) {
       //await initVirtuoso();
-      const network = await window.mina
+      let network = await window.mina
         .requestNetwork()
         .catch((err) => console.log(err));
+      console.log("mina login network", network);
+      if (network?.chainId !== "testworld2") {
+        const switchNetwork = await window.mina
+          .switchChain({ chainId: "testworld2" })
+          .catch((err) => console.log(err));
+        console.log("mina login switch network", switchNetwork);
+        let network = await window.mina
+          .requestNetwork()
+          .catch((err) => console.log(err));
+      }
+      console.log("mina login network", network);
+
       const account = await window.mina.requestAccounts();
       log.debug("account", { account, network });
       console.log("mina login account", account, network);

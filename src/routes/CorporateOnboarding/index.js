@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../serverless/api";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
+import axios from "axios";
 import {
   footerText,
   footerAgreement,
@@ -53,10 +54,11 @@ const RadioGroup = Radio.Group;
 
 const startToken = {
   corporate_name: "",
+  description: "",
   contact_name: "",
   contact_phone: "",
   contact_email: "",
-  corporate_website: "",
+  auth: "",
 };
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -80,7 +82,11 @@ const Corporate = () => {
 
   const checkCanCreate = () => {
     let newCreateDisabled = true;
-    if (token.corporate_name !== "" && token.contact_email !== "")
+    if (
+      token.corporate_name !== "" &&
+      token.contact_email !== "" &&
+      token.auth !== ""
+    )
       newCreateDisabled = false;
     if (newCreateDisabled !== createDisabled)
       setCreateDisabled(newCreateDisabled);
@@ -107,14 +113,15 @@ const Corporate = () => {
 
     if (values.corporate_name !== undefined)
       newToken.corporate_name = values.corporate_name; //TODO: check name
+    if (values.description !== undefined)
+      newToken.description = values.description;
     if (values.contact_name !== undefined)
       newToken.contact_name = values.contact_name;
     if (values.contact_phone !== undefined)
       newToken.contact_phone = values.contact_phone;
     if (values.contact_email !== undefined)
       newToken.contact_email = values.contact_email;
-    if (values.corporate_website !== undefined)
-      newToken.corporate_website = values.corporate_website;
+    if (values.auth !== undefined) newToken.auth = values.auth;
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -122,34 +129,74 @@ const Corporate = () => {
   };
 
   async function corporateButton() {
-    if (address == "") {
+    if (address === "") {
       const myaddress = await minaLogin(true);
       dispatch(updateAddress(myaddress));
     } else {
-      const corpMessage = JSON.stringify(token);
-      if (DEBUG) console.log("corpMessage", corpMessage);
-      const corpSignature = await getSignature(corpMessage);
+      //const corpMessage = JSON.stringify(token);
+
+      const msgParams = [
+        {
+          label: "Message:",
+          value:
+            "Sign to submit corporate information and accept the Terms and Conditions and Limited License ",
+        },
+        {
+          label: "Corporation name:",
+          value: token.corporate_name,
+        },
+        {
+          label: "Description:",
+          value: token.description,
+        },
+        {
+          label: "Contact e-mail:",
+          value: token.contact_email,
+        },
+        {
+          label: "Contact name:",
+          value: token.contact_name,
+        },
+        {
+          label: "Contact phone:",
+          value: token.contact_phone,
+        },
+        {
+          label: "Authorisation code:",
+          value: token.auth,
+        },
+        {
+          label: "Signed At:",
+          value: new Date().toUTCString(),
+        },
+        {
+          label: "Site:",
+          value: "https://minanft.io/",
+        },
+      ];
+      if (DEBUG) console.log("corpMessage", msgParams);
+      const corpSignature = await getSignature(msgParams);
       if (DEBUG) console.log("corpSignature", corpSignature);
       log.info("Corporate signature", {
         address,
         token,
-        corpMessage,
+        msgParams,
         corpSignature,
         wf: "corporateButton",
       });
       messageApi.open({
-        type: "warning",
+        type: "success",
         content: <IntlMessages id="corporate.thankyou" />,
         key: `CorporateButton`,
+        duration: 60,
       });
-      /*
-      message.error({
-        // "corporate.thankyou": "Thank you for registering your corporate account. Please note that this feature is not implemented yet"
-        content: <IntlMessages id="corporate.thankyou" />,
-        key: `CorporateButton`,
-        duration: 10,
+      await axios({
+        method: "post",
+        url: "https://getform.io/f/a80be20b-8b80-40cd-adc9-5e317feb719d",
+        data: corpSignature,
+      }).catch((error) => {
+        console.log("axios error", error);
       });
-      */
     }
   }
 
@@ -191,21 +238,25 @@ const Corporate = () => {
                 on-chain for any content segment, supporting data integrity.
                 <br />
                 <br />
-                - Redact (sanitize) specific pieces of content (such as text,
-                Word files, PNG files) to exclude sensitive information such as
-                personal information (social security number, etc), financial
-                information (bank account details and balances, transfer
-                details), security information (passwords, access codes, private
-                keys), commercial confidential information (prices paid, some
-                details of the proof of ownership, proof of product and proof of
-                funds), and validate this redacted content on-chain, maintaining
-                security and confidentiality on request of your legal department
-                or commercial department.
+                - Redact (sanitize) specific pieces of file's content to exclude
+                sensitive information such as personal information (social
+                security number, etc), financial information (bank account
+                details and balances, transfer details), security information
+                (passwords, access codes, private keys), commercial confidential
+                information (prices paid, some details of the proof of
+                ownership, proof of product and proof of funds), and validate
+                this redacted content on-chain, maintaining security and
+                confidentiality on request of your legal department or
+                commercial department.
                 <br />
                 <br />
                 - Use a wide variety of content formats including text, images,
                 videos, audio, and documents, promoting versatility in data
                 representation.
+                <br />
+                <br />
+                - All the communication in regard to the corporate account
+                should be in English language.
                 <br />
                 <br />
               </div>
@@ -241,6 +292,20 @@ const Corporate = () => {
                           autoSize={{
                             minRows: 1,
                             maxRows: 1,
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        label="Short description of your business"
+                        name="description"
+                        placeholder="Some string"
+                      >
+                        <TextArea
+                          autoSize={{
+                            minRows: 1,
+                            maxRows: 10,
                           }}
                         />
                       </Form.Item>
@@ -288,6 +353,39 @@ const Corporate = () => {
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
+                        label={
+                          <span>
+                            <span>Authorisation code. </span>
+                            <span>
+                              {" "}
+                              <a
+                                href="https://t.me/minanft_bot?start=auth"
+                                target="_blank"
+                              >
+                                Get it here
+                              </a>
+                            </span>
+                          </span>
+                        }
+                        name="auth"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter authorisation code",
+                          },
+                        ]}
+                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+                      >
+                        <TextArea
+                          autoSize={{
+                            minRows: 2,
+                            maxRows: 3,
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
                         label="Contact phone"
                         name="contact_phone"
                         placeholder="Some string (less than 30 chars)"
@@ -300,22 +398,8 @@ const Corporate = () => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label="Short description of your business"
-                        name="corporate_description"
-                        placeholder="Some string"
-                      >
-                        <TextArea
-                          autoSize={{
-                            minRows: 1,
-                            maxRows: 10,
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
+
+                    {/*
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item name="kyc docs" label="Your KYC docs">
                         <Upload
@@ -336,33 +420,7 @@ const Corporate = () => {
                         </Upload>
                       </Form.Item>
                     </Col>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label={
-                          <span>
-                            <span>Authorisation code. </span>
-                            <span>
-                              {" "}
-                              <a
-                                href="https://t.me/minanft_bot?start=auth"
-                                target="_blank"
-                              >
-                                Get it here
-                              </a>
-                            </span>
-                          </span>
-                        }
-                        name="auth"
-                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
-                      >
-                        <TextArea
-                          autoSize={{
-                            minRows: 2,
-                            maxRows: 3,
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
+                        */}
                   </Row>
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
@@ -375,7 +433,7 @@ const Corporate = () => {
                         >
                           <span>
                             {address == ""
-                              ? "Please connect with Auro on Berkeley network before creating corporate account"
+                              ? "Please connect with Auro before creating corporate account"
                               : "You are creating corporate account with AURO address " +
                                 address}
                             <br />
@@ -406,9 +464,7 @@ const Corporate = () => {
                         disabled={createDisabled}
                         onClick={corporateButton}
                       >
-                        {address == ""
-                          ? "Connect with Auro"
-                          : "Create corporate account"}
+                        {address == "" ? "Connect with Auro" : "Submit"}
                       </Button>
                     </Form.Item>
                   </Row>

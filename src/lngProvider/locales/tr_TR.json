@@ -321,5 +321,7 @@
   "sidebar.map.weather": "Hava Durumu Haritası",
   "sidebar.extensions.shuffle": "Karıştır",
   "sidebar.extensions.profile": "Profil",
-  "sidebar.social": "Sosyal Uygulamalar"
+  "sidebar.social": "Sosyal Uygulamalar",
+  "create.title": "Mina Avatar NFT Oluştur",
+  "create.description": "Açıklama - destekler"
 }

@@ -157,7 +157,7 @@ const handleAccountsChanged = useCallback( async (accounts) => {
   if (address !== undefined && address !== "") {
     metamaskText = address.slice(0, 6) + "..." + address.slice(51, 55);
     usernameText = username ? username : "";
-    blockExplorer = "https://berkeley.minaexplorer.com/wallet/" + address;
+    blockExplorer = "https://minascan.io/testworld/account/" + address;
     result = (
       <ul className="gx-login-list">
         <li

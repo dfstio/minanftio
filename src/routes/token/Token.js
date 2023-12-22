@@ -30,6 +30,7 @@ import fileSaver from "file-saver";
 import api from "../../serverless/api";
 import { getOnLoad, getContentMessage } from "../../serverless/content";
 import { prepareMetadata } from "./metadata";
+import { storageUrl } from "../../blockchain/storage";
 //import '../../styles/token/audio-player.less';
 
 const {
@@ -172,7 +173,8 @@ const TokenMedia = ({
           console.log("TokenMedia useEffect url: ", media.name, newURL);
       } else 
       */
-      setURL("https://gateway.pinata.cloud/ipfs/" + media.storage.slice(2));
+      //setURL("https://gateway.pinata.cloud/ipfs/" + media.storage.slice(2));
+      setURL(storageUrl(media.storage, true, true));
       setLoading(false);
       //if(DEBUG) console.log("TokenMedia useEffect percent: ", percent);
     }
@@ -499,8 +501,10 @@ const Attachment = ({ attachment }) => {
     let url =
       attachment.storage === undefined
         ? ""
-        : "https://gateway.pinata.cloud/ipfs/" + attachment.storage.slice(2);
+        : storageUrl(attachment.storage, true, true);
+
     /*
+     "https://gateway.pinata.cloud/ipfs/" + attachment.storage.slice(2);
     if (
       url === "" &&
       attachment.password !== undefined &&
