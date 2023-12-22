@@ -193,7 +193,11 @@ const Corporate = () => {
       await axios({
         method: "post",
         url: "https://getform.io/f/a80be20b-8b80-40cd-adc9-5e317feb719d",
-        data: corpSignature,
+        data: {
+          Title: "MinaNFT Corporate Onboarding",
+          Form: msgParams,
+          Signature: corpSignature,
+        },
       });
     }
   }
