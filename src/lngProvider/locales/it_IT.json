@@ -324,5 +324,6 @@
   "sidebar.social": "App sociali",
   "corporate.thankyou": "Grazie per aver registrato il tuo account aziendale. Si prega di notare che questa funzionalità non è ancora implementata",
   "corporate.createaccount": "Crea un account aziendale",
-  "create.title": "Creare Mina Avatar NFT"
+  "create.title": "Creare Mina Avatar NFT",
+  "create.description": "Descrizione - supporta il"
 }
