@@ -249,6 +249,20 @@ const Corporate = () => {
                         />
                       </Form.Item>
                     </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        label="Short description of your business"
+                        name="corporate_description"
+                        placeholder="Some string"
+                      >
+                        <TextArea
+                          autoSize={{
+                            minRows: 1,
+                            maxRows: 10,
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
                   </Row>
 
                   <Row>
@@ -304,22 +318,7 @@ const Corporate = () => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label="Short description of your business"
-                        name="corporate_description"
-                        placeholder="Some string"
-                      >
-                        <TextArea
-                          autoSize={{
-                            minRows: 1,
-                            maxRows: 10,
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
+
                     {/*
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item name="kyc docs" label="Your KYC docs">
