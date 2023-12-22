@@ -43,6 +43,8 @@ import {
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
+import { queryBilling } from "./billing";
+
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
@@ -52,12 +54,9 @@ const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-const startToken = {
-  auth: "",
-};
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const Corporate = () => {
+const CorporateBilling = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
   const balance = useSelector(({ blockchain }) => blockchain.balance);
@@ -69,23 +68,17 @@ const Corporate = () => {
 
   const [form] = Form.useForm();
   const [auth, setAuth] = useState("");
-  const [token, setToken] = useState({ startToken });
+  const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [report, setReport] = useState("");
-  const [createDisabled, setCreateDisabled] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const log = logm.child({ winstonComponent: "Corporate" });
 
   const checkCanCreate = () => {
-    let newCreateDisabled = true;
-    if (
-      token.corporate_name !== "" &&
-      token.contact_email !== "" &&
-      token.auth !== ""
-    )
-      newCreateDisabled = false;
-    if (newCreateDisabled !== createDisabled)
-      setCreateDisabled(newCreateDisabled);
+    let newButtonDisabled = false;
+    if (newButtonDisabled !== buttonDisabled)
+      setButtonDisabled(newButtonDisabled);
   };
 
   let vb = "$0";
@@ -105,27 +98,50 @@ const Corporate = () => {
 
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
-    let newToken = token;
-    if (values.auth !== undefined) newToken.auth = values.auth;
-
-    setToken(newToken);
+    if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
     setCounter(counter + 1);
     checkCanCreate();
   };
 
-  async function corporateButton() {
-    console.log("Corporate button clicked");
+  async function billingButton() {
+    console.log("Billing button clicked");
+    setLoading(true);
+
+    function makeURL(data) {
+      const url =
+        "/api/create-checkout-session?item=" +
+        encodeURIComponent(JSON.stringify(data));
+      //if(DEBUG) console.log("makeURL", data, "result", url);
+      return url;
+    }
+
+    const data = {
+      type: "buy",
+      address: "generate",
+      //saleID:  item.saleID.toString(),
+      tokenId: "10",
+      winstonMeta: "billing",
+    };
+
+    const buyTokenPath = makeURL(data);
+    let form = document.createElement("form");
+    form.action = buyTokenPath;
+    form.method = "POST";
+
+    // the form must be in the document to submit it
+    document.body.append(form);
+
+    form.submit();
+
+    //const report = await queryBilling(auth);
+    //setReport(report.toString());
+    setLoading(false);
+    //if (report === undefined || report === "") return;
   }
 
   const onFinish = async (values) => {
     if (DEBUG) console.log("onFinish", values);
   };
-
-  async function connect() {
-    log.info("Connect clicked", { address, wf: "connect" });
-    const newAddress = await minaLogin();
-    dispatch(updateAddress(newAddress));
-  }
 
   return (
     <>
@@ -135,6 +151,7 @@ const Corporate = () => {
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card
               className="gx-card"
+              key="billingCard"
               title=<IntlMessages id="corporate.billing.report.title" />
             >
               <div className="gx-d-flex justify-content-center">
@@ -142,6 +159,7 @@ const Corporate = () => {
               </div>
               <Form
                 form={form}
+                key="billingForm"
                 labelCol={{
                   span: 24,
                 }}
@@ -149,7 +167,7 @@ const Corporate = () => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={token}
+                initialValues={{ auth: "" }}
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
@@ -198,9 +216,7 @@ const Corporate = () => {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          {report === ""
-                            ? ""
-                            : "Table with the report will be shown here"}
+                          {report}
                         </div>
                       </Form.Item>
                     </Col>
@@ -210,8 +226,10 @@ const Corporate = () => {
                     <Form.Item>
                       <Button
                         type="primary"
-                        disabled={createDisabled}
-                        onClick={corporateButton}
+                        disabled={buttonDisabled}
+                        loading={loading}
+                        onClick={billingButton}
+                        key="billingButton"
                       >
                         {report === "" ? "Retreive report" : "Pay"}
                       </Button>
@@ -227,4 +245,4 @@ const Corporate = () => {
   );
 };
 
-export default Corporate;
+export default CorporateBilling;
