@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../serverless/api";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
+import axios from "axios";
 import {
   footerText,
   footerAgreement,
@@ -187,6 +188,12 @@ const Corporate = () => {
         type: "success",
         content: <IntlMessages id="corporate.thankyou" />,
         key: `CorporateButton`,
+        duration: 60,
+      });
+      await axios({
+        method: "post",
+        url: "https://getform.io/f/a80be20b-8b80-40cd-adc9-5e317feb719d",
+        data: corpSignature,
       });
     }
   }
