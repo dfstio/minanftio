@@ -57,7 +57,7 @@ const startToken = {
 };
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const Corporate = () => {
+const CorporateBilling = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
   const balance = useSelector(({ blockchain }) => blockchain.balance);
@@ -77,13 +77,7 @@ const Corporate = () => {
   const log = logm.child({ winstonComponent: "Corporate" });
 
   const checkCanCreate = () => {
-    let newCreateDisabled = true;
-    if (
-      token.corporate_name !== "" &&
-      token.contact_email !== "" &&
-      token.auth !== ""
-    )
-      newCreateDisabled = false;
+    let newCreateDisabled = false;
     if (newCreateDisabled !== createDisabled)
       setCreateDisabled(newCreateDisabled);
   };
@@ -113,8 +107,8 @@ const Corporate = () => {
     checkCanCreate();
   };
 
-  async function corporateButton() {
-    console.log("Corporate button clicked");
+  async function billingButton() {
+    console.log("Billing button clicked");
   }
 
   const onFinish = async (values) => {
@@ -198,9 +192,7 @@ const Corporate = () => {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          {report === ""
-                            ? ""
-                            : "Table with the report will be shown here"}
+                          report
                         </div>
                       </Form.Item>
                     </Col>
@@ -211,7 +203,7 @@ const Corporate = () => {
                       <Button
                         type="primary"
                         disabled={createDisabled}
-                        onClick={corporateButton}
+                        onClick={billingButton}
                       >
                         {report === "" ? "Retreive report" : "Pay"}
                       </Button>
@@ -227,4 +219,4 @@ const Corporate = () => {
   );
 };
 
-export default Corporate;
+export default CorporateBilling;
