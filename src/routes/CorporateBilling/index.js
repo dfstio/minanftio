@@ -138,7 +138,7 @@ const CorporateBilling = () => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={token}
+                initialValues={{ auth: "" }}
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
