@@ -3,7 +3,7 @@ import { Card } from "antd";
 
 const { Meta } = Card;
 
-const MintMenuItem = ({ title, creator, description, price, link, image }) => {
+const MintMenuItem = ({ title, creator, description, button, link, image }) => {
   return (
     <div className="gx-product-item gx-product-vertical">
       {link === "" ? (
@@ -13,8 +13,7 @@ const MintMenuItem = ({ title, creator, description, price, link, image }) => {
           bordered={false}
         >
           <div className="gx-product-name">
-            <p>{description}</p>
-            <Meta title={title} description={price} />
+            <Meta title={title} description={description} />
           </div>
         </Card>
       ) : (
@@ -22,15 +21,14 @@ const MintMenuItem = ({ title, creator, description, price, link, image }) => {
           title={creator}
           extra={
             <a href={link}>
-              <span className="gx-link">Create</span>
+              <span className="gx-link">{button}</span>
             </a>
           }
           cover={<img alt="example" src={image} crossorigin="anonymous" />}
           bordered={false}
         >
           <div className="gx-product-name">
-            <p>{description}</p>
-            <Meta title={title} description={price} />
+            <Meta title={title} description={description} />
           </div>
         </Card>
       )}

@@ -47,12 +47,12 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./Tools"))}
       />
       <Route
-        path={`${match.url}corporate`}
-        component={asyncComponent(() => import("./CorporatePortal"))}
-      />
-      <Route
         path={`${match.url}corporate/kyc`}
         component={asyncComponent(() => import("./Corporate"))}
+      />
+      <Route
+        path={`${match.url}corporate`}
+        component={asyncComponent(() => import("./CorporatePortal"))}
       />
       <Route
         path={`${match.url}token/:chainId/:contract/:tokenId`}

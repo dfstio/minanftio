@@ -325,5 +325,9 @@
   "corporate.thankyou": "Thank you for providing your corporate information. We will get back to you soon.",
   "corporate.createaccount": "Create or update corporate information",
   "create.title": "Create Mina Avatar NFT",
-  "create.description": "Description - supports"
+  "create.description": "Description - supports",
+  "corporate.createcorporateaccount": "Create Corporate Account",
+  "corporate.createorupdatecorporateaccount": "Create or Update Corporate Account",
+  "corporate.createbutton": "Create",
+  "corporate.createdescription": "Create or update a corporate account to be able to create and manage Mina NFTs for your company."
 }
