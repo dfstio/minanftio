@@ -460,7 +460,7 @@ const MintPrivate = () => {
     <div className="gx-main-content">
       <Row>
         <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-          <Card className="gx-card" title="Create Mina Avatar NFT">
+          <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
             <Form
               form={form}
               labelCol={{
@@ -521,7 +521,9 @@ const MintPrivate = () => {
                   <Form.Item
                     label={
                       <span>
-                        <span>Description - supports</span>
+                        <span>
+                          <IntlMessages id={"create.description"} />
+                        </span>
                         <span>
                           {" "}
                           <a

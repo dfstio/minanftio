@@ -323,5 +323,7 @@
   "sidebar.extensions.profile": "Profile",
   "sidebar.social": "Social Apps",
   "corporate.thankyou": "Thank you for registering your corporate account. Please note that this feature is not implemented yet",
-  "corporate.createaccount": "Create corporate account"
+  "corporate.createaccount": "Create corporate account",
+  "create.title": "Create Mina Avatar NFT",
+  "create.description": "Description - supports"
 }
