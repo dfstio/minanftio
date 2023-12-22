@@ -43,6 +43,8 @@ import {
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
+import { queryBilling } from "./billing";
+
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
@@ -52,9 +54,6 @@ const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-const startToken = {
-  auth: "",
-};
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const CorporateBilling = () => {
@@ -69,17 +68,17 @@ const CorporateBilling = () => {
 
   const [form] = Form.useForm();
   const [auth, setAuth] = useState("");
-  const [token, setToken] = useState({ startToken });
+  const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [report, setReport] = useState("");
-  const [createDisabled, setCreateDisabled] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const log = logm.child({ winstonComponent: "Corporate" });
 
   const checkCanCreate = () => {
-    let newCreateDisabled = false;
-    if (newCreateDisabled !== createDisabled)
-      setCreateDisabled(newCreateDisabled);
+    let newButtonDisabled = false;
+    if (newButtonDisabled !== buttonDisabled)
+      setButtonDisabled(newButtonDisabled);
   };
 
   let vb = "$0";
@@ -99,27 +98,23 @@ const CorporateBilling = () => {
 
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
-    let newToken = token;
-    if (values.auth !== undefined) newToken.auth = values.auth;
-
-    setToken(newToken);
+    if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
     setCounter(counter + 1);
     checkCanCreate();
   };
 
   async function billingButton() {
     console.log("Billing button clicked");
+    setLoading(true);
+    const report = await queryBilling(auth);
+    setReport(report);
+    setLoading(false);
+    if (report === undefined || report === "") return;
   }
 
   const onFinish = async (values) => {
     if (DEBUG) console.log("onFinish", values);
   };
-
-  async function connect() {
-    log.info("Connect clicked", { address, wf: "connect" });
-    const newAddress = await minaLogin();
-    dispatch(updateAddress(newAddress));
-  }
 
   return (
     <>
@@ -192,7 +187,7 @@ const CorporateBilling = () => {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          report
+                          {report}
                         </div>
                       </Form.Item>
                     </Col>
@@ -202,7 +197,8 @@ const CorporateBilling = () => {
                     <Form.Item>
                       <Button
                         type="primary"
-                        disabled={createDisabled}
+                        disabled={buttonDisabled}
+                        loading={loading}
                         onClick={billingButton}
                       >
                         {report === "" ? "Retreive report" : "Pay"}
