@@ -135,23 +135,10 @@ const Corporate = () => {
       //const corpMessage = JSON.stringify(token);
 
       const msgParams = [
-        { label: "Label:", value: "Sign Confirm" },
         {
           label: "Message:",
           value:
-            "Click to submit corporate information and accept the Terms and Conditions and Limited License ",
-        },
-        {
-          label: "URI:",
-          value: "window.location.href",
-        },
-        {
-          label: "Issued At:",
-          value: new Date().getTime(),
-        },
-        {
-          label: "Resources:",
-          value: "https://minanft.io/",
+            "Sign to submit corporate information and accept the Terms and Conditions and Limited License ",
         },
         {
           label: "Corporation name:",
@@ -176,6 +163,14 @@ const Corporate = () => {
         {
           label: "Authorisation code:",
           value: token.auth,
+        },
+        {
+          label: "Signed At:",
+          value: new Date().toUTCString(),
+        },
+        {
+          label: "Site:",
+          value: "https://minanft.io/",
         },
       ];
       if (DEBUG) console.log("corpMessage", msgParams);
