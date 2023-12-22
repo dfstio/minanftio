@@ -333,5 +333,17 @@
   "corporate.billing": "Billing",
   "corporate.billingbutton": "Get Report",
   "corporate.billingtitle": "Get billing report",
-  "corporate.billingdescription": "Get billing report for your corporate account with details of all the NFT jobs created by your company."
+  "corporate.billingdescription": "Get billing report for your corporate account with details of all the NFT jobs created by your company.",
+  "corporate.docs": "Documentation",
+  "corporate.docstitle": "Read Documentation",
+  "corporate.docsbutton": "Read Docs",
+  "corporate.docsdescription": "Read documentation to learn more about Mina NFTs and how to create them.",
+  "corporate.library": "Integrate Library",
+  "corporate.librarytitle": "Integrate minanft Library",
+  "corporate.librarybutton": "Visit GitHub",
+  "corporate.librarydescription": "Integrate minanft library in your corporate application to create and manage Mina NFTs.",
+  "corporate.support": "Support",
+  "corporate.supporttitle": "E-mail Support",
+  "corporate.supportbutton": "Get Support",
+  "corporate.supportdescription": "Get support by e-mail from the Mina NFT team for any issues or queries."
 }

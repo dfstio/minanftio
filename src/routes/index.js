@@ -47,8 +47,12 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./Tools"))}
       />
       <Route
-        path={`${match.url}corporate/kyc`}
-        component={asyncComponent(() => import("./Corporate"))}
+        path={`${match.url}corporate/onboarding`}
+        component={asyncComponent(() => import("./CorporateOnboarding"))}
+      />
+      <Route
+        path={`${match.url}corporate/billing`}
+        component={asyncComponent(() => import("./CorporateBilling"))}
       />
       <Route
         path={`${match.url}corporate`}
