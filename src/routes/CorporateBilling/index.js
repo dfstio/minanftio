@@ -107,7 +107,7 @@ const CorporateBilling = () => {
     console.log("Billing button clicked");
     setLoading(true);
     const report = await queryBilling(auth);
-    setReport(report);
+    setReport(report.toString());
     setLoading(false);
     if (report === undefined || report === "") return;
   }
