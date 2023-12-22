@@ -353,10 +353,12 @@ export async function getSignature(message) {
 
   try {
     const address = await getAddress();
-    if (address == "") return "";
-    const signResult = await window.mina.signMessage({
-      message,
-    });
+    if (address === "") return "";
+    const signResult = await window.mina
+      .signJsonMessage({
+        message,
+      })
+      .catch((err) => console.log(err));
 
     log.debug("getSignature:", { signResult, address });
     return signResult;

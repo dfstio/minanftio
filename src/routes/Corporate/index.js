@@ -53,10 +53,11 @@ const RadioGroup = Radio.Group;
 
 const startToken = {
   corporate_name: "",
+  description: "",
   contact_name: "",
   contact_phone: "",
   contact_email: "",
-  corporate_website: "",
+  auth: "",
 };
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -80,7 +81,11 @@ const Corporate = () => {
 
   const checkCanCreate = () => {
     let newCreateDisabled = true;
-    if (token.corporate_name !== "" && token.contact_email !== "")
+    if (
+      token.corporate_name !== "" &&
+      token.contact_email !== "" &&
+      token.auth !== ""
+    )
       newCreateDisabled = false;
     if (newCreateDisabled !== createDisabled)
       setCreateDisabled(newCreateDisabled);
@@ -107,14 +112,15 @@ const Corporate = () => {
 
     if (values.corporate_name !== undefined)
       newToken.corporate_name = values.corporate_name; //TODO: check name
+    if (values.description !== undefined)
+      newToken.description = values.description;
     if (values.contact_name !== undefined)
       newToken.contact_name = values.contact_name;
     if (values.contact_phone !== undefined)
       newToken.contact_phone = values.contact_phone;
     if (values.contact_email !== undefined)
       newToken.contact_email = values.contact_email;
-    if (values.corporate_website !== undefined)
-      newToken.corporate_website = values.corporate_website;
+    if (values.auth !== undefined) newToken.auth = values.auth;
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -122,34 +128,71 @@ const Corporate = () => {
   };
 
   async function corporateButton() {
-    if (address == "") {
+    if (address === "") {
       const myaddress = await minaLogin(true);
       dispatch(updateAddress(myaddress));
     } else {
-      const corpMessage = JSON.stringify(token);
-      if (DEBUG) console.log("corpMessage", corpMessage);
-      const corpSignature = await getSignature(corpMessage);
+      //const corpMessage = JSON.stringify(token);
+
+      const msgParams = [
+        { label: "Label:", value: "Sign Confirm" },
+        {
+          label: "Message:",
+          value:
+            "Click to submit corporate information and accept the Terms and Conditions and Limited License ",
+        },
+        {
+          label: "URI:",
+          value: "window.location.href",
+        },
+        {
+          label: "Issued At:",
+          value: new Date().getTime(),
+        },
+        {
+          label: "Resources:",
+          value: "https://minanft.io/",
+        },
+        {
+          label: "Corporation name:",
+          value: token.corporate_name,
+        },
+        {
+          label: "Description:",
+          value: token.description,
+        },
+        {
+          label: "Contact e-mail:",
+          value: token.contact_email,
+        },
+        {
+          label: "Contact name:",
+          value: token.contact_name,
+        },
+        {
+          label: "Contact phone:",
+          value: token.contact_phone,
+        },
+        {
+          label: "Authorisation code:",
+          value: token.auth,
+        },
+      ];
+      if (DEBUG) console.log("corpMessage", msgParams);
+      const corpSignature = await getSignature(msgParams);
       if (DEBUG) console.log("corpSignature", corpSignature);
       log.info("Corporate signature", {
         address,
         token,
-        corpMessage,
+        msgParams,
         corpSignature,
         wf: "corporateButton",
       });
       messageApi.open({
-        type: "warning",
+        type: "success",
         content: <IntlMessages id="corporate.thankyou" />,
         key: `CorporateButton`,
       });
-      /*
-      message.error({
-        // "corporate.thankyou": "Thank you for registering your corporate account. Please note that this feature is not implemented yet"
-        content: <IntlMessages id="corporate.thankyou" />,
-        key: `CorporateButton`,
-        duration: 10,
-      });
-      */
     }
   }
 
@@ -252,7 +295,7 @@ const Corporate = () => {
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Short description of your business"
-                        name="corporate_description"
+                        name="description"
                         placeholder="Some string"
                       >
                         <TextArea
