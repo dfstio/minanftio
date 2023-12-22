@@ -329,5 +329,9 @@
   "corporate.createcorporateaccount": "Create Corporate Account",
   "corporate.createorupdatecorporateaccount": "Create or Update Corporate Account",
   "corporate.createbutton": "Create",
-  "corporate.createdescription": "Create or update a corporate account to be able to create and manage Mina NFTs for your company."
+  "corporate.createdescription": "Create or update a corporate account to be able to create and manage Mina NFTs for your company.",
+  "corporate.billing": "Billing",
+  "corporate.billingbutton": "Get Report",
+  "corporate.billingtitle": "Get billing report",
+  "corporate.billingdescription": "Get billing report for your corporate account with details of all the NFT jobs created by your company."
 }
