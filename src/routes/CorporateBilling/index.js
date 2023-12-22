@@ -124,6 +124,7 @@ const CorporateBilling = () => {
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card
               className="gx-card"
+              key="billingCard"
               title=<IntlMessages id="corporate.billing.report.title" />
             >
               <div className="gx-d-flex justify-content-center">
@@ -131,6 +132,7 @@ const CorporateBilling = () => {
               </div>
               <Form
                 form={form}
+                key="billingForm"
                 labelCol={{
                   span: 24,
                 }}
@@ -200,6 +202,7 @@ const CorporateBilling = () => {
                         disabled={buttonDisabled}
                         loading={loading}
                         onClick={billingButton}
+                        key="billingButton"
                       >
                         {report === "" ? "Retreive report" : "Pay"}
                       </Button>
