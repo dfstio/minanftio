@@ -240,6 +240,19 @@ const CorporateBilling = () => {
                     </Col>
                   </Row>
                   <Row>
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        disabled={buttonDisabled}
+                        loading={loading}
+                        onClick={billingButton}
+                        key="billingButton"
+                      >
+                        Retreive report
+                      </Button>
+                    </Form.Item>
+                  </Row>
+                  <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
                         <Table dataSource={report} columns={columns} />
@@ -288,20 +301,6 @@ const CorporateBilling = () => {
                         </div>
                       </Form.Item>
                     </Col>
-                  </Row>
-
-                  <Row>
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        disabled={buttonDisabled}
-                        loading={loading}
-                        onClick={billingButton}
-                        key="billingButton"
-                      >
-                        Retreive report
-                      </Button>
-                    </Form.Item>
                   </Row>
                 </div>
               </Form>
