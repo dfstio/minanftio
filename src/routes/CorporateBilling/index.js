@@ -111,7 +111,7 @@ const CorporateBilling = () => {
   const [counter, setCounter] = useState(0);
   const [report, setReport] = useState("");
   const [total, setTotal] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const log = logm.child({ winstonComponent: "Corporate" });
