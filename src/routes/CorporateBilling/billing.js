@@ -39,7 +39,27 @@ timeFinished
 1703085208743
   */
 
-  return report;
+  if (report.success === false) return report;
+  const table = report.result.map((row) => {
+    let duration = 0;
+    if (row.timeFinished !== undefined && row.timeCreated !== undefined)
+      duration = row.timeFinished - row.timeCreated;
+    return {
+      key: row.jobId,
+      id: row.id,
+      jobId: row.jobId,
+      jobName: row.jobName,
+      jobStatus: row.jobStatus,
+      task: row.task,
+      developer: row.developer,
+      billedDuration: row.billedDuration,
+      timeCreated: row.timeCreated,
+      timeFinished: row.timeFinished,
+      created: new Date(row.timeCreated).toLocaleString(),
+      duration,
+    };
+  });
+  return { table, ...report };
 }
 
 /*

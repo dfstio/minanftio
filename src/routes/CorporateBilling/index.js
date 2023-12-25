@@ -126,7 +126,7 @@ const CorporateBilling = () => {
       report.result !== undefined &&
       report.result !== ""
     )
-      setReport(report.result);
+      setReport(report.table);
     setLoading(false);
   }
 
@@ -215,7 +215,7 @@ const CorporateBilling = () => {
                         onClick={billingButton}
                         key="billingButton"
                       >
-                        {report === "" ? "Retreive report" : "Pay"}
+                        "Retreive report"
                       </Button>
                     </Form.Item>
                   </Row>
