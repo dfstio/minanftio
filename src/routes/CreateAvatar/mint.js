@@ -214,6 +214,7 @@ export async function mintNFT(address, auth, token) {
     uri,
     signature: reserved.signature,
     privateKey: nftPrivateKey.toBase58(),
+    useArweave: token.storagetype === "Arweave",
   });
 
   console.log("mint job result", result);
