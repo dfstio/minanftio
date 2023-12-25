@@ -46,6 +46,9 @@ timeFinished
     if (row.timeFinished !== undefined && row.timeCreated !== undefined)
       duration = row.timeFinished - row.timeCreated;
     total += row.billedDuration ?? 0;
+    const billedDuration = row.billedDuration
+      ? row.billedDuration.toLocaleString()
+      : "0";
     return {
       key: row.jobId,
       id: row.id,
@@ -54,7 +57,7 @@ timeFinished
       jobStatus: row.jobStatus,
       task: row.task,
       developer: row.developer,
-      billedDuration: row.billedDuration.toLocaleString(),
+      billedDuration,
       timeCreated: row.timeCreated,
       timeFinished: row.timeFinished,
       created: new Date(row.timeCreated).toLocaleString(),
