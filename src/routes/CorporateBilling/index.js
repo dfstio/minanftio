@@ -56,16 +56,42 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+
 const columns = [
   {
-    title: "Job Id",
-    dataIndex: "jobId",
-    key: "jobId",
+    title: "Created",
+    dataIndex: "created",
+    key: "created",
+  },
+  {
+    title: "Job Name",
+    dataIndex: "jobName",
+    key: "jobName",
+  },
+  {
+    title: "Job Task",
+    dataIndex: "task",
+    key: "task",
+  },
+  {
+    title: "Job Status",
+    dataIndex: "jobStatus",
+    key: "jobStatus",
   },
   {
     title: "Billed time (ms)",
     dataIndex: "billedDuration",
     key: "billedDuration",
+  },
+  {
+    title: "Job Duration (ms)",
+    dataIndex: "duration",
+    key: "duration",
+  },
+  {
+    title: "Job Id",
+    dataIndex: "jobId",
+    key: "jobId",
   },
 ];
 
@@ -215,7 +241,7 @@ const CorporateBilling = () => {
                         onClick={billingButton}
                         key="billingButton"
                       >
-                        "Retreive report"
+                        Retreive report
                       </Button>
                     </Form.Item>
                   </Row>
