@@ -107,36 +107,10 @@ const CorporateBilling = () => {
     console.log("Billing button clicked");
     setLoading(true);
 
-    function makeURL(data) {
-      const url =
-        "/api/create-checkout-session?item=" +
-        encodeURIComponent(JSON.stringify(data));
-      //if(DEBUG) console.log("makeURL", data, "result", url);
-      return url;
-    }
-
-    const data = {
-      type: "buy",
-      address: "generate",
-      //saleID:  item.saleID.toString(),
-      tokenId: "10",
-      winstonMeta: "billing",
-    };
-
-    const buyTokenPath = makeURL(data);
-    let form = document.createElement("form");
-    form.action = buyTokenPath;
-    form.method = "POST";
-
-    // the form must be in the document to submit it
-    document.body.append(form);
-
-    form.submit();
-
-    //const report = await queryBilling(auth);
-    //setReport(report.toString());
+    const report = await queryBilling(auth);
+    setReport(report.toString());
     setLoading(false);
-    //if (report === undefined || report === "") return;
+    if (report === undefined || report === "") return;
   }
 
   const onFinish = async (values) => {
