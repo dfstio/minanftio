@@ -249,6 +249,9 @@ const CorporateBilling = () => {
                         Total billed time: {total}
                       </div>
                     </Form.Item>
+                  </Row>
+
+                  <Row>
                     <Form.Item>
                       <div
                         className="gx-mt-4"
