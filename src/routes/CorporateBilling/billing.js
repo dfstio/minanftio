@@ -40,10 +40,12 @@ timeFinished
   */
 
   if (report.success === false) return report;
+  let total = 0;
   const table = report.result.map((row) => {
     let duration = 0;
     if (row.timeFinished !== undefined && row.timeCreated !== undefined)
       duration = row.timeFinished - row.timeCreated;
+    total += row.billedDuration ?? 0;
     return {
       key: row.jobId,
       id: row.id,
@@ -52,14 +54,14 @@ timeFinished
       jobStatus: row.jobStatus,
       task: row.task,
       developer: row.developer,
-      billedDuration: row.billedDuration,
+      billedDuration: row.billedDuration.toLocaleString(),
       timeCreated: row.timeCreated,
       timeFinished: row.timeFinished,
       created: new Date(row.timeCreated).toLocaleString(),
-      duration,
+      duration: duration.toLocaleString(),
     };
   });
-  return { table, ...report };
+  return { table, total, ...report };
 }
 
 /*

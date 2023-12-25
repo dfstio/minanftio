@@ -110,6 +110,8 @@ const CorporateBilling = () => {
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [report, setReport] = useState("");
+  const [total, setTotal] = useState("");
+  const [amount, setAmount] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const log = logm.child({ winstonComponent: "Corporate" });
@@ -149,10 +151,15 @@ const CorporateBilling = () => {
     const report = await queryBilling(auth);
     if (
       report.success === true &&
-      report.result !== undefined &&
-      report.result !== ""
-    )
+      report.table !== undefined &&
+      report.total !== undefined
+    ) {
       setReport(report.table);
+      setTotal(parseInt((report.total / 1000).toString()) + " seconds");
+      const price = 0.0000001333;
+      // set Amount in USD
+      setAmount("USD " + (report.total * price * 10).toFixed(2).toString());
+    }
     setLoading(false);
   }
 
@@ -230,6 +237,28 @@ const CorporateBilling = () => {
                         <Table dataSource={report} columns={columns} />
                       </Form.Item>
                     </Col>
+                  </Row>
+                  <Row>
+                    <Form.Item>
+                      <div
+                        className="gx-mt-4"
+                        style={{
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        Total billed time: {total}
+                      </div>
+                    </Form.Item>
+                    <Form.Item>
+                      <div
+                        className="gx-mt-4"
+                        style={{
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        Total amount: {amount}
+                      </div>
+                    </Form.Item>
                   </Row>
 
                   <Row>
