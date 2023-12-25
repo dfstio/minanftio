@@ -22,6 +22,7 @@ import {
   Card,
   Upload,
   Select,
+  Table,
 } from "antd";
 import {
   LoadingOutlined,
@@ -55,6 +56,18 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+const columns = [
+  {
+    title: "Job Id",
+    dataIndex: "jobId",
+    key: "jobId",
+  },
+  {
+    title: "Billed time (ms)",
+    dataIndex: "billedDuration",
+    key: "billedDuration",
+  },
+];
 
 const CorporateBilling = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
@@ -184,14 +197,7 @@ const CorporateBilling = () => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          {report}
-                        </div>
+                        <Table dataSource={report} columns={columns} />;
                       </Form.Item>
                     </Col>
                   </Row>
