@@ -29,6 +29,14 @@ import { getFileData } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
 import { set } from "lodash";
+import {
+  footerText,
+  footerAgreement,
+  footerContact,
+  footerAgreementLink,
+  footerEmail,
+  accountingEmail,
+} from "../../util/config";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -905,6 +913,29 @@ const MintPrivate = () => {
                 placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
               >
                 <TextArea autoSize={{ minRows: 2, maxRows: 3 }} />
+              </Form.Item>
+              <Form.Item>
+                <div
+                  className="gx-mt-4"
+                  style={{
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  <span>
+                    {address === ""
+                      ? "Please connect with Auro before creating NFT"
+                      : "You are creating NFT with owner address " + address}
+                    <br />
+                    <br />
+                    By clicking this button, you are confirming your agreement
+                    with our
+                  </span>{" "}
+                  <span>
+                    <a href={footerAgreementLink} target="_blank">
+                      {footerAgreement}
+                    </a>
+                  </span>
+                </div>
               </Form.Item>
 
               <Form.Item>

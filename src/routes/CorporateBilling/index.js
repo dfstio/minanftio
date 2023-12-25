@@ -22,6 +22,7 @@ import {
   Card,
   Upload,
   Select,
+  Table,
 } from "antd";
 import {
   LoadingOutlined,
@@ -56,6 +57,44 @@ const RadioGroup = Radio.Group;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
+const columns = [
+  {
+    title: "Created",
+    dataIndex: "created",
+    key: "created",
+  },
+  {
+    title: "Job Name",
+    dataIndex: "jobName",
+    key: "jobName",
+  },
+  {
+    title: "Job Task",
+    dataIndex: "task",
+    key: "task",
+  },
+  {
+    title: "Job Status",
+    dataIndex: "jobStatus",
+    key: "jobStatus",
+  },
+  {
+    title: "Billed time (ms)",
+    dataIndex: "billedDuration",
+    key: "billedDuration",
+  },
+  {
+    title: "Job Duration (ms)",
+    dataIndex: "duration",
+    key: "duration",
+  },
+  {
+    title: "Job Id",
+    dataIndex: "jobId",
+    key: "jobId",
+  },
+];
+
 const CorporateBilling = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
@@ -71,6 +110,9 @@ const CorporateBilling = () => {
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [report, setReport] = useState("");
+  const [total, setTotal] = useState("");
+  const [amount, setAmount] = useState("");
+  const [minted, setMinted] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const log = logm.child({ winstonComponent: "Corporate" });
@@ -107,36 +149,26 @@ const CorporateBilling = () => {
     console.log("Billing button clicked");
     setLoading(true);
 
-    function makeURL(data) {
-      const url =
-        "/api/create-checkout-session?item=" +
-        encodeURIComponent(JSON.stringify(data));
-      //if(DEBUG) console.log("makeURL", data, "result", url);
-      return url;
+    const report = await queryBilling(auth);
+    if (
+      report.success === true &&
+      report.table !== undefined &&
+      report.total !== undefined &&
+      report.minted !== undefined
+    ) {
+      setReport(report.table);
+      setTotal(
+        parseInt((report.total / 1000).toString()).toLocaleString() + " seconds"
+      );
+      const price = 0.0000001333; // AWS lambda cost per ms for 8192 MB memory
+      // set Amount in USD
+      setAmount(
+        "USD " +
+          (report.total * price * 10 + report.minted * 9).toFixed(2).toString()
+      );
+      setMinted(report.minted.toLocaleString());
     }
-
-    const data = {
-      type: "buy",
-      address: "generate",
-      //saleID:  item.saleID.toString(),
-      tokenId: "10",
-      winstonMeta: "billing",
-    };
-
-    const buyTokenPath = makeURL(data);
-    let form = document.createElement("form");
-    form.action = buyTokenPath;
-    form.method = "POST";
-
-    // the form must be in the document to submit it
-    document.body.append(form);
-
-    form.submit();
-
-    //const report = await queryBilling(auth);
-    //setReport(report.toString());
     setLoading(false);
-    //if (report === undefined || report === "") return;
   }
 
   const onFinish = async (values) => {
@@ -208,21 +240,6 @@ const CorporateBilling = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          {report}
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row>
                     <Form.Item>
                       <Button
                         type="primary"
@@ -231,9 +248,59 @@ const CorporateBilling = () => {
                         onClick={billingButton}
                         key="billingButton"
                       >
-                        {report === "" ? "Retreive report" : "Pay"}
+                        Retreive report
                       </Button>
                     </Form.Item>
+                  </Row>
+                  <Row>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <Table dataSource={report} columns={columns} />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          Total billed time: {total}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          NFT minted: {minted}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          Total amount: {amount}
+                        </div>
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </div>
               </Form>
