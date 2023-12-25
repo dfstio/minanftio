@@ -481,8 +481,10 @@ const Attachment = ({ attachment }) => {
   useEffect(() => {
     async function setText() {
       //console.log("Attachment", attachment);
-      const size1 = formatBytes(attachment.size);
-      setSize(" (" + size1 + ")");
+      if (attachment.size !== undefined && attachment.size > 0) {
+        const size1 = formatBytes(attachment.size);
+        setSize(" (" + size1 + ")");
+      }
       const splitName = attachment.filename.split("/");
       setName(splitName[splitName.length - 1]);
     }
