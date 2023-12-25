@@ -155,7 +155,9 @@ const CorporateBilling = () => {
       report.total !== undefined
     ) {
       setReport(report.table);
-      setTotal(parseInt((report.total / 1000).toString()) + " seconds");
+      setTotal(
+        parseInt((report.total / 1000).toString()).toLocaleString() + " seconds"
+      );
       const price = 0.0000001333;
       // set Amount in USD
       setAmount("USD " + (report.total * price * 10).toFixed(2).toString());
@@ -239,29 +241,33 @@ const CorporateBilling = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Form.Item>
-                      <div
-                        className="gx-mt-4"
-                        style={{
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        Total billed time: {total}
-                      </div>
-                    </Form.Item>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          Total billed time: {total}
+                        </div>
+                      </Form.Item>
+                    </Col>
                   </Row>
 
                   <Row>
-                    <Form.Item>
-                      <div
-                        className="gx-mt-4"
-                        style={{
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        Total amount: {amount}
-                      </div>
-                    </Form.Item>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          Total amount: {amount}
+                        </div>
+                      </Form.Item>
+                    </Col>
                   </Row>
 
                   <Row>
