@@ -2,6 +2,7 @@ import { MerkleTree, Field, Encoding } from "o1js";
 import { FileData } from "minanft";
 //import { createHash } from "crypto";
 import axios from "axios";
+import { ARWEAVE } from "minanft";
 const CryptoJS = require("crypto-js");
 
 function readFileAsync(file) {
@@ -20,7 +21,9 @@ function readFileAsync(file) {
 
 export async function getFileData(
   file,
+  storageType,
   pinataJWT,
+  arweaveKey,
   isPrivate = false,
   calculateRoot = false
 ) {
@@ -50,12 +53,24 @@ export async function getFileData(
   //  "UBSdn4FVQRB1q6qAT7gjVb6TbNAC+Rqo3PS5GpDSaBzLLI4yHuJB8lQV7GFFvxSZKLo/commzF9LsaUGE4Sv3Q==";
 
   if (isPrivate !== true) {
-    const hash = await pinFile(file, pinataJWT);
-    if (hash === undefined) {
-      console.error("getFileData error: hash is undefined");
+    if (storageType === "Arweave") {
+      const hash = await pinFile(file, arweaveKey, true);
+      if (hash === undefined) {
+        console.error("getFileData error: Arweave hash is undefined");
+        return undefined;
+      }
+      storage = `a:${hash}`;
+    } else if (storageType === "IPFS") {
+      const hash = await pinFile(file, pinataJWT);
+      if (hash === undefined) {
+        console.error("getFileData error: IPFS hash is undefined");
+        return undefined;
+      }
+      storage = `i:${hash}`;
+    } else {
+      console.error("getFileData error: unknown storage type");
       return undefined;
     }
-    storage = `i:${hash}`;
   }
 
   return new FileData({
@@ -69,53 +84,47 @@ export async function getFileData(
   });
 }
 
-export async function pinFile(file, pinataJWT) {
-  const auth = "Bearer " + pinataJWT;
-  const formData = new FormData();
-  formData.append("file", file, {
-    contentType: file.type,
-    knownLength: file.size,
-    filename: file.name,
-  });
-
-  if (auth === "Bearer ")
-    //for running tests
-    return `QmaRZUgm2GYCCjsDCa5eJk4rjRogTgY6dCyXRQmnhvFmjj`;
-
-  /*
-    const metadata = JSON.stringify({
-      name: 'File name',
+export async function pinFile(file, key, useArweave = false) {
+  if (useArweave) {
+    const arweave = new ARWEAVE(key);
+    const hash = await arweave.pinFile(file, file.name, file.size, file.type);
+    return hash;
+  } else {
+    const auth = "Bearer " + key;
+    const formData = new FormData();
+    formData.append("file", file, {
+      contentType: file.type,
+      knownLength: file.size,
+      filename: file.name,
     });
-    formData.append('pinataMetadata', metadata);
-    
-    const options = JSON.stringify({
-      cidVersion: 0,
-    })
-    formData.append('pinataOptions', options);
-    */
 
-  try {
-    const response = await axios.post(
-      "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      formData,
-      {
-        maxBodyLength: "Infinity",
-        headers: {
-          "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
-          Authorization: auth,
-        },
+    if (auth === "Bearer ")
+      //for running tests
+      return `QmaRZUgm2GYCCjsDCa5eJk4rjRogTgY6dCyXRQmnhvFmjj`;
+
+    try {
+      const response = await axios.post(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        formData,
+        {
+          maxBodyLength: "Infinity",
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+            Authorization: auth,
+          },
+        }
+      );
+      console.log("pinFile result:", response.data);
+      if (response && response.data && response.data.IpfsHash) {
+        return response.data.IpfsHash;
+      } else {
+        console.error("pinFile error", response.data.error);
+        return undefined;
       }
-    );
-    console.log("pinFile result:", response.data);
-    if (response && response.data && response.data.IpfsHash) {
-      return response.data.IpfsHash;
-    } else {
-      console.error("pinFile error", response.data.error);
+    } catch (err) {
+      console.error("pinFile error 2 - catch", err);
       return undefined;
     }
-  } catch (err) {
-    console.error("pinFile error 2 - catch", err);
-    return undefined;
   }
 }
 

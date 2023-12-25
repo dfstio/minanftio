@@ -68,6 +68,7 @@ const startToken = {
   type: "individual",
   contains_private_content: false,
   private_content_description: "",
+  storagetype: "IPFS",
   uri: {
     name: "",
     type: "object",
@@ -217,6 +218,8 @@ const MintPrivate = () => {
     if (values.folder !== undefined) newToken.folder = values.folder;
     if (values.calculateroot !== undefined)
       newToken.calculateroot = values.calculateroot;
+    if (values.storagetype !== undefined)
+      newToken.storagetype = values.storagetype;
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -857,6 +860,23 @@ const MintPrivate = () => {
                       Calculate Merkle Tree root of the private attachments
                       (takes time)
                     </Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="NFT Storage"
+                    name="storagetype"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please choose storage",
+                      },
+                    ]}
+                  >
+                    <RadioGroup>
+                      <RadioButton value="IPFS">IPFS</RadioButton>
+                      <RadioButton value="Arweave">Arweave</RadioButton>
+                    </RadioGroup>
                   </Form.Item>
                 </Col>
               </Row>
