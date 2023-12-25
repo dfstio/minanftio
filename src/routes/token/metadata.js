@@ -108,6 +108,18 @@ export function prepareMetadata(token) {
   }
 
   try {
+    const URI = {
+      filename: token.name + ".json",
+      mimeType: "application/json",
+      size: 0,
+      storage: token.uri,
+      type: "file",
+    };
+
+    attachments.push({
+      data: URI,
+      id: attachments.length,
+    });
     const properties = JSON.parse(token.properties);
     iterateProperties(properties);
   } catch (error) {
