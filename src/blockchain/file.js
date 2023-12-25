@@ -87,7 +87,8 @@ export async function getFileData(
 export async function pinFile(file, key, useArweave = false) {
   if (useArweave) {
     const arweave = new ARWEAVE(key);
-    const hash = await arweave.pinFile(file, file.name, file.size, file.type);
+    const binary = await readFileAsync(file);
+    const hash = await arweave.pinFile(binary, file.name, file.size, file.type);
     return hash;
   } else {
     const auth = "Bearer " + key;
