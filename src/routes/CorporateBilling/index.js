@@ -121,9 +121,13 @@ const CorporateBilling = () => {
     setLoading(true);
 
     const report = await queryBilling(auth);
-    setReport(report.toString());
+    if (
+      report.success === true &&
+      report.result !== undefined &&
+      report.result !== ""
+    )
+      setReport(report.result);
     setLoading(false);
-    if (report === undefined || report === "") return;
   }
 
   const onFinish = async (values) => {
