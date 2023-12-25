@@ -112,6 +112,7 @@ const CorporateBilling = () => {
   const [report, setReport] = useState("");
   const [total, setTotal] = useState("");
   const [amount, setAmount] = useState("");
+  const [minted, setMinted] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const log = logm.child({ winstonComponent: "Corporate" });
@@ -152,15 +153,20 @@ const CorporateBilling = () => {
     if (
       report.success === true &&
       report.table !== undefined &&
-      report.total !== undefined
+      report.total !== undefined &&
+      report.minted !== undefined
     ) {
       setReport(report.table);
       setTotal(
         parseInt((report.total / 1000).toString()).toLocaleString() + " seconds"
       );
-      const price = 0.0000001333;
+      const price = 0.0000001333; // AWS lambda cost per ms for 8192 MB memory
       // set Amount in USD
-      setAmount("USD " + (report.total * price * 10).toFixed(2).toString());
+      setAmount(
+        "USD " +
+          (report.total * price * 10 + report.minted * 9).toFixed(2).toString()
+      );
+      setMinted(report.minted.toLocaleString());
     }
     setLoading(false);
   }
@@ -250,6 +256,20 @@ const CorporateBilling = () => {
                           }}
                         >
                           Total billed time: {total}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          NFT minted: {minted}
                         </div>
                       </Form.Item>
                     </Col>

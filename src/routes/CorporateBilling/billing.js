@@ -41,6 +41,7 @@ timeFinished
 
   if (report.success === false) return report;
   let total = 0;
+  let minted = 0;
   const table = report.result.map((row) => {
     let duration = 0;
     if (row.timeFinished !== undefined && row.timeCreated !== undefined)
@@ -49,6 +50,7 @@ timeFinished
     const billedDuration = row.billedDuration
       ? row.billedDuration.toLocaleString()
       : "0";
+    if (row.task === "mint" && row.timeFinished !== undefined) minted++;
     return {
       key: row.jobId,
       id: row.id,
@@ -64,5 +66,5 @@ timeFinished
       duration: duration.toLocaleString(),
     };
   });
-  return { table, total, ...report };
+  return { table, total, minted, ...report };
 }
