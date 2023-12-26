@@ -218,7 +218,8 @@ export async function post(address, auth, token) {
   }
 
   console.log("post: ", name, nft.toJSON());
-  mintedNFT.updateMap({ key: name, nft });
+
+  mintedNFT.updateMap({ key: name, map: nft });
   const commitData = await mintedNFT.prepareCommitData({
     ownerPublicKey,
     pinataJWT: token.storagetype === "Arweave" ? undefined : pinataJWT,
