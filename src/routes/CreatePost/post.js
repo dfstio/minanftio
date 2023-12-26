@@ -130,21 +130,28 @@ export async function post(address, auth, token) {
       key: "type",
       value: token.type?.substring(0, 30) ?? "",
     });
-  const imageData = await getFileData(
-    token.main.image,
-    token.storagetype,
-    pinataJWT,
-    arweaveKey
-  );
-  if (imageData === undefined) {
-    console.error("getFileData error: imageData is undefined");
-    return {
-      success: false,
-      error: "Cannot get image data",
-    };
+
+  if (
+    token.main !== undefined &&
+    token.main.image !== undefined &&
+    token.main.image !== ""
+  ) {
+    const imageData = await getFileData(
+      token.main.image,
+      token.storagetype,
+      pinataJWT,
+      arweaveKey
+    );
+    if (imageData === undefined) {
+      console.error("getFileData error: imageData is undefined");
+      return {
+        success: false,
+        error: "Cannot get image data",
+      };
+    }
+    console.log("imageData", imageData);
+    nft.updateFileData({ key: `image`, type: "image", data: imageData });
   }
-  console.log("imageData", imageData);
-  nft.updateFileData({ key: `image`, type: "image", data: imageData });
 
   async function addFile(file, isPrivate = false, calculateRoot = false) {
     const fileData = await getFileData(
@@ -229,10 +236,13 @@ export async function post(address, auth, token) {
     includePrivateData: true,
   });
 
+  const version = mintedNFT.version.add(1).toJSON();
+
   return {
     success: true,
     commitData,
     json,
+    version,
   };
 }
 

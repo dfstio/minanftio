@@ -255,7 +255,8 @@ const Post = () => {
       if (
         mintResult?.success === true &&
         mintResult?.commitData !== undefined &&
-        mintResult?.json !== undefined
+        mintResult?.json !== undefined &&
+        mintResult?.version !== undefined
       ) {
         message.loading({
           content: `Please sign post transaction`,
@@ -265,7 +266,7 @@ const Post = () => {
         const blob = new Blob([mintResult.json], {
           type: "text/plain;charset=utf-8",
         });
-        fileSaver.saveAs(blob, name + ".json");
+        fileSaver.saveAs(blob, name + ".v" + mintResult.version + ".json");
       } else {
         message.error({
           content: `Error uploading metadata: ${mintResult?.error ?? ""} ${
