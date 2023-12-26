@@ -490,11 +490,12 @@ const Post = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="json"
-                    label="Upload JSON with NFT data here"
+                    label="Upload the JSON file with NFT data here that you've got when you have minted an NFT"
                     rules={[
                       {
                         required: true,
-                        message: "Please upload JSON with NFT data here",
+                        message:
+                          "Please upload the JSON file with NFT data here",
                       },
                     ]}
                   >
@@ -511,7 +512,7 @@ const Post = () => {
                       {" "}
                       <div>
                         <PlusOutlined />
-                        <div className="ant-upload-text">Main Image</div>
+                        <div className="ant-upload-text">JSON file</div>
                       </div>
                     </Upload>
                   </Form.Item>
