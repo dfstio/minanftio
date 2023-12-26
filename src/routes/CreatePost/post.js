@@ -48,6 +48,10 @@ export async function post(address, auth, token) {
   MinaNFT.minaInit(blockchainInstance);
 
   const name = token.name;
+  if (name === undefined || name === "") {
+    console.error("Name is undefined");
+    return undefined;
+  }
   const ownerPublicKey = PublicKey.fromBase58(address);
   const owner = Poseidon.hash(ownerPublicKey.toFields());
   if (Field.fromJSON(jsonData.owner).toJSON() !== owner.toJSON()) {
@@ -74,6 +78,8 @@ export async function post(address, auth, token) {
   }
 
   const nft = new MapData();
+  nft.update({ key: "name", value: name });
+  nft.update({ key: "time", value: Date.now().toString() });
 
   if (token.description !== undefined && token.description !== "") {
     nft.updateText({
@@ -223,6 +229,7 @@ export async function post(address, auth, token) {
     };
   }
 
+  console.log("post: ", name, nft.toJSON());
   mintedNFT.updateMap({ key: name, nft });
   const commitData = await mintedNFT.prepareCommitData({
     ownerPublicKey,
