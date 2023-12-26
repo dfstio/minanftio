@@ -260,17 +260,17 @@ const Post = () => {
       return;
     }
 
-    const key = "Minting Mina Avatar NFT";
+    const key = "Minting Mina Avatar Post";
 
     try {
       setMinting(true);
       message.loading({
-        content: `Minting NFT token: creating token metadata`,
+        content: `Minting post: creating token metadata`,
         key,
         duration: 240,
       });
-      const name = token.name[0] === "@" ? token.name : "@" + token.name;
-      let mintResult = await mintNFT(address, auth, token);
+      const name = token.name;
+      let mintResult = await post(address, auth, token);
       console.log("Mint result", mintResult);
       if (
         mintResult?.success === true &&
@@ -288,7 +288,7 @@ const Post = () => {
         fileSaver.saveAs(blob, name + ".json");
       } else {
         message.error({
-          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+          content: `Error minting post: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           key,
@@ -298,10 +298,10 @@ const Post = () => {
         return;
       }
       const jobId = mintResult.jobId;
-      mintResult = await waitForMint(jobId, auth);
+      mintResult = await waitForPost(jobId, auth);
       if (mintResult?.success === true && mintResult?.hash !== undefined) {
         message.success({
-          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
+          content: `Post minted successfully with transaction hash ${mintResult.hash}`,
           key,
           duration: 240,
         });
