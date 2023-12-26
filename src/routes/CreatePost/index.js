@@ -302,20 +302,12 @@ const Post = () => {
 
       mintResult = await commit(commitData, address, name, token.name, auth);
       console.log("Post upload metadata result", mintResult);
-      if (
-        mintResult?.success === true &&
-        mintResult?.jobId !== undefined &&
-        mintResult?.json !== undefined
-      ) {
+      if (mintResult?.success === true && mintResult?.jobId !== undefined) {
         message.loading({
           content: `Started mint job ${mintResult.jobId}`,
           key,
           duration: 240,
         });
-        const blob = new Blob([mintResult.json], {
-          type: "text/plain;charset=utf-8",
-        });
-        fileSaver.saveAs(blob, name + ".json");
       } else {
         message.error({
           content: `Error minting post: ${mintResult?.error ?? ""} ${
