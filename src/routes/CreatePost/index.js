@@ -111,6 +111,7 @@ const startToken = {
     attachments: "",
   },
   folder: "",
+  json: "",
 };
 
 /*
@@ -314,7 +315,7 @@ const Post = () => {
         setShowLink(true);
       } else
         message.error({
-          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+          content: `Error minting post: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           key,
@@ -471,7 +472,7 @@ const Post = () => {
     <div className="gx-main-content">
       <Row>
         <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-          <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
+          <Card className="gx-card" title=<IntlMessages id={"create.post"} />>
             <Form
               form={form}
               labelCol={{
@@ -488,20 +489,20 @@ const Post = () => {
               <Row>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
-                    name="mainimage"
-                    label="Main post image"
+                    name="json"
+                    label="Upload JSON with NFT data here"
                     rules={[
                       {
-                        required: false,
-                        message: "Please upload post image",
+                        required: true,
+                        message: "Please upload JSON with NFT data here",
                       },
                     ]}
                   >
                     <Upload
-                      name="mainimage"
+                      name="jsondata"
                       listType="picture-card"
                       className="avatar-uploader"
-                      accept="image/*"
+                      accept="application/json"
                       showUploadList={true}
                       multiple={false}
                       maxCount={1}
@@ -514,7 +515,10 @@ const Post = () => {
                       </div>
                     </Upload>
                   </Form.Item>
-
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     label="Post name"
                     name="name"
@@ -571,6 +575,34 @@ const Post = () => {
                 </Col>
 
                 <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+                  <Form.Item
+                    name="mainimage"
+                    label="Main post image"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please upload post image",
+                      },
+                    ]}
+                  >
+                    <Upload
+                      name="mainimage"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="image/*"
+                      showUploadList={true}
+                      multiple={false}
+                      maxCount={1}
+                      beforeUpload={beforeUpload}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">Main Image</div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+
                   <Form.Item name="mainvideo" label="Main Video/Audio">
                     <Upload
                       name="video"
