@@ -21,7 +21,7 @@ import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import botapi from "../../serverless/botapi";
-import { mintNFT, waitForMint } from "./mint";
+import { post, waitForPost } from "./post";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
@@ -148,7 +148,7 @@ const { REACT_APP_PINATA_JWT } = process.env;
 const mintText = "Free to create Mina NFT token for Christmas and New Year";
 //"$9 to create one Mina Avatar NFT token";
 
-const MintPrivate = () => {
+const Post = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
   const username = useSelector(({ blockchain }) => blockchain.username);
@@ -489,11 +489,11 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="mainimage"
-                    label="Main image"
+                    label="Main post image"
                     rules={[
                       {
-                        required: true,
-                        message: "Please upload NFT image",
+                        required: false,
+                        message: "Please upload post image",
                       },
                     ]}
                   >
@@ -516,12 +516,12 @@ const MintPrivate = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Name (like @myminanft)"
+                    label="Post name"
                     name="name"
                     rules={[
                       {
                         required: true,
-                        message: "Please name your NFT",
+                        message: "Please name your post",
                       },
                     ]}
                     placeholder="Please name your NFT like @myminanft"
@@ -591,52 +591,6 @@ const MintPrivate = () => {
                         </div>
                       </div>
                     </Upload>
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Type"
-                    name="type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please choose type",
-                      },
-                    ]}
-                  >
-                    <RadioGroup>
-                      <RadioButton value="individual">Individual</RadioButton>
-                      <RadioButton value="corporate">Corporate</RadioButton>
-                    </RadioGroup>
-                  </Form.Item>
-                  <Form.Item
-                    name="category"
-                    label="Category"
-                    hasFeedback
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select category",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Please select a category"
-                      onChange={categoryChange}
-                    >
-                      <Option value="MINA protocol">MINA protocol</Option>
-                      <Option value="Music">Music</Option>
-                      <Option value="Video">Video</Option>
-                      <Option value="Art">Art</Option>
-                      <Option value="Dance">Dance</Option>
-                      <Option value="Document">Document</Option>
-                      <Option value="Business">Business</Option>
-                      <Option value="Transaction">Transaction</Option>
-                      <Option value="Technology">Technology</Option>
-                      <Option value="Blockchain">Blockchain</Option>
-                      <Option value="Health">Health</Option>
-                      <Option value="Event">Event</Option>
-                      <Option value="Other">Other</Option>
-                    </Select>
                   </Form.Item>
                 </Col>
               </Row>
@@ -923,8 +877,8 @@ const MintPrivate = () => {
                 >
                   <span>
                     {address === ""
-                      ? "Please connect with Auro before creating NFT"
-                      : "You are creating NFT with owner address " + address}
+                      ? "Please connect with Auro before creating post"
+                      : "You are creating post with owner address " + address}
                     <br />
                     <br />
                     By clicking this button, you are confirming your agreement
@@ -945,11 +899,11 @@ const MintPrivate = () => {
                   disabled={mintDisabled}
                   loading={minting}
                 >
-                  {address === "" ? "Connect with AURO" : "Mint NFT"}
+                  {address === "" ? "Connect with AURO" : "Mint Post"}
                 </Button>
               </Form.Item>
               <Form.Item
-                label="NFT is minted: "
+                label="Post is minted: "
                 name="mintedlink"
                 hidden={!showLink}
               >
@@ -972,4 +926,4 @@ const MintPrivate = () => {
   );
 };
 
-export default MintPrivate;
+export default Post;
