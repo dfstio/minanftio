@@ -25,7 +25,7 @@ import { post, waitForPost } from "./post";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import { getFileData } from "../../blockchain/file";
+import { getJSON } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
 import { set } from "lodash";
@@ -114,35 +114,6 @@ const startToken = {
   json: "",
 };
 
-/*
-const STARTING_JSON = {
-  name: "@mynft",
-  description: "",
-  url: "",
-  type: "object",
-  image: "",
-  category: "",
-  type: "individual",
-  external_url: "minanft.io",
-  animation_url: "",
-
-  license: "Mina NFT V1",
-  license_id: "0",
-  title: "",
-  properties: { image: "", animation: "" },
-  private_content_description: "",
-  contains_private_content: false,
-  private: {
-    image: "",
-    video: "",
-    audio: "",
-    pdf: "",
-    files: "",
-    files_number: 0,
-  },
-};
-*/
-
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 const { REACT_APP_PINATA_JWT } = process.env;
 //const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
@@ -160,6 +131,8 @@ const Post = () => {
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
   const [hash, setHash] = useState("");
+  const [name, setName] = useState("");
+  const [nftAddress, setNftAddress] = useState("");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
@@ -182,8 +155,7 @@ const Post = () => {
     if (DEBUG) console.log("onValuesChange", values);
     let newToken = token;
 
-    if (values.name !== undefined)
-      newToken.name = values.name[0] == "@" ? values.name : "@" + values.name; //TODO: check name
+    if (values.name !== undefined) newToken.name = values.name;
     //if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
       newToken.description = values.description;
@@ -229,6 +201,14 @@ const Post = () => {
       newToken.calculateroot = values.calculateroot;
     if (values.storagetype !== undefined)
       newToken.storagetype = values.storagetype;
+    if (values.json !== undefined) {
+      newToken.json = values.json.file;
+      const json = await getJSON(values.json.file);
+      if (json !== undefined) {
+        if (json.name !== undefined) setName(json.name);
+        if (json.address !== undefined) setNftAddress(json.address);
+      }
+    }
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -515,6 +495,28 @@ const Post = () => {
                         <div className="ant-upload-text">JSON file</div>
                       </div>
                     </Upload>
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item hidden={name === ""}>
+                    <div
+                      className="gx-mt-4"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      NFT name: {name}
+                    </div>
+                  </Form.Item>
+                  <Form.Item hidden={nftAddress === ""}>
+                    <div
+                      className="gx-mt-4"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      NFT address: {nftAddress}
+                    </div>
                   </Form.Item>
                 </Col>
               </Row>

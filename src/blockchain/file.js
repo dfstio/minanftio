@@ -19,6 +19,31 @@ function readFileAsync(file) {
   });
 }
 
+function readJSONAsync(file) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsText(file);
+  });
+}
+
+export async function getJSON(file) {
+  let json = undefined;
+  try {
+    const text = await readJSONAsync(file);
+    json = JSON.parse(text);
+  } catch (err) {
+    console.error("getJSON error", file, err);
+  }
+  return json;
+}
+
 export async function getFileData(
   file,
   storageType,
