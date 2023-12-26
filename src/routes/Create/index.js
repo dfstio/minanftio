@@ -6,73 +6,86 @@ import MintMenuItem from "./MintMenu";
 
 import IntlMessages from "util/IntlMessages";
 
-const { REACT_APP_VIRTUOSO_BRANCH } = process.env;
+const Create = () => {
+  const address = useSelector(({ blockchain }) => blockchain.address);
 
-const Mint = () => {
-    const address = useSelector(({ blockchain }) => blockchain.address);
+  return (
+    <div className="gx-algolia-content-inner">
+      <Row>
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.create" />
+            title=<IntlMessages id="create.create" />
+            link="/create/nft"
+            button=<IntlMessages id="create.create.button" />
+            description=<IntlMessages id="create.create.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateKYC.png"
+            key="Create NFT"
+          />
+        </Col>
 
-    function add() {
-        console.log("Add balance clicked", address);
-        if (address !== "") api.add(address, 100, "Added $1 ");
-    }
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.post" />
+            title=<IntlMessages id="create.post.title" />
+            link="/create/post"
+            button=<IntlMessages id="create.post.button" />
+            description=<IntlMessages id="create.post.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateBilling.png"
+            key="Craete Post"
+          />
+        </Col>
 
-    return (
-        <div className="gx-algolia-content-inner">
-            {REACT_APP_VIRTUOSO_BRANCH === "polygon" ? (
-                <Row>
-                    <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
-                        <MintMenuItem
-                            creator="Your NFT Token"
-                            title="Create your own private NFT token"
-                            link="/pro"
-                            price="$10 for private NFT token or $100 for public NFT token"
-                            description="Private NFT token will be visible only to you on Mina NFT marketplace, except when you'll put it for sale. Public NFT token is always visible to everyone on Mina NFT marketplace"
-                            image="https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
-                            key="Private Mint"
-                        />
-                    </Col>
-                </Row>
-            ) : (
-                <Row>
-                    <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
-                        <MintMenuItem
-                            creator="Create Mina Avatar NFT"
-                            title="Create Mina Avatar NFT"
-                            link="/create/avatar"
-                            price="$9 for deployment of the Mina NFT and $19-$999 for reservation of name for one year (regular name is $19, short names like @sea and @gold are $49-$99, exclusive names like @shopping are $999)"
-                            description="Create personalised avatar NFTs and use them as an identity symbol across various social media. Mina Avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. MinaNFT is a space where art meets privacy"
-                            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
-                            key="Create Avatar"
-                        />
-                    </Col>
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator="Get Authorisation Token"
+            title="Get Authorisation Token"
+            link="https://t.me/minanft_bot?start=auth"
+            button="Get Token"
+            description="Get or renew your authorisation token by visiting MinaNFT telegram bot at https://t.me/minanft_bot?start=auth"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/AuthorisationToken.png"
+            key="Get Authorisation Token - Create"
+          />
+        </Col>
 
-                    <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
-                        <MintMenuItem
-                            creator="Create new post on MinaNFT"
-                            title="Create new post on MinaNFT"
-                            link="/create/post"
-                            price="$5 for deployment"
-                            description="Create new post on your Mina Avatar NFTs to host images and documents with verifiable proofs of authenticity. Youc can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. MinaNFT is a space where art meets privacy"
-                            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/minanft_profile_photo.jpg"
-                            key="Create Post"
-                        />
-                    </Col>
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.docs" />
+            title=<IntlMessages id="create.docs.title" />
+            link="https://docs.minanft.io"
+            button=<IntlMessages id="create.docs.button" />
+            description=<IntlMessages id="create.docs.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateDocs.png"
+            key="Docs - Create"
+          />
+        </Col>
 
-                    <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
-                        <MintMenuItem
-                            creator="Description of the Mina NFT project"
-                            title="Description of Mina NFT project"
-                            link=""
-                            price=""
-                            description="MinaNFT is an innovative NFT project leveraging the Mina blockchain's unique privacy features and AI technology. Our platform allows users to create personalised avatar NFTs and use them as an identity symbol across various social media. By interacting with our Telegram bot, users can describe avatar idea by texting or sending voice message in any language, and our AI will generate a unique NFT. Additionally, our avatar NFTs are equipped to host verifiable proofs of authenticity. Users can securely attach and share public and private sensitive content such as art, contracts, medical records, or ownership proofs, transforming traditional NFTs into versatile digital identities. Individuals and businesses are welcome to join MinaNFT, a space where art meets privacy, and personalize their digital footprint"
-                            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://content.nftvirtuoso.io/image/mintimages/deepnft.jpg"
-                            key="MinaNFT Description"
-                        />
-                    </Col>
-                </Row>
-            )}
-        </div>
-    );
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.library" />
+            title=<IntlMessages id="create.library.title" />
+            link="https://github.com/dfstio/minanft-lib"
+            button=<IntlMessages id="create.library.button" />
+            description=<IntlMessages id="create.library.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateLibrary.png"
+            key="Library - Create"
+          />
+        </Col>
+
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.support" />
+            title=<IntlMessages id="create.support.title" />
+            link="mailto:hello@minanft.io"
+            button=<IntlMessages id="create.support.button" />
+            description=<IntlMessages id="create.support.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateSupport.png"
+            key="Support- Create"
+          />
+        </Col>
+      </Row>
+    </div>
+  );
 };
 
-export default Mint;
+export default Create;

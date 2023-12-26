@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isMobile, isDesktop, isChrome } from "react-device-detect";
-import api from "../../serverless/api";
 import {
   Button,
   Row,
@@ -12,8 +10,8 @@ import {
   Card,
   Upload,
   Select,
+  Checkbox,
 } from "antd";
-import TokenItem from "../token/Token";
 import {
   LoadingOutlined,
   PlusOutlined,
@@ -21,34 +19,38 @@ import {
 } from "@ant-design/icons";
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
-import fileSaver from "file-saver";
 import Markdown from "markdown-to-jsx";
-
-import {
-  updateAddress,
-  updateVirtuosoBalance,
-  updatePublicKey,
-} from "../../appRedux/actions";
-import {
-  minaLogin,
-  //virtuosoRegisterPublicKey,
-  //virtuosoMint,
-  isModerator,
-  getVirtuosoBalance,
-} from "../../blockchain/mina";
+import botapi from "../../serverless/botapi";
+import { mintNFT, waitForMint } from "./mint";
+import fileSaver from "file-saver";
+import { updateAddress } from "../../appRedux/actions";
+import { minaLogin } from "../../blockchain/mina";
+import { getFileData } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
+import { set } from "lodash";
+import {
+  footerText,
+  footerAgreement,
+  footerContact,
+  footerAgreementLink,
+  footerEmail,
+  accountingEmail,
+} from "../../util/config";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
 
+/*
 const {
   addFileHashToIPFS,
   addToIPFS,
   encryptUnlockableToken,
   writeToken,
 } = require("../../blockchain/ipfs");
+const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
+*/
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -57,41 +59,35 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 const startToken = {
-  //  "contract": "0x49368c4ed51be6484705f07b63ebd92270923081",
-  //  "chainId": 80001,
-  tokenId: 17,
-  vrtTokenId: "VRT1-17",
+  tokenId: "@mynft",
   updated: 1633284972170,
-  //  "owner": "0xa73CC65aBfb96FD65D6EF407535CFDeBBF77fCbb",
+  creator: "",
   name: "",
   description: "",
+  url: "",
   shortdescription: "",
-  saleID: 0,
+  saleID: "0",
   onSale: false,
-  saleStatus: "on sale",
-  price: 101,
+  saleStatus: "not on sale",
+  price: 0,
   currency: "USD",
-  category: "Music",
+  category: "MINA protocol",
   image: "",
-  visibility: "private",
-  contains_unlockable_content: false,
-  unlockable_description: "",
+  type: "individual",
+  contains_private_content: false,
+  private_content_description: "",
+  storagetype: "IPFS",
   uri: {
     name: "",
     type: "object",
     image: "",
-    external_url: "nftvirtuoso.io",
+    external_url: "minanft.io",
     animation_url: "",
     description: "",
-    license: "Mina NFT Personal License Agreement V1",
+    license: "Mina NFT License Agreement V1",
     license_id: "1",
     license_url: "https://minanft.io/agreement/MinaNFT_agreement_v1.pdf",
-    contains_unlockable_content: false,
-    unlockable_content_encryption: {
-      unlockableContentKey:
-        "MetaMask.eth-sig-util.encrypt.x25519-xsalsa20-poly1305",
-      unlockableContent: "crypto-js.AES.encrypt",
-    },
+    contains_private_content: false,
     properties: {
       image: "",
       animation: "",
@@ -102,17 +98,6 @@ const startToken = {
         value: "",
       },
     ],
-  },
-  sale: {
-    price: 100,
-    type: "fixedprice",
-    currency: "usd",
-    comment: "test",
-    contains_unlockable_content: false,
-    operator: {
-      address: "",
-      time: 1632691467099,
-    },
   },
   //  "objectID": "80001.0x49368c4ed51be6484705f07b63ebd92270923081.17",
   unlockable: {
@@ -128,22 +113,25 @@ const startToken = {
   folder: "",
 };
 
+/*
 const STARTING_JSON = {
-  name: "My NFT",
+  name: "@mynft",
+  description: "",
+  url: "",
   type: "object",
   image: "",
   category: "",
-  visibility: "private",
-  external_url: "nftvirtuoso.io",
+  type: "individual",
+  external_url: "minanft.io",
   animation_url: "",
-  description: "",
-  license: "Mina NFT V1 personal",
+
+  license: "Mina NFT V1",
   license_id: "0",
   title: "",
   properties: { image: "", animation: "" },
-  unlockable_description: "",
-  contains_unlockable_content: false,
-  unlockable: {
+  private_content_description: "",
+  contains_private_content: false,
+  private: {
     image: "",
     video: "",
     audio: "",
@@ -152,77 +140,75 @@ const STARTING_JSON = {
     files_number: 0,
   },
 };
+*/
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
-const mintPrivateText =
-  "$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale";
-const mintPublicText =
-  "$100 to create one Public NFT token. Public NFT token will always be visible on Mina NFT marketplace";
+const { REACT_APP_PINATA_JWT } = process.env;
+//const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
+const mintText = "Free to create Mina NFT token for Christmas and New Year";
+//"$9 to create one Mina Avatar NFT token";
 
 const MintPrivate = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
+  const username = useSelector(({ blockchain }) => blockchain.username);
   const dispatch = useDispatch();
 
   const [token, setToken] = useState(startToken);
+  const [ipfs, setIpfs] = useState("");
+  const [auth, setAuth] = useState("");
+  const [link, setLink] = useState("");
+  const [hash, setHash] = useState("");
+  const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showUnlockable, setShowUnlockable] = useState(false);
-  const [allowUnlockable, setAllowUnlockable] = useState(false);
   const [mintDisabled, setMintDisabled] = useState(true);
-  const [mintPrice, setMintPrice] = useState(mintPrivateText);
-  const [moderator, setModerator] = useState(false);
+  const [mintPrice, setMintPrice] = useState(mintText);
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    async function checkModerator() {
-      const newModerator = await isModerator(address);
-      if (newModerator !== moderator) setModerator(newModerator);
-    }
-    checkModerator();
-  }, [address]);
 
   const checkCanMint = () => {
     let newMintDisabled = true;
-    if (
-      (token.name !== "" &&
-        token.description !== "" &&
-        token.main.image !== "") ||
-      moderator
-    )
+    if (address === "") newMintDisabled = false;
+    else if (token.name !== "" && token.main.image !== "")
       newMintDisabled = false;
     if (newMintDisabled !== mintDisabled) setMintDisabled(newMintDisabled);
-
-    let newShowUnlockable = false;
-    if (
-      allowUnlockable &&
-      address !== undefined &&
-      publicKey !== undefined &&
-      address !== "" &&
-      publicKey !== ""
-    )
-      newShowUnlockable = true;
-    if (newShowUnlockable !== showUnlockable)
-      setShowUnlockable(newShowUnlockable);
   };
 
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
     let newToken = token;
 
-    if (values.name !== undefined) newToken.name = values.name;
+    if (values.name !== undefined)
+      newToken.name = values.name[0] == "@" ? values.name : "@" + values.name; //TODO: check name
+    //if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
       newToken.description = values.description;
     if (values.unlockable_description !== undefined)
       newToken.unlockable_description = values.unlockable_description;
     if (values.category !== undefined) newToken.category = values.category;
+    if (values.public_key1 !== undefined)
+      newToken.public_key1 = values.public_key1;
+    if (values.public_key2 !== undefined)
+      newToken.public_key2 = values.public_key2;
+    if (values.public_value1 !== undefined)
+      newToken.public_value1 = values.public_value1;
+    if (values.public_value2 !== undefined)
+      newToken.public_value2 = values.public_value2;
+    if (values.private_key1 !== undefined)
+      newToken.private_key1 = values.private_key1;
+    if (values.private_key2 !== undefined)
+      newToken.private_key2 = values.private_key2;
+    if (values.private_value1 !== undefined)
+      newToken.private_value1 = values.private_value1;
+    if (values.private_value2 !== undefined)
+      newToken.private_value2 = values.private_value2;
+    if (values.auth !== undefined) setAuth(values.auth);
 
-    if (values.visibility !== undefined) {
-      newToken.visibility = values.visibility;
-      if (values.visibility == "private") setMintPrice(mintPrivateText);
-      if (values.visibility == "public") setMintPrice(mintPublicText);
+    if (values.type !== undefined) {
+      newToken.type = values.type;
     }
 
     if (values.mainimage !== undefined)
@@ -238,6 +224,10 @@ const MintPrivate = () => {
       newToken.unlockable.attachments = values.uattachments.fileList;
 
     if (values.folder !== undefined) newToken.folder = values.folder;
+    if (values.calculateroot !== undefined)
+      newToken.calculateroot = values.calculateroot;
+    if (values.storagetype !== undefined)
+      newToken.storagetype = values.storagetype;
 
     setToken(newToken);
     setCounter(counter + 1);
@@ -257,228 +247,212 @@ const MintPrivate = () => {
     checkCanMint();
   };
 
-  /*
-    const beforeUploadImage = async (file) => {
-
-        if(DEBUG) console.log("beforeUploadImage ", file);
-        setLoadingImage(true);
-        let newToken = token;
-        const key = 'IPFSimageloading';
-        message.loading({content: `Uploading ${file.name} to IPFS`, key});
-
-        const result = await addFileHashToIPFS(file);
-        if(DEBUG) console.log("Image File added to IPFS: ", result);
-        newToken.image = result.url;
-        newToken.uri.properties.image = result;
-        message.success({content: `File ${file.name} uploaded to ${result.url}`, key, duration: 5});
-        setToken(newToken);
-        setLoadingImage(false);
-        checkCanMint();
-        return false;
-  };
-
-    const beforeUploadVideo = async (file) => {
-        if(DEBUG) console.log("beforeUploadVideo ", file);
-        setLoadingVideo(true);
-        let newToken = token;
-        const key = 'IPFSvideoloading';
-        message.loading({content: `Uploading ${file.name} to IPFS`, key, duration: 60});
-        const result = await addFileHashToIPFS(file);
-        if(DEBUG) console.log("Video File added to IPFS: ", result);
-
-
-        newToken.uri.animation_url = result.url;
-        newToken.uri.properties.animation = result;
-        message.success({content: `File ${file.name} uploaded to ${result.url}`, key, duration: 5});
-        setToken(newToken);
-        setLoadingVideo(false);
-        checkCanMint();
-        return false;
-  };
-
-      const unlockableFiles = async (info) => {
-
-
-        let newToken = token;
-        newToken.unlockable.files = info.fileList;
-        newToken.unlockable.files_number = info.fileList.length;
-        setToken(newToken);
-        if(DEBUG) console.log("unlockableFiles: ", newToken.unlockable);
-
-        return false;
-  };
-
-
-
-  const beforeUploadUnlockableFiles = async (info) => {
-
-        if(DEBUG) console.log("before unlockableFiles ", info);
-        return false;
-  };
-
-  const beforeUnlockableImage = async (file) => {
-        let newToken = token;
-        newToken.unlockable.image = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockableImage: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-
-    const beforeUnlockableVideo = async (file) => {
-        let newToken = token;
-        newToken.unlockable.video = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockableVideo: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-
-    const beforeUnlockableAudio = async (file) => {
-        let newToken = token;
-        newToken.unlockable.audio = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockableAudio: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-
-    const beforeUnlockablePDF = async (file) => {
-        let newToken = token;
-        newToken.unlockable.pdf = file;
-        setToken(newToken);
-        if(DEBUG) console.log("beforeUnlockablePDF: ", file);
-        setCounter(counter+1);
-        return false;
-  };
-*/
-
   const beforeUpload = (file) => {
     return false;
   };
 
   const mint = async () => {
-    if (DEBUG) console.log("Mint token: ", token);
+    if (address === "") {
+      const newAddress = await minaLogin();
+      console.log("newAddress", newAddress);
+      dispatch(updateAddress(newAddress));
+      checkCanMint();
+      return;
+    }
 
-    setMinting(true);
-    const key = "MintingCustomNFT";
-    if (moderator)
-      message.loading({
-        content: `Preparing JSON...`,
-        key,
-        duration: 240,
-      });
-    else
-      message.loading({
-        content: `Minting NFT token - uploading to IPFS`,
-        key,
-        duration: 240,
-      });
+    const key = "Minting Mina Avatar NFT";
 
     try {
-      let unlockableResult = { path: "" };
-
-      if (token.contains_unlockable_content === true && !moderator) {
-        let key = publicKey;
-        if (key === "") key = await register();
-        const encryptedContent = await encryptUnlockableToken(token, key);
-        if (encryptedContent.key !== "")
-          unlockableResult = await addToIPFS(JSON.stringify(encryptedContent));
-      }
-
-      const mintJSON = await writeToken(token, !moderator);
-
-      let result = { path: "" };
-      if (moderator) {
-        const strJSON = JSON.stringify(mintJSON);
-        const blob = new Blob([strJSON], {
+      setMinting(true);
+      message.loading({
+        content: `Minting NFT token: creating token metadata`,
+        key,
+        duration: 240,
+      });
+      const name = token.name[0] === "@" ? token.name : "@" + token.name;
+      let mintResult = await mintNFT(address, auth, token);
+      console.log("Mint result", mintResult);
+      if (
+        mintResult?.success === true &&
+        mintResult?.jobId !== undefined &&
+        mintResult?.json !== undefined
+      ) {
+        message.loading({
+          content: `Started mint job ${mintResult.jobId}`,
+          key,
+          duration: 240,
+        });
+        const blob = new Blob([mintResult.json], {
           type: "text/plain;charset=utf-8",
         });
-        fileSaver.saveAs(blob, "content.json");
-        message.success({
-          content: `JSON downloaded`,
+        fileSaver.saveAs(blob, name + ".json");
+      } else {
+        message.error({
+          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
           key,
-          duration: 10,
+          duration: 20,
         });
         setMinting(false);
         return;
-      } else {
-        result = await addToIPFS(JSON.stringify(mintJSON));
       }
+      const jobId = mintResult.jobId;
+      mintResult = await waitForMint(jobId, auth);
+      if (mintResult?.success === true && mintResult?.hash !== undefined) {
+        message.success({
+          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
+          key,
+          duration: 240,
+        });
+        const linkURL = "https://minanft.io/" + name;
+        console.log("linkURL", linkURL);
+        const openResult = window.open(linkURL, "_blank");
+        console.log("openResult", openResult);
+        setLink(linkURL);
+        setHash("https://minascan.io/testworld/tx/" + mintResult.hash);
+        setShowLink(true);
+      } else
+        message.error({
+          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          key,
+          duration: 60,
+        });
+
+      /*
+
+      if (DEBUG) console.log("Mint token: ", ipfs, token);
+      if (ipfs !== "" && auth == "") {
+        message.loading({
+          content: `Deploying Mina NFT token - open telegram`,
+          key,
+          duration: 240,
+        });
+        const linkURL = "https://t.me/minanft_bot?start=" + ipfs;
+        window.open(linkURL);
+        setToken(startToken);
+        setMinting(false);
+        return;
+      } else if (ipfs !== "") {
+        message.loading({
+          content: `Deploying Mina NFT token - see messages in telegram`,
+          key,
+          duration: 240,
+        });
+        await botapi.mint(auth, ipfs);
+        setToken(startToken);
+        setMinting(false);
+        return;
+      }
+
+      setMinting(true);
+
+      message.loading({
+        content: `Minting Mina NFT token - uploading to IPFS`,
+        key,
+        duration: 240,
+      });
+
+      let unlockableResult = { path: "" };
+      /*
+    if(token.contains_private_content === true && !moderator)
+    {
+        let key = publicKey;
+        if (key === "") key = await register();
+        const encryptedContent = await encryptUnlockableToken(token, key);
+        if( encryptedContent.key !== "") unlockableResult = await addToIPFS(JSON.stringify(encryptedContent));
+    };
+
+      const mintJSON = await writeToken(token, true);
+
+      let result = { path: "" };
+      const strJSON = JSON.stringify(mintJSON);
+      const blob = new Blob([strJSON], {
+        type: "text/plain;charset=utf-8",
+      });
+      fileSaver.saveAs(blob, "minanft.json");
+      message.success({
+        content: `Mina NFT JSON downloaded`,
+        key,
+        duration: 10,
+      });
+
+      result = await addToIPFS(JSON.stringify(mintJSON));
+
+    if( moderator )
+    {
+        const strJSON = JSON.stringify(mintJSON);
+        const blob = new Blob([strJSON], {type: "text/plain;charset=utf-8"});
+        fileSaver.saveAs(blob, "content.json");
+        message.success({content: `JSON downloaded`, key, duration: 10});
+        setMinting(false);
+        return;
+    }
+    else
+    {
+        result = await addToIPFS(JSON.stringify(mintJSON));
+    };
+
 
       if (DEBUG) console.log("ipfsHash uploaded - uri: ", result.path); //, " unlockable: ", unlockableResult.path);
-      if (DEBUG)
-        console.log(
-          "Minting NFT with IPFS hashes ",
-          result.path,
-          unlockableResult.path
-        );
+      if (result.path) setIpfs(result.path);
+      //if(DEBUG) console.log("Minting NFT with IPFS hashes ", result.path, unlockableResult.path )
 
-      const myaddress = await minaLogin(false);
-      const mybalance = await getVirtuosoBalance(myaddress);
 
-      if (token.visibility === "private" && mybalance >= 100) {
-        message.loading({
-          content: `Minting NFT token - sending transaction to blockchain with IPFS hash ${result.path}`,
-          key,
-          duration: 240,
-        });
-        /*
-                const txresult = await virtuosoMint(
-                    myaddress,
-                    result.path,
-                    unlockableResult.path,
-                    false,
-                    "",
-                );
-                if (DEBUG) console.log("Mint  tx: ", txresult);
-                message.success({
-                    content: `NFT token minted successfully with transaction hash ${txresult.hash}`,
-                    key,
-                    duration: 10,
-                });
-                */
-      } else {
-        message.loading({
-          content: `Minting NFT token - preparing checkout session`,
-          key,
-          duration: 240,
-        });
+    const myaddress = await minaLogin(false);
+    const mybalance = await getVirtuosoBalance(myaddress);
 
-        const data = {
-          type: "mintItem",
-          minttype: "custom",
-          id: mintJSON.id,
-          time: mintJSON.time,
-          tokenId: 0,
-          price: token.visibility === "private" ? 10 : 100,
-          currency: "usd",
-          image: mintJSON.image,
-          name: token.name,
-          address: myaddress === "" ? "generate" : myaddress,
-          newTokenURI: result.path,
-          unlockableContentKey: unlockableResult.path,
-          onEscrow: false,
-          dynamicUri: "",
-          winstonMeta: JSON.stringify(logger.meta),
-        };
+    if( token.type === 'private' && mybalance >= 100)
+    {
+            message.loading({content: `Minting NFT token - sending transaction to blockchain with IPFS hash ${result.path}`, key, duration: 240});
 
-        let form = document.createElement("form");
-        form.action =
-          "/api/create-checkout-session?item=" +
-          encodeURIComponent(JSON.stringify(data));
-        form.method = "POST";
-        document.body.append(form);
-        form.submit();
-      }
+            const txresult = await virtuosoMint(myaddress, result.path, unlockableResult.path, false, "");
+            if(DEBUG) console.log("Mint  tx: ", txresult );
+            message.success({content: `NFT token minted successfully with transaction hash ${txresult.hash}`, key, duration: 10});
 
-      //const txresult = await api.mint(address, result.path, unlockableResult.path, false, "");
-      //if(DEBUG) console.log("Mint  tx: ", txresult );
-      //if( txresult.success ) message.success({content: `NFT token minted successfully with transaction hash ${txresult.data.hash}`, key, duration: 10});
-      //else message.error({content: `Error: NFT token was not minted`, key, duration: 10});
+    }
+    else
+    {
+           message.loading({content: `Minting NFT token - preparing checkout session`, key, duration: 240});
 
-      //message.success({content: `NFT token minted successfully with transaction hash ${txresult.hash}`, key, duration: 10});
-      setToken(startToken);
+           const data = {
+                                type:    "mintItem",
+                                minttype: "custom",
+                                id: mintJSON.id,
+                                time: mintJSON.time,
+                                tokenId: 0,
+                                price: (token.type === 'private')?10:100,
+                                currency: "usd",
+                                image: mintJSON.image,
+                                name: token.name,
+                                address:  (myaddress==="")?"generate":myaddress,
+                                newTokenURI: result.path,
+                                unlockableContentKey: unlockableResult.path,
+                                onEscrow: false,
+                                dynamicUri: "",
+                                winstonMeta: JSON.stringify(logger.meta)
+                              };
+
+            let form = document.createElement('form');
+            form.action =  "/api/create-checkout-session?item=" + encodeURIComponent(JSON.stringify(data));
+            form.method = 'POST';
+            document.body.append(form);
+            form.submit();
+    };
+
+
+    //const txresult = await api.mint(address, result.path, unlockableResult.path, false, "");
+    //if(DEBUG) console.log("Mint  tx: ", txresult );
+    //if( txresult.success ) message.success({content: `NFT token minted successfully with transaction hash ${txresult.data.hash}`, key, duration: 10});
+    //else message.error({content: `Error: NFT token was not minted`, key, duration: 10});
+
+    //message.success({content: `NFT token minted successfully with transaction hash ${txresult.hash}`, key, duration: 10});
+    
+    */
+      //setToken(startToken);
+      //if (address !== "") await getSignature(strJSON);
       setMinting(false);
     } catch (error) {
       console.log("Mint error", error);
@@ -491,69 +465,13 @@ const MintPrivate = () => {
     }
   };
 
-  async function register() {
-    if (DEBUG) console.log("Register clicked", address);
-    if (address !== undefined && address !== "") {
-      const key = "RegisterPublicKeyMint";
-      message.loading({
-        content: `To add unlockable content please provide public key in Metamask and confirm transaction`,
-        key,
-        duration: 60,
-      });
-      /*
-      const result = await virtuosoRegisterPublicKey(address);
-      if (result.publicKey !== "" && result.hash !== "") {
-        dispatch(updatePublicKey(result.publicKey));
-        message.success({
-          content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`,
-          key,
-          duration: 10,
-        });
-        return publicKey;
-      } else
-        message.error({
-          content: `Public key is not provided or written to blockchain`,
-          key,
-          duration: 10,
-        });
-        */
-    }
-    return "";
-  }
-
-  async function allowUnlockableContent() {
-    if (isChrome === false || isDesktop === false) {
-      message.error(
-        "Please use desktop version of Chrome with MetaMask to add unlockable content"
-      );
-      return;
-    }
-
-    if (address !== undefined && address !== "") {
-      let allow = false;
-      if (publicKey === undefined || publicKey === "" || publicKey === "a") {
-        const pk = await register();
-        if (pk !== "") allow = true;
-      } else if (publicKey !== "") allow = true;
-      if (allowUnlockable !== allow) setAllowUnlockable(allow);
-      if (allow) {
-        let newToken = token;
-        newToken.contains_unlockable_content = true;
-        setToken(newToken);
-      }
-    } else message.error("Please connect with MetaMask");
-  }
-
   checkCanMint();
 
   return (
     <div className="gx-main-content">
       <Row>
         <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-          <Card
-            className="gx-card"
-            title="Create new post for your Mina Avatar NFT"
-          >
+          <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
             <Form
               form={form}
               labelCol={{
@@ -598,7 +516,7 @@ const MintPrivate = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Name"
+                    label="Name (like @myminanft)"
                     name="name"
                     rules={[
                       {
@@ -606,15 +524,17 @@ const MintPrivate = () => {
                         message: "Please name your NFT",
                       },
                     ]}
-                    placeholder="Please name your NFT"
+                    placeholder="Please name your NFT like @myminanft"
                   >
-                    <Input />
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
 
                   <Form.Item
                     label={
                       <span>
-                        <span>Description - supports</span>
+                        <span>
+                          <IntlMessages id={"create.description"} />
+                        </span>
                         <span>
                           {" "}
                           <a
@@ -629,7 +549,7 @@ const MintPrivate = () => {
                     name="description"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Please describe your NFT",
                       },
                     ]}
@@ -674,58 +594,53 @@ const MintPrivate = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Visibility"
-                    name="visibility"
+                    label="Type"
+                    name="type"
                     rules={[
                       {
                         required: true,
-                        message: "Please choose visibility",
+                        message: "Please choose type",
                       },
                     ]}
                   >
                     <RadioGroup>
-                      <RadioButton value="private">Private</RadioButton>
-                      <RadioButton value="public">Public</RadioButton>
+                      <RadioButton value="individual">Individual</RadioButton>
+                      <RadioButton value="corporate">Corporate</RadioButton>
                     </RadioGroup>
                   </Form.Item>
-                  {moderator ? (
-                    <Form.Item
-                      label="Folder"
-                      name="folder"
-                      placeholder="Enter folder name"
+                  <Form.Item
+                    name="category"
+                    label="Category"
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select category",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Please select a category"
+                      onChange={categoryChange}
                     >
-                      <Input />
-                    </Form.Item>
-                  ) : (
-                    <Form.Item
-                      name="category"
-                      label="Category"
-                      hasFeedback
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please select category",
-                        },
-                      ]}
-                    >
-                      <Select
-                        placeholder="Please select a category"
-                        onChange={categoryChange}
-                      >
-                        <Option value="Music">Music</Option>
-                        <Option value="Video">Video</Option>
-                        <Option value="Art">Art</Option>
-                        <Option value="Dance">Dance</Option>
-                        <Option value="Document">Document</Option>
-                        <Option value="Technology">Technology</Option>
-                        <Option value="Health">Health</Option>
-                        <Option value="Event">Event</Option>
-                        <Option value="Butterflies">Butterflies</Option>
-                      </Select>
-                    </Form.Item>
-                  )}
+                      <Option value="MINA protocol">MINA protocol</Option>
+                      <Option value="Music">Music</Option>
+                      <Option value="Video">Video</Option>
+                      <Option value="Art">Art</Option>
+                      <Option value="Dance">Dance</Option>
+                      <Option value="Document">Document</Option>
+                      <Option value="Business">Business</Option>
+                      <Option value="Transaction">Transaction</Option>
+                      <Option value="Technology">Technology</Option>
+                      <Option value="Blockchain">Blockchain</Option>
+                      <Option value="Health">Health</Option>
+                      <Option value="Event">Event</Option>
+                      <Option value="Other">Other</Option>
+                    </Select>
+                  </Form.Item>
                 </Col>
               </Row>
+
               <Row>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item name="media" label="Additional Media">
@@ -736,7 +651,6 @@ const MintPrivate = () => {
                       accept="image/*,video/*,audio/*,.pdf"
                       showUploadList={true}
                       multiple={true}
-                      showUploadList={true}
                       //action="//jsonplaceholder.typicode.com/posts/"
                       beforeUpload={beforeUpload}
                       //onChange={this.handleChange}
@@ -772,77 +686,256 @@ const MintPrivate = () => {
                   </Form.Item>
                 </Col>
               </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Public key 1 (will be published to IPFS)"
+                    name="public_key1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Public value 1 (will be published to IPFS)"
+                    name="public_value1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Public key 2 (will be published to IPFS)"
+                    name="public_key2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Public value 2 (will be published to IPFS)"
+                    name="public_value2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
 
-              {showUnlockable ? (
-                <Row>
-                  <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                    <Form.Item
-                      label="Description of unlockable content"
-                      name="unlockable_description"
-                      placeholder="This text and content below can see only the owner of NFT"
+              <Row>
+                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                  <Card
+                    className="gx-card"
+                    title="Private data - will be verifiable on-chain without disclosing content"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private key 1 (will NOT be published to IPFS)"
+                    name="private_key1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private value 1 (will NOT be published to IPFS, but will be verifiable on-chain)"
+                    name="private_value1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private key 2 (will NOT be published to IPFS)"
+                    name="private_key2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain)"
+                    name="private_value2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label={<span>Private description</span>}
+                    name="unlockable_description"
+                    rules={[
+                      {
+                        required: false,
+                        message: "Please enter private description",
+                      },
+                    ]}
+                    placeholder="Please enter private description"
+                  >
+                    <TextArea
+                      autoSize={{
+                        minRows: 2,
+                        maxRows: 10,
+                      }}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    name="umedia"
+                    label={
+                      <span>
+                        <span>
+                          Private Media - will NOT be uploaded to IPFS. To make
+                          media, other binary files and big text files
+                          verifiable on-chain use
+                        </span>
+                        <span>
+                          {" "}
+                          <a
+                            href="https://github.com/dfstio/minanft-cli"
+                            target="_blank"
+                          >
+                            MinaNFT offline CLI tool
+                          </a>
+                        </span>
+                      </span>
+                    }
+                  >
+                    <Upload
+                      name="unlockablemedia"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="image/*,video/*,audio/*,.pdf"
+                      showUploadList={true}
+                      multiple={true}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
                     >
-                      <TextArea
-                        autoSize={{
-                          minRows: 2,
-                          maxRows: 10,
-                        }}
-                      />
-                    </Form.Item>
-                    <Form.Item name="umedia" label="Unlockable Media">
-                      <Upload
-                        name="unlockablemedia"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        accept="image/*,video/*,audio/*,.pdf"
-                        showUploadList={true}
-                        multiple={true}
-                        showUploadList={true}
-                        //action="//jsonplaceholder.typicode.com/posts/"
-                        beforeUpload={beforeUpload}
-                        //onChange={this.handleChange}
-                      >
-                        {" "}
-                        <div>
-                          <PlusOutlined />
-                          <div className="ant-upload-text">
-                            Image Video Audio PDF
-                          </div>
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">
+                          Image Video Audio PDF
                         </div>
-                      </Upload>
-                    </Form.Item>
-                  </Col>
-
-                  <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
-                    <Form.Item
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    name="uattachments"
+                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) in case checkbox below is checked"
+                  >
+                    <Upload
                       name="uattachments"
-                      label="Unlockable Attachments"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      showUploadList={true}
+                      multiple={true}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
                     >
-                      <Upload
-                        name="uattachments"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={true}
-                        multiple={true}
-                        //action="//jsonplaceholder.typicode.com/posts/"
-                        beforeUpload={beforeUpload}
-                        //onChange={this.handleChange}
-                      >
-                        {" "}
-                        <div>
-                          <PlusOutlined />
-                          <div className="ant-upload-text">Any files</div>
-                        </div>
-                      </Upload>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              ) : (
-                <Button onClick={allowUnlockableContent} disabled={moderator}>
-                  Add Unlockable Content
-                </Button>
-              )}
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">Any files</div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                  <Form.Item name="calculateroot" valuePropName="checked">
+                    <Checkbox>
+                      Calculate Merkle Tree root of the private attachments
+                      (takes time)
+                    </Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="NFT Storage"
+                    name="storagetype"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please choose storage",
+                      },
+                    ]}
+                  >
+                    <RadioGroup>
+                      <RadioButton value="IPFS">IPFS</RadioButton>
+                      <RadioButton value="Arweave">Arweave</RadioButton>
+                    </RadioGroup>
+                  </Form.Item>
+                </Col>
+              </Row>
+              {/*
               <Form.Item label="Price" name="price">
                 {mintPrice}
+              </Form.Item>
+                  */}
+
+              <Form.Item
+                label={
+                  <span>
+                    <span>Authorisation code. </span>
+                    <span>
+                      {" "}
+                      <a
+                        href="https://t.me/minanft_bot?start=auth"
+                        target="_blank"
+                      >
+                        Get it here
+                      </a>
+                    </span>
+                  </span>
+                }
+                name="auth"
+                placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+              >
+                <TextArea autoSize={{ minRows: 2, maxRows: 3 }} />
+              </Form.Item>
+              <Form.Item>
+                <div
+                  className="gx-mt-4"
+                  style={{
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  <span>
+                    {address === ""
+                      ? "Please connect with Auro before creating NFT"
+                      : "You are creating NFT with owner address " + address}
+                    <br />
+                    <br />
+                    By clicking this button, you are confirming your agreement
+                    with our
+                  </span>
+                  <span>
+                    <a href={footerAgreementLink} target="_blank">
+                      {footerAgreement}
+                    </a>
+                  </span>
+                </div>
               </Form.Item>
 
               <Form.Item>
@@ -852,40 +945,28 @@ const MintPrivate = () => {
                   disabled={mintDisabled}
                   loading={minting}
                 >
-                  {moderator ? "Create JSON" : "Create NFT"}
+                  {address === "" ? "Connect with AURO" : "Mint NFT"}
                 </Button>
+              </Form.Item>
+              <Form.Item
+                label="NFT is minted: "
+                name="mintedlink"
+                hidden={!showLink}
+              >
+                <div>
+                  <a href={link} target="_blank">
+                    {link}
+                  </a>
+                </div>
+                <div>
+                  <a href={hash} target="_blank">
+                    {hash}
+                  </a>
+                </div>
               </Form.Item>
             </Form>
           </Card>
         </Col>
-
-        {/*
-        <Col xxl={8} xl={8} lg={6} md={12} sm={24} xs={24}>
-            <TokenItem
-              item={token}
-              small={true}
-              preview={true}
-              key="MintSmallToken"
-
-              />
-        </Col>
-        <Col xxl={8}  xl={8} lg={12} md={12} sm={24} xs={24}>
-         <TokenItem
-              item={token}
-              key="MintBigToken"
-              preview={true}
-
-              />
-        </Col>
-        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
-         <TokenItem
-              item={token}
-              key="MintBigToken"
-              preview={true}
-
-              />
-        </Col>
-*/}
       </Row>
     </div>
   );
