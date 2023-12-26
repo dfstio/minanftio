@@ -146,8 +146,7 @@ const Post = () => {
   const checkCanMint = () => {
     let newMintDisabled = true;
     if (address === "") newMintDisabled = false;
-    else if (token.name !== "" && token.main.image !== "")
-      newMintDisabled = false;
+    else if (token.name !== "") newMintDisabled = false;
     if (newMintDisabled !== mintDisabled) setMintDisabled(newMintDisabled);
   };
 

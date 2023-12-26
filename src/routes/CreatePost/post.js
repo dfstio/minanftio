@@ -39,6 +39,7 @@ export async function post(address, auth, token) {
     console.error("Json address is undefined");
     return undefined;
   }
+  console.log("jsonData", jsonData);
 
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const blockchainInstance = "testworld2";
@@ -62,7 +63,7 @@ export async function post(address, auth, token) {
     nameService: nameServiceAddress,
   });
 
-  await mintedNFT.loadMetadata(jsonData);
+  await mintedNFT.loadMetadata(JSON.stringify(jsonData));
   const loadedJson = mintedNFT.toJSON();
   console.log(`json:`, JSON.stringify(loadedJson, null, 2));
 
