@@ -21,10 +21,10 @@ import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import botapi from "../../serverless/botapi";
-import { post, waitForPost } from "./post";
+import { post, commit, waitForPost } from "./post";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
-import { minaLogin } from "../../blockchain/mina";
+import { minaLogin, getFieldsSignature } from "../../blockchain/mina";
 import { getJSON } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
@@ -252,7 +252,50 @@ const Post = () => {
       });
       const name = token.name;
       let mintResult = await post(address, auth, token);
-      console.log("Mint result", mintResult);
+      console.log("Post upload metadata result", mintResult);
+      if (
+        mintResult?.success === true &&
+        mintResult?.commitData !== undefined &&
+        mintResult?.json !== undefined
+      ) {
+        message.loading({
+          content: `Please sign post transaction`,
+          key,
+          duration: 240,
+        });
+        const blob = new Blob([mintResult.json], {
+          type: "text/plain;charset=utf-8",
+        });
+        fileSaver.saveAs(blob, name + ".json");
+      } else {
+        message.error({
+          content: `Error uploading metadata: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          key,
+          duration: 20,
+        });
+        setMinting(false);
+        return;
+      }
+      const commitData = mintResult.commitData;
+      console.log("commitData", commitData);
+      const signature = await getFieldsSignature(
+        JSON.parse(commitData.update).update
+      );
+      if (signature === undefined || signature === "") {
+        message.error({
+          content: `Error signing metadata`,
+          key,
+          duration: 20,
+        });
+        setMinting(false);
+        return;
+      }
+      commitData.signature = signature;
+
+      mintResult = await commit(commitData, address, name, token.name, auth);
+      console.log("Post upload metadata result", mintResult);
       if (
         mintResult?.success === true &&
         mintResult?.jobId !== undefined &&
