@@ -125,18 +125,6 @@ export async function post(address, auth, token) {
       isPrivate: true,
     });
 
-  if (token.category !== undefined && token.category !== "")
-    nft.update({
-      key: "category",
-      value: token.category?.substring(0, 30) ?? "",
-    });
-
-  if (token.type !== undefined && token.type !== "")
-    nft.update({
-      key: "type",
-      value: token.type?.substring(0, 30) ?? "",
-    });
-
   if (
     token.main !== undefined &&
     token.main.image !== undefined &&
