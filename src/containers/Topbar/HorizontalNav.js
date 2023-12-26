@@ -47,7 +47,7 @@ const HorizontalNav = () => {
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
         key="avatars"
       >
-        <Link to="/avatars">
+        <Link to="/explore">
           <i className="icon icon-shopping-cart " />
           <IntlMessages id="sidebar.avatars" />
         </Link>

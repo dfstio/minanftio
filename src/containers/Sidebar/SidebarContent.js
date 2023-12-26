@@ -51,8 +51,8 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
             theme={themeType === THEME_TYPE_LITE ? "lite" : "dark"}
             mode="inline"
           >
-            <Menu.Item key="avatars">
-              <Link to="/avatars">
+            <Menu.Item key="explore">
+              <Link to="/explore">
                 <i className="icon icon-shopping-cart " />
                 <IntlMessages id="sidebar.avatars" />
               </Link>
