@@ -283,7 +283,12 @@ const Post = () => {
       const signature = await getFieldsSignature(
         JSON.parse(commitData.update).update
       );
-      if (signature === undefined || signature === "") {
+      if (
+        signature === undefined ||
+        signature === "" ||
+        signature.signature === undefined ||
+        signature.signature === ""
+      ) {
         message.error({
           content: `Error signing metadata`,
           key,
@@ -292,7 +297,8 @@ const Post = () => {
         setMinting(false);
         return;
       }
-      commitData.signature = signature;
+      commitData.signature = signature.signature;
+      console.log("Calling commit", address, name, token.name, auth);
 
       mintResult = await commit(commitData, address, name, token.name, auth);
       console.log("Post upload metadata result", mintResult);

@@ -243,6 +243,7 @@ export async function post(address, auth, token) {
 }
 
 export async function commit(commitData, address, nftName, postName, auth) {
+  console.log("commit", address, nftName, postName, auth);
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   if (address === undefined || address === "") {
     console.error("Address is undefined");
