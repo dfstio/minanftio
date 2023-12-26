@@ -19,7 +19,7 @@ const Create = () => {
             link="/create/nft"
             button=<IntlMessages id="create.create.button" />
             description=<IntlMessages id="create.create.description" />
-            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateKYC.png"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CreateNFT.png"
             key="Create NFT"
           />
         </Col>
@@ -31,7 +31,7 @@ const Create = () => {
             link="/create/post"
             button=<IntlMessages id="create.post.button" />
             description=<IntlMessages id="create.post.description" />
-            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateBilling.png"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CreatePost.png"
             key="Craete Post"
           />
         </Col>
