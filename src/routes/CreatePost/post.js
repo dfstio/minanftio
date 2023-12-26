@@ -79,6 +79,7 @@ export async function post(address, auth, token) {
 
   const nft = new MapData();
   nft.update({ key: "name", value: name });
+  nft.update({ key: "post", value: "true" });
   nft.update({ key: "time", value: Date.now().toString() });
 
   if (token.description !== undefined && token.description !== "") {

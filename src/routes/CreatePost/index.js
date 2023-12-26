@@ -249,7 +249,7 @@ const Post = () => {
         key,
         duration: 240,
       });
-      const name = token.name;
+
       let mintResult = await post(address, auth, token);
       console.log("Post upload metadata result", mintResult);
       if (
@@ -304,7 +304,7 @@ const Post = () => {
       console.log("Post upload metadata result", mintResult);
       if (mintResult?.success === true && mintResult?.jobId !== undefined) {
         message.loading({
-          content: `Started mint job ${mintResult.jobId}`,
+          content: `Started post mint job ${mintResult.jobId}`,
           key,
           duration: 240,
         });
