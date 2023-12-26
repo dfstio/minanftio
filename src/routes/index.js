@@ -7,20 +7,16 @@ const App = ({ match }) => (
   <div className="gx-main-content-wrapper">
     <Switch>
       <Route
-        path={`${match.url}avatars`}
-        component={asyncComponent(() => import("./Avatars"))}
+        path={`${match.url}explore`}
+        component={asyncComponent(() => import("./Explore"))}
       />
       <Route
         path={`${match.url}posts`}
         component={asyncComponent(() => import("./Posts"))}
       />
       <Route
-        path={`${match.url}create/avatar`}
-        component={asyncComponent(() => import("./CreateAvatar"))}
-      />
-      <Route
-        path={`${match.url}portal`}
-        component={asyncComponent(() => import("./Create"))}
+        path={`${match.url}create/nft`}
+        component={asyncComponent(() => import("./CreateNFT"))}
       />
       <Route
         path={`${match.url}create/post`}

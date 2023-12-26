@@ -285,7 +285,7 @@ const MintPrivate = () => {
         const blob = new Blob([mintResult.json], {
           type: "text/plain;charset=utf-8",
         });
-        fileSaver.saveAs(blob, name + ".json");
+        fileSaver.saveAs(blob, name + ".v1.json");
       } else {
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
@@ -929,7 +929,7 @@ const MintPrivate = () => {
                     <br />
                     By clicking this button, you are confirming your agreement
                     with our
-                  </span>{" "}
+                  </span>
                   <span>
                     <a href={footerAgreementLink} target="_blank">
                       {footerAgreement}

@@ -369,6 +369,31 @@ export async function getSignature(message) {
   return signature;
 }
 
+export async function getFieldsSignature(message) {
+  let signature = "";
+  const log = logm.child({
+    getSignatureMessage: message,
+    wf: "getSignature",
+  });
+
+  try {
+    const address = await getAddress();
+    if (address === "") return "";
+    const signResult = await window.mina
+      .signFields({
+        message,
+      })
+      .catch((err) => console.log(err));
+
+    log.debug("getFieldsSignature:", { signResult, address });
+    return signResult;
+  } catch (error) {
+    log.error("catch", error);
+  }
+
+  return signature;
+}
+
 /*
 export function convertAddress(address) {
   if (address !== "") return ethers.utils.getAddress(address);

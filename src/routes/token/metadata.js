@@ -106,7 +106,6 @@ export function prepareMetadata(token) {
       }
     }
   }
-
   try {
     const URI = {
       filename: token.name + ".json",

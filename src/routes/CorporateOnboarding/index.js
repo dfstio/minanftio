@@ -446,7 +446,7 @@ const Corporate = () => {
                             <br />
                             By clicking this button, you are confirming your
                             agreement with our
-                          </span>{" "}
+                          </span>
                           <span>
                             <a href={footerAgreementLink} target="_blank">
                               {footerAgreement}
