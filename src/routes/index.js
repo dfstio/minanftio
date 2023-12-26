@@ -56,15 +56,15 @@ const App = ({ match }) => (
       />
       <Route
         path={`${match.url}token/:chainId/:contract/:tokenId`}
-        component={asyncComponent(() => import("./token"))}
+        component={asyncComponent(() => import("./Token"))}
       />
       <Route
         path={`${match.url}token/:tokenId`}
-        component={asyncComponent(() => import("./token"))}
+        component={asyncComponent(() => import("./Token"))}
       />
       <Route
         path={`${match.url}@:tokenId`}
-        component={asyncComponent(() => import("./token"))}
+        component={asyncComponent(() => import("./Token"))}
       />
     </Switch>
   </div>
