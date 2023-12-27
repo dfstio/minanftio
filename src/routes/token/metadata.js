@@ -40,11 +40,15 @@ export function prepareMetadata(token) {
               });
               break;
             case "string":
-              strings.push({
-                key: key,
-                data: properties[key].data,
-                id: strings.length,
-              });
+              if (
+                token.type === "nft" ||
+                (key !== "name" && key !== "time" && key !== "post")
+              )
+                strings.push({
+                  key: key,
+                  data: properties[key].data,
+                  id: strings.length,
+                });
               break;
             case "image":
               media.push({
