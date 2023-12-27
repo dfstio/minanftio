@@ -108,7 +108,7 @@ export function prepareMetadata(token) {
   }
   try {
     const URI = {
-      filename: token.name + ".json",
+      filename: token.name + ".v" + token.version + ".public.json",
       mimeType: "application/json",
       size: 0,
       storage: token.uri,
