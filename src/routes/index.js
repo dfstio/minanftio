@@ -59,6 +59,10 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./token"))}
       />
       <Route
+        path={`${match.url}post/:tokenId/:postId`}
+        component={asyncComponent(() => import("./token"))}
+      />
+      <Route
         path={`${match.url}token/:tokenId`}
         component={asyncComponent(() => import("./token"))}
       />

@@ -6,16 +6,28 @@ const languageData = [
     icon: "us",
   },
   {
+    languageId: "turkish",
+    locale: "tr",
+    name: "Türkçe",
+    icon: "tr",
+  },
+  {
     languageId: "italian",
     locale: "it",
     name: "Italiano",
     icon: "it",
   },
   {
-    languageId: "turkish",
-    locale: "tr",
-    name: "Türkçe",
-    icon: "tr",
+    languageId: "spanish",
+    locale: "es",
+    name: "Español",
+    icon: "es",
+  },
+  {
+    languageId: "french",
+    locale: "fr",
+    name: "Français",
+    icon: "fr",
   },
 ];
 export default languageData;

@@ -367,5 +367,7 @@
   "create.support": "Support",
   "create.support.title": "E-mail Support",
   "create.support.button": "Get Support",
-  "create.support.description": "Get support by e-mail from the Mina NFT team for any issues or queries."
+  "create.support.description": "Get support by e-mail from the Mina NFT team for any issues or queries.",
+  "not.translated": "Not Translated",
+  "sidebar.algolia.nft": "NFT"
 }

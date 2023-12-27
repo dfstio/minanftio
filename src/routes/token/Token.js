@@ -1306,7 +1306,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     )}
                   </div>
                   <div className="gx-mb-3">
-                    {item.category}
+                    Address:{" "}
                     <a href={item.minaExplorer} target="_blank">
                       {" "}
                       {item.minaPublicKey}{" "}

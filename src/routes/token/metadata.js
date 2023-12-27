@@ -40,11 +40,15 @@ export function prepareMetadata(token) {
               });
               break;
             case "string":
-              strings.push({
-                key: key,
-                data: properties[key].data,
-                id: strings.length,
-              });
+              if (
+                token.type === "nft" ||
+                (key !== "name" && key !== "time" && key !== "post")
+              )
+                strings.push({
+                  key: key,
+                  data: properties[key].data,
+                  id: strings.length,
+                });
               break;
             case "image":
               media.push({
@@ -107,18 +111,20 @@ export function prepareMetadata(token) {
     }
   }
   try {
-    const URI = {
-      filename: token.name + ".v" + token.version + ".public.json",
-      mimeType: "application/json",
-      size: 0,
-      storage: token.uri,
-      type: "file",
-    };
+    if (token.type === "nft") {
+      const URI = {
+        filename: token.name + ".v" + token.version + ".public.json",
+        mimeType: "application/json",
+        size: 0,
+        storage: token.uri,
+        type: "file",
+      };
 
-    attachments.push({
-      data: URI,
-      id: attachments.length,
-    });
+      attachments.push({
+        data: URI,
+        id: attachments.length,
+      });
+    }
     //const properties = JSON.parse(token.properties);
     iterateProperties(token.properties);
   } catch (error) {
