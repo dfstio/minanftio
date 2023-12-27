@@ -145,7 +145,7 @@ export async function post(address, auth, token) {
       };
     }
     console.log("imageData", imageData);
-    nft.updateFileData({ key: `image`, type: "image", data: imageData });
+    nft.updateFileData({ key: `image`, type: "image", fileData: imageData });
   }
 
   async function addFile(file, isPrivate = false, calculateRoot = false) {
@@ -165,7 +165,7 @@ export async function post(address, auth, token) {
     nft.updateFileData({
       key: file.name.substring(0, 30),
       type: "file",
-      data: fileData,
+      fileData: fileData,
       isPrivate: isPrivate ?? false,
     });
   }
