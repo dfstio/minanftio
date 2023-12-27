@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { updatePublicKey } from "../appRedux/actions";
 import {
   ClearRefinements,
   HierarchicalMenu,
@@ -11,6 +12,7 @@ import {
   Configure,
 } from "react-instantsearch-dom";
 import IntlMessages from "../../util/IntlMessages";
+import api from "./api";
 
 const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);
@@ -18,6 +20,8 @@ const chainId = Number(REACT_APP_CHAIN_ID);
 const { Sider } = Layout;
 const Sidebar = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
+  const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
+  const dispatch = useDispatch();
 
   const [filter, setFilter] = useState(`type:nft`);
 
@@ -28,10 +32,13 @@ const Sidebar = () => {
   function onChange(e) {
     if (address !== "") {
       setDisabled(false);
+
       if (e.target.checked === true) {
-        const filterStr = `owner:${address} AND type:nft`;
+        let filterStr = `type:nft`;
+        if (publicKey !== undefined || publicKey !== "")
+          filterStr = `owner:${publicKey} AND type:nft`;
         setFilter(filterStr);
-        //console.log("On change", e.target.checked, filterStr);
+        console.log("On change", e.target.checked, filterStr);
       } else {
         const filterStr = `type:nft`;
         setFilter(filterStr);
@@ -43,15 +50,28 @@ const Sidebar = () => {
   }
 
   useEffect(() => {
-    if (address === "") {
-      setDisabled(true);
-      setFilter(`type:nft`);
-    } else {
-      setDisabled(false);
-      const filterStr = `type:nft`;
-      setFilter(filterStr);
+    async function loadHash() {
+      if (address === "") {
+        setDisabled(true);
+        setFilter(`type:nft`);
+      } else {
+        setDisabled(false);
+        const filterStr = `type:nft`;
+        setFilter(filterStr);
+      }
     }
+    loadHash();
   }, [address]);
+
+  useEffect(() => {
+    async function fetchHash() {
+      const result = await api.hash(address);
+      console.log("Hash result: ", result);
+      if (result.hash !== undefined && result.hash !== "")
+        dispatch(updatePublicKey(result.hash));
+    }
+    fetchHash();
+  }, [dispatch, address]);
 
   return (
     <Sider className="gx-algolia-sidebar">
