@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePublicKey } from "../appRedux/actions";
+import { updatePublicKey } from "../../appRedux/actions";
 import {
   ClearRefinements,
   HierarchicalMenu,
