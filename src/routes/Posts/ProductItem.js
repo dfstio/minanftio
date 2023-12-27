@@ -21,7 +21,7 @@ const ProductItem = ({ item }) => {
     buttonId = "sidebar.algolia.sell";
     canSell = true;
   }
-  const tokenPath = item.tokenId;
+  const tokenPath = "post/" + item.nft + "/" + item.tokenId;
 
   return (
     <div className="gx-product-item gx-product-vertical">
