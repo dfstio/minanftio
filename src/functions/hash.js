@@ -1,5 +1,5 @@
-import { Poseidon, PublicKey } from "o1js";
-import { MinaNFT, accountBalanceMina } from "minanft";
+//import { Poseidon, PublicKey } from "o1js";
+//import { MinaNFT, accountBalanceMina } from "minanft";
 const logger = require("../serverless/winston");
 const logmodule = logger.debug.child({ winstonModule: "hash module" });
 
@@ -24,6 +24,7 @@ exports.handler = async (event, context) => {
     //log.debug("test debug", {body});
     log.debug("hash function call", { body });
 
+    /*
     if (
       body.address !== undefined &&
       body.address !== null &&
@@ -34,6 +35,7 @@ exports.handler = async (event, context) => {
       hash = Poseidon.hash(publicKey.toFields()).toJSON();
       balance = await accountBalanceMina(body.address);
     }
+    */
     console.log("hash", hash);
     console.log("balance", balance);
 

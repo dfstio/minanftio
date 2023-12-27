@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePublicKey } from "../../appRedux/actions";
+//import { updatePublicKey } from "../../appRedux/actions";
 import {
   ClearRefinements,
   HierarchicalMenu,
@@ -12,7 +12,7 @@ import {
   Configure,
 } from "react-instantsearch-dom";
 import IntlMessages from "../../util/IntlMessages";
-import api from "../../serverless/api";
+//import api from "../../serverless/api";
 
 const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);
@@ -20,8 +20,8 @@ const chainId = Number(REACT_APP_CHAIN_ID);
 const { Sider } = Layout;
 const Sidebar = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
-  const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
-  const dispatch = useDispatch();
+  //const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
+  //const dispatch = useDispatch();
 
   const [filter, setFilter] = useState(`type:nft`);
 
@@ -35,8 +35,8 @@ const Sidebar = () => {
 
       if (e.target.checked === true) {
         let filterStr = `type:nft`;
-        if (publicKey !== undefined || publicKey !== "")
-          filterStr = `owner:${publicKey} AND type:nft`;
+        //if (publicKey !== undefined || publicKey !== "")
+        //  filterStr = `owner:${publicKey} AND type:nft`;
         setFilter(filterStr);
         console.log("On change", e.target.checked, filterStr);
       } else {
@@ -62,7 +62,7 @@ const Sidebar = () => {
     }
     loadHash();
   }, [address]);
-
+  /*
   useEffect(() => {
     async function fetchHash() {
       const result = await api.hash(address);
@@ -72,7 +72,7 @@ const Sidebar = () => {
     }
     fetchHash();
   }, [dispatch, address]);
-
+*/
   return (
     <Sider className="gx-algolia-sidebar">
       <div className="gx-algolia-sidebar-content">
