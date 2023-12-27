@@ -19,6 +19,7 @@ const Token = ({ match }) => {
       match.params.chainId,
       match.params.contract,
       match.params.tokenId,
+      match.params.postId,
       "match",
       match
     );
