@@ -129,27 +129,13 @@ export async function initAccount(
   handleChainChanged,
   handleAccountsChanged
 ) {
-  let address = "";
-  try {
-    if (window.mina !== undefined) {
-      const chainId = await window.mina.requestNetwork();
-      let account = await window.mina.mina_accounts();
-      console.log("getAddress account", account, chainId);
-
-      if (account.length > 0 && chainId === "Berkeley") {
-        address = account[0];
-      }
-    }
-  } catch (error) {
-    // if user reject, requestAccounts will throw an error with code and message filed
-    console.log("getAddress", error.message, error.code);
-  }
-  console.log("getAddress address", address);
+  console.log("initAccount called");
+  const address = await getAddress();
   return address;
 }
 
 export async function getAddress(force = false) {
-  //if(DEBUG) console.log("getAddress called");
+  console.log("getAddress called");
   let address = "";
   try {
     if (window.mina !== undefined) {
