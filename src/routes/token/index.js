@@ -27,7 +27,12 @@ const Token = ({ match }) => {
 
   useEffect(() => {
     async function getItem() {
-      let objectID = match.params.tokenId.toString();
+      let objectID =
+        match.params.postId === undefined
+          ? match.params.tokenId.toString()
+          : match.params.tokenId.toString() +
+            "." +
+            match.params.postId.toString();
       if (objectID[0] !== "@") objectID = "@" + objectID;
       if (DEBUG) console.log("Token objectID", objectID);
       try {
