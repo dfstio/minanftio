@@ -95,7 +95,7 @@ export async function post(address, auth, token) {
   ) {
     nft.updateText({
       key: `privatedescription`,
-      text: token.description,
+      text: token.unlockable_description,
       isPrivate: true,
     });
   }
