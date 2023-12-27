@@ -34,16 +34,14 @@ const BuyButton = ({ item }) => {
                 log.info(`Buy clicked on token ${item.tokenId}`);
 
                 message.loading("Preparing checkout page", 10);
-                //const myaddress = await minaLogin(false);
-                //dispatch(updateAddress(myaddress));
-                const myaddress = address;
+                const myaddress = await minaLogin(false);
+                dispatch(updateAddress(myaddress));
 
-                if (true) {
-                    //myaddress !== item.owner)
+                if (myaddress !== item.owner) {
                     const data = {
                         type: "buy",
                         address: myaddress === "" ? "generate" : myaddress,
-                        //saleID:  item.saleID.toString(),
+                        saleID: item.saleID.toString(),
                         tokenId: item.tokenId.toString(),
                         winstonMeta: JSON.stringify(logger.meta),
                     };

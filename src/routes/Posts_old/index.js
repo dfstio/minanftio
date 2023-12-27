@@ -36,7 +36,7 @@ const App = (props) => {
     return (
         <InstantSearch
             className="gx-main-content"
-            indexName="minanft"
+            indexName="posts"
             searchState={props.searchState}
             createURL={props.createURL}
             searchClient={searchClient}
