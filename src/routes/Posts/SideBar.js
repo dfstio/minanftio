@@ -87,19 +87,6 @@ const Sidebar = () => {
 
           <Panel
             header=<span>
-              <IntlMessages id="sidebar.algolia.onsale" />
-            </span>
-          >
-            <RefinementList
-              className="gx-algolia-refinementList"
-              attribute="saleStatus"
-              operator="or"
-              limit={5}
-            />
-          </Panel>
-
-          <Panel
-            header=<span>
               <IntlMessages id="sidebar.algolia.category" />
             </span>
           >
@@ -133,29 +120,6 @@ const Sidebar = () => {
           <RatingMenu className="gx-algolia-refinementList" attribute="owner" max={5}/>
         </Panel>
 */}
-          <Panel
-            header=<span>
-              <IntlMessages id="sidebar.algolia.price" />
-            </span>
-          >
-            <RangeInput
-              className="gx-algolia-refinementList"
-              attribute="price"
-            />
-          </Panel>
-
-          <Panel
-            header=<span>
-              <IntlMessages id="sidebar.algolia.currency" />
-            </span>
-          >
-            <RefinementList
-              className="gx-algolia-refinementList"
-              attribute="currency"
-              operator="or"
-              limit={5}
-            />
-          </Panel>
         </div>
       </div>
     </Sider>
