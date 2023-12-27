@@ -87,6 +87,21 @@ const Sidebar = () => {
 
           <Panel
             header=<span>
+              <IntlMessages id="sidebar.algolia.nft" />
+            </span>
+          >
+            <RefinementList
+              className="gx-algolia-refinementList"
+              attribute="nft"
+              operator="or"
+              limit={10}
+              searchable
+              showMore
+            />
+          </Panel>
+
+          <Panel
+            header=<span>
               <IntlMessages id="sidebar.algolia.category" />
             </span>
           >
