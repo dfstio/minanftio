@@ -119,8 +119,8 @@ export function prepareMetadata(token) {
       data: URI,
       id: attachments.length,
     });
-    const properties = JSON.parse(token.properties);
-    iterateProperties(properties);
+    //const properties = JSON.parse(token.properties);
+    iterateProperties(token.properties);
   } catch (error) {
     console.error(`Error: ${error}`);
   }
