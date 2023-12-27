@@ -247,7 +247,7 @@ const Post = () => {
       message.loading({
         content: `Minting post: creating token metadata`,
         key,
-        duration: 240,
+        duration: 600,
       });
 
       let mintResult = await post(address, auth, token);
@@ -261,7 +261,7 @@ const Post = () => {
         message.loading({
           content: `Please sign post transaction`,
           key,
-          duration: 240,
+          duration: 600,
         });
         const blob = new Blob([mintResult.json], {
           type: "text/plain;charset=utf-8",
@@ -273,7 +273,7 @@ const Post = () => {
             mintResult?.reason ?? ""
           }`,
           key,
-          duration: 20,
+          duration: 60,
         });
         setMinting(false);
         return;
@@ -292,7 +292,7 @@ const Post = () => {
         message.error({
           content: `Error signing metadata`,
           key,
-          duration: 20,
+          duration: 60,
         });
         setMinting(false);
         return;
@@ -306,7 +306,7 @@ const Post = () => {
         message.loading({
           content: `Started post mint job ${mintResult.jobId}`,
           key,
-          duration: 240,
+          duration: 600,
         });
       } else {
         message.error({
@@ -314,7 +314,7 @@ const Post = () => {
             mintResult?.reason ?? ""
           }`,
           key,
-          duration: 20,
+          duration: 60,
         });
         setMinting(false);
         return;
