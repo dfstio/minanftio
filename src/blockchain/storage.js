@@ -14,8 +14,7 @@ export function storageUrl(storage, big = false, nocache = false) {
   if (storage[0] === "i") url = ipfsUrl + url2;
   else if (storage[0] === "a") url = arweaveUrl + url2;
   else {
-    console.error("Unknown storage media");
-    return "";
+    return storage;
   }
 
   if (nocache === true) return url;

@@ -71,7 +71,7 @@ export async function mintNFT(address, auth, token) {
   ) {
     nft.updateText({
       key: `privatedescription`,
-      text: token.description,
+      text: token.unlockable_description,
       isPrivate: true,
     });
   }

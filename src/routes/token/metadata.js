@@ -108,7 +108,7 @@ export function prepareMetadata(token) {
   }
   try {
     const URI = {
-      filename: token.name + ".json",
+      filename: token.name + ".v" + token.version + ".public.json",
       mimeType: "application/json",
       size: 0,
       storage: token.uri,
@@ -119,8 +119,8 @@ export function prepareMetadata(token) {
       data: URI,
       id: attachments.length,
     });
-    const properties = JSON.parse(token.properties);
-    iterateProperties(properties);
+    //const properties = JSON.parse(token.properties);
+    iterateProperties(token.properties);
   } catch (error) {
     console.error(`Error: ${error}`);
   }
