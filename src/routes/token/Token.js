@@ -500,7 +500,10 @@ const Attachment = ({ attachment }) => {
   async function onClick() {
     if (DEBUG) console.log("Attachment clicked", attachment.filename, size);
     setLoading(true);
-    let url = attachment.storage === undefined ? "" : attachment.storage;
+    let url =
+      attachment.storage === undefined
+        ? ""
+        : storageUrl(attachment.storage, true, true);
 
     /*
      "https://gateway.pinata.cloud/ipfs/" + attachment.storage.slice(2);
