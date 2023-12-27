@@ -111,18 +111,20 @@ export function prepareMetadata(token) {
     }
   }
   try {
-    const URI = {
-      filename: token.name + ".v" + token.version + ".public.json",
-      mimeType: "application/json",
-      size: 0,
-      storage: token.uri,
-      type: "file",
-    };
+    if (token.type === "nft") {
+      const URI = {
+        filename: token.name + ".v" + token.version + ".public.json",
+        mimeType: "application/json",
+        size: 0,
+        storage: token.uri,
+        type: "file",
+      };
 
-    attachments.push({
-      data: URI,
-      id: attachments.length,
-    });
+      attachments.push({
+        data: URI,
+        id: attachments.length,
+      });
+    }
     //const properties = JSON.parse(token.properties);
     iterateProperties(token.properties);
   } catch (error) {
