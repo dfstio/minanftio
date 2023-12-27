@@ -12,7 +12,7 @@ import {
   Configure,
 } from "react-instantsearch-dom";
 import IntlMessages from "../../util/IntlMessages";
-import api from "./api";
+import api from "../../serverless/api";
 
 const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);

@@ -29,9 +29,9 @@ exports.handler = async (event, context) => {
       body.address !== null &&
       body.address !== ""
     ) {
+      MinaNFT.minaInit("testworld2");
       const publicKey = PublicKey.fromBase58(body.address);
       hash = Poseidon.hash(publicKey.toFields()).toJSON();
-      MinaNFT.minaInit("testworld2");
       balance = await accountBalanceMina(body.address);
     }
     console.log("hash", hash);
