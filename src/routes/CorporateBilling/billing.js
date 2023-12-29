@@ -56,11 +56,9 @@ timeFinished
     return {
       key: row.jobId,
       id: row.id,
-      jobId: row.jobId,
       jobName: row.jobName,
       jobStatus: row.jobStatus,
       task: row.task,
-      developer: row.developer,
       billedDuration,
       timeCreated: row.timeCreated,
       timeFinished: row.timeFinished,
