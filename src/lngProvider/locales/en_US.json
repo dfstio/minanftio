@@ -369,5 +369,10 @@
   "create.support.button": "Get Support",
   "create.support.description": "Get support by e-mail from the Mina NFT team for any issues or queries.",
   "not.translated": "Not Translated",
-  "sidebar.algolia.nft": "NFT"
+  "sidebar.algolia.nft": "NFT",
+  "sidebar.proofs": "Proofs",
+  "proofs.create": "Create Proof",
+  "proofs.create.title": "Create proofs for NFT attributes",
+  "proofs.create.button": "Create Proof",
+  "proofs.create.description": "Create a proof for an private or public attributes of an NFT."
 }
