@@ -2,7 +2,38 @@ import { MinaNFT, api } from "minanft";
 
 const { REACT_APP_JWT } = process.env;
 
-export async function queryBilling(auth) {
+export function prepareTable(token) {
+  const strings = [];
+
+  function iterateProperties(properties, level = 0) {
+    for (const key in properties) {
+      console.log(`key:`, key, properties[key]);
+
+      switch (properties[key].kind) {
+        case "string":
+          strings.push({
+            key: key,
+            value: properties[key].data,
+            status: properties[key].isPrivate === "true" ? "private" : "public",
+            id: strings.length,
+          });
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
+  try {
+    iterateProperties(token.properties);
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  }
+
+  return strings;
+}
+
+export async function prove(auth) {
   console.log("queryBilling start", auth);
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);

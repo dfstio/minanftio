@@ -1,16 +1,4 @@
 import React, { useState, useEffect } from "react";
-import api from "../../serverless/api";
-import { isMobile, isDesktop, isChrome } from "react-device-detect";
-import axios from "axios";
-import {
-  footerText,
-  footerAgreement,
-  footerContact,
-  footerAgreementLink,
-  footerEmail,
-  accountingEmail,
-} from "../../util/config";
-
 import {
   Button,
   message,
@@ -24,27 +12,18 @@ import {
   Select,
   Table,
 } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import IntlMessages from "util/IntlMessages";
 import {
   LoadingOutlined,
   PlusOutlined,
   InboxOutlined,
 } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  updateAddress,
-  updateVirtuosoBalance,
-  updatePublicKey,
-} from "../../appRedux/actions";
-import {
-  minaLogin,
-  //virtuosoRegisterPublicKey,
-  getSignature,
-} from "../../blockchain/mina";
-
-import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
-import { queryBilling } from "./billing";
+import { prepareTable, prove } from "./prove";
+import { getJSON } from "../../blockchain/file";
+import { set } from "lodash";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -59,43 +38,23 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const columns = [
   {
-    title: "Created",
-    dataIndex: "created",
-    key: "created",
+    title: "Key",
+    dataIndex: "key",
+    key: "key",
   },
   {
-    title: "Job Name",
-    dataIndex: "jobName",
-    key: "jobName",
+    title: "Value",
+    dataIndex: "value",
+    key: "value",
   },
   {
-    title: "Job Task",
-    dataIndex: "task",
-    key: "task",
-  },
-  {
-    title: "Job Status",
-    dataIndex: "jobStatus",
-    key: "jobStatus",
-  },
-  {
-    title: "Billed time (ms)",
-    dataIndex: "billedDuration",
-    key: "billedDuration",
-  },
-  {
-    title: "Job Duration (ms)",
-    dataIndex: "duration",
-    key: "duration",
-  },
-  {
-    title: "Job Id",
-    dataIndex: "jobId",
-    key: "jobId",
+    title: "Type",
+    dataIndex: "type",
+    key: "type",
   },
 ];
 
-const CorporateBilling = () => {
+const ProveAttributes = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
   const balance = useSelector(({ blockchain }) => blockchain.balance);
@@ -109,7 +68,10 @@ const CorporateBilling = () => {
   const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
-  const [report, setReport] = useState("");
+  const [name, setName] = useState("");
+  const [nftAddress, setNftAddress] = useState("");
+  const [json, setJson] = useState(undefined);
+  const [table, setTable] = useState([]);
   const [total, setTotal] = useState("");
   const [amount, setAmount] = useState("");
   const [minted, setMinted] = useState("");
@@ -141,14 +103,25 @@ const CorporateBilling = () => {
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
     if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
+    if (values.json !== undefined) {
+      const json = await getJSON(values.json.file);
+      if (json !== undefined) {
+        if (json.name !== undefined) setName(json.name);
+        if (json.address !== undefined) setNftAddress(json.address);
+        setJson(json);
+        const table = prepareTable(json);
+        setTable(table);
+      }
+    }
     setCounter(counter + 1);
     checkCanCreate();
   };
 
-  async function billingButton() {
+  async function proveButton() {
     console.log("Billing button clicked");
     setLoading(true);
 
+    /*
     const report = await queryBilling(auth);
     if (
       report.success === true &&
@@ -168,6 +141,7 @@ const CorporateBilling = () => {
       );
       setMinted(report.minted.toLocaleString());
     }
+    */
     setLoading(false);
   }
 
@@ -204,6 +178,61 @@ const CorporateBilling = () => {
                 onValuesChange={onValuesChange}
               >
                 <div>
+                  <Row>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        name="json"
+                        label="Upload the JSON file with NFT data here that you've got when you have minted an NFT"
+                        rules={[
+                          {
+                            required: true,
+                            message:
+                              "Please upload the JSON file with NFT data here",
+                          },
+                        ]}
+                      >
+                        <Upload
+                          name="jsondata"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="application/json"
+                          showUploadList={true}
+                          multiple={false}
+                          maxCount={1}
+                          beforeUpload={beforeUpload}
+                        >
+                          {" "}
+                          <div>
+                            <PlusOutlined />
+                            <div className="ant-upload-text">JSON file</div>
+                          </div>
+                        </Upload>
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item hidden={name === ""}>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          NFT name: {name}
+                        </div>
+                      </Form.Item>
+                      <Form.Item hidden={nftAddress === ""}>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          NFT address: {nftAddress}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
@@ -245,8 +274,8 @@ const CorporateBilling = () => {
                         type="primary"
                         disabled={buttonDisabled}
                         loading={loading}
-                        onClick={billingButton}
-                        key="billingButton"
+                        onClick={proveButton}
+                        key="proveButton"
                       >
                         Retreive report
                       </Button>
@@ -255,50 +284,7 @@ const CorporateBilling = () => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
-                        <Table dataSource={report} columns={columns} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          Total billed time: {total}
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          NFT minted: {minted}
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          Total amount: {amount}
-                        </div>
+                        <Table dataSource={table} columns={columns} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -312,4 +298,4 @@ const CorporateBilling = () => {
   );
 };
 
-export default CorporateBilling;
+export default ProveAttributes;
