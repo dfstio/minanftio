@@ -11,6 +11,7 @@ import {
   Upload,
   Select,
   Table,
+  Divider,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import IntlMessages from "util/IntlMessages";
@@ -54,6 +55,20 @@ const columns = [
   },
 ];
 
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(
+      `selectedRowKeys: ${selectedRowKeys}`,
+      "selectedRows: ",
+      selectedRows
+    );
+  },
+  getCheckboxProps: (record) => ({
+    disabled: record.name === "Disabled User", // Column configuration not to be checked
+    name: record.name,
+  }),
+};
+
 const ProveAttributes = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
@@ -76,6 +91,8 @@ const ProveAttributes = () => {
   const [amount, setAmount] = useState("");
   const [minted, setMinted] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [selectionType, setSelectionType] =
+    (useState < "checkbox") | ("radio" > "checkbox");
 
   const log = logm.child({ winstonComponent: "Corporate" });
 
@@ -274,7 +291,25 @@ const ProveAttributes = () => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
-                        <Table dataSource={table} columns={columns} />
+                        <Radio.Group
+                          onChange={({ target: { value } }) => {
+                            setSelectionType(value);
+                          }}
+                          value={selectionType}
+                        >
+                          <Radio value="checkbox">Checkbox</Radio>
+                          <Radio value="radio">radio</Radio>
+                        </Radio.Group>
+
+                        <Divider />
+                        <Table
+                          rowSelection={{
+                            type: selectionType,
+                            ...rowSelection,
+                          }}
+                          dataSource={table}
+                          columns={columns}
+                        />
                       </Form.Item>
                     </Col>
                   </Row>
