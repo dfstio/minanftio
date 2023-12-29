@@ -85,17 +85,6 @@ const ProveAttributes = () => {
       setButtonDisabled(newButtonDisabled);
   };
 
-  let vb = "$0";
-  let showWithdaw = false;
-  if (virtuosoBalance !== undefined) {
-    const vb1 = virtuosoBalance / 100;
-    vb = " $" + vb1.toString();
-    if (vb1 > 100) showWithdaw = true;
-  }
-
-  let pb = " is not registered";
-  if (publicKey !== undefined && publicKey !== "") pb = " is " + publicKey;
-
   const beforeUpload = (file) => {
     return false;
   };
@@ -110,6 +99,7 @@ const ProveAttributes = () => {
         if (json.address !== undefined) setNftAddress(json.address);
         setJson(json);
         const table = prepareTable(json);
+        console.log("table", table);
         setTable(table);
       }
     }
@@ -277,7 +267,7 @@ const ProveAttributes = () => {
                         onClick={proveButton}
                         key="proveButton"
                       >
-                        Retreive report
+                        Create Proof
                       </Button>
                     </Form.Item>
                   </Row>

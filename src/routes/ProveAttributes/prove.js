@@ -14,7 +14,7 @@ export function prepareTable(token) {
           strings.push({
             key: key,
             value: properties[key].data,
-            status: properties[key].isPrivate === "true" ? "private" : "public",
+            type: properties[key].isPrivate === "true" ? "private" : "public",
             id: strings.length,
           });
           break;
