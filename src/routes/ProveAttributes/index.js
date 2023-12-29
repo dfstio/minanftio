@@ -127,6 +127,8 @@ const ProveAttributes = () => {
   async function proveButton() {
     console.log("Billing button clicked");
     setLoading(true);
+    console.log("selectionType", selectionType);
+    console.log("table", table);
 
     /*
     const report = await queryBilling(auth);
