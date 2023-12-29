@@ -31,16 +31,20 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./Edit"))}
       />
       <Route
-        path={`${match.url}prove`}
-        component={asyncComponent(() => import("./Prove"))}
+        path={`${match.url}proofs`}
+        component={asyncComponent(() => import("./Proofs"))}
       />
       <Route
         path={`${match.url}prove/attributes`}
         component={asyncComponent(() => import("./ProveAttributes"))}
       />
       <Route
-        path={`${match.url}verify`}
-        component={asyncComponent(() => import("./Verify"))}
+        path={`${match.url}verify/offchain`}
+        component={asyncComponent(() => import("./VerifyAttributesOffChain"))}
+      />
+      <Route
+        path={`${match.url}verify/onchain`}
+        component={asyncComponent(() => import("./VerifyAttributesOnChain"))}
       />
       <Route
         path={`${match.url}tools`}

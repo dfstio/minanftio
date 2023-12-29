@@ -1,6 +1,83 @@
-import { MinaNFT, api } from "minanft";
+import { PrivateKey, Poseidon, PublicKey, Field } from "o1js";
+import {
+  MinaNFT,
+  RedactedMinaNFT,
+  MapData,
+  MinaNFTNameService,
+  accountBalanceMina,
+  makeString,
+  api,
+  MINANFT_NAME_SERVICE,
+} from "minanft";
 
 const { REACT_APP_JWT } = process.env;
+
+export async function prove(auth, json, keys) {
+  console.log("prove start", auth, keys, json);
+  const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
+  const minanft = new api(JWT);
+  const nameServiceAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE);
+  const blockchainInstance = "testworld2";
+  MinaNFT.minaInit(blockchainInstance);
+  console.log("nameServiceAddress", nameServiceAddress);
+
+  const nft = new MinaNFT({
+    name: json.name,
+    address: PublicKey.fromBase58(json.address),
+    nameService: nameServiceAddress,
+  });
+
+  await nft.loadMetadata(JSON.stringify(json));
+  const loadedJson = nft.toJSON();
+  console.log(`loadedJson:`, JSON.stringify(loadedJson, null, 2));
+
+  const checkNft = await nft.checkState();
+  if (checkNft === false) {
+    console.error("NFT checkState error");
+    return;
+  }
+
+  const redactedNFT = new RedactedMinaNFT(nft);
+  for (const key of keys) {
+    console.log(`key:`, key);
+    redactedNFT.copyMetadata(key);
+  }
+  const transactions = await redactedNFT.prepareProofData();
+  console.log("transactions", transactions.length);
+  const result = await minanft.proof({
+    transactions,
+    developer: "@dfst",
+    name: "map-proof",
+    task: "calculate",
+    args: [],
+  });
+
+  console.log("proof job result", result);
+
+  const jobId = result.jobId;
+  if (jobId === undefined) {
+    console.error("JobId is undefined");
+    return {
+      success: false,
+      error: "JobId is undefined",
+      reason: result.error,
+    };
+  }
+
+  return {
+    success: true,
+    jobId,
+  };
+}
+
+export function getKeys(selectedRowKeys, table) {
+  const keys = [];
+  selectedRowKeys.forEach((key) => {
+    const row = table.find((row) => row.key === key);
+    if (row !== undefined) keys.push({ key: row.key, value: row.value });
+  });
+  return keys;
+}
 
 export function prepareTable(token) {
   const strings = [];
@@ -33,52 +110,6 @@ export function prepareTable(token) {
   return strings;
 }
 
-export async function prove(auth, json, keys) {
-  console.log("queryBilling start", auth);
-  const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
-  const minanft = new api(JWT);
-  const report = await minanft.queryBilling();
-  console.log("queryBilling result", report);
-
-  if (report.success === false) return report;
-  let total = 0;
-  let minted = 0;
-  const table = report.result.map((row) => {
-    let duration = 0;
-    if (row.timeFinished !== undefined && row.timeCreated !== undefined)
-      duration = row.timeFinished - row.timeCreated;
-    total += row.billedDuration ?? 0;
-    const billedDuration = row.billedDuration
-      ? row.billedDuration.toLocaleString()
-      : "0";
-    if (row.task === "mint" && row.timeFinished !== undefined) minted++;
-    return {
-      key: row.jobId,
-      id: row.id,
-      jobId: row.jobId,
-      jobName: row.jobName,
-      jobStatus: row.jobStatus,
-      task: row.task,
-      developer: row.developer,
-      billedDuration,
-      timeCreated: row.timeCreated,
-      timeFinished: row.timeFinished,
-      created: new Date(row.timeCreated).toLocaleString(),
-      duration: duration.toLocaleString(),
-    };
-  });
-  return { table, total, minted, ...report };
-}
-
-export function getKeys(selectedRowKeys, table) {
-  const keys = [];
-  selectedRowKeys.forEach((key) => {
-    const row = table.find((row) => row.key === key);
-    if (row !== undefined) keys.push({ key: row.key, value: row.value });
-  });
-  return keys;
-}
-
 export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
   if (jobId === undefined || jobId === "") {
     console.error("JobId is undefined");
@@ -90,12 +121,12 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
   const txData = await minanft.waitForJobResult({ jobId });
-  console.log("txData", txData);
+  console.log("Job result", txData);
   if (txData?.result?.result === undefined || txData.result?.result === "") {
     console.error("txData is undefined");
     return {
       success: false,
-      error: "Mint error",
+      error: "Proving error",
       reason: txData.error,
     };
   }
@@ -105,11 +136,13 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
     version: json.version,
     address: json.address,
     keys: getKeys(selectedRowKeys, table),
-    proof: txData.result.result,
+    proof: JSON.parse(txData.result.result),
   };
+
+  console.log("proof", proof);
 
   return {
     success: true,
-    proof: txData.result.result,
+    proof: JSON.stringify(proof, null, 2),
   };
 }

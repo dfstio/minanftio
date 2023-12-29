@@ -23,10 +23,9 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { prepareTable, prove, waitForProof, getKeys } from "./prove";
+import { prepareTable, verify, waitForProof, getKeys } from "./verify";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
-import { set } from "lodash";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -46,14 +45,9 @@ const columns = [
     dataIndex: "value",
     key: "value",
   },
-  {
-    title: "Type",
-    dataIndex: "type",
-    key: "type",
-  },
 ];
 
-const ProveAttributes = () => {
+const VerifyAttributes = () => {
   const [form] = Form.useForm();
   const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,23 +56,11 @@ const ProveAttributes = () => {
   const [nftAddress, setNftAddress] = useState("");
   const [json, setJson] = useState(undefined);
   const [table, setTable] = useState([]);
-  const [proof, setProof] = useState(undefined);
-  const [proofname, setProofname] = useState("");
+  const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
 
   const log = logm.child({ winstonComponent: "ProveAttributes" });
-
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
 
   const checkCanCreate = () => {
     let newButtonDisabled = false;
@@ -89,14 +71,6 @@ const ProveAttributes = () => {
   const beforeUpload = (file) => {
     return false;
   };
-
-  async function onDownloadClick() {
-    if (DEBUG) console.log("Download clicked");
-    const blob = new Blob([proof], {
-      type: "text/plain;charset=utf-8",
-    });
-    fileSaver.saveAs(blob, proofname);
-  }
 
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
@@ -117,31 +91,29 @@ const ProveAttributes = () => {
   };
 
   async function proveButton() {
-    console.log("Prove button clicked");
+    console.log("Verify button clicked");
     setLoading(true);
-    console.log("rowSelection", selectedRowKeys);
     console.log("table", table);
-    console.log("keys", getKeys(selectedRowKeys, table));
-    const key = "Creating proof message";
+    const key = "Verifying message";
 
     try {
       message.loading({
-        content: `Creating proof...`,
+        content: `Verifying...`,
         key,
         duration: 600,
       });
 
-      const jobResult = await prove(auth, json, selectedRowKeys);
-      console.log("Prove job result", jobResult);
+      const jobResult = await verify(auth, json);
+      console.log("Verify job result", jobResult);
       if (jobResult?.success === true && jobResult?.jobId !== undefined) {
         message.loading({
-          content: `Started proof job ${jobResult.jobId}`,
+          content: `Started verification job ${jobResult.jobId}`,
           key,
           duration: 600,
         });
       } else {
         message.error({
-          content: `Error creating proof: ${jobResult?.error ?? ""} ${
+          content: `Error verifying proof: ${jobResult?.error ?? ""} ${
             jobResult?.reason ?? ""
           }`,
           key,
@@ -151,28 +123,22 @@ const ProveAttributes = () => {
         return;
       }
       const jobId = jobResult.jobId;
-      const mintResult = await waitForProof(
-        jobId,
-        json,
-        selectedRowKeys,
-        table,
-        auth
-      );
-      if (mintResult?.success === true && mintResult?.proof !== undefined) {
+      const mintResult = await waitForProof(jobId, auth);
+      if (
+        mintResult?.success === true &&
+        mintResult?.verificationResult !== undefined
+      ) {
         message.success({
-          content: `Proof created and verified successfully`,
+          content: `Proof verified, transaction: ${mintResult.verificationResult}`,
           key,
           duration: 240,
         });
-        setProof(mintResult.proof);
-        setProofname(name + ".proof.json");
-        const blob = new Blob([mintResult.proof], {
-          type: "text/plain;charset=utf-8",
-        });
-        fileSaver.saveAs(blob, name + ".proof.json");
+        setVerificationResult(
+          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
+        );
       } else
         message.error({
-          content: `Error creating proof: ${mintResult?.error ?? ""} ${
+          content: `Error verifying proof: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           key,
@@ -205,10 +171,10 @@ const ProveAttributes = () => {
             <Card
               className="gx-card"
               key="billingCard"
-              title=<IntlMessages id="create.proofs.strings.form.title" />
+              title=<IntlMessages id="verify.onchain.proofs.strings.form.title" />
             >
               <div className="gx-d-flex justify-content-center">
-                <IntlMessages id="create.proofs.strings.form.description" />
+                <IntlMessages id="verify.onchain.proofs.strings.form.description" />
               </div>
               <Form
                 form={form}
@@ -230,12 +196,12 @@ const ProveAttributes = () => {
                       <Divider />
                       <Form.Item
                         name="json"
-                        label="Upload the JSON file with NFT data here that you've got when you have minted an NFT"
+                        label="Upload the JSON file with proof data here"
                         rules={[
                           {
                             required: true,
                             message:
-                              "Please upload the JSON file with NFT data here",
+                              "Please upload the JSON file with proof data here",
                           },
                         ]}
                       >
@@ -320,40 +286,36 @@ const ProveAttributes = () => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
-                        <Table
-                          rowSelection={{
-                            type: "checkbox",
-                            ...rowSelection,
-                          }}
-                          dataSource={table}
-                          columns={columns}
-                        />
+                        <Table dataSource={table} columns={columns} />
                       </Form.Item>
                     </Col>
                   </Row>
                   <Row>
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        disabled={!hasSelected}
-                        loading={loading}
-                        onClick={proveButton}
-                        key="proveButton"
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <Button
+                          type="primary"
+                          disabled={json === undefined}
+                          loading={loading}
+                          onClick={proveButton}
+                          key="proveButton"
+                        >
+                          Verify Proof
+                        </Button>
+                      </Form.Item>
+                      <Divider />
+                      <Form.Item
+                        label="Verification transaction sent: "
+                        name="mintedlink"
+                        hidden={verificationResult === ""}
                       >
-                        Create Proof
-                      </Button>
-                    </Form.Item>
-                    <Divider />
-                    <Form.Item
-                      label=""
-                      name="prooflink"
-                      hidden={proofname === ""}
-                    >
-                      Proof is created:{" "}
-                      <Button onClick={onDownloadClick} type="link">
-                        {proofname}
-                      </Button>
-                    </Form.Item>
+                        <div>
+                          <a href={verificationResult} target="_blank">
+                            {verificationResult}
+                          </a>
+                        </div>
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </div>
               </Form>
@@ -365,4 +327,4 @@ const ProveAttributes = () => {
   );
 };
 
-export default ProveAttributes;
+export default VerifyAttributes;
