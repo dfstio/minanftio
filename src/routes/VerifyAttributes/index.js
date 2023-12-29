@@ -107,13 +107,13 @@ const VerifyAttributes = () => {
       console.log("Verify job result", jobResult);
       if (jobResult?.success === true && jobResult?.jobId !== undefined) {
         message.loading({
-          content: `Started proof job ${jobResult.jobId}`,
+          content: `Started verification job ${jobResult.jobId}`,
           key,
           duration: 600,
         });
       } else {
         message.error({
-          content: `Error creating proof: ${jobResult?.error ?? ""} ${
+          content: `Error verifying proof: ${jobResult?.error ?? ""} ${
             jobResult?.reason ?? ""
           }`,
           key,
@@ -124,16 +124,19 @@ const VerifyAttributes = () => {
       }
       const jobId = jobResult.jobId;
       const mintResult = await waitForProof(jobId, auth);
-      if (mintResult?.success === true && mintResult?.proof !== undefined) {
+      if (
+        mintResult?.success === true &&
+        mintResult?.verificationResult !== undefined
+      ) {
         message.success({
-          content: `Proof created and verified successfully`,
+          content: `Proof verified, result: ${mintResult.verificationResult}`,
           key,
           duration: 240,
         });
         setVerificationResult(mintResult.verificationResult);
       } else
         message.error({
-          content: `Error creating proof: ${mintResult?.error ?? ""} ${
+          content: `Error verifying proof: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           key,
@@ -294,7 +297,7 @@ const VerifyAttributes = () => {
                         onClick={proveButton}
                         key="proveButton"
                       >
-                        Create Proof
+                        Verify Proof
                       </Button>
                     </Form.Item>
                     <Divider />
