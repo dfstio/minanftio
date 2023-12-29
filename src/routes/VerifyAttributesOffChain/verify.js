@@ -16,13 +16,16 @@ export async function check(json) {
   let verified = true;
   const data = new MerkleMap();
   const kind = new MerkleMap();
-  for (const item in json.keys) {
-    console.log("item", item, json.keys[item]);
+  for (let i = 0; i < json.keys.length; i++) {
+    console.log("item", json.keys[i]);
     data.set(
-      MinaNFT.stringToField(item.key),
-      MinaNFT.stringToField(json.keys[item])
+      MinaNFT.stringToField(json.keys[i].key),
+      MinaNFT.stringToField(json.keys[i].value)
     );
-    kind.set(MinaNFT.stringToField(item), MinaNFT.stringToField("string"));
+    kind.set(
+      MinaNFT.stringToField(json.keys[i].key),
+      MinaNFT.stringToField("string")
+    );
   }
   if (
     data.getRoot().toJSON() !== json.proof?.publicInput[2] ||
