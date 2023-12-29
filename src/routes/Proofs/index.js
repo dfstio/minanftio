@@ -16,7 +16,7 @@ const Create = () => {
           <MintMenuItem
             creator=<IntlMessages id="proofs.create" />
             title=<IntlMessages id="proofs.create" />
-            link="/create/nft"
+            link="/prove/attributes"
             button=<IntlMessages id="proofs.create.button" />
             description=<IntlMessages id="proofs.create.description" />
             image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CreateStringProof.png"
