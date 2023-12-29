@@ -61,6 +61,7 @@ const ProveAttributes = () => {
   const [json, setJson] = useState(undefined);
   const [table, setTable] = useState([]);
   const [proof, setProof] = useState(undefined);
+  const [proofname, setProofname] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
@@ -86,6 +87,14 @@ const ProveAttributes = () => {
   const beforeUpload = (file) => {
     return false;
   };
+
+  async function onDownloadClick() {
+    if (DEBUG) console.log("Download clicked");
+    const blob = new Blob([proof], {
+      type: "text/plain;charset=utf-8",
+    });
+    fileSaver.saveAs(blob, proofname);
+  }
 
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
@@ -154,7 +163,8 @@ const ProveAttributes = () => {
           duration: 240,
         });
         setProof(mintResult.proof);
-        const blob = new Blob([mintResult.json], {
+        setProofname(name + ".proof.json");
+        const blob = new Blob([mintResult.proof], {
           type: "text/plain;charset=utf-8",
         });
         fileSaver.saveAs(blob, name + ".proof.json");
@@ -305,19 +315,7 @@ const ProveAttributes = () => {
                       </Form.Item>
                     </Col>
                   </Row>
-                  <Row>
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        disabled={!hasSelected}
-                        loading={loading}
-                        onClick={proveButton}
-                        key="proveButton"
-                      >
-                        Create Proof
-                      </Button>
-                    </Form.Item>
-                  </Row>
+
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
@@ -331,6 +329,28 @@ const ProveAttributes = () => {
                         />
                       </Form.Item>
                     </Col>
+                  </Row>
+                  <Row>
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        disabled={!hasSelected}
+                        loading={loading}
+                        onClick={proveButton}
+                        key="proveButton"
+                      >
+                        Create Proof
+                      </Button>
+                    </Form.Item>
+                    <Form.Item
+                      label="Post is minted: "
+                      name="mintedlink"
+                      hidden={proofname === ""}
+                    >
+                      <Button onClick={onDownloadClick} type="link">
+                        {proofname}
+                      </Button>
+                    </Form.Item>
                   </Row>
                 </div>
               </Form>
