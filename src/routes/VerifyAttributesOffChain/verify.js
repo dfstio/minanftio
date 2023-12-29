@@ -17,7 +17,7 @@ export async function check(json) {
     json.proof.publicInput === undefined ||
     json.proof.publicInput.length !== 6 ||
     json.keys === undefined ||
-    json.keys.length !== json.proof?.publicInput[5]
+    json.keys.length !== parseInt(json.proof?.publicInput[5])
   ) {
     console.log("JSON proof error", json.proof);
     return false;
@@ -90,7 +90,7 @@ export async function verify(auth, json) {
   if ((await check(json)) === false) {
     return {
       success: false,
-      error: "JSON Verification error",
+      error: "JSON Verification error:",
       reason: "check failed",
     };
   }
