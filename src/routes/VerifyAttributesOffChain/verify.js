@@ -17,8 +17,9 @@ export async function check(json) {
   const data = new MerkleMap();
   const kind = new MerkleMap();
   for (const item in json.keys) {
+    console.log("item", item, json.keys[item]);
     data.set(
-      MinaNFT.stringToField(item),
+      MinaNFT.stringToField(item.key),
       MinaNFT.stringToField(json.keys[item])
     );
     kind.set(MinaNFT.stringToField(item), MinaNFT.stringToField("string"));
