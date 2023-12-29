@@ -133,11 +133,7 @@ const ProveAttributes = () => {
 
       const jobResult = await prove(auth, json, selectedRowKeys);
       console.log("Prove job result", jobResult);
-      if (
-        jobResult?.success === true &&
-        jobResult?.jobId !== undefined &&
-        jobResult?.redactedJson !== undefined
-      ) {
+      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
         message.loading({
           content: `Started proof job ${jobResult.jobId}`,
           key,
@@ -158,7 +154,6 @@ const ProveAttributes = () => {
       const mintResult = await waitForProof(
         jobId,
         json,
-        jobResult.redactedJson,
         selectedRowKeys,
         table,
         auth
