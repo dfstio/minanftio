@@ -92,7 +92,6 @@ const ProveAttributes = () => {
   const [amount, setAmount] = useState("");
   const [minted, setMinted] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [selectionType, setSelectionType] = useState("checkbox");
 
   const log = logm.child({ winstonComponent: "Corporate" });
 
@@ -127,7 +126,8 @@ const ProveAttributes = () => {
   async function proveButton() {
     console.log("Billing button clicked");
     setLoading(true);
-    console.log("selectionType", selectionType);
+    console.log("rowSelection", rowSelection.getCheckboxProps(table[0]));
+    console.log("rowSelection", rowSelection.getCheckboxProps(table[1]));
     console.log("table", table);
 
     /*
@@ -189,6 +189,7 @@ const ProveAttributes = () => {
                 <div>
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Divider />
                       <Form.Item
                         name="json"
                         label="Upload the JSON file with NFT data here that you've got when you have minted an NFT"
@@ -293,20 +294,9 @@ const ProveAttributes = () => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item>
-                        <Radio.Group
-                          onChange={({ target: { value } }) => {
-                            setSelectionType(value);
-                          }}
-                          value={selectionType}
-                        >
-                          <Radio value="checkbox">Checkbox</Radio>
-                          <Radio value="radio">radio</Radio>
-                        </Radio.Group>
-
-                        <Divider />
                         <Table
                           rowSelection={{
-                            type: selectionType,
+                            type: "checkbox",
                             ...rowSelection,
                           }}
                           dataSource={table}
