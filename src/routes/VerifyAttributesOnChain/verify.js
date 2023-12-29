@@ -14,8 +14,8 @@ export async function verify(auth, json) {
     transactions,
     developer: "@dfst",
     name: "map-proof",
-    task: "verify",
-    args: [],
+    task: "send",
+    args: [json.address],
   });
 
   console.log("verify job result", result);

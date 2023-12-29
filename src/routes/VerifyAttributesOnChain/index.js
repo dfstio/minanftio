@@ -133,7 +133,9 @@ const VerifyAttributes = () => {
           key,
           duration: 240,
         });
-        setVerificationResult(mintResult.verificationResult);
+        setVerificationResult(
+          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
+        );
       } else
         message.error({
           content: `Error verifying proof: ${mintResult?.error ?? ""} ${
@@ -309,6 +311,17 @@ const VerifyAttributes = () => {
                         hidden={verificationResult === ""}
                       >
                         {"Verification result: " + verificationResult}
+                      </Form.Item>
+                      <Form.Item
+                        label="Verification transaction sent: "
+                        name="mintedlink"
+                        hidden={verificationResult === ""}
+                      >
+                        <div>
+                          <a href={verificationResult} target="_blank">
+                            {verificationResult}
+                          </a>
+                        </div>
                       </Form.Item>
                     </Col>
                   </Row>

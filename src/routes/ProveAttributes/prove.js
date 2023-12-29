@@ -64,9 +64,12 @@ export async function prove(auth, json, keys) {
     };
   }
 
+  const redactedJson = redactedNFT.toJSON();
+
   return {
     success: true,
     jobId,
+    redactedJson,
   };
 }
 
@@ -110,7 +113,14 @@ export function prepareTable(token) {
   return strings;
 }
 
-export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
+export async function waitForProof(
+  jobId,
+  json,
+  redactedJson,
+  selectedRowKeys,
+  table,
+  auth
+) {
   if (jobId === undefined || jobId === "") {
     console.error("JobId is undefined");
     return {
@@ -136,6 +146,7 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
     version: json.version,
     address: json.address,
     keys: getKeys(selectedRowKeys, table),
+    redactedJson,
     proof: JSON.parse(txData.result.result),
   };
 

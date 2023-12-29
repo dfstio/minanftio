@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -25,6 +26,7 @@ import logger from "../../serverless/logger";
 import { prepareTable, prove, waitForProof, getKeys } from "./prove";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
+import { set } from "lodash";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -131,7 +133,11 @@ const ProveAttributes = () => {
 
       const jobResult = await prove(auth, json, selectedRowKeys);
       console.log("Prove job result", jobResult);
-      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
+      if (
+        jobResult?.success === true &&
+        jobResult?.jobId !== undefined &&
+        jobResult?.redactedJson !== undefined
+      ) {
         message.loading({
           content: `Started proof job ${jobResult.jobId}`,
           key,
@@ -152,6 +158,7 @@ const ProveAttributes = () => {
       const mintResult = await waitForProof(
         jobId,
         json,
+        jobResult.redactedJson,
         selectedRowKeys,
         table,
         auth
