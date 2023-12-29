@@ -39,8 +39,8 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./ProveAttributes"))}
       />
       <Route
-        path={`${match.url}verify`}
-        component={asyncComponent(() => import("./Verify"))}
+        path={`${match.url}verify/attributes`}
+        component={asyncComponent(() => import("./VerifyAttributes"))}
       />
       <Route
         path={`${match.url}tools`}

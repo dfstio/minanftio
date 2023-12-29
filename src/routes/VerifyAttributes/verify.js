@@ -1,18 +1,9 @@
-import { PrivateKey, Poseidon, PublicKey, Field } from "o1js";
-import {
-  MinaNFT,
-  RedactedMinaNFT,
-  MapData,
-  MinaNFTNameService,
-  accountBalanceMina,
-  makeString,
-  api,
-  MINANFT_NAME_SERVICE,
-} from "minanft";
+import { PublicKey } from "o1js";
+import { MinaNFT, RedactedMinaNFT, api, MINANFT_NAME_SERVICE } from "minanft";
 
 const { REACT_APP_JWT } = process.env;
 
-export async function prove(auth, json, keys) {
+export async function verify(auth, json, keys) {
   console.log("prove start", auth, keys, json);
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
@@ -70,47 +61,11 @@ export async function prove(auth, json, keys) {
   };
 }
 
-export function getKeys(selectedRowKeys, table) {
-  const keys = [];
-  selectedRowKeys.forEach((key) => {
-    const row = table.find((row) => row.key === key);
-    if (row !== undefined) keys.push({ key: row.key, value: row.value });
-  });
-  return keys;
-}
-
 export function prepareTable(token) {
-  const strings = [];
-
-  function iterateProperties(properties, level = 0) {
-    for (const key in properties) {
-      console.log(`key:`, key, properties[key]);
-
-      switch (properties[key].kind) {
-        case "string":
-          strings.push({
-            key: key,
-            value: properties[key].data,
-            type: properties[key].isPrivate === true ? "private" : "public",
-            id: strings.length,
-          });
-          break;
-
-        default:
-          break;
-      }
-    }
-  }
-  try {
-    iterateProperties(token.properties);
-  } catch (error) {
-    console.error(`Error: ${error}`);
-  }
-
-  return strings;
+  return token.keys ?? [];
 }
 
-export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
+export async function waitForProof(jobId, auth) {
   if (jobId === undefined || jobId === "") {
     console.error("JobId is undefined");
     return {
@@ -126,23 +81,14 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
     console.error("txData is undefined");
     return {
       success: false,
-      error: "Proving error",
+      error: "Verification error",
       reason: txData.error,
     };
   }
-
-  const proof = {
-    name: json.name,
-    version: json.version,
-    address: json.address,
-    keys: getKeys(selectedRowKeys, table),
-    proof: JSON.parse(txData.result.result),
-  };
-
-  console.log("proof", proof);
+  console.log("verificationResult", txData.result.result);
 
   return {
     success: true,
-    proof: JSON.stringify(proof, null, 2),
+    verificationResult: txData.result.result,
   };
 }

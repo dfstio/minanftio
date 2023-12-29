@@ -384,5 +384,9 @@
   "proofs.verifyon.button": "Verify",
   "proofs.verifyon.description": "Verify Proof On-Chain using json file with proof",
   "create.proofs.strings.form.title": "Create Proof for NFT Attributes",
-  "create.proofs.strings.form.description": "Create a proof for an private or public attributes of an NFT."
+  "create.proofs.strings.form.description": "Create a proof for an private or public attributes of an NFT.",
+  "verify.proofs.strings.form.title": "Verify Proof for NFT Attributes Off-Chain",
+  "verify.proofs.strings.form.description": "Verify off-chain a proof for an private or public attributes of an NFT.",
+  "verify.onchain.proofs.strings.form.title": "Verify Proof for NFT Attributes On-Chain",
+  "verify.onchain.proofs.strings.form.description": "Verify on-chain a proof for an private or public attributes of an NFT."
 }
