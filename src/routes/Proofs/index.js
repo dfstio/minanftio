@@ -31,7 +31,7 @@ const Create = () => {
             link="/prove/verify"
             button=<IntlMessages id="proofs.verify.button" />
             description=<IntlMessages id="proofs.verify.description" />
-            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/VerifyOffChain.png"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/VerifyOffChain1.png"
             key="Create NFT"
           />
         </Col>
