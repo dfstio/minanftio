@@ -1,4 +1,4 @@
-import { PublicKey } from "o1js";
+import { PublicKey, Field, Poseidon } from "o1js";
 import {
   MinaNFT,
   api,
@@ -24,20 +24,28 @@ export async function check(json) {
   }
   const data = new MerkleMap();
   const kind = new MerkleMap();
+  let hash = Field(0);
+  const str = MinaNFT.stringToField("string");
   for (let i = 0; i < json.keys.length; i++) {
     console.log("item", json.keys[i]);
-    data.set(
-      MinaNFT.stringToField(json.keys[i].key),
-      MinaNFT.stringToField(json.keys[i].value)
-    );
-    kind.set(
-      MinaNFT.stringToField(json.keys[i].key),
-      MinaNFT.stringToField("string")
-    );
+    const key = MinaNFT.stringToField(json.keys[i].key);
+    const value = MinaNFT.stringToField(json.keys[i].value);
+    data.set(key, value);
+    kind.set(key, str);
+    /*
+     hash: Poseidon.hash([
+        element.key,
+        element.value.data,
+        element.value.kind,
+      ]),
+      hash: state1.hash.add(state2.hash),
+      */
+    hash = hash.add(Poseidon.hash([key, value, str]));
   }
   if (
     data.getRoot().toJSON() !== json.proof?.publicInput[2] ||
-    kind.getRoot().toJSON() !== json.proof?.publicInput[3]
+    kind.getRoot().toJSON() !== json.proof?.publicInput[3] ||
+    hash.toJSON() !== json.proof?.publicInput[4]
   ) {
     console.log(
       "redacted metadata check error",
