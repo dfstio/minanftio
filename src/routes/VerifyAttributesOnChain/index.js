@@ -129,7 +129,7 @@ const VerifyAttributes = () => {
         mintResult?.verificationResult !== undefined
       ) {
         message.success({
-          content: `Proof verified, result: ${mintResult.verificationResult}`,
+          content: `Proof verified, transaction: ${mintResult.verificationResult}`,
           key,
           duration: 240,
         });
@@ -303,15 +303,7 @@ const VerifyAttributes = () => {
                           Verify Proof
                         </Button>
                       </Form.Item>
-                    </Col>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label=""
-                        name="prooflink"
-                        hidden={verificationResult === ""}
-                      >
-                        {"Verification result: " + verificationResult}
-                      </Form.Item>
+                      <Divider />
                       <Form.Item
                         label="Verification transaction sent: "
                         name="mintedlink"
