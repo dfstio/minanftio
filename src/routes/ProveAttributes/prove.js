@@ -13,16 +13,17 @@ import {
 const { REACT_APP_JWT } = process.env;
 
 export async function prove(auth, json, keys) {
-  console.log("queryBilling start", auth);
+  console.log("prove start", auth, keys, json);
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
   const nameServiceAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE);
   const blockchainInstance = "testworld2";
   MinaNFT.minaInit(blockchainInstance);
+  console.log("nameServiceAddress", nameServiceAddress);
 
   const nft = new MinaNFT({
     name: json.name,
-    address: json.address,
+    address: PublicKey.fromBase58(json.address),
     nameService: nameServiceAddress,
   });
 

@@ -120,7 +120,7 @@ const ProveAttributes = () => {
     console.log("rowSelection", selectedRowKeys);
     console.log("table", table);
     console.log("keys", getKeys(selectedRowKeys, table));
-    const key = "Creating proof";
+    const key = "Creating proof message";
 
     try {
       message.loading({
@@ -197,7 +197,6 @@ const ProveAttributes = () => {
 
   return (
     <>
-      {contextHolder}
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
