@@ -289,25 +289,28 @@ const VerifyAttributes = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        disabled={json === undefined}
-                        loading={loading}
-                        onClick={proveButton}
-                        key="proveButton"
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <Button
+                          type="primary"
+                          disabled={json === undefined}
+                          loading={loading}
+                          onClick={proveButton}
+                          key="proveButton"
+                        >
+                          Verify Proof
+                        </Button>
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        label=""
+                        name="prooflink"
+                        hidden={verificationResult === ""}
                       >
-                        Verify Proof
-                      </Button>
-                    </Form.Item>
-                    <Divider />
-                    <Form.Item
-                      label=""
-                      name="prooflink"
-                      hidden={verificationResult === ""}
-                    >
-                      Verification result:{" " + verificationResult}
-                    </Form.Item>
+                        {"Verification result: " + verificationResult}
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </div>
               </Form>
