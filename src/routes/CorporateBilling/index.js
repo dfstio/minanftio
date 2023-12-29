@@ -88,11 +88,6 @@ const columns = [
     dataIndex: "duration",
     key: "duration",
   },
-  {
-    title: "Job Id",
-    dataIndex: "jobId",
-    key: "jobId",
-  },
 ];
 
 const CorporateBilling = () => {
