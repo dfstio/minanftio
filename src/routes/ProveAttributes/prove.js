@@ -104,7 +104,7 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
     name: json.name,
     version: json.version,
     address: json.address,
-    keys: selectedRowKeys,
+    keys: getKeys(selectedRowKeys, table),
     proof: txData.result.result,
   };
 
