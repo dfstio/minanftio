@@ -39,8 +39,12 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./ProveAttributes"))}
       />
       <Route
-        path={`${match.url}verify/attributes`}
-        component={asyncComponent(() => import("./VerifyAttributes"))}
+        path={`${match.url}verify/offchain`}
+        component={asyncComponent(() => import("./VerifyAttributesOffChain"))}
+      />
+      <Route
+        path={`${match.url}verify/onchain`}
+        component={asyncComponent(() => import("./VerifyAttributesOnChain"))}
       />
       <Route
         path={`${match.url}tools`}

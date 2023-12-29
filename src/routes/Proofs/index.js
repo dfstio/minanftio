@@ -28,7 +28,7 @@ const Create = () => {
           <MintMenuItem
             creator=<IntlMessages id="proofs.verify" />
             title=<IntlMessages id="proofs.verify" />
-            link="/verify/attributes"
+            link="/verify/offchain"
             button=<IntlMessages id="proofs.verify.button" />
             description=<IntlMessages id="proofs.verify.description" />
             image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/VerifyOffChain1.png"
@@ -40,7 +40,7 @@ const Create = () => {
           <MintMenuItem
             creator=<IntlMessages id="proofs.verifyon" />
             title=<IntlMessages id="proofs.verifyon" />
-            link="/prove/verify"
+            link="/verify/onchain"
             button=<IntlMessages id="proofs.verifyon.button" />
             description=<IntlMessages id="proofs.verifyon.description" />
             image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/VerifyOnChain.png"
