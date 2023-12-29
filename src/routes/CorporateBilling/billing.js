@@ -42,6 +42,8 @@ timeFinished
   if (report.success === false) return report;
   let total = 0;
   let minted = 0;
+  // Sort by timeCreated, descending
+  report.result.sort((a, b) => b.timeCreated - a.timeCreated);
   const table = report.result.map((row) => {
     let duration = 0;
     if (row.timeFinished !== undefined && row.timeCreated !== undefined)
