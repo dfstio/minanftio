@@ -91,8 +91,7 @@ const ProveAttributes = () => {
   const [amount, setAmount] = useState("");
   const [minted, setMinted] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [selectionType, setSelectionType] =
-    (useState < "checkbox") | ("radio" > "checkbox");
+  const [selectionType, setSelectionType] = useState("checkbox");
 
   const log = logm.child({ winstonComponent: "Corporate" });
 
