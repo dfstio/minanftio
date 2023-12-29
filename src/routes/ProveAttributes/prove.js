@@ -141,6 +141,6 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
 
   return {
     success: true,
-    proof: txData.result.result,
+    proof,
   };
 }
