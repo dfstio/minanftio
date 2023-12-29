@@ -33,42 +33,12 @@ export function prepareTable(token) {
   return strings;
 }
 
-export async function prove(auth) {
+export async function prove(auth, json, keys) {
   console.log("queryBilling start", auth);
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
   const report = await minanft.queryBilling();
   console.log("queryBilling result", report);
-
-  /*
-billedDuration
-: 
-141818
-developer
-: 
-"@dfst"
-id
-: 
-"6459034946"
-jobId
-: 
-"6459034946.1703085063711.s1ejoc02ff4e19vfb5s6wyp25mm1615x"
-jobName
-: 
-"mint"
-jobStatus
-: 
-"used"
-task
-: 
-"mint"
-timeCreated
-: 
-1703085063711
-timeFinished
-: 
-1703085208743
-  */
 
   if (report.success === false) return report;
   let total = 0;
@@ -98,4 +68,48 @@ timeFinished
     };
   });
   return { table, total, minted, ...report };
+}
+
+export function getKeys(selectedRowKeys, table) {
+  const keys = [];
+  selectedRowKeys.forEach((key) => {
+    const row = table.find((row) => row.key === key);
+    if (row !== undefined) keys.push(row);
+  });
+  return keys;
+}
+
+export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
+  if (jobId === undefined || jobId === "") {
+    console.error("JobId is undefined");
+    return {
+      success: false,
+      error: "JobId is undefined",
+    };
+  }
+  const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
+  const minanft = new api(JWT);
+  const txData = await minanft.waitForJobResult({ jobId });
+  console.log("txData", txData);
+  if (txData?.result?.result === undefined || txData.result?.result === "") {
+    console.error("txData is undefined");
+    return {
+      success: false,
+      error: "Mint error",
+      reason: txData.error,
+    };
+  }
+
+  const proof = {
+    name: json.name,
+    version: json.version,
+    address: json.address,
+    keys: selectedRowKeys,
+    proof: txData.result.result,
+  };
+
+  return {
+    success: true,
+    proof: txData.result.result,
+  };
 }

@@ -22,18 +22,14 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { prepareTable, prove } from "./prove";
+import { prepareTable, prove, waitForProof, getKeys } from "./prove";
 import { getJSON } from "../../blockchain/file";
-import { set } from "lodash";
+import fileSaver from "file-saver";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
-const { Option } = Select;
-const Dragger = Upload.Dragger;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -55,31 +51,7 @@ const columns = [
   },
 ];
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
-
 const ProveAttributes = () => {
-  const address = useSelector(({ blockchain }) => blockchain.address);
-  const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
-  const balance = useSelector(({ blockchain }) => blockchain.balance);
-  const [messageApi, contextHolder] = message.useMessage();
-  const virtuosoBalance = useSelector(
-    ({ blockchain }) => blockchain.virtuosoBalance
-  );
-  const dispatch = useDispatch();
-
   const [form] = Form.useForm();
   const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(false);
@@ -88,11 +60,10 @@ const ProveAttributes = () => {
   const [nftAddress, setNftAddress] = useState("");
   const [json, setJson] = useState(undefined);
   const [table, setTable] = useState([]);
-  const [total, setTotal] = useState("");
-  const [amount, setAmount] = useState("");
-  const [minted, setMinted] = useState("");
+  const [proof, setProof] = useState(undefined);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const log = logm.child({ winstonComponent: "ProveAttributes" });
 
@@ -135,32 +106,79 @@ const ProveAttributes = () => {
   };
 
   async function proveButton() {
-    console.log("Billing button clicked");
+    console.log("Prove button clicked");
     setLoading(true);
     console.log("rowSelection", selectedRowKeys);
     console.log("table", table);
+    console.log("keys", getKeys(selectedRowKeys, table));
+    const key = "Creating proof";
+    return;
 
-    /*
-    const report = await queryBilling(auth);
-    if (
-      report.success === true &&
-      report.table !== undefined &&
-      report.total !== undefined &&
-      report.minted !== undefined
-    ) {
-      setReport(report.table);
-      setTotal(
-        parseInt((report.total / 1000).toString()).toLocaleString() + " seconds"
+    try {
+      message.loading({
+        content: `Creating proof...`,
+        key,
+        duration: 600,
+      });
+
+      const jobResult = await prove(auth, json, selectedRowKeys);
+      console.log("Prove job result", jobResult);
+      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
+        message.loading({
+          content: `Started proof job ${jobResult.jobId}`,
+          key,
+          duration: 600,
+        });
+      } else {
+        message.error({
+          content: `Error creating proof: ${jobResult?.error ?? ""} ${
+            jobResult?.reason ?? ""
+          }`,
+          key,
+          duration: 60,
+        });
+        setLoading(false);
+        return;
+      }
+      const jobId = jobResult.jobId;
+      const mintResult = await waitForProof(
+        jobId,
+        json,
+        selectedRowKeys,
+        table,
+        auth
       );
-      const price = 0.0000001333; // AWS lambda cost per ms for 8192 MB memory
-      // set Amount in USD
-      setAmount(
-        "USD " +
-          (report.total * price * 10 + report.minted * 9).toFixed(2).toString()
-      );
-      setMinted(report.minted.toLocaleString());
+      if (mintResult?.success === true && mintResult?.proof !== undefined) {
+        message.success({
+          content: `Proof created and verified successfully`,
+          key,
+          duration: 240,
+        });
+        setProof(mintResult.proof);
+        const blob = new Blob([mintResult.json], {
+          type: "text/plain;charset=utf-8",
+        });
+        fileSaver.saveAs(blob, name + ".proof.json");
+      } else
+        message.error({
+          content: `Error creating proof: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          key,
+          duration: 60,
+        });
+
+      setLoading(false);
+    } catch (error) {
+      console.log("Proof creation error", error);
+      setLoading(false);
+      message.error({
+        content: `Error creating proof: ${error}`,
+        key,
+        duration: 30,
+      });
     }
-    */
+
     setLoading(false);
   }
 
@@ -177,10 +195,10 @@ const ProveAttributes = () => {
             <Card
               className="gx-card"
               key="billingCard"
-              title=<IntlMessages id="corporate.billing.report.title" />
+              title=<IntlMessages id="create.proofs.strings.form.title" />
             >
               <div className="gx-d-flex justify-content-center">
-                <IntlMessages id="corporate.billing.report.description" />
+                <IntlMessages id="create.proofs.strings.form.description" />
               </div>
               <Form
                 form={form}

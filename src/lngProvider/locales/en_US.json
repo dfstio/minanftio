@@ -374,5 +374,7 @@
   "proofs.create": "Create Proof",
   "proofs.create.title": "Create proofs for NFT attributes",
   "proofs.create.button": "Create Proof",
-  "proofs.create.description": "Create a proof for an private or public attributes of an NFT."
+  "proofs.create.description": "Create a proof for an private or public attributes of an NFT.",
+  "create.proofs.strings.form.title": "Create Proof for NFT Attributes",
+  "create.proofs.strings.form.description": "Create a proof for an private or public attributes of an NFT."
 }
