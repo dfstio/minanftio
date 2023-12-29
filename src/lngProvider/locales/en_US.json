@@ -373,8 +373,16 @@
   "sidebar.proofs": "Proofs",
   "proofs.create": "Create Proof",
   "proofs.create.title": "Create proofs for NFT attributes",
-  "proofs.create.button": "Create Proof",
+  "proofs.create.button": "Create",
   "proofs.create.description": "Create a proof for an private or public attributes of an NFT.",
+  "proofs.verify": "Verify Proof Off-Chain",
+  "proofs.verify.title": "Verify Proof Off-Chain",
+  "proofs.verify.button": "Verify",
+  "proofs.verify.description": "Verify Proof Off-Chain using json file with proof",
+  "proofs.verifyon": "Verify Proof On-Chain",
+  "proofs.verifyon.title": "Verify Proof On-Chain",
+  "proofs.verifyon.button": "Verify",
+  "proofs.verifyon.description": "Verify Proof On-Chain using json file with proof",
   "create.proofs.strings.form.title": "Create Proof for NFT Attributes",
   "create.proofs.strings.form.description": "Create a proof for an private or public attributes of an NFT."
 }
