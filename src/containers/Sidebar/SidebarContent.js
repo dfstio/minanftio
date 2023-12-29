@@ -79,10 +79,17 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="proofs">
-              <Link to="/proofs">
+            <Menu.Item key="prove">
+              <Link to="/prove">
                 <i className="icon icon-components" />
-                <IntlMessages id="sidebar.proofs" />
+                <IntlMessages id="sidebar.prove" />
+              </Link>
+            </Menu.Item>
+
+            <Menu.Item key="verify">
+              <Link to="/verify">
+                <i className="icon icon-components" />
+                <IntlMessages id="sidebar.verify" />
               </Link>
             </Menu.Item>
 

@@ -1,111 +1,91 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import api from "../../serverless/api";
-import { isMobile, isDesktop, isChrome } from "react-device-detect";
-import { accountingEmail } from "../../util/config";
-import { Button, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  updateAddress,
-  updateVirtuosoBalance,
-  updatePublicKey,
-} from "../../appRedux/actions";
-import { minaLogin } from "../../blockchain/mina";
+import { Button, Row, Col } from "antd";
+import MintMenuItem from "./MintMenu";
 
 import IntlMessages from "util/IntlMessages";
 
-import logger from "../../serverless/logger";
-const logm = logger.info.child({ winstonModule: "Verify" });
-const { REACT_APP_DEBUG } = process.env;
-
-const Prove = () => {
+const Create = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
-  const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
-  const balance = useSelector(({ blockchain }) => blockchain.balance);
-  const virtuosoBalance = useSelector(
-    ({ blockchain }) => blockchain.virtuosoBalance
-  );
-  const dispatch = useDispatch();
-
-  const log = logm.child({ winstonComponent: "Verify" });
-
-  let vb = "$0";
-  let showWithdaw = false;
-  if (virtuosoBalance !== undefined) {
-    const vb1 = virtuosoBalance / 100;
-    vb = " $" + vb1.toString();
-    if (vb1 > 100) showWithdaw = true;
-  }
-
-  let pb = " is not registered";
-  if (publicKey !== undefined && publicKey !== "") pb = " is " + publicKey;
-
-  async function register() {
-    log.info("Register clicked", { address, wf: "register" });
-
-    if (address !== undefined && address !== "") {
-      log.profile(`Registered public key of address ${address}`);
-      const key = "RegisterPublicKey";
-      message.loading({
-        content: `Please provide public key in Metamask and confirm transaction`,
-        key,
-        duration: 60,
-      });
-      /*
-      const result = await virtuosoRegisterPublicKey(address);
-      if (result.publicKey !== "" && result.hash !== "") {
-        dispatch(updatePublicKey(result.publicKey));
-        message.success({
-          content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`,
-          key,
-          duration: 10,
-        });
-      } else
-        message.error({
-          content: `Public key is not provided or written to blockchain`,
-          key,
-          duration: 10,
-        });
-      log.profile(`Registered public key of address ${address}`, {
-        address,
-        result,
-        wf: "register",
-      });
-      */
-    }
-  }
-
-  async function test() {
-    //logger.meta.address = address;
-    log.info("Test error clicked", { address, wf: "testerror" });
-    try {
-      throw new Error({ message: "errortest" });
-    } catch (error) {
-      // return error
-      log.error("catch", { error });
-    }
-  }
-
-  async function connect() {
-    log.info("Connect clicked", { address, wf: "connect" });
-    const newAddress = await minaLogin();
-    dispatch(updateAddress(newAddress));
-  }
 
   return (
-    <div>
-      <h2 className="title gx-mb-4">
-        <IntlMessages id="sidebar.prove" />
-      </h2>
-      <div className="gx-d-flex justify-content-center">
-        <h4>
-          You can prove content of any private file that was sealed to the Mina
-          blockchain in the Mina NFT. In case of text files less than 1k in
-          size, you can prove any part of content by sanitizing parts of the
-          text file that you do not want to disclose
-        </h4>
-      </div>
+    <div className="gx-algolia-content-inner">
+      <Row>
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="proofs.create" />
+            title=<IntlMessages id="proofs.create" />
+            link="/prove/attributes"
+            button=<IntlMessages id="proofs.create.button" />
+            description=<IntlMessages id="proofs.create.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CreateStringProof.png"
+            key="Create NFT"
+          />
+        </Col>
+
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.post" />
+            title=<IntlMessages id="create.post.title" />
+            link="/create/post"
+            button=<IntlMessages id="create.post.button" />
+            description=<IntlMessages id="create.post.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CreatePost.png"
+            key="Craete Post"
+          />
+        </Col>
+
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator="Get Authorisation Token"
+            title="Get Authorisation Token"
+            link="https://t.me/minanft_bot?start=auth"
+            button="Get Token"
+            description="Get or renew your authorisation token by visiting MinaNFT telegram bot at https://t.me/minanft_bot?start=auth"
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/AuthorisationToken.png"
+            key="Get Authorisation Token - Create"
+          />
+        </Col>
+
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.docs" />
+            title=<IntlMessages id="create.docs.title" />
+            link="https://docs.minanft.io"
+            button=<IntlMessages id="create.docs.button" />
+            description=<IntlMessages id="create.docs.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateDocs.png"
+            key="Docs - Create"
+          />
+        </Col>
+
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.library" />
+            title=<IntlMessages id="create.library.title" />
+            link="https://github.com/dfstio/minanft-lib"
+            button=<IntlMessages id="create.library.button" />
+            description=<IntlMessages id="create.library.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateLibrary.png"
+            key="Library - Create"
+          />
+        </Col>
+
+        <Col xxl={8} xl={8} lg={12} md={12} sm={24} xs={24}>
+          <MintMenuItem
+            creator=<IntlMessages id="create.support" />
+            title=<IntlMessages id="create.support.title" />
+            link="mailto:hello@minanft.io"
+            button=<IntlMessages id="create.support.button" />
+            description=<IntlMessages id="create.support.description" />
+            image="https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/https://minanft-storage.s3.eu-west-1.amazonaws.com/CorporateSupport.png"
+            key="Support- Create"
+          />
+        </Col>
+      </Row>
     </div>
   );
 };
 
-export default Prove;
+export default Create;

@@ -81,11 +81,20 @@ const HorizontalNav = () => {
       </Menu.Item>
       <Menu.Item
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="proofs"
+        key="prove"
       >
-        <Link to="/proofs">
+        <Link to="/prove">
           <i className="icon icon-components" />
-          <IntlMessages id="sidebar.proofs" />
+          <IntlMessages id="sidebar.prove" />
+        </Link>
+      </Menu.Item>
+      <Menu.Item
+        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+        key="verify"
+      >
+        <Link to="/verify">
+          <i className="icon icon-components" />
+          <IntlMessages id="sidebar.verify" />
         </Link>
       </Menu.Item>
       <Menu.Item
