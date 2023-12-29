@@ -121,7 +121,7 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
   const txData = await minanft.waitForJobResult({ jobId });
-  console.log("txData", txData);
+  console.log("Job result", txData);
   if (txData?.result?.result === undefined || txData.result?.result === "") {
     console.error("txData is undefined");
     return {

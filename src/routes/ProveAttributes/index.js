@@ -341,11 +341,13 @@ const ProveAttributes = () => {
                         Create Proof
                       </Button>
                     </Form.Item>
+                    <Divider />
                     <Form.Item
-                      label="Post is minted: "
-                      name="mintedlink"
+                      label=""
+                      name="prooflink"
                       hidden={proofname === ""}
                     >
+                      Proof is created:{" "}
                       <Button onClick={onDownloadClick} type="link">
                         {proofname}
                       </Button>
