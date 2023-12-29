@@ -136,7 +136,7 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
     version: json.version,
     address: json.address,
     keys: getKeys(selectedRowKeys, table),
-    proof: txData.result.result,
+    proof: JSON.parse(txData.result.result),
   };
 
   console.log("proof", proof);
