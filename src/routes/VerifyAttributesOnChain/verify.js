@@ -1,10 +1,17 @@
-import { PublicKey } from "o1js";
-import { MinaNFT, RedactedMinaNFT, api, MINANFT_NAME_SERVICE } from "minanft";
+import { api } from "minanft";
+import { check } from "../../blockchain/verify";
 
 const { REACT_APP_JWT } = process.env;
 
 export async function verify(auth, json) {
   console.log("verify start", auth, json);
+  if ((await check(json)) === false) {
+    return {
+      success: false,
+      error: "JSON Verification error:",
+      reason: "check failed",
+    };
+  }
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
   const transactions = [JSON.stringify(json.proof)];
