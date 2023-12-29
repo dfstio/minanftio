@@ -139,8 +139,10 @@ export async function waitForProof(jobId, json, selectedRowKeys, table, auth) {
     proof: txData.result.result,
   };
 
+  console.log("proof", proof);
+
   return {
     success: true,
-    proof,
+    proof: JSON.stringify(proof, null, 2),
   };
 }
