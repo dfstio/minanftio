@@ -92,8 +92,19 @@ const ProveAttributes = () => {
   const [amount, setAmount] = useState("");
   const [minted, setMinted] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const log = logm.child({ winstonComponent: "Corporate" });
+  const log = logm.child({ winstonComponent: "ProveAttributes" });
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
 
   const checkCanCreate = () => {
     let newButtonDisabled = false;
@@ -126,8 +137,7 @@ const ProveAttributes = () => {
   async function proveButton() {
     console.log("Billing button clicked");
     setLoading(true);
-    console.log("rowSelection", rowSelection.getCheckboxProps(table[0]));
-    console.log("rowSelection", rowSelection.getCheckboxProps(table[1]));
+    console.log("rowSelection", selectedRowKeys);
     console.log("table", table);
 
     /*
@@ -282,7 +292,7 @@ const ProveAttributes = () => {
                     <Form.Item>
                       <Button
                         type="primary"
-                        disabled={buttonDisabled}
+                        disabled={!hasSelected}
                         loading={loading}
                         onClick={proveButton}
                         key="proveButton"
