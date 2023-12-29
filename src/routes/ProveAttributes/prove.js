@@ -74,7 +74,7 @@ export function getKeys(selectedRowKeys, table) {
   const keys = [];
   selectedRowKeys.forEach((key) => {
     const row = table.find((row) => row.key === key);
-    if (row !== undefined) keys.push(row);
+    if (row !== undefined) keys.push({ key: row.key, value: row.value });
   });
   return keys;
 }
