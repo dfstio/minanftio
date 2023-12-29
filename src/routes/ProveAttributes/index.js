@@ -112,7 +112,6 @@ const ProveAttributes = () => {
     console.log("table", table);
     console.log("keys", getKeys(selectedRowKeys, table));
     const key = "Creating proof";
-    return;
 
     try {
       message.loading({
