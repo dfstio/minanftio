@@ -1,7 +1,6 @@
 import { PublicKey } from "o1js";
 import {
   MinaNFT,
-  RedactedMinaNFT,
   api,
   MINANFT_NAME_SERVICE,
   MinaNFTContract,
@@ -13,7 +12,16 @@ const { REACT_APP_JWT } = process.env;
 
 export async function check(json) {
   MinaNFT.minaInit("testworld2");
-  let verified = true;
+  if (
+    json.proof === undefined ||
+    json.proof.publicInput === undefined ||
+    json.proof.publicInput.length !== 6 ||
+    json.keys === undefined ||
+    json.keys.length !== json.proof?.publicInput[5]
+  ) {
+    console.log("JSON proof error", json.proof);
+    return false;
+  }
   const data = new MerkleMap();
   const kind = new MerkleMap();
   for (let i = 0; i < json.keys.length; i++) {
@@ -38,7 +46,7 @@ export async function check(json) {
       kind.getRoot().toJSON(),
       json.proof?.publicInput[3]
     );
-    verified = false;
+    return false;
   }
   const nameServiceAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE);
   const zkNames = new MinaNFTNameServiceContract(nameServiceAddress);
@@ -48,21 +56,25 @@ export async function check(json) {
   );
   await fetchAccount({ publicKey: zkApp.address, tokenId: zkNames.token.id });
   const metadata = zkApp.metadata.get();
+  const version = zkApp.version.get();
   if (
     metadata.data.toJSON() !== json.proof?.publicInput[0] ||
-    metadata.kind.toJSON() !== json.proof?.publicInput[1]
+    metadata.kind.toJSON() !== json.proof?.publicInput[1] ||
+    version.toJSON() !== json.version.toString()
   ) {
     console.log(
       "metadata check error",
       metadata.data.toJSON(),
       json.proof?.publicInput[0],
       metadata.kind.toJSON(),
-      json.proof?.publicInput[1]
+      json.proof?.publicInput[1],
+      version.toJSON(),
+      json.version.toString()
     );
-    verified = false;
+    return false;
   }
 
-  return verified;
+  return true;
 }
 
 export async function verify(auth, json) {
