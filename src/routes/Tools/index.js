@@ -118,6 +118,7 @@ const Tools = () => {
         if (executeResult.json !== undefined) {
           setResultJSON(executeResult.json);
           const resultname = getName(json);
+          console.log("resultname", resultname);
           setResultName(resultname);
           const blob = new Blob([executeResult.json], {
             type: "text/plain;charset=utf-8",
@@ -347,7 +348,14 @@ const Tools = () => {
                         hidden={result === ""}
                         key="executionResult"
                       >
-                        <div>{result}</div>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {result}
+                        </div>
                       </Form.Item>
                       <Divider />
                       <Form.Item

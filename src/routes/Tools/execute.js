@@ -202,6 +202,7 @@ export async function waitForExecution(jobId, auth) {
 export function getName(json) {
   const name =
     getFormattedDateTime(json.timestamp) + "." + json.filename + ".result.json";
+  return name;
 }
 
 function getFormattedDateTime(timestamp) {
