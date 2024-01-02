@@ -60,6 +60,7 @@ async function balance(JWT, json) {
     return {
       success: true,
       result: balance,
+      message: balance,
     };
   } catch (e) {
     console.error("balance error", e);
@@ -73,15 +74,49 @@ async function balance(JWT, json) {
 
 async function reserve(JWT, json) {
   try {
-    return {
-      success: false,
-      error: "reserve error",
-    };
+    if (JWT === undefined) throw new Error("JWT token is not set");
+    const minanft = new api(JWT);
+    if (json.data?.publicKey === undefined || json.data?.publicKey === "") {
+      console.error("Public key is undefined");
+      return {
+        success: false,
+        error: "Public key is undefined",
+      };
+    }
+    if (json.data?.name === undefined || json.data?.name === "") {
+      console.error("Name is undefined");
+      return {
+        success: false,
+        error: "Name is undefined",
+      };
+    }
+    const reserved = await minanft.reserveName({
+      name: json.data.name,
+      publicKey: json.data.publicKey,
+    });
+    if (
+      reserved !== undefined &&
+      reserved.isReserved === true &&
+      reserved.signature !== undefined
+    )
+      return {
+        success: true,
+        result: reserved,
+        json: JSON.stringify({ ...json.data, ...reserved }, null, 2),
+        message: "Name reserved",
+      };
+    else {
+      return {
+        success: false,
+        error: reserved.error,
+        reason: reserved.reason,
+      };
+    }
   } catch (e) {
     console.error("balance error", e);
     return {
       success: false,
-      error: "balance error",
+      error: "name reservation error",
       reason: e.toString(),
     };
   }
@@ -155,4 +190,23 @@ export async function waitForExecution(jobId, auth) {
     success: true,
     verificationResult: txData.result.result,
   };
+}
+
+export function getName(json) {
+  const name =
+    getFormattedDateTime(json.timestamp) + "." + json.filename + ".result.json";
+}
+
+function getFormattedDateTime(timestamp) {
+  const now = new Date(timestamp);
+
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, "0");
+  const day = now.getDate().toString().padStart(2, "0");
+
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const seconds = now.getSeconds().toString().padStart(2, "0");
+
+  return `${year}.${month}.${day}-${hours}.${minutes}.${seconds}`;
 }

@@ -23,9 +23,10 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { execute } from "./execute";
+import { execute, getName } from "./execute";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
+import { get } from "lodash";
 
 const logm = logger.info.child({ winstonModule: "Tools" });
 const { REACT_APP_DEBUG } = process.env;
@@ -44,6 +45,8 @@ const Tools = () => {
   const [data, setData] = useState("");
   const [json, setJson] = useState(undefined);
   const [result, setResult] = useState("");
+  const [resultname, setResultName] = useState("");
+  const [resultjson, setResultJSON] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -71,11 +74,22 @@ const Tools = () => {
         if (json.data !== undefined)
           setData(JSON.stringify(json.data, null, 2));
         setJson(json);
+        setResult("");
+        setResultJSON("");
+        setResultName("");
       }
     }
     setCounter(counter + 1);
     checkCanCreate();
   };
+
+  async function onDownloadClick() {
+    if (DEBUG) console.log("Download clicked");
+    const blob = new Blob([resultjson], {
+      type: "text/plain;charset=utf-8",
+    });
+    fileSaver.saveAs(blob, resultname);
+  }
 
   async function executeButton() {
     console.log("Execute button clicked");
@@ -95,11 +109,18 @@ const Tools = () => {
         executeResult?.result !== undefined
       ) {
         message.success({
-          content: `Command executed: ${executeResult.result}`,
+          content: `Command executed: ${executeResult.message ?? ""}`,
           key,
           duration: 240,
         });
         setResult(executeResult.result);
+        if (executeResult.json !== undefined) {
+          setResultJSON(executeResult.json);
+          setResultName(getName(json));
+        } else {
+          setResultJSON("");
+          setResultName("");
+        }
       } else
         message.error({
           content: `Error executing command: ${executeResult?.error ?? ""} ${
@@ -321,6 +342,17 @@ const Tools = () => {
                         key="executionResult"
                       >
                         <div>{result}</div>
+                      </Form.Item>
+                      <Divider />
+                      <Form.Item
+                        label=""
+                        name="resultlink"
+                        hidden={resultname === ""}
+                      >
+                        Please transfer this file to offline computer:{" "}
+                        <Button onClick={onDownloadClick} type="link">
+                          {resultname}
+                        </Button>
                       </Form.Item>
                     </Col>
                   </Row>
