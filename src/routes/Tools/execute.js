@@ -101,7 +101,17 @@ async function reserve(JWT, json) {
       reserved.signature !== undefined
     ) {
       const reservedJSON = JSON.stringify(
-        { ...json.data, ...reserved },
+        {
+          filename: json.data.name,
+          type: "name",
+          timestamp: Date.now(),
+          data: {
+            name: json.data.name,
+            account: json.data.account,
+            address: json.data.publicKey,
+            signature: reserved.signature,
+          },
+        },
         null,
         2
       );
@@ -110,6 +120,7 @@ async function reserve(JWT, json) {
         success: true,
         result: JSON.stringify(reserved, null, 2),
         json: reservedJSON,
+        filename: json.data.name + ".name.json",
         message: "Name reserved",
       };
     } else {

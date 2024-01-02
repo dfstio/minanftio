@@ -115,9 +115,12 @@ const Tools = () => {
           duration: 240,
         });
         setResult(executeResult.result);
-        if (executeResult.json !== undefined) {
+        if (
+          executeResult.json !== undefined &&
+          executeResult.filename !== undefined
+        ) {
           setResultJSON(executeResult.json);
-          const resultname = getName(json);
+          const resultname = executeResult.filename; //getName(json);
           console.log("resultname", resultname);
           setResultName(resultname);
           const blob = new Blob([executeResult.json], {
@@ -363,7 +366,8 @@ const Tools = () => {
                         name="resultlink"
                         hidden={resultname === ""}
                       >
-                        Please transfer this file to offline computer:{" "}
+                        Please transfer this file to offline computer to the
+                        data folder:{" "}
                         <Button onClick={onDownloadClick} type="link">
                           {resultname}
                         </Button>
