@@ -242,24 +242,10 @@ const Tools = () => {
                         </div>
                       </Form.Item>
                       <Form.Item hidden={time === ""} key="time text">
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          Request created: {time}
-                        </div>
+                        <div className="gx-mt-4">Request created: {time}</div>
                       </Form.Item>
                       <Form.Item hidden={data === ""} key="data text">
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          Request data: {data}
-                        </div>
+                        <div className="gx-mt-4">Request data: {data}</div>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -310,7 +296,7 @@ const Tools = () => {
                           onClick={executeButton}
                           key="executeButton"
                         >
-                          Verify Proof
+                          Execute Request
                         </Button>
                       </Form.Item>
                       <Divider />
