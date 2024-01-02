@@ -68,7 +68,8 @@ const Tools = () => {
         if (json.filename !== undefined) setName(json.filename);
         if (json.timestamp !== undefined)
           setTime(new Date(json.timestamp).toLocaleString());
-        if (json.data !== undefined) setData(json.data);
+        if (json.data !== undefined)
+          setData(JSON.stringify(json.data, null, 2));
         setJson(json);
       }
     }
