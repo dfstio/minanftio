@@ -108,7 +108,7 @@ async function reserve(JWT, json) {
       console.log("reservedJSON", reservedJSON);
       return {
         success: true,
-        result: reserved,
+        result: JSON.stringify(reserved, null, 2),
         json: reservedJSON,
         message: "Name reserved",
       };
