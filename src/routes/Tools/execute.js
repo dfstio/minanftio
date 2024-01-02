@@ -94,6 +94,7 @@ async function reserve(JWT, json) {
       name: json.data.name,
       publicKey: json.data.publicKey,
     });
+    console.log("reserved", reserved);
     if (
       reserved !== undefined &&
       reserved.isReserved === true &&
@@ -108,8 +109,8 @@ async function reserve(JWT, json) {
     else {
       return {
         success: false,
-        error: reserved.error,
-        reason: reserved.reason,
+        error: reserved.error.toString(),
+        reason: reserved.reason.toString(),
       };
     }
   } catch (e) {

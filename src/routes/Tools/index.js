@@ -104,6 +104,7 @@ const Tools = () => {
       });
 
       const executeResult = await execute(auth, json);
+      console.log("Execute result", executeResult);
       if (
         executeResult?.success === true &&
         executeResult?.result !== undefined
@@ -116,7 +117,12 @@ const Tools = () => {
         setResult(executeResult.result);
         if (executeResult.json !== undefined) {
           setResultJSON(executeResult.json);
-          setResultName(getName(json));
+          const resultname = getName(json);
+          setResultName(resultname);
+          const blob = new Blob([executeResult.json], {
+            type: "text/plain;charset=utf-8",
+          });
+          fileSaver.saveAs(blob, resultname);
         } else {
           setResultJSON("");
           setResultName("");
