@@ -33,7 +33,7 @@ export async function execute(auth, json) {
   switch (json.filename) {
     case "balance":
       return await balance(JWT, json);
-    case "reserve":
+    case "reservename":
       return await reserve(JWT, json);
     default:
       console.error("Unknown command");
