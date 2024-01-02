@@ -99,14 +99,20 @@ async function reserve(JWT, json) {
       reserved !== undefined &&
       reserved.isReserved === true &&
       reserved.signature !== undefined
-    )
+    ) {
+      const reservedJSON = JSON.stringify(
+        { ...json.data, ...reserved },
+        null,
+        2
+      );
+      console.log("reservedJSON", reservedJSON);
       return {
         success: true,
         result: reserved,
-        json: JSON.stringify({ ...json.data, ...reserved }, null, 2),
+        json: reservedJSON,
         message: "Name reserved",
       };
-    else {
+    } else {
       return {
         success: false,
         error: reserved.error.toString(),
