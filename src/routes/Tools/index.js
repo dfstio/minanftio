@@ -230,7 +230,7 @@ const Tools = () => {
                       </Form.Item>
                     </Col>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item hidden={name === ""}>
+                      <Form.Item hidden={name === ""} key="name text">
                         <div
                           className="gx-mt-4"
                           style={{
@@ -240,7 +240,7 @@ const Tools = () => {
                           Request name: {name}
                         </div>
                       </Form.Item>
-                      <Form.Item hidden={time === ""}>
+                      <Form.Item hidden={time === ""} key="time text">
                         <div
                           className="gx-mt-4"
                           style={{
@@ -250,7 +250,7 @@ const Tools = () => {
                           Request created: {time}
                         </div>
                       </Form.Item>
-                      <Form.Item hidden={data === ""}>
+                      <Form.Item hidden={data === ""} key="data text">
                         <div
                           className="gx-mt-4"
                           style={{
@@ -317,6 +317,7 @@ const Tools = () => {
                         label="Execution result: "
                         name="executionResult"
                         hidden={result === ""}
+                        key="executionResult"
                       >
                         <div>{result}</div>
                       </Form.Item>
