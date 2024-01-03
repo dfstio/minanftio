@@ -35,6 +35,8 @@ export async function execute(auth, json) {
       return await balance(JWT, json);
     case "reservename":
       return await reserve(JWT, json);
+    case "mint":
+      return await mint(JWT, json);
     default:
       console.error("Unknown command");
       return {
@@ -94,29 +96,105 @@ async function reserve(JWT, json) {
       name: json.data.name,
       publicKey: json.data.publicKey,
     });
+    console.log("reserved", reserved);
     if (
       reserved !== undefined &&
       reserved.isReserved === true &&
       reserved.signature !== undefined
-    )
+    ) {
+      const reservedJSON = JSON.stringify(
+        {
+          filename: json.data.name,
+          type: "name",
+          timestamp: Date.now(),
+          data: {
+            name: json.data.name,
+            account: json.data.account,
+            address: json.data.publicKey,
+            signature: reserved.signature,
+          },
+        },
+        null,
+        2
+      );
+      console.log("reservedJSON", reservedJSON);
       return {
         success: true,
-        result: reserved,
-        json: JSON.stringify({ ...json.data, ...reserved }, null, 2),
+        result: JSON.stringify(reserved, null, 2),
+        json: reservedJSON,
+        filename: json.data.name + ".name.json",
         message: "Name reserved",
       };
-    else {
+    } else {
       return {
         success: false,
-        error: reserved.error,
-        reason: reserved.reason,
+        error: reserved.error.toString(),
+        reason: reserved.reason.toString(),
       };
     }
   } catch (e) {
-    console.error("balance error", e);
+    console.error("name reservation error", e);
     return {
       success: false,
       error: "name reservation error",
+      reason: e.toString(),
+    };
+  }
+}
+
+async function mint(JWT, json) {
+  try {
+    if (JWT === undefined) throw new Error("JWT token is not set");
+    const minanft = new api(JWT);
+    if (json.data?.uri === undefined || json.data?.uri === "") {
+      console.error("URI is undefined");
+      return {
+        success: false,
+        error: "URI is undefined",
+      };
+    }
+    if (json.data?.signature === undefined || json.data?.signature === "") {
+      console.error("Signature is undefined");
+      return {
+        success: false,
+        error: "Signature is undefined",
+      };
+    }
+    if (json.data?.privateKey === undefined || json.data?.privateKey === "") {
+      console.error("privateKey is undefined");
+      return {
+        success: false,
+        error: "privateKey is undefined",
+      };
+    }
+    const result = await minanft.mint({
+      uri: json.data.uri,
+      signature: json.data.signature,
+      privateKey: json.data.privateKey,
+      useArweave: json.data.useArweave ?? false,
+    });
+    console.log("api result", result);
+
+    const jobId = result.jobId;
+    if (jobId === undefined) {
+      console.error("JobId is undefined");
+      return {
+        success: false,
+        error: "JobId is undefined",
+        reason: result.error,
+      };
+    }
+
+    return {
+      success: true,
+      jobId,
+      result: "Minting started",
+    };
+  } catch (e) {
+    console.error("mint error", e);
+    return {
+      success: false,
+      error: "mint error",
       reason: e.toString(),
     };
   }
@@ -180,21 +258,22 @@ export async function waitForExecution(jobId, auth) {
     console.error("txData is undefined");
     return {
       success: false,
-      error: "Verification error",
+      error: "Mint error",
       reason: txData.error,
     };
   }
-  console.log("verificationResult", txData.result.result);
+  console.log("mintResult", txData.result.result);
 
   return {
     success: true,
-    verificationResult: txData.result.result,
+    mintResult: txData.result.result,
   };
 }
 
 export function getName(json) {
   const name =
     getFormattedDateTime(json.timestamp) + "." + json.filename + ".result.json";
+  return name;
 }
 
 function getFormattedDateTime(timestamp) {

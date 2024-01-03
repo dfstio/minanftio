@@ -23,7 +23,7 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { execute, getName } from "./execute";
+import { execute, waitForExecution } from "./execute";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { get } from "lodash";
@@ -104,6 +104,7 @@ const Tools = () => {
       });
 
       const executeResult = await execute(auth, json);
+      console.log("Execute result", executeResult);
       if (
         executeResult?.success === true &&
         executeResult?.result !== undefined
@@ -114,9 +115,18 @@ const Tools = () => {
           duration: 240,
         });
         setResult(executeResult.result);
-        if (executeResult.json !== undefined) {
+        if (
+          executeResult.json !== undefined &&
+          executeResult.filename !== undefined
+        ) {
           setResultJSON(executeResult.json);
-          setResultName(getName(json));
+          const resultname = executeResult.filename; //getName(json);
+          console.log("resultname", resultname);
+          setResultName(resultname);
+          const blob = new Blob([executeResult.json], {
+            type: "text/plain;charset=utf-8",
+          });
+          fileSaver.saveAs(blob, resultname);
         } else {
           setResultJSON("");
           setResultName("");
@@ -130,50 +140,41 @@ const Tools = () => {
           duration: 60,
         });
 
-      /*
-      
-      console.log("Verify job result", jobResult);
-      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
+      if (
+        executeResult?.success === true &&
+        executeResult?.jobId !== undefined
+      ) {
+        const jobId = executeResult.jobId;
+        console.log("Verify job result", jobId);
         message.loading({
-          content: `Started verification job ${jobResult.jobId}`,
+          content: `Started mint job ${jobId}`,
           key,
           duration: 600,
         });
-      } else {
-        message.error({
-          content: `Error verifying proof: ${jobResult?.error ?? ""} ${
-            jobResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
+
+        const mintResult = await waitForExecution(jobId, auth);
+        if (
+          mintResult?.success === true &&
+          mintResult?.mintResult !== undefined
+        ) {
+          message.success({
+            content: `Minted, transaction: ${mintResult.mintResult}`,
+            key,
+            duration: 240,
+          });
+          setResult(
+            "https://minascan.io/testworld/tx/" + mintResult.mintResult
+          );
+        } else
+          message.error({
+            content: `Error minting: ${mintResult?.error ?? ""} ${
+              mintResult?.reason ?? ""
+            }`,
+            key,
+            duration: 60,
+          });
         setLoading(false);
-        return;
       }
-      const jobId = jobResult.jobId;
-      const mintResult = await waitForProof(jobId, auth);
-      if (
-        mintResult?.success === true &&
-        mintResult?.verificationResult !== undefined
-      ) {
-        message.success({
-          content: `Proof verified, transaction: ${mintResult.verificationResult}`,
-          key,
-          duration: 240,
-        });
-        setVerificationResult(
-          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
-        );
-      } else
-        message.error({
-          content: `Error verifying proof: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
-      */
-      setLoading(false);
     } catch (error) {
       console.log("Execution error", error);
       setLoading(false);
@@ -341,7 +342,14 @@ const Tools = () => {
                         hidden={result === ""}
                         key="executionResult"
                       >
-                        <div>{result}</div>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {result}
+                        </div>
                       </Form.Item>
                       <Divider />
                       <Form.Item
@@ -349,7 +357,8 @@ const Tools = () => {
                         name="resultlink"
                         hidden={resultname === ""}
                       >
-                        Please transfer this file to offline computer:{" "}
+                        Please transfer this file to offline computer to the
+                        data folder:{" "}
                         <Button onClick={onDownloadClick} type="link">
                           {resultname}
                         </Button>
