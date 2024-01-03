@@ -23,7 +23,7 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { execute, getName } from "./execute";
+import { execute, waitForExecution } from "./execute";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { get } from "lodash";
@@ -140,50 +140,41 @@ const Tools = () => {
           duration: 60,
         });
 
-      /*
-      
-      console.log("Verify job result", jobResult);
-      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
+      if (
+        executeResult?.success === true &&
+        executeResult?.jobId !== undefined
+      ) {
+        const jobId = executeResult.jobId;
+        console.log("Verify job result", jobId);
         message.loading({
-          content: `Started verification job ${jobResult.jobId}`,
+          content: `Started mint job ${jobId}`,
           key,
           duration: 600,
         });
-      } else {
-        message.error({
-          content: `Error verifying proof: ${jobResult?.error ?? ""} ${
-            jobResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
+
+        const mintResult = await waitForExecution(jobId, auth);
+        if (
+          mintResult?.success === true &&
+          mintResult?.mintResult !== undefined
+        ) {
+          message.success({
+            content: `Minted, transaction: ${mintResult.mintResult}`,
+            key,
+            duration: 240,
+          });
+          setResult(
+            "https://minascan.io/testworld/tx/" + mintResult.mintResult
+          );
+        } else
+          message.error({
+            content: `Error minting: ${mintResult?.error ?? ""} ${
+              mintResult?.reason ?? ""
+            }`,
+            key,
+            duration: 60,
+          });
         setLoading(false);
-        return;
       }
-      const jobId = jobResult.jobId;
-      const mintResult = await waitForProof(jobId, auth);
-      if (
-        mintResult?.success === true &&
-        mintResult?.verificationResult !== undefined
-      ) {
-        message.success({
-          content: `Proof verified, transaction: ${mintResult.verificationResult}`,
-          key,
-          duration: 240,
-        });
-        setVerificationResult(
-          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
-        );
-      } else
-        message.error({
-          content: `Error verifying proof: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
-      */
-      setLoading(false);
     } catch (error) {
       console.log("Execution error", error);
       setLoading(false);
