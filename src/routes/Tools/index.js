@@ -145,7 +145,7 @@ const Tools = () => {
         executeResult?.jobId !== undefined
       ) {
         const jobId = executeResult.jobId;
-        console.log("Verify job result", jobId);
+        console.log("job id", jobId);
         message.loading({
           content: `Started mint job ${jobId}`,
           key,
