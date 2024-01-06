@@ -57,7 +57,7 @@
     "logform": "^2.6.0",
     "mailgun-js": "^0.22.0",
     "markdown-to-jsx": "^7.3.2",
-    "minanft": "^1.4.3",
+    "minanft": "^1.4.6",
     "moment": "^2.29.4",
     "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
