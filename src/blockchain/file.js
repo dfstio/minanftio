@@ -1,5 +1,5 @@
 import { MerkleTree, Field, Encoding } from "o1js";
-import { FileData } from "minanft";
+import { FileData, File } from "minanft";
 //import { createHash } from "crypto";
 import axios from "axios";
 import { ARWEAVE } from "minanft";
@@ -58,10 +58,8 @@ export async function getFileData(
   let storage = "";
   if (calculateRoot) {
     const bytes = new Uint8Array(binary.byteLength);
-    const fields = [];
     bytes.set(binary);
-    fields.push(...Encoding.bytesToFields(bytes));
-
+    const fields = File.fillFields(bytes);
     height = Math.ceil(Math.log2(fields.length + 2)) + 1;
     const tree = new MerkleTree(height);
     if (fields.length > tree.leafCount)
