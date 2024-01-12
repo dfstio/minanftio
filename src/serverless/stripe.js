@@ -15,11 +15,13 @@ const delayMS = 1000;
 const logger = require("./winston");
 const logm = logger.debug.child({ winstonModule: "stripe" });
 
+/*
 const {
   lambdaTransferToken,
   lambdaAddBalance,
   lambdaMintItem,
 } = require("../serverless/lambda");
+*/
 
 async function getToken(tokenId) {
   const log = logm.child({ tokenId, wf: "getToken" });
@@ -60,7 +62,7 @@ async function checkoutCompleted(body, headers) {
   switch (event.type) {
     case "checkout.session.completed":
       const checkout1 = event.data.object;
-      await handleCheckoutCompleted(checkout1);
+      //await handleCheckoutCompleted(checkout1);
       break;
 
     case "charge.succeeded":
@@ -68,9 +70,9 @@ async function checkoutCompleted(body, headers) {
       if (
         event.data.object.metadata &&
         event.data.object.metadata.tguser !== undefined
-      )
-        await handleCheckoutCompletedTelegram(checkout2);
-      else log.info(`${event.type}`, { event, stripeEvent: true });
+      ) {
+        //await handleCheckoutCompletedTelegram(checkout2);
+      } else log.info(`${event.type}`, { event, stripeEvent: true });
       break;
 
     default:
@@ -79,6 +81,7 @@ async function checkoutCompleted(body, headers) {
   }
 }
 
+/*
 async function handleCheckoutCompletedTelegram(checkout) {
   const log = logm.child({ checkout, wf: "handleCheckoutCompletedTelegram" });
 
@@ -204,6 +207,7 @@ async function handleCheckoutCompleted(checkout) {
 
   //console.log("Checkout status: ", checkout.payment_status);
 }
+*/
 
 async function createCheckoutSession(body) {
   console.log("createCheckoutSession body - stripe", body);
