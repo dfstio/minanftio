@@ -20,7 +20,6 @@ import {
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
-import botapi from "../../serverless/botapi";
 import { post, commit, waitForPost } from "./post";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
