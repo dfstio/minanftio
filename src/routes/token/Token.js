@@ -9,7 +9,7 @@ import {
   CaretDownFilled,
 } from "@ant-design/icons";
 import IntlMessages from "util/IntlMessages";
-import SellButton from "../Explore/Sell";
+//import SellButton from "../Explore/Sell";
 import BuyButton from "../Explore/Buy";
 import ReactPlayer from "react-player";
 import ReactJkMusicPlayer from "react-jinke-music-player";
@@ -1273,7 +1273,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </span>
                     {canSell ? (
                       <span style={{ float: "right" }}>
-                        <SellButton item={item} address={address} />
+                        {/*<SellButton item={item} address={address} />*/}
                       </span>
                     ) : (
                       <span>
