@@ -112,73 +112,7 @@ const unlockable = (tokenId, address) => {
   });
 };
 
-/*
-const encrypt = (toEncrypt, key) => {
-  const data = {"data": toEncrypt, "key": key };
-  if(DEBUG) console.log("encrypt api: ", data);
-  return fetch('/api/encrypt', {
-    body: JSON.stringify(data),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
-
-
-
-
-const getToken = (tokenId, force = false, contract = "80001.0x49368C4ED51BE6484705F07B63eBD92270923081") => {
-  if(DEBUG) console.log("getToken api: tokenId: ", tokenId, "force: ", force);
-  //const strForce = (force)?"true":"false";
-  const data = {"tokenId": tokenId, "force": force, "contract": contract};
-  return fetch('/api/gettoken', {
-    body: JSON.stringify(data),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
-
-
-const hello = (txRequest) => {
-  if(DEBUG) console.log("hello api: txRequest: ", txRequest);
-
-  return fetch('/api/hello', {
-    body: JSON.stringify(txRequest),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
-
-*/
-
-const txSent = (txData, chainId, transactionId = "") => {
-  const data = {
-    txData: txData,
-    transactionId: transactionId,
-    chainId: chainId,
-  };
-  //const log = logm.child({ wf: 'txSent', data });
-  try {
-    notify.hash(txData);
-    //log.info("txSent api ${txData}");
-    if (txData === undefined || txData === 0)
-      return { error: "txSent error - wrong hash", success: false };
-    return fetch("/api/tx-background", {
-      body: JSON.stringify(data),
-      method: "POST",
-    }).then((response) => {
-      //if(DEBUG) console.log("txSent api response: ", response);
-      return response;
-    });
-  } catch (error) {
-    console.error("txSent catch", { error, data });
-  }
-};
-
 export default {
-  txSent: txSent,
   sell: sell,
   unlockable: unlockable,
   content: content,
