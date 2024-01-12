@@ -34,11 +34,6 @@ import { storageUrl } from "../../blockchain/storage";
 //import '../../styles/token/audio-player.less';
 
 const {
-  getFromIPFS,
-  decryptUnlockableToken,
-  getEncryptedFileFromIPFS,
-} = require("../../blockchain/ipfs");
-const {
   REACT_APP_CONTRACT_ADDRESS,
   REACT_APP_CHAIN_ID,
   REACT_APP_VIRTUOSO_URL,

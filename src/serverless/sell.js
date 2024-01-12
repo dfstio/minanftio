@@ -1,5 +1,4 @@
 import api from "./api";
-import { getFromIPFS, addToIPFS } from "../blockchain/ipfs";
 import //getVirtuosoUnlockableContentKey,
 //metamaskDecrypt,
 //virtuosoSell,
@@ -41,30 +40,6 @@ const operator = async (values) => {
 
   return { key: operator.data.key, sale: sellJSON };
 };
-
-const ipfs = async (data) => {
-  const result = await addToIPFS(JSON.stringify(data));
-  if (DEBUG) console.log("Uploaded to IPFS with hash ", result.path);
-  return result.path;
-};
-/*
-async function ethEncrypt(toEncrypt, publicKey) {
-    const encrypted = await EthCrypto.encryptWithPublicKey(
-        publicKey,
-        toEncrypt,
-    );
-    return EthCrypto.cipher.stringify(encrypted);
-}
-
-
-async function ethDecrypt(toDecrypt, privateKey)
-{
-    const data = EthCrypto.cipher.parse(toDecrypt);
-    const decrypted = await EthCrypto.decryptWithPrivateKey(privateKey, data);
-    return decrypted;
-
-};
-*/
 
 const unlockable = async (sellData, operatorData, address) => {
   let newSellKey = "";

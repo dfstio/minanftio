@@ -42,16 +42,6 @@ const logm = logger.info.child({
   winstonComponent: "Custom",
 });
 
-/*
-const {
-  addFileHashToIPFS,
-  addToIPFS,
-  encryptUnlockableToken,
-  writeToken,
-} = require("../../blockchain/ipfs");
-const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
-*/
-
 const { TextArea } = Input;
 const { Option } = Select;
 const Dragger = Upload.Dragger;
