@@ -6,7 +6,7 @@ import { Highlight } from "react-instantsearch-dom";
 import { Button } from "antd";
 import IntlMessages from "util/IntlMessages";
 import { minaLogin } from "../../blockchain/mina";
-import SellButton from "./Sell";
+//import SellButton from "./Sell";
 import BuyButton from "./Buy";
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -43,7 +43,7 @@ const ProductItem = ({ item }) => {
           </a>
           {canSell ? (
             <span style={{ float: "right" }}>
-              <SellButton item={item} address={address} />
+              {/*<SellButton item={item} address={address} />*/}
             </span>
           ) : (
             <span>
