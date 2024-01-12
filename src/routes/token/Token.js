@@ -9,15 +9,7 @@ import {
   CaretDownFilled,
 } from "@ant-design/icons";
 import IntlMessages from "util/IntlMessages";
-import {
-  metamaskLogin,
-  //virtuosoRegisterPublicKey,
-  //getVirtuosoUnlockableContentKey,
-  //getVirtuosoPublicKey,
-  metamaskDecrypt,
-  getSignature,
-} from "../../blockchain/mina";
-import SellButton from "../Explore/Sell";
+//import SellButton from "../Explore/Sell";
 import BuyButton from "../Explore/Buy";
 import ReactPlayer from "react-player";
 import ReactJkMusicPlayer from "react-jinke-music-player";
@@ -28,16 +20,10 @@ import "./style.css";
 import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
 import api from "../../serverless/api";
-import { getOnLoad, getContentMessage } from "../../serverless/content";
 import { prepareMetadata } from "./metadata";
 import { storageUrl } from "../../blockchain/storage";
 //import '../../styles/token/audio-player.less';
 
-const {
-  getFromIPFS,
-  decryptUnlockableToken,
-  getEncryptedFileFromIPFS,
-} = require("../../blockchain/ipfs");
 const {
   REACT_APP_CONTRACT_ADDRESS,
   REACT_APP_CHAIN_ID,
@@ -1287,7 +1273,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </span>
                     {canSell ? (
                       <span style={{ float: "right" }}>
-                        <SellButton item={item} address={address} />
+                        {/*<SellButton item={item} address={address} />*/}
                       </span>
                     ) : (
                       <span>

@@ -72,7 +72,7 @@ const Sidebar = () => {
 
         <div className="gx-algolia-category-item">
           <div className="gx-algolia-category-title">Refine By</div>
-
+          {/*
           <div className="gx-algolia-refinementList">
             <Checkbox
               onChange={onChange}
@@ -82,7 +82,7 @@ const Sidebar = () => {
               Only my NFTs
             </Checkbox>
           </div>
-
+*/}
           <Configure filters={filter} />
 
           <Panel

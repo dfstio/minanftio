@@ -20,7 +20,6 @@ import {
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
-import botapi from "../../serverless/botapi";
 import { post, commit, waitForPost } from "./post";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
@@ -41,16 +40,6 @@ const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
-
-/*
-const {
-  addFileHashToIPFS,
-  addToIPFS,
-  encryptUnlockableToken,
-  writeToken,
-} = require("../../blockchain/ipfs");
-const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
-*/
 
 const { TextArea } = Input;
 const { Option } = Select;

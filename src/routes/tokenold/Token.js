@@ -9,14 +9,6 @@ import {
   CaretDownFilled,
 } from "@ant-design/icons";
 import IntlMessages from "util/IntlMessages";
-import {
-  metamaskLogin,
-  //virtuosoRegisterPublicKey,
-  //getVirtuosoUnlockableContentKey,
-  //getVirtuosoPublicKey,
-  metamaskDecrypt,
-  getSignature,
-} from "../../blockchain/mina";
 import SellButton from "../Avatars/Sell";
 import BuyButton from "../Avatars/Buy";
 import ReactPlayer from "react-player";
@@ -28,7 +20,6 @@ import "./style.css";
 import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
 import api from "../../serverless/api";
-import { getOnLoad, getContentMessage } from "../../serverless/content";
 //import '../../styles/token/audio-player.less';
 
 const {
@@ -673,80 +664,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       let newName = item.name;
       let newImage = item.image;
       let newAnimation = item.animation_url; // USE IT LATER!!!
-      /*
-            if (timedContent.success && timedContent.content !== undefined) {
-                if (timedContent.signed) setStreamingContent(true);
 
-                if (
-                    timedContent.content.description !== undefined &&
-                    timedContent.content.description !== ""
-                )
-                    newDescription = timedContent.content.description;
-                if (
-                    timedContent.content.name !== undefined &&
-                    timedContent.content.name !== ""
-                )
-                    newName = timedContent.content.name;
-                if (
-                    timedContent.content.image !== undefined &&
-                    timedContent.content.image !== ""
-                )
-                    newImage = timedContent.content.image;
-                if (
-                    timedContent.content.animation_url !== undefined &&
-                    timedContent.content.animation_url !== ""
-                )
-                    newAnimation = timedContent.content.animation_url;
-
-                let count =
-                    timedContent.content.media_count === undefined
-                        ? 0
-                        : timedContent.content.media_count;
-
-                if (count > 0) {
-                    let i;
-
-                    for (i = 0; i < count; i++) {
-                        const type = timedContent.content.media[
-                            i
-                        ].filetype.replace(/\/[^/.]+$/, "");
-                        const id = newMedia.length;
-                        if (type === "video")
-                            newMedia.push({
-                                data: timedContent.content.media[i],
-                                id: id,
-                            });
-                        if (type === "image")
-                            newMedia.push({
-                                data: timedContent.content.media[i],
-                                id: id,
-                            });
-                        if (type === "audio")
-                            newAudio.push(timedContent.content.media[i]);
-                        if (type === "application") {
-                            if (
-                                timedContent.content.media[i].filetype ===
-                                "application/pdf"
-                            )
-                                newMedia.push({
-                                    data: timedContent.content.media[i],
-                                    id: id,
-                                });
-                        }
-                    }
-               }
-
-                let acount =
-                    timedContent.content.attachments_count === undefined
-                        ? 0
-                        : timedContent.content.attachments_count;
-                if (acount > 0)
-                    newAttachments = [
-                        ...newAttachments,
-                        ...timedContent.content.attachments,
-                    ];
-            }
-*/
       if (descriptionMarkdown !== newDescription)
         setDescriptionMarkdown(newDescription);
       if (name !== newName) setName(newName);
@@ -755,29 +673,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       setAudio(newAudio);
       setAttachments(newAttachments);
 
-      /*
-            if (loadingStreaming) {
-                setLoadingStreaming(false);
-
-                if (
-                    timedContent.good_signature !== undefined &&
-                    timedContent.good_signature === true
-                ) {
-                    setStreamingContentLoaded(true);
-                    message.success({
-                        content: `Secret content was loaded`,
-                        key: "loadSecret",
-                        duration: 10,
-                    });
-                } else {
-                    message.error({
-                        content: `Secret content was not loaded - bad signature`,
-                        key: "loadSecret",
-                        duration: 30,
-                    });
-                }
-            }
-            */
       setCounter(counter + 1);
     }
     loadMedia();
@@ -794,51 +689,13 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     if (DEBUG) console.log("Register clicked", address);
     if (address !== undefined && address !== "") {
       return true;
-      /*
-      const newKey1 = await getVirtuosoPublicKey(address);
-      if (newKey1 !== "") {
-        dispatch(updatePublicKey(newKey1));
-        return true;
-      }
-      */
+
       const key = "RegisterPublicKeyTokenItem";
       message.loading({
         content: `To view unlockable content please provide public key in Metamask and sign transaction`,
         key,
         duration: 60,
       });
-      /*
-      const result = await virtuosoRegisterPublicKey(address);
-      if (result.publicKey !== "" && result.hash !== "") {
-        let i = 0;
-        let newKey = "";
-        while (newKey === "" && i < 20) {
-          await sleep(5000);
-          newKey = await getVirtuosoPublicKey(address);
-
-          i++;
-          if (DEBUG) console.log("Register - public key", i, ":", newKey);
-        }
-
-        dispatch(updatePublicKey(newKey));
-        await sleep(10000);
-        await api.unlockable(item.tokenId, address);
-        await sleep(10000);
-
-        message.success({
-          content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`,
-          key,
-          duration: 30,
-        });
-
-        return true;
-      } else
-        message.error({
-          content: `Public key is not provided or written to blockchain`,
-          key,
-          duration: 10,
-        });
-        */
     }
     return false;
   }
@@ -909,94 +766,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     //await fetchUnlockable(newMedia, initial_count, newCount);
   };
 
-  const loadUnlockable = async (again = false) => {
-    /*
-    setLoadingUnlockable(true);
-    message.loading({
-      content: `Loading unlockable content from blockchain`,
-      key: "loadUnlockable",
-      duration: 6000,
-    });
-
-    try {
-      let encryptedKey = await getVirtuosoUnlockableContentKey(
-        item.tokenId,
-        address
-      );
-      if (DEBUG) console.log("View - unlockable key: ", encryptedKey);
-
-      if (encryptedKey === "" && again === true) {
-        let i = 0;
-        while (encryptedKey === "" && i < 20) {
-          //await api.unlockable(item.tokenId, address);
-          await sleep(10000);
-          encryptedKey = await getVirtuosoUnlockableContentKey(
-            item.tokenId,
-            address
-          );
-          i++;
-          if (DEBUG) console.log("View - unlockable key", i, ":", encryptedKey);
-        }
-      }
-
-      if (encryptedKey !== "") {
-        const unlockableIPFS = await getFromIPFS(encryptedKey);
-        //if(DEBUG)  console.log("unlockable unlockableIPFS: ", unlockableIPFS );
-        let unlockableJSON = JSON.parse(unlockableIPFS.toString());
-        const password = await metamaskDecrypt(unlockableJSON.key, address);
-
-        if (password === "") {
-          setLoadingUnlockable(false);
-          message.error({
-            content: `Error loading unlockable content`,
-            key: "loadUnlockable",
-            duration: 30,
-          });
-          return;
-        }
-        const decryptedData = await decryptUnlockableToken(
-          unlockableJSON.data,
-          password
-        );
-
-        setUnlockable(decryptedData);
-        setUAttachments(decryptedData.attachments);
-        if (DEBUG) console.log("View - Decrypted data: ", decryptedData);
-
-        setCounter(counter + 1);
-        await addUnlockable(decryptedData.media, decryptedData.media_count);
-        message.success({
-          content: `Unlockable content and files have loaded`,
-          key: "loadUnlockable",
-          duration: 30,
-        });
-        if (DEBUG) console.log(`loadUnlockable media:`, media, "audio", audio);
-      } else {
-        message.error({
-          content: `Error loading unlockable content, please try later`,
-          key: "loadUnlockable",
-          duration: 30,
-        });
-        await api.unlockable(item.tokenId, address);
-      }
-    } catch (error) {
-      console.error("loadUnlockable error:", error);
-      message.error({
-        content: `Error loading unlockable content`,
-        key: "loadUnlockable",
-        duration: 30,
-      });
-     
-    }
-
-    setLoadingUnlockable(false);
-    setCounter(counter + 1);
-    await sleep(1000);
-    setCounter(counter + 1);
-    await sleep(1000);
-    setCounter(counter + 1);
-     */
-  };
+  const loadUnlockable = async (again = false) => {};
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1021,46 +791,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         }
       } else {
         await loadUnlockable();
-      }
-    } else message.error("Please connect with MetaMask");
-  }
-
-  async function showStreamingContent() {
-    if (address !== undefined && address !== "") {
-      setLoadingStreaming(true);
-      message.loading({
-        content: `Loading secret content`,
-        key: "loadSecret",
-        duration: 6000,
-      });
-      if (DEBUG) console.log("showStreamingContent", address);
-      const result = await getContentMessage(item.tokenId);
-      if (result.success) {
-        setSignatureTime(result.time);
-        message.loading({
-          content: `Please sign request to open secret content`,
-          key: "loadSecret",
-          duration: 6000,
-        });
-        const signature = await getSignature(result.message);
-        if (signature !== "") setSignature(signature);
-        else {
-          setLoadingStreaming(false);
-          message.error({
-            content: `Error opening secret content`,
-            key: "loadSecret",
-            duration: 30,
-          });
-          return;
-        }
-      } else {
-        setLoadingStreaming(false);
-        message.error({
-          content: `Error opening secret content`,
-          key: "loadSecret",
-          duration: 30,
-        });
-        return;
       }
     } else message.error("Please connect with MetaMask");
   }
@@ -1264,25 +994,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                         loading={loadingUnlockable}
                       >
                         Show Unlockable Content
-                      </Button>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  {showUnlockableButton &&
-                  small === false &&
-                  preview === false &&
-                  streamingContent === true &&
-                  streamingContentLoaded === false ? (
-                    <div
-                      className="gx-product-image"
-                      style={{ marginTop: "25px" }}
-                    >
-                      <Button
-                        onClick={showStreamingContent}
-                        loading={loadingStreaming}
-                      >
-                        Show Secret Content
                       </Button>
                     </div>
                   ) : (
