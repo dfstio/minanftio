@@ -175,7 +175,6 @@ const blockchain = async (
 
 export default {
   operator: operator,
-  ipfs: ipfs,
   unlockable: unlockable,
   blockchain: blockchain,
 };
