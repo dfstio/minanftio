@@ -5,7 +5,7 @@ export async function hash(address) {
     return { isCalculated: false, hash: "", reason: "address is undefined" };
   try {
     const response = await axios.post(process.env.REACT_APP_HASH_URL, {
-      auth: process.env.BOTAPIAUTH,
+      auth: process.env.REACT_APP_BOTAPIAUTH,
       publicKey: address,
     });
     if (response && response.data) return response.data;
