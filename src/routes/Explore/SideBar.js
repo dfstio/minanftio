@@ -12,7 +12,7 @@ import {
   Configure,
 } from "react-instantsearch-dom";
 import IntlMessages from "../../util/IntlMessages";
-//import api from "../../serverless/api";
+import { hash } from "../../blockchain/hash";
 
 const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);
@@ -29,16 +29,16 @@ const Sidebar = () => {
   const [disabled, setDisabled] = useState(true);
   //const [visible, setVisible] = useState(false);
 
-  function onChange(e) {
+  async function onChange(e) {
     if (address !== "") {
       setDisabled(false);
-
       if (e.target.checked === true) {
-        let filterStr = `type:nft`;
-        //if (publicKey !== undefined || publicKey !== "")
-        //  filterStr = `owner:${publicKey} AND type:nft`;
-        setFilter(filterStr);
-        console.log("On change", e.target.checked, filterStr);
+        const hashResult = await hash(address);
+        if (hashResult.isCalculated === true) {
+          const filterStr = `owner:${hashResult.hash} AND type:nft`;
+          setFilter(filterStr);
+          console.log("On change", e.target.checked, filterStr);
+        } else console.error("hashResult", hashResult);
       } else {
         const filterStr = `type:nft`;
         setFilter(filterStr);
@@ -93,7 +93,6 @@ const Sidebar = () => {
         <div className="gx-algolia-category-item">
           <div className="gx-algolia-category-title">Refine By</div>
 
-          {/*
           <div className="gx-algolia-refinementList">
             <Checkbox
               onChange={onChange}
@@ -103,7 +102,7 @@ const Sidebar = () => {
               Only my NFTs
             </Checkbox>
           </div>
-          */}
+
           <Configure filters={filter} />
 
           <Panel

@@ -35,8 +35,7 @@ const Sidebar = () => {
           const filterStr = `owner:${hashResult.hash} AND type:post`;
           setFilter(filterStr);
           console.log("On change", e.target.checked, filterStr);
-        }
-        console.error("hashResult", hashResult);
+        } else console.error("hashResult", hashResult);
       } else {
         const filterStr = `type:post`;
         setFilter(filterStr);
