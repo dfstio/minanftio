@@ -11,7 +11,7 @@ import {
   Configure,
 } from "react-instantsearch-dom";
 import IntlMessages from "../../util/IntlMessages";
-import { hash } from "../../functions/hash";
+import { hash } from "../../blockchain/hash";
 
 const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);
