@@ -44,7 +44,7 @@ const columns = [
   },
 ];
 
-const VerifyAttributes = () => {
+const Faucet = () => {
   const [form] = Form.useForm();
   const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(false);
@@ -160,11 +160,8 @@ const VerifyAttributes = () => {
             <Card
               className="gx-card"
               key="billingCard"
-              title=<IntlMessages id="verify.onchain.proofs.strings.form.title" />
+              title="Testworld2 Faucet"
             >
-              <div className="gx-d-flex justify-content-center">
-                <IntlMessages id="verify.onchain.proofs.strings.form.description" />
-              </div>
               <Form
                 form={form}
                 key="billingForm"
@@ -183,32 +180,19 @@ const VerifyAttributes = () => {
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
-                        label={
-                          <span>
-                            <span>Authorisation code. </span>
-                            <span>
-                              {" "}
-                              <a
-                                href="https://t.me/minanft_bot?start=auth"
-                                target="_blank"
-                              >
-                                Get it here
-                              </a>
-                            </span>
-                          </span>
-                        }
+                        label="Enter public key of your account"
                         name="auth"
                         rules={[
                           {
                             required: true,
-                            message: "Please enter authorisation code",
+                            message: "Please enter public key of your account"",
                           },
                         ]}
-                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+                        placeholder=""
                       >
                         <TextArea
                           autoSize={{
-                            minRows: 2,
+                            minRows: 1,
                             maxRows: 3,
                           }}
                         />
@@ -216,13 +200,6 @@ const VerifyAttributes = () => {
                     </Col>
                   </Row>
 
-                  <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item>
-                        <Table dataSource={table} columns={columns} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item>
@@ -233,12 +210,12 @@ const VerifyAttributes = () => {
                           onClick={proveButton}
                           key="proveButton"
                         >
-                          Verify Proof
+                          Get MINA
                         </Button>
                       </Form.Item>
                       <Divider />
                       <Form.Item
-                        label="Verification transaction sent: "
+                        label="Topup transaction sent: "
                         name="mintedlink"
                         hidden={verificationResult === ""}
                       >
@@ -260,4 +237,4 @@ const VerifyAttributes = () => {
   );
 };
 
-export default VerifyAttributes;
+export default Faucet;
