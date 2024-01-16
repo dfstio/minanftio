@@ -23,8 +23,10 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
+import { faucet } from "../../blockchain/faucet";
+import { set } from "lodash";
 
-const logm = logger.info.child({ winstonModule: "Corporate" });
+const logm = logger.info.child({ winstonModule: "Faucet" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
@@ -90,6 +92,27 @@ const Faucet = () => {
         key,
         duration: 600,
       });
+      const hashResult = await faucet(auth);
+      if (hashResult.isCalculated === true) {
+        setVerificationResult(hashResult.hash);
+        message.success({
+          content: `Transaction sent: ${hashResult.hash}`,
+          key,
+          duration: 240,
+        });
+        setVerificationResult(
+          "https://minascan.io/testworld/tx/" + hashResult.hash
+        );
+      } else {
+        console.error("faucetResult", hashResult);
+        message.error({
+          content: `Error requesting MINA from faucet: ${
+            hashResult?.error ?? ""
+          } ${hashResult?.reason ?? ""}`,
+          key,
+          duration: 60,
+        });
+      }
 
       /*
       const jobResult = await verify(auth, json);
@@ -205,7 +228,7 @@ const Faucet = () => {
                       <Form.Item>
                         <Button
                           type="primary"
-                          disabled={json === undefined}
+                          disabled={auth === ""}
                           loading={loading}
                           onClick={proveButton}
                           key="proveButton"
