@@ -185,7 +185,7 @@ const Faucet = () => {
                         rules={[
                           {
                             required: true,
-                            message: "Please enter public key of your account"",
+                            message: "Please enter public key of your account",
                           },
                         ]}
                         placeholder=""
