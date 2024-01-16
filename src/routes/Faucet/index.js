@@ -80,17 +80,18 @@ const VerifyAttributes = () => {
   async function proveButton() {
     console.log("Verify button clicked");
     setLoading(true);
-    /*
+
     console.log("table", table);
     const key = "Verifying message";
 
     try {
       message.loading({
-        content: `Verifying...`,
+        content: `Requesting MINA from faucet...`,
         key,
         duration: 600,
       });
 
+      /*
       const jobResult = await verify(auth, json);
       console.log("Verify job result", jobResult);
       if (jobResult?.success === true && jobResult?.jobId !== undefined) {
