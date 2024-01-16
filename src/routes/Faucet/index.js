@@ -23,9 +23,6 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { prepareTable, verify, waitForProof, getKeys } from "./verify";
-import { getJSON } from "../../blockchain/file";
-import fileSaver from "file-saver";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -75,17 +72,7 @@ const VerifyAttributes = () => {
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
     if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
-    if (values.json !== undefined) {
-      const json = await getJSON(values.json.file);
-      if (json !== undefined) {
-        if (json.name !== undefined) setName(json.name);
-        if (json.address !== undefined) setNftAddress(json.address);
-        setJson(json);
-        const table = prepareTable(json);
-        console.log("table", table);
-        setTable(table);
-      }
-    }
+
     setCounter(counter + 1);
     checkCanCreate();
   };
@@ -93,6 +80,7 @@ const VerifyAttributes = () => {
   async function proveButton() {
     console.log("Verify button clicked");
     setLoading(true);
+    /*
     console.log("table", table);
     const key = "Verifying message";
 
@@ -144,7 +132,7 @@ const VerifyAttributes = () => {
           key,
           duration: 60,
         });
-
+      */
       setLoading(false);
     } catch (error) {
       console.log("Proof creation error", error);
@@ -191,62 +179,6 @@ const VerifyAttributes = () => {
                 onValuesChange={onValuesChange}
               >
                 <div>
-                  <Row>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Divider />
-                      <Form.Item
-                        name="json"
-                        label="Upload the JSON file with proof data here"
-                        rules={[
-                          {
-                            required: true,
-                            message:
-                              "Please upload the JSON file with proof data here",
-                          },
-                        ]}
-                      >
-                        <Upload
-                          name="jsondata"
-                          listType="picture-card"
-                          className="avatar-uploader"
-                          accept="application/json"
-                          showUploadList={true}
-                          multiple={false}
-                          maxCount={1}
-                          beforeUpload={beforeUpload}
-                        >
-                          {" "}
-                          <div>
-                            <PlusOutlined />
-                            <div className="ant-upload-text">JSON file</div>
-                          </div>
-                        </Upload>
-                      </Form.Item>
-                    </Col>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item hidden={name === ""}>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          NFT name: {name}
-                        </div>
-                      </Form.Item>
-                      <Form.Item hidden={nftAddress === ""}>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          NFT address: {nftAddress}
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
