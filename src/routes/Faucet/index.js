@@ -88,7 +88,7 @@ const Faucet = () => {
 
     try {
       message.loading({
-        content: `Requesting MINA from faucet...`,
+        content: `Requesting MINA from the faucet...`,
         key,
         duration: 600,
       });
@@ -203,12 +203,13 @@ const Faucet = () => {
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
-                        label="Enter public key of your account"
+                        label="Enter the public key of your account"
                         name="auth"
                         rules={[
                           {
                             required: true,
-                            message: "Please enter public key of your account",
+                            message:
+                              "Please enter the public key of your account",
                           },
                         ]}
                         placeholder=""
