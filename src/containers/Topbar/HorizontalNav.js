@@ -99,6 +99,15 @@ const HorizontalNav = () => {
           <IntlMessages id="sidebar.corporate" />
         </Link>
       </Menu.Item>
+      <Menu.Item
+        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+        key="corporate"
+      >
+        <Link to="/faucet">
+          <i className="icon icon-culture-calendar" />
+          <IntlMessages id="testworld2.faucet" />
+        </Link>
+      </Menu.Item>
     </Menu>
   );
 };

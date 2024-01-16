@@ -99,6 +99,12 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
                 <IntlMessages id="sidebar.corporate" />
               </Link>
             </Menu.Item>
+            <Menu.Item key="faucet">
+              <Link to="/faucet">
+                <i className="icon icon-components" />
+                <IntlMessages id="testworld2.faucet" />
+              </Link>
+            </Menu.Item>
           </Menu>
         </CustomScrollbars>
       </div>
