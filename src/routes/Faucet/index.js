@@ -23,6 +23,9 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
+import { prepareTable, verify, waitForProof, getKeys } from "./verify";
+import { getJSON } from "../../blockchain/file";
+import fileSaver from "file-saver";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -31,14 +34,29 @@ const { TextArea } = Input;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
+const columns = [
+  {
+    title: "Key",
+    dataIndex: "key",
+    key: "key",
+  },
+  {
+    title: "Value",
+    dataIndex: "value",
+    key: "value",
+  },
+];
 
-
-const Faucet = () => {
+const VerifyAttributes = () => {
   const [form] = Form.useForm();
-  const [publicKey, setPublicKey] = useState("");
+  const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
-  const [link, setLink] = useState("");
+  const [name, setName] = useState("");
+  const [nftAddress, setNftAddress] = useState("");
+  const [json, setJson] = useState(undefined);
+  const [table, setTable] = useState([]);
+  const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -72,7 +90,7 @@ const Faucet = () => {
     checkCanCreate();
   };
 
-  async function faucetButton() {
+  async function proveButton() {
     console.log("Verify button clicked");
     setLoading(true);
     console.log("table", table);
@@ -111,11 +129,13 @@ const Faucet = () => {
         mintResult?.verificationResult !== undefined
       ) {
         message.success({
-          content: `Proof verified, result: ${mintResult.verificationResult}`,
+          content: `Proof verified, transaction: ${mintResult.verificationResult}`,
           key,
           duration: 240,
         });
-        setVerificationResult(mintResult.verificationResult);
+        setVerificationResult(
+          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
+        );
       } else
         message.error({
           content: `Error verifying proof: ${mintResult?.error ?? ""} ${
@@ -151,14 +171,14 @@ const Faucet = () => {
             <Card
               className="gx-card"
               key="billingCard"
-              title="Testworld2 Faucet"
+              title=<IntlMessages id="verify.onchain.proofs.strings.form.title" />
             >
               <div className="gx-d-flex justify-content-center">
-                Enter your public key to get some testworld2 tokens
+                <IntlMessages id="verify.onchain.proofs.strings.form.description" />
               </div>
               <Form
                 form={form}
-                key="faucetForm"
+                key="billingForm"
                 labelCol={{
                   span: 24,
                 }}
@@ -170,26 +190,103 @@ const Faucet = () => {
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
-                
+                <div>
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Divider />
                       <Form.Item
-                        label=""
-                        name="publ"
+                        name="json"
+                        label="Upload the JSON file with proof data here"
                         rules={[
                           {
                             required: true,
-                            message: "Please enter publicKey",
+                            message:
+                              "Please upload the JSON file with proof data here",
                           },
                         ]}
-                        placeholder="
+                      >
+                        <Upload
+                          name="jsondata"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="application/json"
+                          showUploadList={true}
+                          multiple={false}
+                          maxCount={1}
+                          beforeUpload={beforeUpload}
+                        >
+                          {" "}
+                          <div>
+                            <PlusOutlined />
+                            <div className="ant-upload-text">JSON file</div>
+                          </div>
+                        </Upload>
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item hidden={name === ""}>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          NFT name: {name}
+                        </div>
+                      </Form.Item>
+                      <Form.Item hidden={nftAddress === ""}>
+                        <div
+                          className="gx-mt-4"
+                          style={{
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          NFT address: {nftAddress}
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        label={
+                          <span>
+                            <span>Authorisation code. </span>
+                            <span>
+                              {" "}
+                              <a
+                                href="https://t.me/minanft_bot?start=auth"
+                                target="_blank"
+                              >
+                                Get it here
+                              </a>
+                            </span>
+                          </span>
+                        }
+                        name="auth"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter authorisation code",
+                          },
+                        ]}
+                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
                       >
                         <TextArea
                           autoSize={{
-                            minRows: 1,
+                            minRows: 2,
                             maxRows: 3,
                           }}
                         />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <Form.Item>
+                        <Table dataSource={table} columns={columns} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -198,24 +295,25 @@ const Faucet = () => {
                       <Form.Item>
                         <Button
                           type="primary"
-                          disabled={publicKey === ""}
+                          disabled={json === undefined}
                           loading={loading}
-                          onClick={faucetButton}
-                          key="faucetButton"
+                          onClick={proveButton}
+                          key="proveButton"
                         >
-                          Get MINA tokens
+                          Verify Proof
                         </Button>
                       </Form.Item>
-                    </Col>
-                    </Row>
-                    <Row>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Divider />
                       <Form.Item
-                        label=""
-                        name="link"
-                        hidden={link === ""}
+                        label="Verification transaction sent: "
+                        name="mintedlink"
+                        hidden={verificationResult === ""}
                       >
-                        {"Transaction: " + link}
+                        <div>
+                          <a href={verificationResult} target="_blank">
+                            {verificationResult}
+                          </a>
+                        </div>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -229,4 +327,4 @@ const Faucet = () => {
   );
 };
 
-export default Faucet;
+export default VerifyAttributes;
