@@ -27,11 +27,7 @@ const ProductItem = ({ item }) => {
     <div className="gx-product-item gx-product-vertical">
       <a href={tokenPath}>
         <div className="gx-product-image">
-          <img
-            src={`https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/${item.image}`}
-            alt=""
-            crossorigin="anonymous"
-          />
+          <img src={`${item.image}`} alt="" crossorigin="anonymous" />
         </div>
       </a>
       <div className="gx-product-body">
