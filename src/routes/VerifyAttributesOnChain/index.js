@@ -26,6 +26,7 @@ import logger from "../../serverless/logger";
 import { prepareTable, verify, waitForProof, getKeys } from "./verify";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
+import { explorerTransaction } from "../../blockchain/explorer";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -134,7 +135,7 @@ const VerifyAttributes = () => {
           duration: 240,
         });
         setVerificationResult(
-          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
+          explorerTransaction() + mintResult.verificationResult
         );
       } else
         message.error({

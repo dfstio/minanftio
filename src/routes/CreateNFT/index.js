@@ -17,6 +17,7 @@ import {
   PlusOutlined,
   InboxOutlined,
 } from "@ant-design/icons";
+import { explorerTransaction } from "../../blockchain/explorer";
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
@@ -299,7 +300,7 @@ const MintPrivate = () => {
         const openResult = window.open(linkURL, "_blank");
         console.log("openResult", openResult);
         setLink(linkURL);
-        setHash("https://minascan.io/testworld/tx/" + mintResult.hash);
+        setHash(explorerTransaction() + mintResult.hash);
         setShowLink(true);
       } else
         message.error({

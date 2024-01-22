@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from "react";
 import { isMobile } from "react-device-detect";
 import { useDispatch, useSelector } from "react-redux";
 import { message } from "antd";
+import { explorerAccount } from "./explorer";
 import {
   updateAddress,
   updateVirtuosoBalance,
@@ -30,7 +31,7 @@ const MinaAccount = () => {
   const username = useSelector(({ blockchain }) => blockchain.username);
   const dispatch = useDispatch();
 
-  let metamaskText = "CONNECT WITH AURO";
+  let auroText = "CONNECT WITH AURO";
   let usernameText = "";
   let topup = "";
   let blockExplorer = "";
@@ -54,20 +55,20 @@ const MinaAccount = () => {
     <ul className="gx-login-list">
       <li
         onClick={async () => {
-          if (DEBUG) console.log("Connect to MetaMask clicked");
+          if (DEBUG) console.log("Connect to Auro clicked");
           const newAddress = await minaLogin();
           dispatch(updateAddress(newAddress));
         }}
       >
-        {metamaskText}
+        {auroText}
       </li>
     </ul>
   );
 
   if (address !== undefined && address !== "") {
-    metamaskText = address.slice(0, 6) + "..." + address.slice(51, 55);
+    auroText = address.slice(0, 6) + "..." + address.slice(51, 55);
     usernameText = username ? username : "";
-    blockExplorer = "https://minascan.io/testworld/account/" + address;
+    blockExplorer = explorerAccount() + address;
     result = (
       <ul className="gx-login-list">
         <li
@@ -75,7 +76,7 @@ const MinaAccount = () => {
             window.open(blockExplorer);
           }}
         >
-          {metamaskText}
+          {auroText}
         </li>
         <li>{username}</li>
       </ul>

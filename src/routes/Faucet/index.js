@@ -24,7 +24,7 @@ import {
 
 import logger from "../../serverless/logger";
 import { faucet } from "../../blockchain/faucet";
-import { set } from "lodash";
+import { explorerTransaction } from "../../blockchain/explorer";
 
 const logm = logger.info.child({ winstonModule: "Faucet" });
 const { REACT_APP_DEBUG } = process.env;
@@ -59,7 +59,7 @@ const Faucet = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const log = logm.child({ winstonComponent: "ProveAttributes" });
+  const log = logm.child({ winstonComponent: "Faucet" });
 
   const checkCanCreate = () => {
     let newButtonDisabled = false;
@@ -100,9 +100,7 @@ const Faucet = () => {
           key,
           duration: 240,
         });
-        setVerificationResult(
-          "https://minascan.io/testworld/tx/" + hashResult.hash
-        );
+        setVerificationResult(explorerTransaction() + hashResult.hash);
       } else {
         console.error("faucetResult", hashResult);
         message.error({
@@ -146,7 +144,7 @@ const Faucet = () => {
           duration: 240,
         });
         setVerificationResult(
-          "https://minascan.io/testworld/tx/" + mintResult.verificationResult
+          explorerTransaction() + mintResult.verificationResult
         );
       } else
         message.error({
@@ -180,11 +178,7 @@ const Faucet = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              className="gx-card"
-              key="billingCard"
-              title="Testworld2 Faucet"
-            >
+            <Card className="gx-card" key="faucetCard" title="Berkeley Faucet">
               <Form
                 form={form}
                 key="billingForm"

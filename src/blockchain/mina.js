@@ -1,9 +1,8 @@
-import api from "../serverless/api";
-import { relayFunction } from "../relay/relayclient";
 import { message } from "antd";
 import { isMobile } from "react-device-detect";
-
+import { chainId } from "./explorer";
 import logger from "../serverless/logger";
+import { chain } from "lodash";
 const logm = logger.debug.child({ winstonModule: "mina" });
 
 export async function initAccount(
@@ -25,7 +24,7 @@ export async function getAddress(force = false) {
       let account = await window.mina.getAccounts();
       console.log("getAddress account", account, network);
 
-      if (account.length > 0 && network?.chainId === "testworld2") {
+      if (account.length > 0 && network?.chainId === chainId()) {
         address = account[0];
       }
     }
@@ -111,9 +110,9 @@ export async function minaLogin(openlink = true) {
         .requestNetwork()
         .catch((err) => console.log(err));
       console.log("mina login network", network);
-      if (network?.chainId !== "testworld2") {
+      if (network?.chainId !== chainId()) {
         const switchNetwork = await window.mina
-          .switchChain({ chainId: "testworld2" })
+          .switchChain({ chainId: chainId() })
           .catch((err) => console.log(err));
         console.log("mina login switch network", switchNetwork);
         let network = await window.mina
@@ -126,7 +125,7 @@ export async function minaLogin(openlink = true) {
       log.debug("account", { account, network });
       console.log("mina login account", account, network);
 
-      if (account.length > 0 && network?.chainId === "testworld2")
+      if (account.length > 0 && network?.chainId === chainId())
         address = account[0];
     } else {
       if (openlink) {
