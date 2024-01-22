@@ -1,7 +1,7 @@
 {
-  "app.announced1": "Create new Mina Avatar NFT with the help of the telegram bot @MinaNFT_bot",
+  "app.announced": "Create a new Mina Avatar NFT with the help of the telegram bot @MinaNFT_bot",
   "app.announced2": "Happy Holidays! Wishing joy and innovation to our Mina community this festive season!",
-  "app.announced": "On 22nd January, MinaNFT service can be temporarily unavailable for one hour due to transition from TestWorld2 to Berkeley",
+  "app.announced3": "On 22nd January, MinaNFT service can be temporarily unavailable for one hour due to transition from TestWorld2 to Berkeley",
   "sidebar.main": "Main",
   "sidebar.avatars": "Explore",
   "sidebar.posts": "Posts",
