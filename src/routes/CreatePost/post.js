@@ -9,6 +9,7 @@ import {
   MINANFT_NAME_SERVICE,
 } from "minanft";
 import { getFileData, getJSON } from "../../blockchain/file";
+import { minaInit } from "../../blockchain/init";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 const arconfig =
@@ -42,10 +43,9 @@ export async function post(address, auth, token) {
   console.log("jsonData", jsonData);
 
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
-  const blockchainInstance = "testworld2";
   const pinataJWT = REACT_APP_PINATA_JWT;
   const arweaveKey = arconfig;
-  MinaNFT.minaInit(blockchainInstance);
+  minaInit();
 
   const name = token.name;
   if (name === undefined || name === "") {

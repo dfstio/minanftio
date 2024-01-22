@@ -36,6 +36,7 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
+import { explorerTransaction } from "../../blockchain/explorer";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -321,7 +322,7 @@ const Post = () => {
         const openResult = window.open(linkURL, "_blank");
         console.log("openResult", openResult);
         setLink(linkURL);
-        setHash("https://minascan.io/testworld/tx/" + mintResult.hash);
+        setHash(explorerTransaction() + mintResult.hash);
         setShowLink(true);
       } else
         message.error({

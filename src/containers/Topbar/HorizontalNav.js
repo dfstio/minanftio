@@ -105,7 +105,7 @@ const HorizontalNav = () => {
       >
         <Link to="/faucet">
           <i className="icon icon-culture-calendar" />
-          <IntlMessages id="testworld2.faucet" />
+          <IntlMessages id="faucet" />
         </Link>
       </Menu.Item>
     </Menu>

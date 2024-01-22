@@ -27,6 +27,7 @@ import { execute, waitForExecution } from "./execute";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { get } from "lodash";
+import { explorerTransaction } from "../../blockchain/explorer";
 
 const logm = logger.info.child({ winstonModule: "Tools" });
 const { REACT_APP_DEBUG } = process.env;
@@ -162,9 +163,7 @@ const Tools = () => {
             key,
             duration: 240,
           });
-          setResult(
-            "https://minascan.io/testworld/tx/" + mintResult.mintResult
-          );
+          setResult(explorerTransaction() + mintResult.mintResult);
         } else
           message.error({
             content: `Error minting: ${mintResult?.error ?? ""} ${

@@ -16,7 +16,7 @@ import {
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
-import { add } from "lodash";
+import { minaInit } from "./init";
 
 const logm = logger.info.child({ winstonModule: "Verify" });
 const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
@@ -95,10 +95,9 @@ const Verify = () => {
       console.error("Address is undefined");
       return;
     }
-    const blockchainInstance = "testworld2";
     const includeFiles = false;
     const pinataJWT = REACT_APP_PINATA_JWT;
-    MinaNFT.minaInit(blockchainInstance);
+    minaInit();
 
     const name = "@test_" + makeString(10);
     const ownerPublicKey = PublicKey.fromBase58(address);
@@ -278,35 +277,6 @@ const Verify = () => {
     console.log("newAddress", newAddress);
     dispatch(updateAddress(newAddress));
 
-    /*
-    const network = Mina.Network({
-      mina: "https://proxy.testworld.minaexplorer.com/graphql",
-    });
-
-    Mina.setActiveInstance(network);
-
-    const a = Field(7);
-    const b = Field(3);
-    const c = a.add(b);
-    console.log("a", a.toJSON());
-    console.log("b", b.toJSON());
-    console.log("c", c.toJSON());
-    const publicKey = PublicKey.fromBase58(newAddress);
-    console.log("publicKey", publicKey.toBase58());
-    const acc = await fetchAccount({ publicKey });
-    console.log("acc", acc);
-    let balance = "0";
-    if (Mina.hasAccount(publicKey)) {
-      balance = Mina.getBalance(publicKey).toJSON();
-      console.log("balance", balance);
-    } else {
-      console.log("no account");
-    }
-
-    const balanceMina = await accountBalanceMina(publicKey);
-    console.log("balanceMina", balanceMina, makeString(12));
-
-    */
     await mintNFTapi();
   }
 

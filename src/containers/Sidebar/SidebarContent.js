@@ -95,7 +95,7 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
             <Menu.Item key="faucet">
               <Link to="/faucet">
                 <i className="icon icon-components" />
-                <IntlMessages id="testworld2.faucet" />
+                <IntlMessages id="faucet" />
               </Link>
             </Menu.Item>
           </Menu>

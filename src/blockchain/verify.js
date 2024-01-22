@@ -6,9 +6,10 @@ import {
   MinaNFTNameServiceContract,
 } from "minanft";
 import { MerkleMap, fetchAccount } from "o1js";
+import { minaInit } from "./init";
 
 export async function check(json) {
-  MinaNFT.minaInit("testworld2");
+  minaInit();
   if (
     json.proof === undefined ||
     json.proof.publicInput === undefined ||

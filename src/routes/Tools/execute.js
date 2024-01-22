@@ -1,5 +1,6 @@
 import { api, accountBalanceMina, MinaNFT } from "minanft";
 import { PublicKey } from "o1js";
+import { minaInit } from "./init";
 
 const { REACT_APP_JWT } = process.env;
 
@@ -48,7 +49,7 @@ export async function execute(auth, json) {
 
 async function balance(JWT, json) {
   try {
-    MinaNFT.minaInit("testworld2");
+    minaInit();
     if (json.data?.publicKey === undefined || json.data?.publicKey === "") {
       console.error("Public key is undefined");
       return {
