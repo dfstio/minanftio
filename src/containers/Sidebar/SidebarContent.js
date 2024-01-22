@@ -79,13 +79,6 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="verify">
-              <Link to="/verify">
-                <i className="icon icon-components" />
-                <IntlMessages id="sidebar.verify" />
-              </Link>
-            </Menu.Item>
-
             <Menu.Item key="tools">
               <Link to="/tools">
                 <i className="icon icon-components" />
