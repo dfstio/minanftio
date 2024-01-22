@@ -9,7 +9,7 @@ import {
   api,
   MINANFT_NAME_SERVICE,
 } from "minanft";
-import { minaInit } from "./init";
+import { minaInit } from "../../blockchain/init";
 
 const { REACT_APP_JWT } = process.env;
 

@@ -16,7 +16,7 @@ import {
 import IntlMessages from "util/IntlMessages";
 
 import logger from "../../serverless/logger";
-import { minaInit } from "./init";
+import { minaInit } from "../../blockchain/init";
 
 const logm = logger.info.child({ winstonModule: "Verify" });
 const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
@@ -177,7 +177,7 @@ const Verify = () => {
     console.log("txData", txData);
   }
 
-  async function mintNFT() {
+  async function mintNFTLocal() {
     const DEPLOYER = "";
     const NAMES_ORACLE_SK = "";
     const PINATA_JWT = "";

@@ -1,6 +1,6 @@
 import { api, accountBalanceMina, MinaNFT } from "minanft";
 import { PublicKey } from "o1js";
-import { minaInit } from "./init";
+import { minaInit } from "../../blockchain/init";
 
 const { REACT_APP_JWT } = process.env;
 
