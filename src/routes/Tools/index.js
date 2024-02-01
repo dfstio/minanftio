@@ -26,7 +26,6 @@ import logger from "../../serverless/logger";
 import { execute, waitForExecution } from "./execute";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
-import { get } from "lodash";
 import { explorerTransaction } from "../../blockchain/explorer";
 
 const logm = logger.info.child({ winstonModule: "Tools" });

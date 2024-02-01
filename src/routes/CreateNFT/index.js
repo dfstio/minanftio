@@ -28,7 +28,6 @@ import { minaLogin } from "../../blockchain/mina";
 import { getFileData } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
-import { set } from "lodash";
 import {
   footerText,
   footerAgreement,
