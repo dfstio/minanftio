@@ -17,25 +17,15 @@
   "author": "dfst.io",
   "license": "Apache-2.0",
   "dependencies": {
-    "@amcharts/amcharts3-react": "^3.1.1",
-    "@ant-design/compatible": "^1.1.2",
     "@ant-design/icons": "^4.8.1",
     "@babel/compat-data": "^7.23.5",
     "@metamask/jazzicon": "^2.0.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "add": "^2.0.6",
     "algoliasearch": "^4.22.0",
-    "amcharts3": "^3.21.15",
     "antd": "^4.24.15",
     "antd-theme-webpack-plugin": "^1.3.9",
     "app-redux": "^2.0.3",
     "assert": "^2.1.0",
-    "aws-sdk": "^2.1519.0",
     "axios": "^1.6.7",
-    "bl": "^5.1.0",
-    "bnc-notify": "^1.9.8",
     "browserify-zlib": "^0.2.0",
     "connected-react-router": "^6.9.3",
     "crypto-browserify": "^3.12.0",
@@ -48,7 +38,6 @@
     "https-browserify": "^1.0.0",
     "instantsearch.css": "^7.4.5",
     "ipfs-http-client": "^53.0.1",
-    "jazzicon": "^1.5.0",
     "jimp": "^0.16.13",
     "less": "^4.2.0",
     "less-loader": "5.0.0",
@@ -155,5 +144,5 @@
     "process": "^0.11.10",
     "react-app-rewired": "^2.2.1"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.1.0"
 }
