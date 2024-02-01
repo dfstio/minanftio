@@ -2,7 +2,6 @@ import { message } from "antd";
 import { isMobile } from "react-device-detect";
 import { chainId } from "./explorer";
 import logger from "../serverless/logger";
-import { chain } from "lodash";
 const logm = logger.debug.child({ winstonModule: "mina" });
 
 export async function initAccount(

@@ -27,7 +27,6 @@ import { minaLogin, getFieldsSignature } from "../../blockchain/mina";
 import { getJSON } from "../../blockchain/file";
 
 import logger from "../../serverless/logger";
-import { set } from "lodash";
 import {
   footerText,
   footerAgreement,

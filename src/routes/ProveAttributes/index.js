@@ -26,7 +26,6 @@ import logger from "../../serverless/logger";
 import { prepareTable, prove, waitForProof, getKeys } from "./prove";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
-import { set } from "lodash";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
