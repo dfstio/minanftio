@@ -1,5 +1,5 @@
 import { MerkleTree, Field, Encoding } from "o1js";
-import { FileData, File } from "minanft";
+import { FileData, File, calculateMerkleTreeRootFast } from "minanft";
 //import { createHash } from "crypto";
 import axios from "axios";
 import { ARWEAVE } from "minanft";
@@ -61,12 +61,23 @@ export async function getFileData(
     bytes.set(binary);
     const fields = File.fillFields(bytes);
     height = Math.ceil(Math.log2(fields.length + 2)) + 1;
-    const tree = new MerkleTree(height);
-    if (fields.length > tree.leafCount)
-      throw new Error(`File is too big for this Merkle tree`);
     // First field is the height, second number is the number of fields
-    tree.fill([Field.from(height), Field.from(fields.length), ...fields]);
-    root = tree.getRoot();
+    const treeFields = [
+      Field.from(height),
+      Field.from(fields.length),
+      ...fields,
+    ];
+    const { root: calculatedRoot, leafCount } = calculateMerkleTreeRootFast(
+      height,
+      treeFields
+    );
+    root = calculatedRoot;
+    //const tree = new MerkleTree(height);
+    if (treeFields.length > leafCount)
+      throw new Error(`File is too big for this Merkle tree`);
+
+    //tree.fill();
+    //root = tree.getRoot();
   }
 
   const binaryWA = CryptoJS.lib.WordArray.create(binary);
