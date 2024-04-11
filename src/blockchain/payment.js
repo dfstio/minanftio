@@ -1,3 +1,4 @@
+import { error } from "winston";
 import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "payment" });
 
@@ -9,15 +10,12 @@ export async function payment(params) {
   });
 
   try {
-    const paymentResult = await window.mina
-      .sendPayment({ amount, to, memo })
-      .catch((err) => console.log(err));
-
+    const paymentResult = await window.mina.sendPayment({ amount, to, memo });
     log.debug("payment:", { paymentResult });
     console.log("paymentResult", paymentResult);
     return paymentResult;
   } catch (error) {
-    log.error("catch", error);
-    return undefined;
+    log.error("paymentResult : error: ", error);
+    return error;
   }
 }

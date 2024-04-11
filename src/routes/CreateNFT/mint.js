@@ -70,7 +70,7 @@ export async function mintNFT(address, auth, token) {
     return {
       success: false,
       error: "Payment failed",
-      reason: paymentResult.message ?? paymentResult.code ?? "",
+      reason: paymentResult?.message ?? paymentResult?.code ?? "",
     };
   } else console.log("Payment hash", paymentResult.hash);
 
