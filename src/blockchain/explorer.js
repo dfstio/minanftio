@@ -1,11 +1,11 @@
 export function explorerAccount() {
-  return "https://minascan.io/berkeley/account/";
+  return "https://minascan.io/devnet/account/";
 }
 
 export function explorerTransaction() {
-  return "https://minascan.io/berkeley/tx/";
+  return "https://minascan.io/devnet/tx/";
 }
 
 export function chainId() {
-  return "berkeley";
+  return "devnet";
 }

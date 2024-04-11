@@ -178,7 +178,7 @@ const Faucet = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card className="gx-card" key="faucetCard" title="Berkeley Faucet">
+            <Card className="gx-card" key="faucetCard" title="Devnet Faucet">
               <Form
                 form={form}
                 key="billingForm"
