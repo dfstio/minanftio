@@ -173,11 +173,11 @@ const MintPrivate = () => {
     let newToken = token;
 
     if (values.name !== undefined) {
-      const name = values.name[0] === "@" ? values.name : "@" + values.name; //TODO: check name
+      const name = values.name[0] === "@" ? values.name : "@" + values.name;
       function validateName(value) {
         if (value.length > 30) return false;
         const regExp = /^[a-zA-Z]\w+$/g;
-        return regExp.test(value);
+        return regExp.test(value.substring(1));
       }
       if (validateName(name)) {
         newToken.name = name;
@@ -531,6 +531,14 @@ const MintPrivate = () => {
                     placeholder="Please name your NFT like @myminanft"
                   >
                     <Input maxLength={30} showCount={true} />
+                    <div
+                      className="gx-mt-4"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {price}
+                    </div>
                   </Form.Item>
 
                   <Form.Item
@@ -718,14 +726,6 @@ const MintPrivate = () => {
                     placeholder="Some string (less than 30 chars)"
                   >
                     <Input maxLength={30} showCount={true} />
-                    <div
-                      className="gx-mt-4"
-                      style={{
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      {price}
-                    </div>
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
