@@ -176,17 +176,14 @@ const MintPrivate = () => {
       const name = values.name[0] === "@" ? values.name : "@" + values.name;
       function validateName(value) {
         if (value.length > 30) return false;
-        if (value.length <= 1) return true;
+        if (value.length <= 2) return true;
         const regExp = /^[a-zA-Z]\w+$/g;
         return regExp.test(value.substring(1));
       }
       if (validateName(name)) {
         newToken.name = name;
-        const newPrice = nftPrice(name);
-        setPrice(newPrice);
-        console.log("name valid", name, newPrice);
+        setPrice(name === "@" ? "" : nftPrice(name));
       } else {
-        console.log("name invalid", name);
         setPrice(
           "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
         );
