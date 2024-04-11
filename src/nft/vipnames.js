@@ -1,4 +1,4 @@
-const vipnames = [
+export const vipnames = [
   "minanft",
   "nft",
   "shopping",
@@ -259,5 +259,3 @@ const vipnames = [
   "humanrights",
   "socialjustice",
 ];
-
-export { vipnames };

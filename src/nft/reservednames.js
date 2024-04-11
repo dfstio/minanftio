@@ -1,4 +1,4 @@
-const reservedNames = [
+export const reservedNames = [
   "minanft",
   "mike",
   "dfst",
@@ -94,8 +94,3 @@ const reservedNames = [
   "rollsroyce",
   "porsche",
 ];
-
-export function isReservedName(userInput) {
-  const name = userInput[0] === "@" ? userInput.substring(1) : userInput;
-  return reservedNames.includes(userInput.toLowerCase().substring(1, 30));
-}

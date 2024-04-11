@@ -1,10 +1,10 @@
 import { vipnames } from "./vipnames";
-import { isReservedName } from "./reservednames";
+import { reservedNames } from "./reservednames";
 
-function nftPrice(name) {
+export function nftPrice(name) {
   const username =
     name[0] === "@" ? name.substring(1).toLowerCase() : name.toLowerCase();
-  if (isReservedName(username)) return "This name is reserved.";
+  if (reservedNames.includes(username)) return "This name is reserved.";
   let category = 3;
   if (username.length <= 5) category = 2;
   if (username.length <= 3) category = 1;
@@ -30,5 +30,3 @@ const prices = [
     description: "Avatar NFT name",
   },
 ];
-
-export { nftPrice };
