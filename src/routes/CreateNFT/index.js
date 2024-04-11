@@ -25,7 +25,7 @@ import { mintNFT, waitForMint } from "./mint";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
-import { getFileData } from "../../blockchain/file";
+import { nftPrice } from "../../nft/pricing";
 
 import logger from "../../serverless/logger";
 import {
@@ -36,6 +36,7 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
+import { set } from "nprogress";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -148,6 +149,7 @@ const MintPrivate = () => {
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
   const [hash, setHash] = useState("");
+  const [price, setPrice] = useState("");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
@@ -170,8 +172,21 @@ const MintPrivate = () => {
     if (DEBUG) console.log("onValuesChange", values);
     let newToken = token;
 
-    if (values.name !== undefined)
-      newToken.name = values.name[0] == "@" ? values.name : "@" + values.name; //TODO: check name
+    if (values.name !== undefined) {
+      const name = values.name[0] === "@" ? values.name : "@" + values.name; //TODO: check name
+      function validateName(value) {
+        if (value.length > 30) return false;
+        const regExp = /^[a-zA-Z]\w+$/g;
+        return regExp.test(value);
+      }
+      if (validateName(name)) {
+        newToken.name = name;
+        setPrice(nftPrice(name));
+      } else
+        setPrice(
+          "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
+        );
+    }
     //if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
       newToken.description = values.description;
@@ -703,6 +718,14 @@ const MintPrivate = () => {
                     placeholder="Some string (less than 30 chars)"
                   >
                     <Input maxLength={30} showCount={true} />
+                    <div
+                      className="gx-mt-4"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {price}
+                    </div>
                   </Form.Item>
                 </Col>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
