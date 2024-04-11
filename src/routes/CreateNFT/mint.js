@@ -9,6 +9,8 @@ import {
 } from "minanft";
 import { getFileData } from "../../blockchain/file";
 import { minaInit } from "../../blockchain/init";
+import { payment } from "../../blockchain/payment";
+import { nftPrice } from "../../nft/pricing";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 const arconfig =
@@ -45,7 +47,9 @@ export async function mintNFT(address, auth, token) {
     reserved === undefined ||
     reserved.isReserved !== true ||
     reserved.signature === undefined ||
-    reserved.signature === ""
+    reserved.signature === "" ||
+    reserved.price === undefined ||
+    reserved.price.price === undefined
   ) {
     console.error("Name is not reserved");
     return {
@@ -54,6 +58,21 @@ export async function mintNFT(address, auth, token) {
       reason: reserved.reason,
     };
   }
+
+  const price = reserved.price.price;
+  const paymentResult = await payment({
+    to: address,
+    amount: price,
+    memo: "NFT " + name,
+  });
+  if (paymentResult === undefined || paymentResult.hash === undefined) {
+    console.error("Payment failed", paymentResult);
+    return {
+      success: false,
+      error: "Payment failed",
+      reason: paymentResult?.message ?? paymentResult?.code ?? "",
+    };
+  } else console.log("Payment hash", paymentResult.hash);
 
   const nft = new MinaNFT({ name, owner, address: nftPublicKey });
   console.log("token", token);
