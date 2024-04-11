@@ -181,11 +181,13 @@ const MintPrivate = () => {
       }
       if (validateName(name)) {
         newToken.name = name;
-        setPrice(nftPrice(name));
-      } else
-        setPrice(
-          "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
-        );
+        const newPrice = nftPrice(name);
+        setPrice(newPrice);
+        console.log("name valid", name, newPrice);
+      } else console.log("name invalid", name);
+      setPrice(
+        "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
+      );
     }
     //if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
@@ -531,6 +533,8 @@ const MintPrivate = () => {
                     placeholder="Please name your NFT like @myminanft"
                   >
                     <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                  <Form.Item>
                     <div
                       className="gx-mt-4"
                       style={{
