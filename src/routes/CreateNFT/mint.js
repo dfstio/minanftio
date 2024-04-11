@@ -61,7 +61,7 @@ export async function mintNFT(address, auth, token) {
 
   const price = reserved.price.price;
   const paymentResult = await payment({
-    to: address,
+    to: process.env.REACT_APP_ADDRESS,
     amount: price,
     memo: "NFT " + name,
   });
