@@ -566,11 +566,17 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setFirstRun(false);
       }
 
-      const qrURL =
-        "https://" +
-        REACT_APP_VIRTUOSO_URL +
-        "/token/" +
-        item.tokenId.toString();
+      const qrURL = item.tokenId
+        ? "https://" +
+          REACT_APP_VIRTUOSO_URL +
+          "/token/" +
+          item.tokenId.toString()
+        : item.rollupId
+        ? "https://" +
+          REACT_APP_VIRTUOSO_URL +
+          "/nft/" +
+          item.rollupId.toString()
+        : "https://minanft.io";
       setQRCodeURL(qrURL);
 
       //if(DEBUG) console.log("Token window ", window.location.pathname);

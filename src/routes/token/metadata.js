@@ -113,7 +113,10 @@ export function prepareMetadata(token) {
   try {
     if (token.type === "nft") {
       const URI = {
-        filename: token.name + ".v" + token.version + ".public.json",
+        filename:
+          token.name +
+          (token.version ? ".v" + token.version : "") +
+          ".public.json",
         mimeType: "application/json",
         size: 0,
         storage: token.uri,
