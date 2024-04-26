@@ -21,17 +21,84 @@ export async function getRollupNFT(rollupId) {
     nft.address = nft?.properties?.address?.linkedObject?.text ?? "";
   if (nft.image === undefined)
     nft.image = `https://gateway.pinata.cloud/ipfs/bafybeigkvkjhk7iii7b35u4e6ljpbtf5a6jdmzp3qdrn2odx76pubwvc4i`;
-  if (nft.category === undefined) nft.category = "RollupNFT token";
+  if (nft.properties.category === undefined)
+    nft.properties.category = {
+      data: "RollupNFT token",
+      kind: "string",
+    };
   if (nft.minaExplorer === undefined)
     nft.minaExplorer = `https://minascan.io/devnet/account/${nft.address}`;
   if (nft.uri === undefined)
     nft.uri = `https://gateway.pinata.cloud/ipfs/${rollupId.slice(1)}`;
+  if (nft.type === undefined) nft.type = "nft";
   if (nft.minaPublicKey === undefined) nft.minaPublicKey = nft.address;
   nft.rollupId = rollupId;
   return nft;
 }
 
 /*
+
+{
+    "name": "@upgrade",
+    "description": "",
+    "image": "https://gateway.pinata.cloud/ipfs/QmYAwGfKf4MetTbMTyRXiE9epsxtih35ApDPyu6MVqTey9",
+    "external_url": "https://minanft.io/@upgrade",
+    "version": "1",
+    "time": 1712877623384,
+    "creator": "MinaNFT library",
+    "address": "B62qnPLdVEjxr9JEq72HxPNP2QvymTqu3iyJNCee6t6Z21MSQ3sSx7E",
+    "owner": "826414074366344617915648896592352974906187940538443309993175952047245233321",
+    "escrow": "0",
+    "metadata": {
+        "data": "17574147632009994182181015697314558599730282968982085933458985476874440919130",
+        "kind": "21995384024889917054123538679477086611076779858696571007172537289827626925568"
+    },
+    "properties": {
+        "category": {
+            "data": "MINA protocol",
+            "kind": "string"
+        },
+        "type": {
+            "data": "individual",
+            "kind": "string"
+        },
+        "image": {
+            "data": "16286493874593613512461281935224379191314800298223210482551306865329450949797",
+            "kind": "image",
+            "linkedObject": {
+                "fileMerkleTreeRoot": "0",
+                "MerkleTreeHeight": 0,
+                "size": 287846,
+                "mimeType": "image/jpeg",
+                "SHA3_512": "vlaO8HBmu07YPftPgyoZmUrhcTjLaNX1qiVRYbVgIzbGe87lKw22Ql5cMBzJEOytZUSilxBRZZXfznunsrCetA==",
+                "filename": "image.jpg",
+                "storage": "i:QmYAwGfKf4MetTbMTyRXiE9epsxtih35ApDPyu6MVqTey9",
+                "fileType": "binary",
+                "metadata": "0"
+            }
+        }
+    },
+    "url": "https://minanft.io/@upgrade",
+    "category": "MINA protocol",
+    "type": "nft",
+    "contract": "v1",
+    "chainId": "devnet",
+    "tokenId": "@upgrade",
+    "updated": 1712877798635,
+    "minaExplorer": "https://minascan.io/devnet/account/B62qnPLdVEjxr9JEq72HxPNP2QvymTqu3iyJNCee6t6Z21MSQ3sSx7E",
+    "minaPublicKey": "B62qnPLdVEjxr9JEq72HxPNP2QvymTqu3iyJNCee6t6Z21MSQ3sSx7E",
+    "shortdescription": "",
+    "markdown": "",
+    "uri": "https://gateway.pinata.cloud/ipfs/QmYJXSjWGnzy1Xzzeo5aRJmi9Xhz86UUxnrsWNgD3hMg8Q",
+    "onSale": false,
+    "saleID": "",
+    "saleStatus": "not on sale",
+    "price": 0,
+    "currency": "",
+    "sale": "",
+    "objectID": "@upgrade"
+}
+
 {
     "description": "This is my long description of the Rollup NFT. Can be of any length, supports markdown.",
     "image": "https://gateway.pinata.cloud/ipfs/bafybeigkvkjhk7iii7b35u4e6ljpbtf5a6jdmzp3qdrn2odx76pubwvc4i",
