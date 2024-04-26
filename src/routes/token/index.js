@@ -33,10 +33,6 @@ const Token = ({ match }) => {
         try {
           let newItem = await getRollupNFT(match.params.rollupId);
           if (DEBUG) console.log("Rollup item received", newItem);
-          newItem.name = newItem?.properties?.name?.data ?? "Rollup NFT";
-          newItem.address =
-            newItem?.properties?.address?.linkedObject.text ??
-            "B62qrjWrAaXV65CZgpfhLdFynbFdyj851cWZPCPvF92mF3ohGDbNAME";
           setItem(newItem);
         } catch (error) {
           console.log("Rollup item not received", error);
