@@ -82,6 +82,10 @@ const App = ({ match }) => (
         path={`${match.url}@:tokenId`}
         component={asyncComponent(() => import("./token"))}
       />
+      <Route
+        path={`${match.url}nft/:rollupId`}
+        component={asyncComponent(() => import("./token"))}
+      />
     </Switch>
   </div>
 );

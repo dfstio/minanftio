@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TokenItem from "./Token";
+import { getRollupNFT } from "../../nft/rollup";
 import algoliasearch from "algoliasearch";
 const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
 const searchClient = algoliasearch(
@@ -20,6 +21,7 @@ const Token = ({ match }) => {
       match.params.contract,
       match.params.tokenId,
       match.params.postId,
+      match.params.rollupId,
       "match",
       match
     );
@@ -27,21 +29,36 @@ const Token = ({ match }) => {
 
   useEffect(() => {
     async function getItem() {
-      let objectID =
-        match.params.postId === undefined
-          ? match.params.tokenId.toString()
-          : match.params.tokenId.toString() +
-            "." +
-            match.params.postId.toString();
-      if (objectID[0] !== "@") objectID = "@" + objectID;
-      if (DEBUG) console.log("Token objectID", objectID);
-      try {
-        let newItem = await searchIndex.getObject(objectID);
-        if (DEBUG) console.log("Token item received", newItem);
-        setItem(newItem);
-      } catch (error) {
-        console.log("Token item not received", error);
-        setMessageText("Token not found");
+      if (match.params.rollupId !== undefined) {
+        try {
+          let newItem = await getRollupNFT(match.params.rollupId);
+          if (DEBUG) console.log("Rollup item received", newItem);
+          newItem.name = newItem?.properties?.name?.data ?? "Rollup NFT";
+          newItem.address =
+            newItem?.properties?.address?.linkedObject.text ??
+            "B62qrjWrAaXV65CZgpfhLdFynbFdyj851cWZPCPvF92mF3ohGDbNAME";
+          setItem(newItem);
+        } catch (error) {
+          console.log("Rollup item not received", error);
+          setMessageText("Rollup NFT not found");
+        }
+      } else {
+        let objectID =
+          match.params.postId === undefined
+            ? match.params.tokenId.toString()
+            : match.params.tokenId.toString() +
+              "." +
+              match.params.postId.toString();
+        if (objectID[0] !== "@") objectID = "@" + objectID;
+        if (DEBUG) console.log("Token objectID", objectID);
+        try {
+          let newItem = await searchIndex.getObject(objectID);
+          if (DEBUG) console.log("Token item received", newItem);
+          setItem(newItem);
+        } catch (error) {
+          console.log("Token item not received", error);
+          setMessageText("Token not found");
+        }
       }
     }
     getItem();
