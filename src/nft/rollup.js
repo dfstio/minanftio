@@ -27,7 +27,8 @@ export async function getRollupNFT(rollupId) {
       kind: "string",
     };
   if (nft.minaExplorer === undefined)
-    nft.minaExplorer = `https://minascan.io/devnet/account/${nft.address}`;
+    nft.minaExplorer =
+      nft.external_url ?? `https://minascan.io/devnet/account/${nft.address}`;
   if (nft.uri === undefined)
     nft.uri = `https://gateway.pinata.cloud/ipfs/${rollupId.slice(1)}`;
   if (nft.type === undefined) nft.type = "nft";
