@@ -244,7 +244,8 @@ interface Transaction {
   };
   const url = `https://minanft.io/nft/i${nft.storage.toIpfsHash()}`;
   console.log("transaction", transaction);
-  const contractAddress = ""; //TODO: get contract address
+  const contractAddress =
+    "B62qo2gLfhzbKpSQw3G7yQaajEJEmxovqm5MBRb774PdJUw6a7XnNFT"; //TODO: get contract address
   const hash = await createRollupNFT({
     transaction,
     contractAddress,
