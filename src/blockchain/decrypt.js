@@ -11,6 +11,7 @@ export async function decrypt() {
       data: text,
     };
     const decrypted = await decryptString(params);
+    console.log("decrypted", decrypted);
     return decrypted;
   } catch (error) {
     logm.error("decrypt : error: ", error);
@@ -19,11 +20,12 @@ export async function decrypt() {
 }
 
 async function decryptString(params) {
+  console.log("decryptString", params);
   try {
     let iv = Buffer.from(params.iv, "hex");
     const key = Buffer.from(params.key, "hex");
     let encryptedText = Buffer.from(params.data, "hex");
-    let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);
+    let decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
     let decrypted = decipher.update(encryptedText);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();

@@ -6,7 +6,6 @@ import { decrypt } from "../../blockchain/decrypt";
 import { createRollupNFT } from "../../blockchain/zeko";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
-const arconfig = await decrypt();
 
 export async function mintRollupNFT(address, auth, token) {
   console.log("mintRollupNFT", token);
@@ -21,8 +20,8 @@ export async function mintRollupNFT(address, auth, token) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   //const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
+  const arconfig = await decrypt();
   console.log("arconfig", arconfig);
-  console.log("pinataJWT", pinataJWT);
   const arweaveKey = arconfig;
   await minaInit();
 
@@ -216,9 +215,13 @@ export async function mintRollupNFT(address, auth, token) {
 
   if (nft.storage === undefined) throw new Error("Storage is undefined");
   if (nft.metadataRoot === undefined) throw new Error("Metadata is undefined");
-  const json = nft.toJSON({
-    includePrivateData: true,
-  });
+  const json = JSON.stringify(
+    nft.toJSON({
+      includePrivateData: true,
+    }),
+    null,
+    2
+  );
   console.log("json", json);
 
   /*
