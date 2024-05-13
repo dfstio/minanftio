@@ -337,7 +337,8 @@ const MintPrivate = () => {
           return;
         }
         const jobId = mintResult.jobId;
-        mintResult = token.chain === (await waitForMint(jobId, auth));
+        mintResult = await waitForMint(jobId, auth);
+        console.log("Final mint result", mintResult);
         if (mintResult?.success === true && mintResult?.hash !== undefined) {
           message.success({
             content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
