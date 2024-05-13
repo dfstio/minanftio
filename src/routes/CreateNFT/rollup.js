@@ -1,17 +1,9 @@
-import { PrivateKey, Poseidon, PublicKey } from "o1js";
-import {
-  MinaNFT,
-  MapData,
-  MinaNFTNameService,
-  accountBalanceMina,
-  makeString,
-  api,
-} from "minanft";
+import { RollupNFT, Metadata, Storage, serializeFields } from "minanft";
 import { getFileData } from "../../blockchain/file";
 import { minaInit } from "../../blockchain/init";
 import { payment } from "../../blockchain/payment";
-import { nftPrice } from "../../nft/pricing";
 import { decrypt } from "../../blockchain/decrypt";
+import { createRollupNFT } from "../../blockchain/zeko";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 const arconfig = await decrypt();
@@ -27,18 +19,19 @@ export async function mintRollupNFT(address, auth, token) {
     return;
   }
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
-  const includeFiles = false;
+  //const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
   const arweaveKey = arconfig;
   await minaInit();
 
   const name = token.name;
+  /*
   const ownerPublicKey = PublicKey.fromBase58(address);
   const nftPrivateKey = PrivateKey.random();
   const nftPublicKey = nftPrivateKey.toPublicKey();
   const owner = Poseidon.hash(ownerPublicKey.toFields());
 
-  /*
+  
   const minanft = new api(JWT);
   const reserved = await minanft.reserveName({
     name,
@@ -70,15 +63,16 @@ export async function mintRollupNFT(address, auth, token) {
   });
   if (paymentResult === undefined || paymentResult.hash === undefined) {
     console.error("Payment failed", paymentResult);
+    /*
     return {
       success: false,
       error: "Payment failed",
       reason: paymentResult?.message ?? paymentResult?.code ?? "",
     };
+    */
   } else console.log("Payment hash", paymentResult.hash);
 
-  const nft = new MinaNFT({ name, owner, address: nftPublicKey });
-  console.log("token", token);
+  const nft = new RollupNFT({ name, address });
 
   if (token.description !== undefined && token.description !== "") {
     nft.updateText({
@@ -222,65 +216,44 @@ export async function mintRollupNFT(address, auth, token) {
   });
   console.log("data", data);
 
-  const uri = nft.toJSON({
-    increaseVersion: true,
-    includePrivateData: false,
-  });
+  await nft.prepareCommitData({ pinataJWT: process.env.PINATA_JWT });
 
-  const result = await minanft.mint({
-    uri,
-    signature: reserved.signature,
-    privateKey: nftPrivateKey.toBase58(),
-    useArweave: token.storagetype === "Arweave",
-  });
+  if (nft.storage === undefined) throw new Error("Storage is undefined");
+  if (nft.metadataRoot === undefined) throw new Error("Metadata is undefined");
 
-  console.log("mint job result", result);
-
-  const jobId = result.jobId;
-  if (jobId === undefined) {
-    console.error("JobId is undefined");
-    return {
-      success: false,
-      error: "JobId is undefined",
-      reason: result.error,
-    };
-  }
-
-  const json = nft.toJSON({
-    increaseVersion: true,
-    includePrivateData: true,
-  });
-
-  return {
-    success: true,
-    jobId,
-    json,
-  };
+  /*
+type TransactionType = "add" | "extend" | "update" | "remove";
+interface Transaction {
+  operation: TransactionType;
+  name: string;
+  address: string;
+  expiry: number;
+  metadata?: string;
+  storage?: string;
+  oldDomain?: string;
+  signature?: string;
 }
+*/
 
-export async function waitForRollupMint(jobId, auth) {
-  if (jobId === undefined || jobId === "") {
-    console.error("JobId is undefined");
-    return {
-      success: false,
-      error: "JobId is undefined",
-    };
-  }
-  const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
-  const minanft = new api(JWT);
-  const txData = await minanft.waitForJobResult({ jobId });
-  console.log("txData", txData);
-  if (txData?.result?.result === undefined || txData.result?.result === "") {
-    console.error("txData is undefined");
-    return {
-      success: false,
-      error: "Mint error",
-      reason: txData.error,
-    };
-  }
+  const transaction = {
+    operation: "add",
+    name: token.name,
+    address,
+    expiry: Date.now() + 1000 * 60 * 60 * 24 * 365, // one year
+    metadata: serializeFields(Metadata.toFields(nft.metadataRoot)),
+    storage: serializeFields(Storage.toFields(nft.storage)),
+  };
+  const url = `https://minanft.io/nft/i${nft.storage.toIpfsHash()}`;
+  console.log("transaction", transaction);
+  const contractAddress = ""; //TODO: get contract address
+  const hash = await createRollupNFT({
+    transaction,
+    contractAddress,
+  });
 
   return {
     success: true,
-    hash: txData.result.result,
+    hash,
+    url,
   };
 }
