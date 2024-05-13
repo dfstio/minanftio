@@ -14,7 +14,7 @@ import { nftPrice } from "../../nft/pricing";
 import { decrypt } from "../../blockchain/decrypt";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
-const arconfig = await decrypt();
+const arconfig = ""; //await decrypt();
 
 export async function mintNFT(address, auth, token) {
   if (address === undefined || address === "") {
