@@ -212,15 +212,14 @@ export async function mintRollupNFT(address, auth, token) {
     };
   }
 
-  const json = nft.toJSON({
-    includePrivateData: true,
-  });
-  console.log("json", json);
-
   await nft.prepareCommitData({ pinataJWT });
 
   if (nft.storage === undefined) throw new Error("Storage is undefined");
   if (nft.metadataRoot === undefined) throw new Error("Metadata is undefined");
+  const json = nft.toJSON({
+    includePrivateData: true,
+  });
+  console.log("json", json);
 
   /*
 type TransactionType = "add" | "extend" | "update" | "remove";
@@ -248,15 +247,51 @@ interface Transaction {
   console.log("transaction", transaction);
   const contractAddress =
     "B62qo2gLfhzbKpSQw3G7yQaajEJEmxovqm5MBRb774PdJUw6a7XnNFT"; //TODO: get contract address
-  const hash = await createRollupNFT({
+  const result = await createRollupNFT({
     transaction,
     contractAddress,
   });
+  console.log("createRollupNFT result", result);
 
-  return {
-    success: true,
-    hash,
-    url,
-    json,
-  };
+  if (result?.toLowerCase()?.startsWith("error")) {
+    console.error("createRollupNFT error", result);
+    return {
+      success: false,
+      error: "createRollupNFT error",
+      reason: result,
+    };
+  }
+
+  try {
+    const { success, txId, error } = JSON.parse(result);
+    if (success !== true) {
+      console.error("createRollupNFT error", error);
+      return {
+        success: false,
+        error: "createRollupNFT error",
+        reason: error,
+      };
+    }
+
+    if (txId === undefined || txId[0] === undefined) {
+      console.error("txId is undefined");
+      return {
+        success: false,
+        error: "txId is undefined",
+      };
+    }
+    return {
+      success: true,
+      hash: txId[0],
+      url,
+      json,
+    };
+  } catch (e) {
+    console.error("createRollupNFT error", e);
+    return {
+      success: false,
+      error: "createRollupNFT error",
+      reason: e.toString(),
+    };
+  }
 }
