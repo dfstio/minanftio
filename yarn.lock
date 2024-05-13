@@ -12511,9 +12511,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minanft@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "minanft@npm:1.9.0"
+"minanft@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "minanft@npm:1.11.0"
   dependencies:
     arweave: "npm:^1.15.0"
     axios: "npm:^1.6.8"
@@ -12521,8 +12521,8 @@ __metadata:
     jimp: "npm:^0.22.12"
     mime: "npm:^3.0.0"
   peerDependencies:
-    o1js: ^0.18.0
-  checksum: 10c0/e89b5b412c8348a906cb899ff61ae322c97c93230bcdf4a96cbaa00f3a27b10a30eaafd85a12bb73b45d4bc7387bf6e24e828c54c45ceb373fbc9c632f689200
+    o1js: ^1.1.0
+  checksum: 10c0/46329c05fadc7aebbd6d350e9a83750f4e7886a04bd608ea80559d25659c1bf67b46296450e28fc8cada5574785ab77d08716ccda6afd993705b7e524a1c2c4c
   languageName: node
   linkType: hard
 
@@ -12558,10 +12558,10 @@ __metadata:
     logform: "npm:^2.6.0"
     mailgun-js: "npm:^0.22.0"
     markdown-to-jsx: "npm:^7.4.6"
-    minanft: "npm:^1.9.0"
+    minanft: "npm:^1.11.0"
     moment: "npm:^2.30.1"
     nprogress: "npm:^0.2.0"
-    o1js: "npm:^0.18.0"
+    o1js: "npm:^1.1.0"
     path-browserify: "npm:^1.0.1"
     process: "npm:^0.11.10"
     prop-types: "npm:^15.8.1"
@@ -12609,7 +12609,7 @@ __metadata:
     stream-http: "npm:^3.2.0"
     stripe: "npm:^14.25.0"
     winston: "npm:^3.13.0"
-    winston-cloudwatch: "npm:^6.2.0"
+    winston-cloudwatch: "npm:^6.3.0"
     winston-transport: "npm:^4.7.0"
   languageName: unknown
   linkType: soft
@@ -13078,9 +13078,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"o1js@npm:^0.18.0":
-  version: 0.18.0
-  resolution: "o1js@npm:0.18.0"
+"o1js@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "o1js@npm:1.1.0"
   dependencies:
     blakejs: "npm:1.2.1"
     cachedir: "npm:^2.4.0"
@@ -13090,7 +13090,7 @@ __metadata:
     tslib: "npm:^2.3.0"
   bin:
     snarky-run: src/build/run.js
-  checksum: 10c0/94e96feac3a560544b4c798abf8c0015a05b0cf36dd6c1f272f50768def9c2fcdd54ac0d1c4de0eb284dc27de49abc00fad5ef09e8a25f945a32381c3cd6d861
+  checksum: 10c0/cac9302989290686e03231dec7e2879715dc593722296726f5c802a18180b8fce75b5fa23c3c651d89b6c1f3fa43275a3e9043f84d6871665942a3e54877c064
   languageName: node
   linkType: hard
 
@@ -19446,9 +19446,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"winston-cloudwatch@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "winston-cloudwatch@npm:6.2.0"
+"winston-cloudwatch@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "winston-cloudwatch@npm:6.3.0"
   dependencies:
     async: "npm:^3.1.0"
     chalk: "npm:^4.0.0"
@@ -19460,7 +19460,7 @@ __metadata:
   peerDependencies:
     "@aws-sdk/client-cloudwatch-logs": ^3.0.0
     winston: ^3.0.0
-  checksum: 10c0/1011281c2fe20045b2dc776738c22139578bd444d7e57fb2c420b8e8d65961e4545a3e0b701958dec9bfc36c98efc84945e4e8cfbcedff2701ffe5cc59818bf4
+  checksum: 10c0/4f6d4a0c4947f07f28693241af065b57df654937024e0fb5c59179491df8b702016ac1e61236e15c74afa7d24d4bff6c0cd62c6ff7b3c3ae1e9087746e045d46
   languageName: node
   linkType: hard
 
