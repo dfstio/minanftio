@@ -45,7 +45,7 @@ export async function post(address, auth, token) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const pinataJWT = REACT_APP_PINATA_JWT;
   const arweaveKey = arconfig;
-  await ();
+  await minaInit();
 
   const name = token.name;
   if (name === undefined || name === "") {
