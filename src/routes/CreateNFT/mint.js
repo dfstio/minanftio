@@ -214,16 +214,24 @@ export async function mintNFT(address, auth, token) {
     };
   }
 
-  const data = nft.toJSON({
-    increaseVersion: false,
-    includePrivateData: true,
-  });
+  const data = JSON.stringify(
+    nft.toJSON({
+      increaseVersion: false,
+      includePrivateData: true,
+    }),
+    null,
+    2
+  );
   console.log("data", data);
 
-  const uri = nft.toJSON({
-    increaseVersion: true,
-    includePrivateData: false,
-  });
+  const uri = JSON.stringify(
+    nft.toJSON({
+      increaseVersion: true,
+      includePrivateData: false,
+    }),
+    null,
+    2
+  );
 
   const result = await minanft.mint({
     uri,
@@ -244,10 +252,14 @@ export async function mintNFT(address, auth, token) {
     };
   }
 
-  const json = nft.toJSON({
-    increaseVersion: true,
-    includePrivateData: true,
-  });
+  const json = JSON.stringify(
+    nft.toJSON({
+      increaseVersion: true,
+      includePrivateData: true,
+    }),
+    null,
+    2
+  );
 
   return {
     success: true,
