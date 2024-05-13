@@ -35,7 +35,7 @@ const Sidebar = () => {
       if (e.target.checked === true) {
         const hashResult = await hash(address);
         if (hashResult.isCalculated === true) {
-          const filterStr = `owner:${hashResult.hash} AND type:nft`;
+          const filterStr = `(owner:${hashResult.hash} OR address:${address}) AND type:nft`;
           setFilter(filterStr);
           console.log("On change", e.target.checked, filterStr);
         } else console.error("hashResult", hashResult);
@@ -104,6 +104,19 @@ const Sidebar = () => {
           </div>
 
           <Configure filters={filter} />
+
+          <Panel
+            header=<span>
+              <IntlMessages id="sidebar.algolia.chain" />
+            </span>
+          >
+            <RefinementList
+              className="gx-algolia-refinementList"
+              attribute="chainId"
+              operator="or"
+              limit={3}
+            />
+          </Panel>
 
           <Panel
             header=<span>
