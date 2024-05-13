@@ -218,13 +218,13 @@ export async function mintNFT(address, auth, token) {
     };
   }
 
-  const data = nft.exportToString({
+  const data = nft.toJSON({
     increaseVersion: false,
     includePrivateData: true,
   });
   console.log("data", data);
 
-  const uri = nft.exportToString({
+  const uri = nft.toJSON({
     increaseVersion: true,
     includePrivateData: false,
   });
@@ -248,7 +248,7 @@ export async function mintNFT(address, auth, token) {
     };
   }
 
-  const json = nft.exportToString({
+  const json = nft.toJSON({
     increaseVersion: true,
     includePrivateData: true,
   });

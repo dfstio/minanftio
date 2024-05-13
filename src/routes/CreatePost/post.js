@@ -228,7 +228,7 @@ export async function post(address, auth, token) {
     nameServiceAddress,
   });
 
-  const json = mintedNFT.exportToString({
+  const json = mintedNFT.toJSON({
     increaseVersion: true,
     includePrivateData: true,
   });

@@ -144,7 +144,7 @@ const Verify = () => {
     mapLevel3.update({ key: `level3-3`, value: `value33` });
     map.updateMap({ key: `level2-4`, map: mapLevel3 });
     nft.updateMap({ key: `level 2 and 3 data`, map });
-    const data = nft.exportToString({
+    const data = nft.toJSON({
       increaseVersion: false,
       includePrivateData: true,
     });
@@ -156,7 +156,7 @@ const Verify = () => {
     });
     console.log("Reserved:", reserved);
 
-    const uri = nft.exportToString({
+    const uri = nft.toJSON({
       increaseVersion: true,
       includePrivateData: false,
     });
