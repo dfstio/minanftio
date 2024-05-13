@@ -1,6 +1,6 @@
 import { message } from "antd";
 import { isMobile } from "react-device-detect";
-import { chainId } from "./explorer";
+//import { chainId } from "./explorer";
 import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "mina" });
 
@@ -23,7 +23,7 @@ export async function getAddress(force = false) {
       let account = await window.mina.getAccounts();
       console.log("getAddress account", account, network);
 
-      if (account.length > 0 && network?.chainId === chainId()) {
+      if (account.length > 0 /*&& network?.chainId === chainId()*/) {
         address = account[0];
       }
     }
@@ -109,6 +109,7 @@ export async function minaLogin(openlink = true) {
         .requestNetwork()
         .catch((err) => console.log(err));
       console.log("mina login network", network);
+      /*
       if (network?.chainId !== chainId()) {
         const switchNetwork = await window.mina
           .switchChain({ chainId: chainId() })
@@ -118,13 +119,14 @@ export async function minaLogin(openlink = true) {
           .requestNetwork()
           .catch((err) => console.log(err));
       }
+      */
       console.log("mina login network", network);
 
       const account = await window.mina.requestAccounts();
       log.debug("account", { account, network });
       console.log("mina login account", account, network);
 
-      if (account.length > 0 && network?.chainId === chainId())
+      if (account.length > 0 /* && network?.chainId === chainId()*/)
         address = account[0];
     } else {
       if (openlink) {

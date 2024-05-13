@@ -38,6 +38,7 @@ export async function mintRollupNFT(address, auth, token) {
   const nftPublicKey = nftPrivateKey.toPublicKey();
   const owner = Poseidon.hash(ownerPublicKey.toFields());
 
+  /*
   const minanft = new api(JWT);
   const reserved = await minanft.reserveName({
     name,
@@ -59,12 +60,13 @@ export async function mintRollupNFT(address, auth, token) {
       reason: reserved.reason,
     };
   }
-
-  const price = reserved.price.price;
+  */
+  const price = 10;
   const paymentResult = await payment({
     to: process.env.REACT_APP_ADDRESS,
     amount: price,
-    memo: "NFT " + name,
+    memo: "Rollup NFT " + name,
+    chain: "zeko",
   });
   if (paymentResult === undefined || paymentResult.hash === undefined) {
     console.error("Payment failed", paymentResult);
@@ -256,7 +258,7 @@ export async function mintRollupNFT(address, auth, token) {
   };
 }
 
-export async function waitForMint(jobId, auth) {
+export async function waitForRollupMint(jobId, auth) {
   if (jobId === undefined || jobId === "") {
     console.error("JobId is undefined");
     return {

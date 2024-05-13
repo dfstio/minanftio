@@ -3,7 +3,7 @@ import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "payment" });
 
 export async function payment(params) {
-  const { to, amount, memo } = params;
+  const { to, amount, memo, chain } = params;
   const log = logm.child({
     params,
     wf: "payment",

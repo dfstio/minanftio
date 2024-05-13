@@ -64,6 +64,7 @@ export async function mintNFT(address, auth, token) {
     to: process.env.REACT_APP_ADDRESS,
     amount: price,
     memo: "NFT " + name,
+    chain: "devnet",
   });
   if (paymentResult === undefined || paymentResult.hash === undefined) {
     console.error("Payment failed", paymentResult);
