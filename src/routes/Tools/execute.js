@@ -49,7 +49,7 @@ export async function execute(auth, json) {
 
 async function balance(JWT, json) {
   try {
-    minaInit();
+    await minaInit();
     if (json.data?.publicKey === undefined || json.data?.publicKey === "") {
       console.error("Public key is undefined");
       return {

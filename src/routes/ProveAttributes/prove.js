@@ -18,7 +18,7 @@ export async function prove(auth, json, keys) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const minanft = new api(JWT);
   const nameServiceAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE);
-  minaInit();
+  await minaInit();
   console.log("nameServiceAddress", nameServiceAddress);
 
   const nft = new MinaNFT({

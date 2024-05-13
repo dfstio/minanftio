@@ -97,7 +97,7 @@ const Verify = () => {
     }
     const includeFiles = false;
     const pinataJWT = REACT_APP_PINATA_JWT;
-    minaInit();
+    await minaInit();
 
     const name = "@test_" + makeString(10);
     const ownerPublicKey = PublicKey.fromBase58(address);
@@ -181,7 +181,7 @@ const Verify = () => {
     const DEPLOYER = "";
     const NAMES_ORACLE_SK = "";
     const PINATA_JWT = "";
-    const keys = MinaNFT.minaInit("local");
+    const keys = await MinaNFT.minaInit("local");
     const deployer = keys
       ? keys[0].privateKey
       : PrivateKey.fromBase58(DEPLOYER);
