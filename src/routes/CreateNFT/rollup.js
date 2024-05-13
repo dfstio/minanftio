@@ -21,6 +21,8 @@ export async function mintRollupNFT(address, auth, token) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   //const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
+  console.log("arconfig", arconfig);
+  console.log("pinataJWT", pinataJWT);
   const arweaveKey = arconfig;
   await minaInit();
 
@@ -215,7 +217,7 @@ export async function mintRollupNFT(address, auth, token) {
   });
   console.log("json", json);
 
-  await nft.prepareCommitData({ pinataJWT: process.env.PINATA_JWT });
+  await nft.prepareCommitData({ pinataJWT });
 
   if (nft.storage === undefined) throw new Error("Storage is undefined");
   if (nft.metadataRoot === undefined) throw new Error("Metadata is undefined");
