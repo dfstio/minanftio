@@ -97,7 +97,7 @@ const Verify = () => {
     }
     const includeFiles = false;
     const pinataJWT = REACT_APP_PINATA_JWT;
-    minaInit();
+    await minaInit();
 
     const name = "@test_" + makeString(10);
     const ownerPublicKey = PublicKey.fromBase58(address);
@@ -144,7 +144,7 @@ const Verify = () => {
     mapLevel3.update({ key: `level3-3`, value: `value33` });
     map.updateMap({ key: `level2-4`, map: mapLevel3 });
     nft.updateMap({ key: `level 2 and 3 data`, map });
-    const data = nft.exportToString({
+    const data = nft.toJSON({
       increaseVersion: false,
       includePrivateData: true,
     });
@@ -156,7 +156,7 @@ const Verify = () => {
     });
     console.log("Reserved:", reserved);
 
-    const uri = nft.exportToString({
+    const uri = nft.toJSON({
       increaseVersion: true,
       includePrivateData: false,
     });
@@ -181,7 +181,7 @@ const Verify = () => {
     const DEPLOYER = "";
     const NAMES_ORACLE_SK = "";
     const PINATA_JWT = "";
-    const keys = MinaNFT.minaInit("local");
+    const keys = await MinaNFT.minaInit("local");
     const deployer = keys
       ? keys[0].privateKey
       : PrivateKey.fromBase58(DEPLOYER);

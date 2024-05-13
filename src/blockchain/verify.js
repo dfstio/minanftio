@@ -9,7 +9,7 @@ import { MerkleMap, fetchAccount } from "o1js";
 import { minaInit } from "./init";
 
 export async function check(json) {
-  minaInit();
+  await minaInit();
   if (
     json.proof === undefined ||
     json.proof.publicInput === undefined ||
