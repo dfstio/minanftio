@@ -210,11 +210,10 @@ export async function mintRollupNFT(address, auth, token) {
     };
   }
 
-  const data = nft.toJSON({
-    increaseVersion: false,
+  const json = nft.toJSON({
     includePrivateData: true,
   });
-  console.log("data", data);
+  console.log("json", json);
 
   await nft.prepareCommitData({ pinataJWT: process.env.PINATA_JWT });
 
@@ -255,5 +254,6 @@ interface Transaction {
     success: true,
     hash,
     url,
+    json,
   };
 }

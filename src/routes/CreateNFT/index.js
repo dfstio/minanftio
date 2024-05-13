@@ -22,7 +22,7 @@ import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import { mintNFT, waitForMint } from "./mint";
-import { mintRollupNFT, waitForRollupMint } from "./rollup";
+import { mintRollupNFT } from "./rollup";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
@@ -292,6 +292,10 @@ const MintPrivate = () => {
             key,
             duration: 240,
           });
+          const blob = new Blob([mintResult.json], {
+            type: "text/plain;charset=utf-8",
+          });
+          fileSaver.saveAs(blob, name + ".rollup.nft.json");
           const linkURL = mintResult?.url ?? "https://minanft.io/";
           console.log("linkURL", linkURL);
           const openResult = window.open(linkURL, "_blank");
@@ -333,10 +337,7 @@ const MintPrivate = () => {
           return;
         }
         const jobId = mintResult.jobId;
-        mintResult =
-          token.chain === "devnet"
-            ? await waitForMint(jobId, auth)
-            : await waitForRollupMint(jobId, auth);
+        mintResult = token.chain === (await waitForMint(jobId, auth));
         if (mintResult?.success === true && mintResult?.hash !== undefined) {
           message.success({
             content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
