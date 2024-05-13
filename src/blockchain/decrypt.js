@@ -1,13 +1,13 @@
 import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "payment" });
 
-const { ARWEAVE_IV, ARWEAVE_KEY } = process.env;
+const { REACT_APP_ARWEAVE_IV, REACT_APP_ARWEAVE_KEY } = process.env;
 
 export async function decrypt() {
   try {
     const params = {
-      iv: ARWEAVE_IV,
-      key: ARWEAVE_KEY,
+      iv: REACT_APP_ARWEAVE_IV,
+      key: REACT_APP_ARWEAVE_KEY,
       data: text,
     };
     const decrypted = await decryptString(params);
