@@ -20,8 +20,8 @@ export async function mintRollupNFT(address, auth, token) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   //const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
-  const arconfig = await decrypt();
-  console.log("arconfig", arconfig);
+  const arconfig = ""; //await decrypt();
+  //console.log("arconfig", arconfig);
   const arweaveKey = arconfig;
   await minaInit();
 
