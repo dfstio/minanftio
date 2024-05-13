@@ -22,6 +22,7 @@ import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import { mintNFT, waitForMint } from "./mint";
+import { mintRollupNFT } from "./rollup";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
@@ -54,6 +55,7 @@ const startToken = {
   creator: "",
   name: "",
   description: "",
+  chain: "devnet",
   url: "",
   shortdescription: "",
   saleID: "0",
@@ -194,6 +196,7 @@ const MintPrivate = () => {
       newToken.description = values.description;
     if (values.unlockable_description !== undefined)
       newToken.unlockable_description = values.unlockable_description;
+
     if (values.category !== undefined) newToken.category = values.category;
     if (values.public_key1 !== undefined)
       newToken.public_key1 = values.public_key1;
@@ -213,8 +216,9 @@ const MintPrivate = () => {
       newToken.private_value2 = values.private_value2;
     if (values.auth !== undefined) setAuth(values.auth);
 
-    if (values.type !== undefined) {
-      newToken.type = values.type;
+    if (values.chain !== undefined) {
+      newToken.chain = values.chain;
+      console.log("chain", values.chain);
     }
 
     if (values.mainimage !== undefined)
@@ -276,57 +280,86 @@ const MintPrivate = () => {
         duration: 240,
       });
       const name = token.name[0] === "@" ? token.name : "@" + token.name;
-      let mintResult = await mintNFT(address, auth, token);
+      let mintResult =
+        token.chain === "devnet"
+          ? await mintNFT(address, auth, token)
+          : await mintRollupNFT(address, auth, token);
       console.log("Mint result", mintResult);
-      if (
-        mintResult?.success === true &&
-        mintResult?.jobId !== undefined &&
-        mintResult?.json !== undefined
-      ) {
-        message.loading({
-          content: `Started mint job ${mintResult.jobId}`,
-          key,
-          duration: 240,
-        });
-        const blob = new Blob([mintResult.json], {
-          type: "text/plain;charset=utf-8",
-        });
-        fileSaver.saveAs(blob, name + ".v1.json");
+      if (token.chain === "zeko") {
+        if (mintResult?.success === true && mintResult?.hash !== undefined) {
+          message.success({
+            content: `Rollup NFT token minted successfully on Zeko with rollup transaction hash ${mintResult.hash}`,
+            key,
+            duration: 240,
+          });
+          const blob = new Blob([mintResult.json], {
+            type: "text/plain;charset=utf-8",
+          });
+          fileSaver.saveAs(blob, name + ".rollup.nft.json");
+          const linkURL = mintResult?.url ?? "https://minanft.io/";
+          console.log("linkURL", linkURL);
+          const openResult = window.open(linkURL, "_blank");
+          console.log("openResult", openResult);
+          setLink(linkURL);
+          setShowLink(true);
+        } else
+          message.error({
+            content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+              mintResult?.reason ?? ""
+            }`,
+            key,
+            duration: 60,
+          });
       } else {
-        message.error({
-          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 20,
-        });
-        setMinting(false);
-        return;
+        if (
+          mintResult?.success === true &&
+          mintResult?.jobId !== undefined &&
+          mintResult?.json !== undefined
+        ) {
+          message.loading({
+            content: `Started mint job ${mintResult.jobId}`,
+            key,
+            duration: 240,
+          });
+          const blob = new Blob([mintResult.json], {
+            type: "text/plain;charset=utf-8",
+          });
+          fileSaver.saveAs(blob, name + ".v1.json");
+        } else {
+          message.error({
+            content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+              mintResult?.reason ?? ""
+            }`,
+            key,
+            duration: 20,
+          });
+          setMinting(false);
+          return;
+        }
+        const jobId = mintResult.jobId;
+        mintResult = token.chain === (await waitForMint(jobId, auth));
+        if (mintResult?.success === true && mintResult?.hash !== undefined) {
+          message.success({
+            content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
+            key,
+            duration: 240,
+          });
+          const linkURL = "https://minanft.io/" + name;
+          console.log("linkURL", linkURL);
+          const openResult = window.open(linkURL, "_blank");
+          console.log("openResult", openResult);
+          setLink(linkURL);
+          setHash(explorerTransaction() + mintResult.hash);
+          setShowLink(true);
+        } else
+          message.error({
+            content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+              mintResult?.reason ?? ""
+            }`,
+            key,
+            duration: 60,
+          });
       }
-      const jobId = mintResult.jobId;
-      mintResult = await waitForMint(jobId, auth);
-      if (mintResult?.success === true && mintResult?.hash !== undefined) {
-        message.success({
-          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
-          key,
-          duration: 240,
-        });
-        const linkURL = "https://minanft.io/" + name;
-        console.log("linkURL", linkURL);
-        const openResult = window.open(linkURL, "_blank");
-        console.log("openResult", openResult);
-        setLink(linkURL);
-        setHash(explorerTransaction() + mintResult.hash);
-        setShowLink(true);
-      } else
-        message.error({
-          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
-
       /*
 
       if (DEBUG) console.log("Mint token: ", ipfs, token);
@@ -610,18 +643,18 @@ const MintPrivate = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Type"
-                    name="type"
+                    label="Chain"
+                    name="chain"
                     rules={[
                       {
                         required: true,
-                        message: "Please choose type",
+                        message: "Please choose chain",
                       },
                     ]}
                   >
                     <RadioGroup>
-                      <RadioButton value="individual">Individual</RadioButton>
-                      <RadioButton value="corporate">Corporate</RadioButton>
+                      <RadioButton value="devnet">Devnet</RadioButton>
+                      <RadioButton value="zeko">Zeko</RadioButton>
                     </RadioGroup>
                   </Form.Item>
                   <Form.Item

@@ -12,7 +12,6 @@ const {
   REACT_APP_CONTRACT_ADDRESS,
   REACT_APP_FORWARDER_ADDRESS,
   REACT_APP_CHAIN_ID,
-  REACT_APP_RELAY_KEY,
 } = process.env;
 const RelayUrl = "/api/relay";
 
