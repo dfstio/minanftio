@@ -491,138 +491,335 @@ const MintPrivate = () => {
 
   return (
     <div className="gx-main-content">
-      <Row>
-        <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-          <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
-            <Form
-              form={form}
-              labelCol={{
-                span: 24,
-              }}
-              wrapperCol={{
-                span: 24,
-              }}
-              layout="horizontal"
-              initialValues={token}
-              onFinish={onFinish}
-              onValuesChange={onValuesChange}
-            >
+      <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
+        <Form
+          form={form}
+          labelCol={{
+            span: 24,
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
+          layout="horizontal"
+          initialValues={token}
+          onFinish={onFinish}
+          onValuesChange={onValuesChange}
+        >
+          <Row>
+            <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
               <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Row>
-                    <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Form.Item
-                        name="mainimage"
-                        label="Main image"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please upload NFT image",
-                          },
-                        ]}
-                      >
-                        <Upload
-                          name="mainimage"
-                          listType="picture-card"
-                          className="avatar-uploader"
-                          accept="image/*"
-                          showUploadList={true}
-                          multiple={false}
-                          maxCount={1}
-                          beforeUpload={beforeUpload}
-                        >
-                          {" "}
-                          <div>
-                            <PlusOutlined />
-                            <div className="ant-upload-text">Main Image</div>
-                          </div>
-                        </Upload>
-                      </Form.Item>
-                    </Col>
-                    <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Form.Item name="mainvideo" label="Main Video/Audio">
-                        <Upload
-                          name="video"
-                          listType="picture-card"
-                          className="avatar-uploader"
-                          accept="video/*,audio/*"
-                          showUploadList={true}
-                          multiple={false}
-                          maxCount={1}
-                          //action="//jsonplaceholder.typicode.com/posts/"
-                          beforeUpload={beforeUpload}
-                          //onChange={this.handleChange}
-                        >
-                          <div>
-                            <PlusOutlined />
-                            <div className="ant-upload-text">
-                              Main Video or Audio
-                            </div>
-                          </div>
-                        </Upload>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
+                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
                   <Form.Item
-                    label={price}
-                    name="name"
+                    name="mainimage"
+                    label="Main image"
                     rules={[
                       {
                         required: true,
-                        message: "Please name your NFT",
+                        message: "Please upload NFT image",
                       },
                     ]}
-                    placeholder="Please name your NFT like @mynft"
+                  >
+                    <Upload
+                      name="mainimage"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="image/*"
+                      showUploadList={true}
+                      multiple={false}
+                      maxCount={1}
+                      beforeUpload={beforeUpload}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">Main Image</div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Form.Item name="mainvideo" label="Main Video/Audio">
+                    <Upload
+                      name="video"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="video/*,audio/*"
+                      showUploadList={true}
+                      multiple={false}
+                      maxCount={1}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
+                    >
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">
+                          Main Video or Audio
+                        </div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Form.Item
+                label={price}
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please name your NFT",
+                  },
+                ]}
+                placeholder="Please name your NFT like @mynft"
+              >
+                <Input maxLength={30} showCount={true} />
+              </Form.Item>
+            </Col>
+
+            <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+              <Form.Item
+                label="Chain"
+                name="chain"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please choose chain",
+                  },
+                ]}
+              >
+                <RadioGroup>
+                  <RadioButton value="zeko">Zeko</RadioButton>
+                  <RadioButton value="devnet">Devnet</RadioButton>
+                </RadioGroup>
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span>
+                    <span>
+                      <IntlMessages id={"create.description"} />
+                    </span>
+                    <span>
+                      {" "}
+                      <a
+                        href="https://www.markdownguide.org/cheat-sheet/"
+                        target="_blank"
+                      >
+                        markdown
+                      </a>
+                    </span>
+                  </span>
+                }
+                name="description"
+                rules={[
+                  {
+                    required: false,
+                    message: "Please describe your NFT",
+                  },
+                ]}
+                placeholder="Please describe your NFT"
+              >
+                <TextArea
+                  autoSize={{
+                    minRows: 2,
+                    maxRows: 10,
+                  }}
+                />
+              </Form.Item>
+              <Form.Item label="Description preview" name="descriptionpreview">
+                <Markdown>{token.description}</Markdown>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Form.Item name="advanced" valuePropName="advanced">
+              <Checkbox>Advanced options</Checkbox>
+            </Form.Item>
+          </Row>
+
+          {advanced === true ? (
+            <div className="gx-main-content">
+              <Row>
+                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    name="category"
+                    label="Category"
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select category",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Please select a category"
+                      onChange={categoryChange}
+                    >
+                      <Option value="MINA protocol">MINA protocol</Option>
+                      <Option value="Music">Music</Option>
+                      <Option value="Video">Video</Option>
+                      <Option value="Art">Art</Option>
+                      <Option value="Dance">Dance</Option>
+                      <Option value="Document">Document</Option>
+                      <Option value="Business">Business</Option>
+                      <Option value="Transaction">Transaction</Option>
+                      <Option value="Technology">Technology</Option>
+                      <Option value="Blockchain">Blockchain</Option>
+                      <Option value="Health">Health</Option>
+                      <Option value="Event">Event</Option>
+                      <Option value="Other">Other</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item name="media" label="Additional Media">
+                    <Upload
+                      name="additionalmedia"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="image/*,video/*,audio/*,.pdf"
+                      showUploadList={true}
+                      multiple={true}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">
+                          Image Video Audio PDF
+                        </div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+                <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+                  <Form.Item name="attachments" label="Attachments">
+                    <Upload
+                      name="attachments"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      showUploadList={true}
+                      multiple={true}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">Any files</div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Public key 1 (will be published to IPFS)"
+                    name="public_key1"
+                    placeholder="Some string (less than 30 chars)"
                   >
                     <Input maxLength={30} showCount={true} />
                   </Form.Item>
-                  <Form.Item name="advanced" valuePropName="advanced">
-                    <Checkbox>Advanced options</Checkbox>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Public value 1 (will be published to IPFS)"
+                    name="public_value1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
                 </Col>
-
-                <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
-                    label="Chain"
-                    name="chain"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please choose chain",
-                      },
-                    ]}
+                    label="Public key 2 (will be published to IPFS)"
+                    name="public_key2"
+                    placeholder="Some string (less than 30 chars)"
                   >
-                    <RadioGroup>
-                      <RadioButton value="zeko">Zeko</RadioButton>
-                      <RadioButton value="devnet">Devnet</RadioButton>
-                    </RadioGroup>
+                    <Input maxLength={30} showCount={true} />
                   </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
-                    label={
-                      <span>
-                        <span>
-                          <IntlMessages id={"create.description"} />
-                        </span>
-                        <span>
-                          {" "}
-                          <a
-                            href="https://www.markdownguide.org/cheat-sheet/"
-                            target="_blank"
-                          >
-                            markdown
-                          </a>
-                        </span>
-                      </span>
-                    }
-                    name="description"
+                    label="Public value 2 (will be published to IPFS)"
+                    name="public_value2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                  <Card
+                    className="gx-card"
+                    title="Private data - will be verifiable on-chain without disclosing content"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private key 1 (will NOT be published to IPFS)"
+                    name="private_key1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private value 1 (will NOT be published to IPFS, but will be verifiable on-chain)"
+                    name="private_value1"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private key 2 (will NOT be published to IPFS)"
+                    name="private_key2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain)"
+                    name="private_value2"
+                    placeholder="Some string (less than 30 chars)"
+                  >
+                    <Input maxLength={30} showCount={true} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label={<span>Private description</span>}
+                    name="unlockable_description"
                     rules={[
                       {
                         required: false,
-                        message: "Please describe your NFT",
+                        message: "Please enter private description",
                       },
                     ]}
-                    placeholder="Please describe your NFT"
+                    placeholder="Please enter private description"
                   >
                     <TextArea
                       autoSize={{
@@ -631,390 +828,188 @@ const MintPrivate = () => {
                       }}
                     />
                   </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
-                    label="Description preview"
-                    name="descriptionpreview"
+                    name="umedia"
+                    label={
+                      <span>
+                        <span>
+                          Private Media - will NOT be uploaded to IPFS. To make
+                          media, other binary files and big text files
+                          verifiable on-chain use
+                        </span>
+                        <span>
+                          {" "}
+                          <a
+                            href="https://github.com/dfstio/minanft-cli"
+                            target="_blank"
+                          >
+                            MinaNFT offline CLI tool
+                          </a>
+                        </span>
+                      </span>
+                    }
                   >
-                    <Markdown>{token.description}</Markdown>
+                    <Upload
+                      name="unlockablemedia"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="image/*,video/*,audio/*,.pdf"
+                      showUploadList={true}
+                      multiple={true}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">
+                          Image Video Audio PDF
+                        </div>
+                      </div>
+                    </Upload>
                   </Form.Item>
                 </Col>
-
-                {advanced === true ? (
-                  <div className="gx-main-content">
-                    <Row>
-                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          name="category"
-                          label="Category"
-                          hasFeedback
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please select category",
-                            },
-                          ]}
-                        >
-                          <Select
-                            placeholder="Please select a category"
-                            onChange={categoryChange}
-                          >
-                            <Option value="MINA protocol">MINA protocol</Option>
-                            <Option value="Music">Music</Option>
-                            <Option value="Video">Video</Option>
-                            <Option value="Art">Art</Option>
-                            <Option value="Dance">Dance</Option>
-                            <Option value="Document">Document</Option>
-                            <Option value="Business">Business</Option>
-                            <Option value="Transaction">Transaction</Option>
-                            <Option value="Technology">Technology</Option>
-                            <Option value="Blockchain">Blockchain</Option>
-                            <Option value="Health">Health</Option>
-                            <Option value="Event">Event</Option>
-                            <Option value="Other">Other</Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item name="media" label="Additional Media">
-                          <Upload
-                            name="additionalmedia"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            accept="image/*,video/*,audio/*,.pdf"
-                            showUploadList={true}
-                            multiple={true}
-                            //action="//jsonplaceholder.typicode.com/posts/"
-                            beforeUpload={beforeUpload}
-                            //onChange={this.handleChange}
-                          >
-                            {" "}
-                            <div>
-                              <PlusOutlined />
-                              <div className="ant-upload-text">
-                                Image Video Audio PDF
-                              </div>
-                            </div>
-                          </Upload>
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
-                        <Form.Item name="attachments" label="Attachments">
-                          <Upload
-                            name="attachments"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            showUploadList={true}
-                            multiple={true}
-                            //action="//jsonplaceholder.typicode.com/posts/"
-                            beforeUpload={beforeUpload}
-                            //onChange={this.handleChange}
-                          >
-                            {" "}
-                            <div>
-                              <PlusOutlined />
-                              <div className="ant-upload-text">Any files</div>
-                            </div>
-                          </Upload>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public key 1 (will be published to IPFS)"
-                          name="public_key1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public value 1 (will be published to IPFS)"
-                          name="public_value1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public key 2 (will be published to IPFS)"
-                          name="public_key2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public value 2 (will be published to IPFS)"
-                          name="public_value2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                        <Card
-                          className="gx-card"
-                          title="Private data - will be verifiable on-chain without disclosing content"
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private key 1 (will NOT be published to IPFS)"
-                          name="private_key1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private value 1 (will NOT be published to IPFS, but will be verifiable on-chain)"
-                          name="private_value1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private key 2 (will NOT be published to IPFS)"
-                          name="private_key2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain)"
-                          name="private_value2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label={<span>Private description</span>}
-                          name="unlockable_description"
-                          rules={[
-                            {
-                              required: false,
-                              message: "Please enter private description",
-                            },
-                          ]}
-                          placeholder="Please enter private description"
-                        >
-                          <TextArea
-                            autoSize={{
-                              minRows: 2,
-                              maxRows: 10,
-                            }}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          name="umedia"
-                          label={
-                            <span>
-                              <span>
-                                Private Media - will NOT be uploaded to IPFS. To
-                                make media, other binary files and big text
-                                files verifiable on-chain use
-                              </span>
-                              <span>
-                                {" "}
-                                <a
-                                  href="https://github.com/dfstio/minanft-cli"
-                                  target="_blank"
-                                >
-                                  MinaNFT offline CLI tool
-                                </a>
-                              </span>
-                            </span>
-                          }
-                        >
-                          <Upload
-                            name="unlockablemedia"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            accept="image/*,video/*,audio/*,.pdf"
-                            showUploadList={true}
-                            multiple={true}
-                            //action="//jsonplaceholder.typicode.com/posts/"
-                            beforeUpload={beforeUpload}
-                            //onChange={this.handleChange}
-                          >
-                            {" "}
-                            <div>
-                              <PlusOutlined />
-                              <div className="ant-upload-text">
-                                Image Video Audio PDF
-                              </div>
-                            </div>
-                          </Upload>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          name="uattachments"
-                          label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) in case checkbox below is checked"
-                        >
-                          <Upload
-                            name="uattachments"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            showUploadList={true}
-                            multiple={true}
-                            //action="//jsonplaceholder.typicode.com/posts/"
-                            beforeUpload={beforeUpload}
-                            //onChange={this.handleChange}
-                          >
-                            {" "}
-                            <div>
-                              <PlusOutlined />
-                              <div className="ant-upload-text">Any files</div>
-                            </div>
-                          </Upload>
-                        </Form.Item>
-                        <Form.Item name="calculateroot" valuePropName="checked">
-                          <Checkbox>
-                            Calculate Merkle Tree root of the private
-                            attachments (takes time)
-                          </Checkbox>
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="NFT Storage"
-                          name="storagetype"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please choose storage",
-                            },
-                          ]}
-                        >
-                          <RadioGroup>
-                            <RadioButton value="IPFS">IPFS</RadioButton>
-                            <RadioButton value="Arweave">Arweave</RadioButton>
-                          </RadioGroup>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    {/*
+              </Row>
+              <Row>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    name="uattachments"
+                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) in case checkbox below is checked"
+                  >
+                    <Upload
+                      name="uattachments"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      showUploadList={true}
+                      multiple={true}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">Any files</div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                  <Form.Item name="calculateroot" valuePropName="checked">
+                    <Checkbox>
+                      Calculate Merkle Tree root of the private attachments
+                      (takes time)
+                    </Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                  <Form.Item
+                    label="NFT Storage"
+                    name="storagetype"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please choose storage",
+                      },
+                    ]}
+                  >
+                    <RadioGroup>
+                      <RadioButton value="IPFS">IPFS</RadioButton>
+                      <RadioButton value="Arweave">Arweave</RadioButton>
+                    </RadioGroup>
+                  </Form.Item>
+                </Col>
+              </Row>
+              {/*
               <Form.Item label="Price" name="price">
                 {mintPrice}
               </Form.Item>
                   */}
 
-                    <Form.Item
-                      label={
-                        <span>
-                          <span>Authorization code. </span>
-                          <span>
-                            {" "}
-                            <a
-                              href="https://t.me/minanft_bot?start=auth"
-                              target="_blank"
-                            >
-                              Get it here
-                            </a>
-                          </span>
-                        </span>
-                      }
-                      name="auth"
-                      placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
-                    >
-                      <TextArea autoSize={{ minRows: 2, maxRows: 3 }} />
-                    </Form.Item>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-                <Row>
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      onClick={mint}
-                      disabled={mintDisabled}
-                      loading={minting}
-                    >
-                      {address === "" ? "Connect with AURO" : "Mint NFT"}
-                    </Button>
-                  </Form.Item>
-                </Row>
+              <Form.Item
+                label={
+                  <span>
+                    <span>Authorization code. </span>
+                    <span>
+                      {" "}
+                      <a
+                        href="https://t.me/minanft_bot?start=auth"
+                        target="_blank"
+                      >
+                        Get it here
+                      </a>
+                    </span>
+                  </span>
+                }
+                name="auth"
+                placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
+              >
+                <TextArea autoSize={{ minRows: 2, maxRows: 3 }} />
+              </Form.Item>
+            </div>
+          ) : (
+            <div></div>
+          )}
 
-                <Row>
-                  <Form.Item hidden={showLink}>
-                    <div
-                      className="gx-mt-4"
-                      style={{
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      <span>
-                        {address === ""
-                          ? "Please connect with Auro before creating NFT"
-                          : "You are creating NFT with owner address " +
-                            address}
-                        <br />
-                        <br />
-                        By clicking this button, you are confirming your
-                        agreement with our
-                      </span>
-                      <span>
-                        <a href={footerAgreementLink} target="_blank">
-                          {footerAgreement}
-                        </a>
-                      </span>
-                    </div>
-                  </Form.Item>
-                </Row>
-                <Row>
-                  <Form.Item
-                    label="NFT is minted: "
-                    name="mintedlink"
-                    hidden={!showLink}
-                  >
-                    <div>
-                      <a href={link} target="_blank">
-                        {link}
-                      </a>
-                    </div>
-                    <div>
-                      <a href={hash} target="_blank">
-                        {hash}
-                      </a>
-                    </div>
-                  </Form.Item>
-                </Row>
-              </Row>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+          <Row>
+            <Form.Item>
+              <Button
+                type="primary"
+                onClick={mint}
+                disabled={mintDisabled}
+                loading={minting}
+              >
+                {address === "" ? "Connect with AURO" : "Mint NFT"}
+              </Button>
+            </Form.Item>
+          </Row>
+
+          <Row>
+            <Form.Item hidden={showLink}>
+              <div
+                className="gx-mt-4"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  {address === ""
+                    ? "Please connect with Auro before creating NFT"
+                    : "You are creating NFT with owner address " + address}
+                  <br />
+                  <br />
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
+                  </a>
+                </span>
+              </div>
+            </Form.Item>
+          </Row>
+          <Row>
+            <Form.Item
+              label="NFT is minted: "
+              name="mintedlink"
+              hidden={!showLink}
+            >
+              <div>
+                <a href={link} target="_blank">
+                  {link}
+                </a>
+              </div>
+              <div>
+                <a href={hash} target="_blank">
+                  {hash}
+                </a>
+              </div>
+            </Form.Item>
+          </Row>
+        </Form>
+      </Card>
     </div>
   );
 };
