@@ -246,6 +246,7 @@ const MintPrivate = () => {
     if (values.folder !== undefined) newToken.folder = values.folder;
     if (values.calculateroot !== undefined)
       newToken.calculateroot = values.calculateroot;
+    if (values.advanced !== undefined) setAdvanced(values.advanced === true);
     if (values.storagetype !== undefined)
       newToken.storagetype = values.storagetype;
 
