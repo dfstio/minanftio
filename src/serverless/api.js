@@ -9,6 +9,17 @@ const winston = (info) => {
   });
 };
 
+const storage = () => {
+  //if(DEBUG) console.log("storage api: ", info);
+  return fetch("/api/storage", {
+    body: JSON.stringify({}),
+    method: "POST",
+  }).then((response) => {
+    return response.json();
+  });
+};
+
 export default {
   winston: winston,
+  storage: storage,
 };
