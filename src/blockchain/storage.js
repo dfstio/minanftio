@@ -27,8 +27,8 @@ export function storageUrl(storage, big = false, nocache = false) {
 }
 
 export function storageUrlFromURL(url) {
-  const cacheSmallUrl =
-    "https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/";
+  const cacheSmallUrl = "";
+  //"https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/";
   if (url === undefined) {
     console.error("Empty fullUrl");
     return "";
