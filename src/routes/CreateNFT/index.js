@@ -972,47 +972,58 @@ const MintPrivate = () => {
           )}
 
           <Row>
-            <span>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={mint}
-                  disabled={mintDisabled}
-                  loading={minting}
-                >
-                  {address === "" ? "Connect with AURO" : "Mint NFT"}
-                </Button>
-              </Form.Item>
-            </span>
-            <br />
-            <br />
-            <span>
-              <Form.Item hidden={showLink}>
-                <div
-                  className="gx-mt-4"
-                  style={{
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  {address !== ""}?(
-                  <span>
-                    {"You are creating NFT with owner address " + address}
-                    <br />
-                    <br />
-                  </span>
-                  ):(){" "}
-                  <span>
-                    By clicking this button, you are confirming your agreement
-                    with our
-                  </span>
-                  <span>
-                    <a href={footerAgreementLink} target="_blank">
-                      {footerAgreement}
-                    </a>
-                  </span>
-                </div>
-              </Form.Item>
-            </span>
+            <Form.Item>
+              <Button
+                type="primary"
+                onClick={mint}
+                disabled={mintDisabled}
+                loading={minting}
+              >
+                {address === "" ? "Connect with AURO" : "Mint NFT"}
+              </Button>
+            </Form.Item>
+            {address !== ""}?(
+            <Form.Item hidden={showLink}>
+              <div
+                className="gx-mt-4"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  {"You are creating NFT with owner address " + address}
+                  <br />
+                  <br />
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
+                  </a>
+                </span>
+              </div>
+            </Form.Item>
+            ):(
+            <Form.Item hidden={showLink}>
+              <div
+                className="gx-mt-4"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
+                  </a>
+                </span>
+              </div>
+            </Form.Item>
+            )
           </Row>
           <Row>
             <Form.Item
