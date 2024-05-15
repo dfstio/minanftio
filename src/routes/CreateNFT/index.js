@@ -132,6 +132,7 @@ const MintPrivate = () => {
   const [mintDisabled, setMintDisabled] = useState(true);
   const [mintPrice, setMintPrice] = useState(mintText);
   const [advanced, setAdvanced] = useState(false);
+  const [merkleTree, setMerkleTree] = useState(false);
   const [form] = Form.useForm();
 
   const checkCanMint = () => {
@@ -217,7 +218,9 @@ const MintPrivate = () => {
     if (values.folder !== undefined) newToken.folder = values.folder;
     if (values.calculateroot !== undefined)
       newToken.calculateroot = values.calculateroot;
-    if (values.advanced !== undefined) setAdvanced(values.advanced === true);
+    if (values.advanced !== undefined) {
+      setAdvanced(values.advanced === true);
+    }
     if (values.storagetype !== undefined)
       newToken.storagetype = values.storagetype;
 
@@ -228,6 +231,16 @@ const MintPrivate = () => {
 
   const onFinish = async (values) => {
     if (DEBUG) console.log("onFinish", values);
+  };
+
+  const onChangeAdvanced = async (value) => {
+    if (DEBUG) console.log("onChangeAdvanced", value);
+    setAdvanced(value.target.checked);
+  };
+
+  const onChangeMerkleTree = async (value) => {
+    if (DEBUG) console.log("onChangeMerkleTree", value);
+    setMerkleTree(value.target.checked);
   };
 
   const categoryChange = (value) => {
@@ -632,9 +645,13 @@ const MintPrivate = () => {
             </Col>
           </Row>
           <Row>
-            <Form.Item name="advanced" valuePropName="advanced">
-              <Checkbox>Advanced options</Checkbox>
-            </Form.Item>
+            <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+              <Form.Item name="advanced" valuePropName="advanced">
+                <Checkbox onChange={onChangeAdvanced}>
+                  Advanced options
+                </Checkbox>
+              </Form.Item>
+            </Col>
           </Row>
 
           {advanced === true ? (
@@ -897,7 +914,7 @@ const MintPrivate = () => {
                     </Upload>
                   </Form.Item>
                   <Form.Item name="calculateroot" valuePropName="checked">
-                    <Checkbox>
+                    <Checkbox onChange={onChangeMerkleTree}>
                       Calculate Merkle Tree root of the private attachments
                       (takes time)
                     </Checkbox>
