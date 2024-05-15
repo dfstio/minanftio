@@ -38,6 +38,7 @@ import {
   accountingEmail,
 } from "../../util/config";
 import { set } from "nprogress";
+import { add } from "winston";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -655,7 +656,6 @@ const MintPrivate = () => {
               </Form.Item>
             </Col>
           </Row>
-
           {advanced === true ? (
             <div className="gx-main-content">
               <Row>
@@ -970,7 +970,6 @@ const MintPrivate = () => {
           ) : (
             <div></div>
           )}
-
           <Row>
             <Form.Item>
               <Button
@@ -983,66 +982,63 @@ const MintPrivate = () => {
               </Button>
             </Form.Item>
           </Row>
-          {showLink === false ? (
-            <Row>
-              {address !== ""}?(
-              <Form.Item>
-                <div
-                  className="gx-mt-4"
-                  style={{
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  <span>
-                    {"You are creating NFT with owner address " + address}
-                    <br />
-                    <br />
-                    By clicking this button, you are confirming your agreement
-                    with our
-                  </span>
-                  <span>
-                    <a href={footerAgreementLink} target="_blank">
-                      {footerAgreement}
-                    </a>
-                  </span>
-                </div>
-              </Form.Item>
-              ):(
-              <Form.Item>
-                <div
-                  className="gx-mt-4"
-                  style={{
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  <span>
-                    By clicking this button, you are confirming your agreement
-                    with our
-                  </span>
-                  <span>
-                    <a href={footerAgreementLink} target="_blank">
-                      {footerAgreement}
-                    </a>
-                  </span>
-                </div>
-              </Form.Item>
-              )
-            </Row>
-          ) : (
-            <Row>
-              <Form.Item label="NFT is minted: " name="mintedlink">
-                <div>
-                  <a href={link} target="_blank">
-                    {link}
+          <Row>
+            <Form.Item hidden={showLink === true || address === ""}>
+              <div
+                className="gx-mt-4"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  {"You are creating NFT with owner address " + address}
+                  <br />
+                  <br />
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
                   </a>
-                </div>
-                <div>
-                  <a href={hash} target="_blank">
-                    {hash}
+                </span>
+              </div>
+            </Form.Item>
+            <Form.Item hidden={showLink === true || address !== ""}>
+              <div
+                className="gx-mt-4"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
                   </a>
-                </div>
-              </Form.Item>
-            </Row>
+                </span>
+              </div>
+            </Form.Item>
+            <Form.Item
+              label="NFT is minted: "
+              name="mintedlink"
+              hidden={showLink === false}
+            >
+              <div>
+                <a href={link} target="_blank">
+                  {link}
+                </a>
+              </div>
+              <div>
+                <a href={hash} target="_blank">
+                  {hash}
+                </a>
+              </div>
+            </Form.Item>
+          </Row>
           )}
         </Form>
       </Card>
