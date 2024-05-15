@@ -985,7 +985,7 @@ const MintPrivate = () => {
           <Row>
             <Form.Item hidden={showLink === true}>
               <div
-                className="gx-mt-1"
+                className="gx-mt-0"
                 style={{
                   whiteSpace: "pre-wrap",
                 }}
