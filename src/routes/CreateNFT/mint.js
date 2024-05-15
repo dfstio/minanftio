@@ -14,7 +14,6 @@ import { nftPrice } from "../../nft/pricing";
 import { decrypt } from "../../blockchain/decrypt";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
-const arconfig = ""; //await decrypt();
 
 export async function mintNFT(address, auth, token, calculateRoot) {
   if (address === undefined || address === "") {
@@ -28,7 +27,7 @@ export async function mintNFT(address, auth, token, calculateRoot) {
   const JWT = auth === undefined || auth === "" ? REACT_APP_JWT : auth;
   const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
-  const arweaveKey = arconfig;
+  const arweaveKey = await decrypt();
   await minaInit();
 
   const name = token.name;
