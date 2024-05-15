@@ -55,7 +55,7 @@ const startToken = {
   creator: "",
   name: "",
   description: "",
-  chain: "devnet",
+  chain: "zeko",
   url: "",
   shortdescription: "",
   saleID: "0",
@@ -556,7 +556,7 @@ const MintPrivate = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Name (like @myminanft)"
+                    label="Name (like @mynft)"
                     name="name"
                     rules={[
                       {
@@ -564,7 +564,7 @@ const MintPrivate = () => {
                         message: "Please name your NFT",
                       },
                     ]}
-                    placeholder="Please name your NFT like @myminanft"
+                    placeholder="Please name your NFT like @mynft"
                   >
                     <Input maxLength={30} showCount={true} />
                   </Form.Item>
@@ -654,8 +654,8 @@ const MintPrivate = () => {
                     ]}
                   >
                     <RadioGroup>
-                      <RadioButton value="devnet">Devnet</RadioButton>
                       <RadioButton value="zeko">Zeko</RadioButton>
+                      <RadioButton value="devnet">Devnet</RadioButton>
                     </RadioGroup>
                   </Form.Item>
                   <Form.Item

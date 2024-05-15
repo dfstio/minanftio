@@ -6,6 +6,7 @@ import { Highlight } from "react-instantsearch-dom";
 import { Button } from "antd";
 import IntlMessages from "util/IntlMessages";
 import { minaLogin } from "../../blockchain/mina";
+import { storageUrlFromURL } from "../../blockchain/storage";
 //import SellButton from "./Sell";
 import BuyButton from "./Buy";
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
@@ -16,6 +17,7 @@ const ProductItem = ({ item }) => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
   let buttonId = "sidebar.algolia.buy";
+  const imageUrl = storageUrlFromURL(item.image);
   let canSell = false;
   if (address.toUpperCase() === item.owner.toUpperCase()) {
     buttonId = "sidebar.algolia.sell";
@@ -28,7 +30,7 @@ const ProductItem = ({ item }) => {
     <div className="gx-product-item gx-product-vertical">
       <a href={tokenPath}>
         <div className="gx-product-image">
-          <img src={`${item.image}`} alt="" crossorigin="anonymous" />
+          <img src={`${imageUrl}`} alt="" crossorigin="anonymous" />
         </div>
       </a>
       <div className="gx-product-body">

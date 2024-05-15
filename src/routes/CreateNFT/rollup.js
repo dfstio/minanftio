@@ -4,6 +4,7 @@ import { minaInit } from "../../blockchain/init";
 import { payment } from "../../blockchain/payment";
 import { decrypt } from "../../blockchain/decrypt";
 import { createRollupNFT } from "../../blockchain/zeko";
+import { nftPrice } from "../../nft/pricing";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 
@@ -55,7 +56,7 @@ export async function mintRollupNFT(address, auth, token) {
     };
   }
   */
-  const price = 10;
+  const price = nftPrice(name) ?? 10;
   const paymentResult = await payment({
     to: process.env.REACT_APP_ADDRESS,
     amount: price,
