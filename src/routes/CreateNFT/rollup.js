@@ -56,7 +56,7 @@ export async function mintRollupNFT(address, auth, token) {
     };
   }
   */
-  const price = nftPrice(name) ?? 10;
+  const price = nftPrice(name)?.price ?? 10;
   const paymentResult = await payment({
     to: process.env.REACT_APP_ADDRESS,
     amount: price,
