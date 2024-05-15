@@ -61,9 +61,9 @@ const HorizontalNav = () => {
           <IntlMessages id="sidebar.create" />
         </Link>
       </Menu.Item>
-      <MenuItemGroup
-        key="mainadvanced"
-        className="gx-menu-group"
+      <SubMenu
+        popupClassName={getNavStyleSubMenuClass(navStyle)}
+        key="advanced"
         title={<IntlMessages id="sidebar.advanced" />}
       >
         <Menu.Item
@@ -113,7 +113,7 @@ const HorizontalNav = () => {
             <IntlMessages id="sidebar.create" />
           </Link>
         </Menu.Item>
-      </MenuItemGroup>
+      </SubMenu>
       <Menu.Item
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
         key="faucet"

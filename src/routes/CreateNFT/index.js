@@ -277,8 +277,8 @@ const MintPrivate = () => {
       const name = token.name[0] === "@" ? token.name : "@" + token.name;
       let mintResult =
         token.chain === "devnet"
-          ? await mintNFT(address, auth, token)
-          : await mintRollupNFT(address, auth, token);
+          ? await mintNFT(address, auth, token, merkleTree)
+          : await mintRollupNFT(address, auth, token, merkleTree);
       console.log("Mint result", mintResult);
       if (token.chain === "zeko") {
         if (mintResult?.success === true && mintResult?.hash !== undefined) {

@@ -16,7 +16,7 @@ import { decrypt } from "../../blockchain/decrypt";
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 const arconfig = ""; //await decrypt();
 
-export async function mintNFT(address, auth, token) {
+export async function mintNFT(address, auth, token, calculateRoot) {
   if (address === undefined || address === "") {
     console.error("Address is undefined");
     return;
@@ -201,7 +201,7 @@ export async function mintNFT(address, auth, token) {
         await addFile(
           token.unlockable.attachments[i].originFileObj,
           true,
-          token.calculateroot === true
+          calculateRoot
         );
       }
     }
