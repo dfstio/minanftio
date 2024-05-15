@@ -982,67 +982,68 @@ const MintPrivate = () => {
                 {address === "" ? "Connect with AURO" : "Mint NFT"}
               </Button>
             </Form.Item>
-            {address !== ""}?(
-            <Form.Item hidden={showLink}>
-              <div
-                className="gx-mt-4"
-                style={{
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                <span>
-                  {"You are creating NFT with owner address " + address}
-                  <br />
-                  <br />
-                  By clicking this button, you are confirming your agreement
-                  with our
-                </span>
-                <span>
-                  <a href={footerAgreementLink} target="_blank">
-                    {footerAgreement}
-                  </a>
-                </span>
-              </div>
-            </Form.Item>
-            ):(
-            <Form.Item hidden={showLink}>
-              <div
-                className="gx-mt-4"
-                style={{
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                <span>
-                  By clicking this button, you are confirming your agreement
-                  with our
-                </span>
-                <span>
-                  <a href={footerAgreementLink} target="_blank">
-                    {footerAgreement}
-                  </a>
-                </span>
-              </div>
-            </Form.Item>
-            )
           </Row>
-          <Row>
-            <Form.Item
-              label="NFT is minted: "
-              name="mintedlink"
-              hidden={!showLink}
-            >
-              <div>
-                <a href={link} target="_blank">
-                  {link}
-                </a>
-              </div>
-              <div>
-                <a href={hash} target="_blank">
-                  {hash}
-                </a>
-              </div>
-            </Form.Item>
-          </Row>
+          {showLink === false ? (
+            <Row>
+              {address !== ""}?(
+              <Form.Item>
+                <div
+                  className="gx-mt-4"
+                  style={{
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  <span>
+                    {"You are creating NFT with owner address " + address}
+                    <br />
+                    <br />
+                    By clicking this button, you are confirming your agreement
+                    with our
+                  </span>
+                  <span>
+                    <a href={footerAgreementLink} target="_blank">
+                      {footerAgreement}
+                    </a>
+                  </span>
+                </div>
+              </Form.Item>
+              ):(
+              <Form.Item>
+                <div
+                  className="gx-mt-4"
+                  style={{
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  <span>
+                    By clicking this button, you are confirming your agreement
+                    with our
+                  </span>
+                  <span>
+                    <a href={footerAgreementLink} target="_blank">
+                      {footerAgreement}
+                    </a>
+                  </span>
+                </div>
+              </Form.Item>
+              )
+            </Row>
+          ) : (
+            <Row>
+              <Form.Item label="NFT is minted: " name="mintedlink">
+                <div>
+                  <a href={link} target="_blank">
+                    {link}
+                  </a>
+                </div>
+                <div>
+                  <a href={hash} target="_blank">
+                    {hash}
+                  </a>
+                </div>
+              </Form.Item>
+            </Row>
+          )}
         </Form>
       </Card>
     </div>
