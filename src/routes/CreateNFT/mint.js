@@ -28,8 +28,6 @@ export async function mintNFT(address, auth, token, calculateRoot) {
   const includeFiles = false;
   const pinataJWT = REACT_APP_PINATA_JWT;
   const arweaveKey = await decrypt();
-  console.log("arweaveKey", arweaveKey);
-  return;
   await minaInit();
 
   const name = token.name;
