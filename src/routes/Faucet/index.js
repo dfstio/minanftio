@@ -15,14 +15,6 @@ import {
   Divider,
 } from "antd";
 
-import { useDispatch, useSelector } from "react-redux";
-import IntlMessages from "util/IntlMessages";
-import {
-  LoadingOutlined,
-  PlusOutlined,
-  InboxOutlined,
-} from "@ant-design/icons";
-
 import logger from "../../serverless/logger";
 import { faucet } from "../../blockchain/faucet";
 import { explorerTransaction } from "../../blockchain/explorer";
@@ -38,16 +30,11 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const Faucet = () => {
   const [form] = Form.useForm();
-  const [auth, setAuth] = useState("");
+  const [publicKey, setPublicKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
-  const [name, setName] = useState("");
-  const [nftAddress, setNftAddress] = useState("");
-  const [json, setJson] = useState(undefined);
-  const [table, setTable] = useState([]);
   const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
   const [chain, setChain] = useState("zeko");
 
   const log = logm.child({ winstonComponent: "Faucet" });
@@ -64,7 +51,8 @@ const Faucet = () => {
 
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
-    if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
+    if (values.publicKey !== undefined && values.publicKey !== publicKey)
+      setPublicKey(values.publicKey);
     if (values.chain !== undefined && values.chain !== chain)
       setChain(values.chain);
 
@@ -73,7 +61,7 @@ const Faucet = () => {
   };
 
   async function proveButton() {
-    console.log("Faucet", { chain, publicKey: auth });
+    console.log("Faucet", { chain, publicKey });
     setLoading(true);
 
     const key = "Faucet";
@@ -84,7 +72,7 @@ const Faucet = () => {
         key,
         duration: 600,
       });
-      const hashResult = await faucet(auth, chain);
+      const hashResult = await faucet(publicKey, chain);
       if (hashResult.isCalculated === true) {
         setVerificationResult(hashResult.hash);
         message.success({
@@ -130,7 +118,7 @@ const Faucet = () => {
             <Card className="gx-card" key="faucetCard" title="Devnet Faucet">
               <Form
                 form={form}
-                key="billingFormDevnet"
+                key="faucetForm"
                 labelCol={{
                   span: 24,
                 }}
@@ -138,7 +126,7 @@ const Faucet = () => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={{ auth: "" }}
+                initialValues={{ publicKey: "", chain: "zeko" }}
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
@@ -162,7 +150,7 @@ const Faucet = () => {
                       </Form.Item>
                       <Form.Item
                         label="Enter the public key of your account"
-                        name="auth"
+                        name="publicKey"
                         rules={[
                           {
                             required: true,
@@ -187,7 +175,7 @@ const Faucet = () => {
                       <Form.Item>
                         <Button
                           type="primary"
-                          disabled={auth === ""}
+                          disabled={publicKey === ""}
                           loading={loading}
                           onClick={proveButton}
                           key="proveButton"
