@@ -13,6 +13,8 @@ import {
   Select,
   Table,
   Divider,
+  RadioGroup,
+  RadioButton,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import IntlMessages from "util/IntlMessages";
@@ -33,19 +35,6 @@ const { TextArea } = Input;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const columns = [
-  {
-    title: "Key",
-    dataIndex: "key",
-    key: "key",
-  },
-  {
-    title: "Value",
-    dataIndex: "value",
-    key: "value",
-  },
-];
-
 const Faucet = () => {
   const [form] = Form.useForm();
   const [auth, setAuth] = useState("");
@@ -58,7 +47,7 @@ const Faucet = () => {
   const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  const [chain, setChain] = useState("devnet");
+  const [chain, setChain] = useState("zeko");
 
   const log = logm.child({ winstonComponent: "Faucet" });
 
@@ -75,17 +64,18 @@ const Faucet = () => {
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
     if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
+    if (values.chain !== undefined && values.chain !== chain)
+      setChain(values.chain);
 
     setCounter(counter + 1);
     checkCanCreate();
   };
 
   async function proveButton() {
-    console.log("Verify button clicked");
+    console.log("Faucet", { chain, publicKey: auth });
     setLoading(true);
 
-    console.log("table", table);
-    const key = "Verifying message";
+    const key = "Faucet";
 
     try {
       message.loading({
@@ -113,49 +103,6 @@ const Faucet = () => {
         });
       }
 
-      /*
-      const jobResult = await verify(auth, json);
-      console.log("Verify job result", jobResult);
-      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
-        message.loading({
-          content: `Started verification job ${jobResult.jobId}`,
-          key,
-          duration: 600,
-        });
-      } else {
-        message.error({
-          content: `Error verifying proof: ${jobResult?.error ?? ""} ${
-            jobResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
-        setLoading(false);
-        return;
-      }
-      const jobId = jobResult.jobId;
-      const mintResult = await waitForProof(jobId, auth);
-      if (
-        mintResult?.success === true &&
-        mintResult?.verificationResult !== undefined
-      ) {
-        message.success({
-          content: `Proof verified, transaction: ${mintResult.verificationResult}`,
-          key,
-          duration: 240,
-        });
-        setVerificationResult(
-          explorerTransaction() + mintResult.verificationResult
-        );
-      } else
-        message.error({
-          content: `Error verifying proof: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
-      */
       setLoading(false);
     } catch (error) {
       console.log("Proof creation error", error);
@@ -179,43 +126,6 @@ const Faucet = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card className="gx-card" key="faucetCardZeko" title="Zeko Faucet">
-              <Form
-                form={form}
-                key="billingFormZeko"
-                labelCol={{
-                  span: 24,
-                }}
-                wrapperCol={{
-                  span: 24,
-                }}
-                layout="horizontal"
-                initialValues={{ auth: "" }}
-                onFinish={onFinish}
-                onValuesChange={onValuesChange}
-              >
-                <div>
-                  <Row>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        name="mintedlinkZeko"
-                        hidden={verificationResult === ""}
-                      >
-                        <div>
-                          <a href={"https://zeko.io/faucet"} target="_blank">
-                            https://zeko.io/faucet
-                          </a>
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </div>
-              </Form>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card className="gx-card" key="faucetCard" title="Devnet Faucet">
               <Form
                 form={form}
@@ -234,6 +144,21 @@ const Faucet = () => {
                 <div>
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        label="Chain"
+                        name="chain"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please choose chain",
+                          },
+                        ]}
+                      >
+                        <RadioGroup>
+                          <RadioButton value="zeko">Zeko</RadioButton>
+                          <RadioButton value="devnet">Devnet</RadioButton>
+                        </RadioGroup>
+                      </Form.Item>
                       <Form.Item
                         label="Enter the public key of your account"
                         name="auth"
