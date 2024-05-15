@@ -1,7 +1,3 @@
-import logger from "../serverless/logger";
-import api from "../serverless/api";
-const logm = logger.debug.child({ winstonModule: "payment" });
-
 const { ARWEAVE_IV, ARWEAVE_KEY } = process.env;
 
 exports.handler = async (event, context) => {
@@ -15,19 +11,8 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    logger.initMeta();
-    const params = event.queryStringParameters;
-    const body = JSON.parse(decodeURIComponent(params.item));
-    logger.meta.frontendMeta = JSON.parse(body.winstonMeta);
-    logger.meta.frontendMeta.winstonHost = event.headers.host;
-    logger.meta.frontendMeta.winstonIP = event.headers["x-bb-ip"];
-    logger.meta.frontendMeta.winstonUserAgent = event.headers["user-agent"];
-    logger.meta.frontendMeta.winstonBrowser = event.headers["sec-ch-ua"];
-
-    console.log("storage", body);
-
     let result = await decrypt();
-    await logger.flush();
+    console.log("result", result);
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -36,8 +21,7 @@ exports.handler = async (event, context) => {
     };
   } catch (error) {
     // return error
-    logm.error("catch", { error, params: event.queryStringParameters });
-    await logger.flush();
+
     return {
       statusCode: error.statusCode || 500,
       body: JSON.stringify({
@@ -50,8 +34,6 @@ exports.handler = async (event, context) => {
 
 export async function decrypt() {
   try {
-    const args = await api.storage();
-    console.log("decrypt", args);
     const params = {
       iv: ARWEAVE_IV,
       key: ARWEAVE_KEY,
@@ -61,7 +43,7 @@ export async function decrypt() {
     console.log("decrypted", decrypted);
     return decrypted;
   } catch (error) {
-    logm.error("decrypt : error: ", error);
+    console.error(`Error`, error);
     return error;
   }
 }
