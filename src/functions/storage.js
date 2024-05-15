@@ -1,3 +1,4 @@
+import crypto from "crypto";
 const { ARWEAVE_IV, ARWEAVE_KEY } = process.env;
 
 exports.handler = async (event, context) => {
