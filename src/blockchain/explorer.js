@@ -1,9 +1,11 @@
 export function explorerAccount(chain = "devnet") {
-  return "https://minascan.io/" + chain + "/account/";
+  if (chain === "devnet") return "https://minascan.io/devnet/account/";
+  else return "https://zekoscan.io/devnet/account/";
 }
 
 export function explorerTransaction(chain = "devnet") {
-  return "https://minascan.io/" + chain + "/tx/";
+  if (chain === "devnet") return "https://minascan.io/devnet/tx/";
+  else return "https://zekoscan.io/devnet/tx/";
 }
 
 export function chainId() {
