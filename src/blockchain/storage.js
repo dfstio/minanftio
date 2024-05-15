@@ -1,3 +1,5 @@
+const REACT_APP_PINATA_GATEWAY_KEY = process.env.REACT_APP_PINATA_GATEWAY_KEY;
+
 export function storageUrl(storage, big = false, nocache = false) {
   const cacheUrl = "https://res.cloudinary.com/minanft/image/fetch/";
   const cacheSmallUrl =
@@ -11,7 +13,9 @@ export function storageUrl(storage, big = false, nocache = false) {
   }
   const url2 = storage.slice(2);
   let url = "";
-  if (storage[0] === "i") url = ipfsUrl + url2;
+  if (storage[0] === "i")
+    url =
+      ipfsUrl + url2 + `?pinataGatewayToken=${REACT_APP_PINATA_GATEWAY_KEY}`;
   else if (storage[0] === "a") url = arweaveUrl + url2;
   else {
     return storage;
@@ -28,9 +32,11 @@ export function storageUrlFromURL(url) {
     return "";
   }
   if (url.includes("https://gateway.pinata.cloud/ipfs/")) {
-    return url.replace(
-      "https://gateway.pinata.cloud/ipfs/",
-      "https://salmon-effective-amphibian-898.mypinata.cloud/ipfs/"
+    return (
+      url.replace(
+        "https://gateway.pinata.cloud/ipfs/",
+        "https://salmon-effective-amphibian-898.mypinata.cloud/ipfs/"
+      ) + `?pinataGatewayToken=${REACT_APP_PINATA_GATEWAY_KEY}`
     );
   } else return url;
 }
