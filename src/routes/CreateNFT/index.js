@@ -643,8 +643,6 @@ const MintPrivate = () => {
                 <Markdown>{token.description}</Markdown>
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
             <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
               <Form.Item name="advanced" valuePropName="advanced">
                 <Checkbox onChange={onChangeAdvanced}>
@@ -980,9 +978,6 @@ const MintPrivate = () => {
                 {address === "" ? "Connect with AURO" : "Mint NFT"}
               </Button>
             </Form.Item>
-          </Row>
-
-          <Row>
             <Form.Item hidden={showLink}>
               <div
                 className="gx-mt-4"
