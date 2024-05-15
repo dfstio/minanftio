@@ -994,15 +994,17 @@ const MintPrivate = () => {
                     whiteSpace: "pre-wrap",
                   }}
                 >
+                  {address !== ""}?(
                   <span>
-                    {address !== ""}?(
                     {"You are creating NFT with owner address " + address}
                     <br />
                     <br />
-                    ):() By clicking this button, you are confirming your
-                    agreement with our
                   </span>
-
+                  ):(){" "}
+                  <span>
+                    By clicking this button, you are confirming your agreement
+                    with our
+                  </span>
                   <span>
                     <a href={footerAgreementLink} target="_blank">
                       {footerAgreement}
