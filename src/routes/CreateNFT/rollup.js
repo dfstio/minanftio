@@ -8,7 +8,7 @@ import { nftPrice } from "../../nft/pricing";
 
 const { REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
 
-export async function mintRollupNFT(address, auth, token) {
+export async function mintRollupNFT(address, auth, token, calculateRoot) {
   console.log("mintRollupNFT", token);
   if (address === undefined || address === "") {
     console.error("Address is undefined");
@@ -56,7 +56,7 @@ export async function mintRollupNFT(address, auth, token) {
     };
   }
   */
-  const price = nftPrice(name) ?? 10;
+  const price = nftPrice(name)?.price ?? 10;
   const paymentResult = await payment({
     to: process.env.REACT_APP_ADDRESS,
     amount: price,
@@ -199,7 +199,7 @@ export async function mintRollupNFT(address, auth, token) {
         await addFile(
           token.unlockable.attachments[i].originFileObj,
           true,
-          token.calculateroot === true
+          calculateRoot
         );
       }
     }

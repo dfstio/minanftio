@@ -48,7 +48,6 @@ const HorizontalNav = () => {
         key="explore"
       >
         <Link to="/explore">
-          <i className="icon icon-shopping-cart " />
           <IntlMessages id="sidebar.avatars" />
         </Link>
       </Menu.Item>
@@ -57,63 +56,63 @@ const HorizontalNav = () => {
         key="create"
       >
         <Link to="/create/nft">
-          <i className="icon icon-culture-calendar" />
           <IntlMessages id="sidebar.create" />
         </Link>
       </Menu.Item>
-      <Menu.Item
+      <SubMenu
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="posts"
+        popupClassName="gx-menu-horizontal-flex"
+        key="advanced"
+        title={<IntlMessages id="sidebar.advanced" />}
       >
-        <Link to="/posts">
-          <i className="icon icon-shopping-cart " />
-          <IntlMessages id="sidebar.posts" />
-        </Link>
-      </Menu.Item>
+        <Menu.Item
+          className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+          key="posts"
+        >
+          <Link to="/posts">
+            <IntlMessages id="sidebar.posts" />
+          </Link>
+        </Menu.Item>
 
-      <Menu.Item
-        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="proofs"
-      >
-        <Link to="/proofs">
-          <i className="icon icon-components" />
-          <IntlMessages id="sidebar.proofs" />
-        </Link>
-      </Menu.Item>
+        <Menu.Item
+          className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+          key="proofs"
+        >
+          <Link to="/proofs">
+            <IntlMessages id="sidebar.proofs" />
+          </Link>
+        </Menu.Item>
 
-      <Menu.Item
-        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="tools"
-      >
-        <Link to="/tools">
-          <i className="icon icon-culture-calendar" />
-          <IntlMessages id="sidebar.tools" />
-        </Link>
-      </Menu.Item>
-      <Menu.Item
-        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="corporate"
-      >
-        <Link to="/corporate">
-          <i className="icon icon-culture-calendar" />
-          <IntlMessages id="sidebar.corporate" />
-        </Link>
-      </Menu.Item>
-      <Menu.Item
-        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="create"
-      >
-        <Link to="/create">
-          <i className="icon icon-culture-calendar" />
-          <IntlMessages id="sidebar.advanced" />
-        </Link>
-      </Menu.Item>
+        <Menu.Item
+          className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+          key="tools"
+        >
+          <Link to="/tools">
+            <IntlMessages id="sidebar.tools" />
+          </Link>
+        </Menu.Item>
+        <Menu.Item
+          className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+          key="corporate"
+        >
+          <Link to="/corporate">
+            <IntlMessages id="sidebar.corporate" />
+          </Link>
+        </Menu.Item>
+        <Menu.Item
+          className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+          key="advancedCreate"
+        >
+          <Link to="/create">
+            <IntlMessages id="sidebar.create" />
+          </Link>
+        </Menu.Item>
+      </SubMenu>
       <Menu.Item
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
         key="faucet"
       >
         <Link to="/faucet">
-          <i className="icon icon-culture-calendar" />
           <IntlMessages id="faucet" />
         </Link>
       </Menu.Item>

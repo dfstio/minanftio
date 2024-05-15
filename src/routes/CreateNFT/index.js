@@ -38,6 +38,7 @@ import {
   accountingEmail,
 } from "../../util/config";
 import { set } from "nprogress";
+import { add } from "winston";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -105,35 +106,6 @@ const startToken = {
   folder: "",
 };
 
-/*
-const STARTING_JSON = {
-  name: "@mynft",
-  description: "",
-  url: "",
-  type: "object",
-  image: "",
-  category: "",
-  type: "individual",
-  external_url: "minanft.io",
-  animation_url: "",
-
-  license: "Mina NFT V1",
-  license_id: "0",
-  title: "",
-  properties: { image: "", animation: "" },
-  private_content_description: "",
-  contains_private_content: false,
-  private: {
-    image: "",
-    video: "",
-    audio: "",
-    pdf: "",
-    files: "",
-    files_number: 0,
-  },
-};
-*/
-
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 const { REACT_APP_PINATA_JWT } = process.env;
 //const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
@@ -151,7 +123,7 @@ const MintPrivate = () => {
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
   const [hash, setHash] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState("Name (like @mynft)");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
@@ -160,6 +132,8 @@ const MintPrivate = () => {
   const [showUnlockable, setShowUnlockable] = useState(false);
   const [mintDisabled, setMintDisabled] = useState(true);
   const [mintPrice, setMintPrice] = useState(mintText);
+  const [advanced, setAdvanced] = useState(false);
+  const [merkleTree, setMerkleTree] = useState(false);
   const [form] = Form.useForm();
 
   const checkCanMint = () => {
@@ -184,7 +158,16 @@ const MintPrivate = () => {
       }
       if (validateName(name)) {
         newToken.name = name;
-        setPrice(name === "@" ? "" : nftPrice(name));
+        const priceObject = nftPrice(name);
+        setPrice(
+          name === "@"
+            ? "Name (like @mynft)"
+            : priceObject.description +
+                ":" +
+                priceObject.price +
+                " " +
+                priceObject.currency
+        );
       } else {
         setPrice(
           "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
@@ -236,6 +219,9 @@ const MintPrivate = () => {
     if (values.folder !== undefined) newToken.folder = values.folder;
     if (values.calculateroot !== undefined)
       newToken.calculateroot = values.calculateroot;
+    if (values.advanced !== undefined) {
+      setAdvanced(values.advanced === true);
+    }
     if (values.storagetype !== undefined)
       newToken.storagetype = values.storagetype;
 
@@ -246,6 +232,16 @@ const MintPrivate = () => {
 
   const onFinish = async (values) => {
     if (DEBUG) console.log("onFinish", values);
+  };
+
+  const onChangeAdvanced = async (value) => {
+    if (DEBUG) console.log("onChangeAdvanced", value);
+    setAdvanced(value.target.checked);
+  };
+
+  const onChangeMerkleTree = async (value) => {
+    if (DEBUG) console.log("onChangeMerkleTree", value);
+    setMerkleTree(value.target.checked);
   };
 
   const categoryChange = (value) => {
@@ -282,8 +278,8 @@ const MintPrivate = () => {
       const name = token.name[0] === "@" ? token.name : "@" + token.name;
       let mintResult =
         token.chain === "devnet"
-          ? await mintNFT(address, auth, token)
-          : await mintRollupNFT(address, auth, token);
+          ? await mintNFT(address, auth, token, merkleTree)
+          : await mintRollupNFT(address, auth, token, merkleTree);
       console.log("Mint result", mintResult);
       if (token.chain === "zeko") {
         if (mintResult?.success === true && mintResult?.hash !== undefined) {
@@ -509,24 +505,24 @@ const MintPrivate = () => {
 
   return (
     <div className="gx-main-content">
-      <Row>
-        <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-          <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
-            <Form
-              form={form}
-              labelCol={{
-                span: 24,
-              }}
-              wrapperCol={{
-                span: 24,
-              }}
-              layout="horizontal"
-              initialValues={token}
-              onFinish={onFinish}
-              onValuesChange={onValuesChange}
-            >
+      <Card className="gx-card" title=<IntlMessages id={"create.title"} />>
+        <Form
+          form={form}
+          labelCol={{
+            span: 24,
+          }}
+          wrapperCol={{
+            span: 24,
+          }}
+          layout="horizontal"
+          initialValues={token}
+          onFinish={onFinish}
+          onValuesChange={onValuesChange}
+        >
+          <Row>
+            <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
               <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
                   <Form.Item
                     name="mainimage"
                     label="Main image"
@@ -554,73 +550,8 @@ const MintPrivate = () => {
                       </div>
                     </Upload>
                   </Form.Item>
-
-                  <Form.Item
-                    label="Name (like @mynft)"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please name your NFT",
-                      },
-                    ]}
-                    placeholder="Please name your NFT like @mynft"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                  <Form.Item>
-                    <div
-                      className="gx-mt-4"
-                      style={{
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      {price}
-                    </div>
-                  </Form.Item>
-
-                  <Form.Item
-                    label={
-                      <span>
-                        <span>
-                          <IntlMessages id={"create.description"} />
-                        </span>
-                        <span>
-                          {" "}
-                          <a
-                            href="https://www.markdownguide.org/cheat-sheet/"
-                            target="_blank"
-                          >
-                            markdown
-                          </a>
-                        </span>
-                      </span>
-                    }
-                    name="description"
-                    rules={[
-                      {
-                        required: false,
-                        message: "Please describe your NFT",
-                      },
-                    ]}
-                    placeholder="Please describe your NFT"
-                  >
-                    <TextArea
-                      autoSize={{
-                        minRows: 2,
-                        maxRows: 10,
-                      }}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Description preview"
-                    name="descriptionpreview"
-                  >
-                    <Markdown>{token.description}</Markdown>
-                  </Form.Item>
                 </Col>
-
-                <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
                   <Form.Item name="mainvideo" label="Main Video/Audio">
                     <Upload
                       name="video"
@@ -642,22 +573,93 @@ const MintPrivate = () => {
                       </div>
                     </Upload>
                   </Form.Item>
+                </Col>
+              </Row>
 
-                  <Form.Item
-                    label="Chain"
-                    name="chain"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please choose chain",
-                      },
-                    ]}
-                  >
-                    <RadioGroup>
-                      <RadioButton value="zeko">Zeko</RadioButton>
-                      <RadioButton value="devnet">Devnet</RadioButton>
-                    </RadioGroup>
-                  </Form.Item>
+              <Form.Item
+                label={price}
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please name your NFT",
+                  },
+                ]}
+                placeholder="Please name your NFT like @mynft"
+              >
+                <Input maxLength={30} showCount={true} />
+              </Form.Item>
+            </Col>
+
+            <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+              <Form.Item
+                label="Chain"
+                name="chain"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please choose chain",
+                  },
+                ]}
+              >
+                <RadioGroup>
+                  <RadioButton value="zeko">Zeko</RadioButton>
+                  <RadioButton value="devnet">Devnet</RadioButton>
+                </RadioGroup>
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span>
+                    <span>
+                      <IntlMessages id={"create.description"} />
+                    </span>
+                    <span>
+                      {" "}
+                      <a
+                        href="https://www.markdownguide.org/cheat-sheet/"
+                        target="_blank"
+                      >
+                        markdown
+                      </a>
+                    </span>
+                  </span>
+                }
+                name="description"
+                rules={[
+                  {
+                    required: false,
+                    message: "Please describe your NFT",
+                  },
+                ]}
+                placeholder="Please describe your NFT"
+              >
+                <TextArea
+                  autoSize={{
+                    minRows: 1,
+                    maxRows: 10,
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Description preview"
+                name="descriptionpreview"
+                hidden={token.description === ""}
+              >
+                <Markdown>{token.description}</Markdown>
+              </Form.Item>
+            </Col>
+            <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+              <Form.Item name="advanced" valuePropName="advanced">
+                <Checkbox onChange={onChangeAdvanced}>
+                  Advanced options
+                </Checkbox>
+              </Form.Item>
+            </Col>
+          </Row>
+          {advanced === true ? (
+            <div className="gx-main-content">
+              <Row>
+                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="category"
                     label="Category"
@@ -914,7 +916,7 @@ const MintPrivate = () => {
                     </Upload>
                   </Form.Item>
                   <Form.Item name="calculateroot" valuePropName="checked">
-                    <Checkbox>
+                    <Checkbox onChange={onChangeMerkleTree}>
                       Calculate Merkle Tree root of the private attachments
                       (takes time)
                     </Checkbox>
@@ -947,7 +949,7 @@ const MintPrivate = () => {
               <Form.Item
                 label={
                   <span>
-                    <span>Authorisation code. </span>
+                    <span>Authorization code. </span>
                     <span>
                       {" "}
                       <a
@@ -964,60 +966,60 @@ const MintPrivate = () => {
               >
                 <TextArea autoSize={{ minRows: 2, maxRows: 3 }} />
               </Form.Item>
-              <Form.Item>
-                <div
-                  className="gx-mt-4"
-                  style={{
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
-                  <span>
-                    {address === ""
-                      ? "Please connect with Auro before creating NFT"
-                      : "You are creating NFT with owner address " + address}
-                    <br />
-                    <br />
-                    By clicking this button, you are confirming your agreement
-                    with our
-                  </span>
-                  <span>
-                    <a href={footerAgreementLink} target="_blank">
-                      {footerAgreement}
-                    </a>
-                  </span>
-                </div>
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={mint}
-                  disabled={mintDisabled}
-                  loading={minting}
-                >
-                  {address === "" ? "Connect with AURO" : "Mint NFT"}
-                </Button>
-              </Form.Item>
-              <Form.Item
-                label="NFT is minted: "
-                name="mintedlink"
-                hidden={!showLink}
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <Row>
+            <Form.Item>
+              <Button
+                type="primary"
+                onClick={mint}
+                disabled={mintDisabled}
+                loading={minting}
               >
-                <div>
-                  <a href={link} target="_blank">
-                    {link}
+                {address === "" ? "Connect with AURO" : "Mint NFT"}
+              </Button>
+            </Form.Item>
+          </Row>
+          <Row>
+            <Form.Item hidden={showLink === true}>
+              <div
+                className="gx-mt-0"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
                   </a>
-                </div>
-                <div>
-                  <a href={hash} target="_blank">
-                    {hash}
-                  </a>
-                </div>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+                </span>
+              </div>
+            </Form.Item>
+            <Form.Item
+              label="NFT is minted: "
+              name="mintedlink"
+              hidden={showLink === false}
+            >
+              <div>
+                <a href={link} target="_blank">
+                  {link}
+                </a>
+              </div>
+              <div>
+                <a href={hash} target="_blank">
+                  {hash}
+                </a>
+              </div>
+            </Form.Item>
+          </Row>
+        </Form>
+      </Card>
     </div>
   );
 };

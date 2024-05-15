@@ -9,24 +9,28 @@ export function nftPrice(name) {
   if (username.length <= 5) category = 2;
   if (username.length <= 3) category = 1;
   if (vipnames.includes(username)) category = 0;
-  return prices[category].description + ": " + prices[category].price + " MINA";
+  return {
+    description: prices[category].description,
+    price: prices[category].price,
+    currency: "MINA",
+  };
 }
 
 const prices = [
   {
     price: 999,
-    description: "Exclusive Avatar NFT name",
+    description: "Exclusive NFT name",
   },
   {
     price: 99,
-    description: "Super Short Avatar NFT Name",
+    description: "Super Short NFT Name",
   },
   {
     price: 19,
-    description: "Short Avatar NFT name",
+    description: "Short NFT name",
   },
   {
     price: 10,
-    description: "Avatar NFT name",
+    description: "Standard NFT name",
   },
 ];
