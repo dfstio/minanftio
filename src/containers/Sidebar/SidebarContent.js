@@ -91,7 +91,7 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
                 <IntlMessages id="sidebar.corporate" />
               </Link>
             </Menu.Item>
-            <Menu.Item key="create">
+            <Menu.Item key="advanced">
               <Link to="/create">
                 <i className="icon icon-culture-calendar" />
                 <IntlMessages id="sidebar.advanced" />

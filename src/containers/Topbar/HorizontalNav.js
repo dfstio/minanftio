@@ -101,7 +101,7 @@ const HorizontalNav = () => {
       </Menu.Item>
       <Menu.Item
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="create"
+        key="davanced"
       >
         <Link to="/create">
           <i className="icon icon-culture-calendar" />

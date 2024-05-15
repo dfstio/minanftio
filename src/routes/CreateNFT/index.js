@@ -527,33 +527,60 @@ const MintPrivate = () => {
             >
               <Row>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    name="mainimage"
-                    label="Main image"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please upload NFT image",
-                      },
-                    ]}
-                  >
-                    <Upload
-                      name="mainimage"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      accept="image/*"
-                      showUploadList={true}
-                      multiple={false}
-                      maxCount={1}
-                      beforeUpload={beforeUpload}
-                    >
-                      {" "}
-                      <div>
-                        <PlusOutlined />
-                        <div className="ant-upload-text">Main Image</div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
+                  <Row>
+                    <Col xxl={6} xl={6} lg={7} md={12} sm={12} xs={12}>
+                      <Form.Item
+                        name="mainimage"
+                        label="Main image"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please upload NFT image",
+                          },
+                        ]}
+                      >
+                        <Upload
+                          name="mainimage"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="image/*"
+                          showUploadList={true}
+                          multiple={false}
+                          maxCount={1}
+                          beforeUpload={beforeUpload}
+                        >
+                          {" "}
+                          <div>
+                            <PlusOutlined />
+                            <div className="ant-upload-text">Main Image</div>
+                          </div>
+                        </Upload>
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={6} xl={6} lg={7} md={12} sm={12} xs={12}>
+                      <Form.Item name="mainvideo" label="Main Video/Audio">
+                        <Upload
+                          name="video"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="video/*,audio/*"
+                          showUploadList={true}
+                          multiple={false}
+                          maxCount={1}
+                          //action="//jsonplaceholder.typicode.com/posts/"
+                          beforeUpload={beforeUpload}
+                          //onChange={this.handleChange}
+                        >
+                          <div>
+                            <PlusOutlined />
+                            <div className="ant-upload-text">
+                              Main Video or Audio
+                            </div>
+                          </div>
+                        </Upload>
+                      </Form.Item>
+                    </Col>
+                  </Row>
 
                   <Form.Item
                     label="Name (like @mynft)"
@@ -578,7 +605,24 @@ const MintPrivate = () => {
                       {price}
                     </div>
                   </Form.Item>
+                </Col>
 
+                <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
+                  <Form.Item
+                    label="Chain"
+                    name="chain"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please choose chain",
+                      },
+                    ]}
+                  >
+                    <RadioGroup>
+                      <RadioButton value="zeko">Zeko</RadioButton>
+                      <RadioButton value="devnet">Devnet</RadioButton>
+                    </RadioGroup>
+                  </Form.Item>
                   <Form.Item
                     label={
                       <span>
@@ -617,46 +661,6 @@ const MintPrivate = () => {
                     name="descriptionpreview"
                   >
                     <Markdown>{token.description}</Markdown>
-                  </Form.Item>
-                </Col>
-
-                <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
-                  <Form.Item name="mainvideo" label="Main Video/Audio">
-                    <Upload
-                      name="video"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      accept="video/*,audio/*"
-                      showUploadList={true}
-                      multiple={false}
-                      maxCount={1}
-                      //action="//jsonplaceholder.typicode.com/posts/"
-                      beforeUpload={beforeUpload}
-                      //onChange={this.handleChange}
-                    >
-                      <div>
-                        <PlusOutlined />
-                        <div className="ant-upload-text">
-                          Main Video or Audio
-                        </div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Chain"
-                    name="chain"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please choose chain",
-                      },
-                    ]}
-                  >
-                    <RadioGroup>
-                      <RadioButton value="zeko">Zeko</RadioButton>
-                      <RadioButton value="devnet">Devnet</RadioButton>
-                    </RadioGroup>
                   </Form.Item>
                   <Form.Item
                     name="category"

@@ -18,7 +18,7 @@ import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
 import api from "../../serverless/api";
 import { prepareMetadata } from "./metadata";
-import { storageUrl } from "../../blockchain/storage";
+import { storageUrl, storageUrlFromURL } from "../../blockchain/storage";
 //import '../../styles/token/audio-player.less';
 
 const {
@@ -188,11 +188,7 @@ const TokenMedia = ({
         ) : (
           <div>
             {type === "image" ? (
-              <img
-                src={`https://res.cloudinary.com/minanft/image/fetch/${url}`}
-                alt={media.filename}
-                crossorigin="anonymous"
-              />
+              <img src={url} alt={media.filename} crossorigin="anonymous" />
             ) : (
               ""
             )}
@@ -643,10 +639,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setName(item.name);
         setDescription(item.description);
         if (item.markdown !== undefined) setDescriptionMarkdown(item.markdown);
-        setImage(
-          "https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/" +
-            item.image
-        );
+        setImage(storageUrlFromURL(item.image));
         setFirstRun(false);
       }
 
@@ -676,7 +669,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
 
       let newDescription = item.markdown === undefined ? "" : item.markdown;
       let newName = item.name;
-      let newImage = item.image;
+      let newImage = storageUrlFromURL(item.image);
 
       /*
       let newAnimation = item.animation_url; // USE IT LATER!!!
@@ -1248,7 +1241,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       includeMargin={true}
                       onClick={hideQRCodeFunction}
                       imageSettings={{
-                        src: `https://res.cloudinary.com/minanft/image/fetch/h_100,q_100,f_auto/${item.image}`,
+                        src: storageUrlFromURL(item.image),
                         width: 100,
                         height: 100,
                       }}
