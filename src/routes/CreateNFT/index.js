@@ -955,6 +955,19 @@ const MintPrivate = () => {
                 )}
                 <Row>
                   <Form.Item>
+                    <Button
+                      type="primary"
+                      onClick={mint}
+                      disabled={mintDisabled}
+                      loading={minting}
+                    >
+                      {address === "" ? "Connect with AURO" : "Mint NFT"}
+                    </Button>
+                  </Form.Item>
+                </Row>
+
+                <Row>
+                  <Form.Item hidden={showLink}>
                     <div
                       className="gx-mt-4"
                       style={{
@@ -979,19 +992,7 @@ const MintPrivate = () => {
                     </div>
                   </Form.Item>
                 </Row>
-
                 <Row>
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      onClick={mint}
-                      disabled={mintDisabled}
-                      loading={minting}
-                    >
-                      {address === "" ? "Connect with AURO" : "Mint NFT"}
-                    </Button>
-                  </Form.Item>
-                  <Row></Row>
                   <Form.Item
                     label="NFT is minted: "
                     name="mintedlink"
