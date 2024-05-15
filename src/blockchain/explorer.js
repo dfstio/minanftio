@@ -1,9 +1,9 @@
-export function explorerAccount() {
-  return "https://minascan.io/devnet/account/";
+export function explorerAccount(chain = "devnet") {
+  return "https://minascan.io/" + chain + "/account/";
 }
 
-export function explorerTransaction() {
-  return "https://minascan.io/devnet/tx/";
+export function explorerTransaction(chain = "devnet") {
+  return "https://minascan.io/" + chain + "/tx/";
 }
 
 export function chainId() {

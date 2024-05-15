@@ -80,7 +80,7 @@ const Faucet = () => {
           key,
           duration: 240,
         });
-        setVerificationResult(explorerTransaction() + hashResult.hash);
+        setVerificationResult(explorerTransaction(chain) + hashResult.hash);
       } else {
         console.error("faucetResult", hashResult);
         message.error({
@@ -115,7 +115,7 @@ const Faucet = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card className="gx-card" key="faucetCard" title="Devnet Faucet">
+            <Card className="gx-card" key="faucetCard" title="Faucet">
               <Form
                 form={form}
                 key="faucetForm"
