@@ -984,15 +984,22 @@ const MintPrivate = () => {
           </Row>
           <Row>
             <Form.Item hidden={showLink === true}>
-              <span>
-                By clicking this button, you are confirming your agreement with
-                our
-              </span>
-              <span>
-                <a href={footerAgreementLink} target="_blank">
-                  {footerAgreement}
-                </a>
-              </span>
+              <div
+                className="gx-mt-1"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>
+                  By clicking this button, you are confirming your agreement
+                  with our
+                </span>
+                <span>
+                  <a href={footerAgreementLink} target="_blank">
+                    {footerAgreement}
+                  </a>
+                </span>
+              </div>
             </Form.Item>
             <Form.Item
               label="NFT is minted: "

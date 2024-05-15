@@ -60,7 +60,7 @@ const HorizontalNav = () => {
         </Link>
       </Menu.Item>
       <SubMenu
-        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+        className="gx-menu-horizontal-flex gx-submenu-horizontal-flex"
         popupClassName="gx-menu-horizontal-flex"
         key="advanced"
         title={<IntlMessages id="sidebar.advanced" />}
@@ -79,7 +79,6 @@ const HorizontalNav = () => {
           key="proofs"
         >
           <Link to="/proofs">
-            <i className="icon icon-components" />
             <IntlMessages id="sidebar.proofs" />
           </Link>
         </Menu.Item>
