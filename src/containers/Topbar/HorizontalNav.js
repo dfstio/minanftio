@@ -48,7 +48,6 @@ const HorizontalNav = () => {
         key="explore"
       >
         <Link to="/explore">
-          <i className="icon icon-shopping-cart " />
           <IntlMessages id="sidebar.avatars" />
         </Link>
       </Menu.Item>
@@ -57,12 +56,11 @@ const HorizontalNav = () => {
         key="create"
       >
         <Link to="/create/nft">
-          <i className="icon icon-culture-calendar" />
           <IntlMessages id="sidebar.create" />
         </Link>
       </Menu.Item>
       <SubMenu
-        popupClassName="gx-menu-horizontal-flex"
+        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
         key="advanced"
         title={<IntlMessages id="sidebar.advanced" />}
       >
@@ -71,7 +69,6 @@ const HorizontalNav = () => {
           key="posts"
         >
           <Link to="/posts">
-            <i className="icon icon-shopping-cart " />
             <IntlMessages id="sidebar.posts" />
           </Link>
         </Menu.Item>
@@ -91,7 +88,6 @@ const HorizontalNav = () => {
           key="tools"
         >
           <Link to="/tools">
-            <i className="icon icon-culture-calendar" />
             <IntlMessages id="sidebar.tools" />
           </Link>
         </Menu.Item>
@@ -100,7 +96,6 @@ const HorizontalNav = () => {
           key="corporate"
         >
           <Link to="/corporate">
-            <i className="icon icon-culture-calendar" />
             <IntlMessages id="sidebar.corporate" />
           </Link>
         </Menu.Item>
@@ -109,7 +104,6 @@ const HorizontalNav = () => {
           key="advancedCreate"
         >
           <Link to="/create">
-            <i className="icon icon-culture-calendar" />
             <IntlMessages id="sidebar.create" />
           </Link>
         </Menu.Item>
@@ -119,7 +113,6 @@ const HorizontalNav = () => {
         key="faucet"
       >
         <Link to="/faucet">
-          <i className="icon icon-culture-calendar" />
           <IntlMessages id="faucet" />
         </Link>
       </Menu.Item>

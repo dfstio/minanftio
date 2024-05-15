@@ -983,28 +983,7 @@ const MintPrivate = () => {
             </Form.Item>
           </Row>
           <Row>
-            <Form.Item hidden={showLink === true || address === ""}>
-              <div
-                className="gx-mt-4"
-                style={{
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                <span>
-                  {"You are creating NFT with owner address " + address}
-                  <br />
-                  <br />
-                  By clicking this button, you are confirming your agreement
-                  with our
-                </span>
-                <span>
-                  <a href={footerAgreementLink} target="_blank">
-                    {footerAgreement}
-                  </a>
-                </span>
-              </div>
-            </Form.Item>
-            <Form.Item hidden={showLink === true || address !== ""}>
+            <Form.Item hidden={showLink === true}>
               <div
                 className="gx-mt-4"
                 style={{
@@ -1039,7 +1018,6 @@ const MintPrivate = () => {
               </div>
             </Form.Item>
           </Row>
-          )}
         </Form>
       </Card>
     </div>
