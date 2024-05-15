@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function faucet(address) {
+export async function faucet(address, chain = "devnet") {
   if (address === undefined || address === "")
     return { isCalculated: false, hash: "", reason: "address is undefined" };
   try {
@@ -8,6 +8,7 @@ export async function faucet(address) {
       auth: process.env.REACT_APP_BOTAPIAUTH,
       publicKey: address,
       faucet: "true",
+      chain,
     });
     if (response && response.data) return response.data;
     else return { isCalculated: false, hash: "", reason: "no response" };

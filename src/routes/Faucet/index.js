@@ -58,6 +58,7 @@ const Faucet = () => {
   const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [chain, setChain] = useState("devnet");
 
   const log = logm.child({ winstonComponent: "Faucet" });
 
@@ -92,7 +93,7 @@ const Faucet = () => {
         key,
         duration: 600,
       });
-      const hashResult = await faucet(auth);
+      const hashResult = await faucet(auth, chain);
       if (hashResult.isCalculated === true) {
         setVerificationResult(hashResult.hash);
         message.success({
@@ -178,10 +179,47 @@ const Faucet = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+            <Card className="gx-card" key="faucetCardZeko" title="Zeko Faucet">
+              <Form
+                form={form}
+                key="billingFormZeko"
+                labelCol={{
+                  span: 24,
+                }}
+                wrapperCol={{
+                  span: 24,
+                }}
+                layout="horizontal"
+                initialValues={{ auth: "" }}
+                onFinish={onFinish}
+                onValuesChange={onValuesChange}
+              >
+                <div>
+                  <Row>
+                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        name="mintedlinkZeko"
+                        hidden={verificationResult === ""}
+                      >
+                        <div>
+                          <a href={"https://zeko.io/faucet"} target="_blank">
+                            https://zeko.io/faucet
+                          </a>
+                        </div>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </div>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
             <Card className="gx-card" key="faucetCard" title="Devnet Faucet">
               <Form
                 form={form}
-                key="billingForm"
+                key="billingFormDevnet"
                 labelCol={{
                   span: 24,
                 }}
