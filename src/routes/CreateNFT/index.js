@@ -984,6 +984,8 @@ const MintPrivate = () => {
                 </Button>
               </Form.Item>
             </span>
+            <br />
+            <br />
             <span>
               <Form.Item hidden={showLink}>
                 <div
@@ -993,14 +995,14 @@ const MintPrivate = () => {
                   }}
                 >
                   <span>
-                    {address === ""
-                      ? "Please connect with Auro before creating NFT"
-                      : "You are creating NFT with owner address " + address}
+                    {address !== ""}?(
+                    {"You are creating NFT with owner address " + address}
                     <br />
                     <br />
-                    By clicking this button, you are confirming your agreement
-                    with our
+                    ):() By clicking this button, you are confirming your
+                    agreement with our
                   </span>
+
                   <span>
                     <a href={footerAgreementLink} target="_blank">
                       {footerAgreement}
