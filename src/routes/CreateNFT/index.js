@@ -1006,10 +1006,18 @@ const MintPrivate = () => {
               name="mintedlink"
               hidden={showLink === false}
             >
-              <div>
-                <a href={link} target="_blank">
-                  {link}
-                </a>
+              <div
+                className="gx-mt-0"
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                <span>NFT is minted:</span>
+                <span>
+                  <a href={link} target="_blank">
+                    {link}
+                  </a>
+                </span>
               </div>
               <div>
                 <a href={hash} target="_blank">
