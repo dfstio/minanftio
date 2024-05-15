@@ -105,35 +105,6 @@ const startToken = {
   folder: "",
 };
 
-/*
-const STARTING_JSON = {
-  name: "@mynft",
-  description: "",
-  url: "",
-  type: "object",
-  image: "",
-  category: "",
-  type: "individual",
-  external_url: "minanft.io",
-  animation_url: "",
-
-  license: "Mina NFT V1",
-  license_id: "0",
-  title: "",
-  properties: { image: "", animation: "" },
-  private_content_description: "",
-  contains_private_content: false,
-  private: {
-    image: "",
-    video: "",
-    audio: "",
-    pdf: "",
-    files: "",
-    files_number: 0,
-  },
-};
-*/
-
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 const { REACT_APP_PINATA_JWT } = process.env;
 //const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
@@ -151,7 +122,7 @@ const MintPrivate = () => {
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
   const [hash, setHash] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState("Name (like @mynft)");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
@@ -188,9 +159,9 @@ const MintPrivate = () => {
         const priceObject = nftPrice(name);
         setPrice(
           name === "@"
-            ? ""
+            ? "Name (like @mynft)"
             : priceObject.description +
-                " " +
+                ":" +
                 priceObject.price +
                 " " +
                 priceObject.currency
@@ -594,7 +565,7 @@ const MintPrivate = () => {
                   </Row>
 
                   <Form.Item
-                    label="Name (like @mynft)"
+                    label={price}
                     name="name"
                     rules={[
                       {
@@ -605,16 +576,6 @@ const MintPrivate = () => {
                     placeholder="Please name your NFT like @mynft"
                   >
                     <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                  <Form.Item>
-                    <div
-                      className="gx-mt-4"
-                      style={{
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      {price}
-                    </div>
                   </Form.Item>
                   <Form.Item name="advanced" valuePropName="advanced">
                     <Checkbox>Advanced options</Checkbox>
@@ -992,56 +953,62 @@ const MintPrivate = () => {
                 ) : (
                   <div></div>
                 )}
-                <Form.Item>
-                  <div
-                    className="gx-mt-4"
-                    style={{
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    <span>
-                      {address === ""
-                        ? "Please connect with Auro before creating NFT"
-                        : "You are creating NFT with owner address " + address}
-                      <br />
-                      <br />
-                      By clicking this button, you are confirming your agreement
-                      with our
-                    </span>
-                    <span>
-                      <a href={footerAgreementLink} target="_blank">
-                        {footerAgreement}
-                      </a>
-                    </span>
-                  </div>
-                </Form.Item>
+                <Row>
+                  <Form.Item>
+                    <div
+                      className="gx-mt-4"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      <span>
+                        {address === ""
+                          ? "Please connect with Auro before creating NFT"
+                          : "You are creating NFT with owner address " +
+                            address}
+                        <br />
+                        <br />
+                        By clicking this button, you are confirming your
+                        agreement with our
+                      </span>
+                      <span>
+                        <a href={footerAgreementLink} target="_blank">
+                          {footerAgreement}
+                        </a>
+                      </span>
+                    </div>
+                  </Form.Item>
+                </Row>
 
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    onClick={mint}
-                    disabled={mintDisabled}
-                    loading={minting}
+                <Row>
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      onClick={mint}
+                      disabled={mintDisabled}
+                      loading={minting}
+                    >
+                      {address === "" ? "Connect with AURO" : "Mint NFT"}
+                    </Button>
+                  </Form.Item>
+                  <Row></Row>
+                  <Form.Item
+                    label="NFT is minted: "
+                    name="mintedlink"
+                    hidden={!showLink}
                   >
-                    {address === "" ? "Connect with AURO" : "Mint NFT"}
-                  </Button>
-                </Form.Item>
-                <Form.Item
-                  label="NFT is minted: "
-                  name="mintedlink"
-                  hidden={!showLink}
-                >
-                  <div>
-                    <a href={link} target="_blank">
-                      {link}
-                    </a>
-                  </div>
-                  <div>
-                    <a href={hash} target="_blank">
-                      {hash}
-                    </a>
-                  </div>
-                </Form.Item>
+                    <div>
+                      <a href={link} target="_blank">
+                        {link}
+                      </a>
+                    </div>
+                    <div>
+                      <a href={hash} target="_blank">
+                        {hash}
+                      </a>
+                    </div>
+                  </Form.Item>
+                </Row>
               </Row>
             </Form>
           </Card>

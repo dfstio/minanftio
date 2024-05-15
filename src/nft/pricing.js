@@ -12,7 +12,7 @@ export function nftPrice(name) {
   return {
     description: prices[category].description,
     price: prices[category].price,
-    currency: " MINA",
+    currency: "MINA",
   };
 }
 
