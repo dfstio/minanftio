@@ -27,16 +27,20 @@ export function storageUrl(storage, big = false, nocache = false) {
 }
 
 export function storageUrlFromURL(url) {
+  const cacheSmallUrl =
+    "https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/";
   if (url === undefined) {
     console.error("Empty fullUrl");
     return "";
   }
   if (url.includes("https://gateway.pinata.cloud/ipfs/")) {
     return (
+      cacheSmallUrl +
       url.replace(
         "https://gateway.pinata.cloud/ipfs/",
         "https://salmon-effective-amphibian-898.mypinata.cloud/ipfs/"
-      ) + `?pinataGatewayToken=${REACT_APP_PINATA_GATEWAY_KEY}`
+      ) +
+      `?pinataGatewayToken=${REACT_APP_PINATA_GATEWAY_KEY}`
     );
-  } else return url;
+  } else return cacheSmallUrl + url;
 }
