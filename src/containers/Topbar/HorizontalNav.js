@@ -54,20 +54,20 @@ const HorizontalNav = () => {
       </Menu.Item>
       <Menu.Item
         className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+        key="create"
+      >
+        <Link to="/create/nft">
+          <i className="icon icon-culture-calendar" />
+          <IntlMessages id="sidebar.create" />
+        </Link>
+      </Menu.Item>
+      <Menu.Item
+        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
         key="posts"
       >
         <Link to="/posts">
           <i className="icon icon-shopping-cart " />
           <IntlMessages id="sidebar.posts" />
-        </Link>
-      </Menu.Item>
-      <Menu.Item
-        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
-        key="create"
-      >
-        <Link to="/create">
-          <i className="icon icon-culture-calendar" />
-          <IntlMessages id="sidebar.create" />
         </Link>
       </Menu.Item>
 
@@ -97,6 +97,15 @@ const HorizontalNav = () => {
         <Link to="/corporate">
           <i className="icon icon-culture-calendar" />
           <IntlMessages id="sidebar.corporate" />
+        </Link>
+      </Menu.Item>
+      <Menu.Item
+        className="gx-menu-horizontal-flex gx-submenu-popup-curve"
+        key="create"
+      >
+        <Link to="/create">
+          <i className="icon icon-culture-calendar" />
+          <IntlMessages id="sidebar.advanced" />
         </Link>
       </Menu.Item>
       <Menu.Item
