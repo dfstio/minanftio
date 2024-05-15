@@ -634,7 +634,7 @@ const MintPrivate = () => {
               >
                 <TextArea
                   autoSize={{
-                    minRows: 2,
+                    minRows: 1,
                     maxRows: 10,
                   }}
                 />
