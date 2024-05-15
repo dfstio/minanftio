@@ -13,9 +13,8 @@ import {
   Select,
   Table,
   Divider,
-  RadioGroup,
-  RadioButton,
 } from "antd";
+
 import { useDispatch, useSelector } from "react-redux";
 import IntlMessages from "util/IntlMessages";
 import {
@@ -32,6 +31,8 @@ const logm = logger.info.child({ winstonModule: "Faucet" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
