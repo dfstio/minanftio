@@ -539,7 +539,7 @@ const MintPrivate = () => {
               <Row>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                    <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
                       <Form.Item
                         name="mainimage"
                         label="Main image"
@@ -568,7 +568,7 @@ const MintPrivate = () => {
                         </Upload>
                       </Form.Item>
                     </Col>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                    <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
                       <Form.Item name="mainvideo" label="Main Video/Audio">
                         <Upload
                           name="video"
@@ -679,7 +679,7 @@ const MintPrivate = () => {
                 </Col>
 
                 {advanced === true ? (
-                  <div>
+                  <div className="gx-main-content">
                     <Row>
                       <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                         <Form.Item
