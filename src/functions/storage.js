@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
   }
 };
 
-export async function decrypt() {
+async function decrypt() {
   try {
     const params = {
       iv: ARWEAVE_IV,
