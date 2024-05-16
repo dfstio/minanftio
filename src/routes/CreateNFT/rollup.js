@@ -265,7 +265,7 @@ interface Transaction {
   }
 
   try {
-    const { success, txId, error } = JSON.parse(result);
+    const { success, transactions, error } = JSON.parse(result);
     if (success !== true) {
       console.error("createRollupNFT error", error);
       return {
@@ -275,8 +275,8 @@ interface Transaction {
       };
     }
 
-    if (txId === undefined || txId[0] === undefined) {
-      console.error("txId is undefined");
+    if (transactions === undefined || transactions[0] === undefined) {
+      console.error("transactions is undefined");
       return {
         success: false,
         error: "txId is undefined",
@@ -284,7 +284,7 @@ interface Transaction {
     }
     return {
       success: true,
-      hash: txId[0],
+      hash: transactions[0].txId,
       url,
       json,
     };
