@@ -1001,18 +1001,14 @@ const MintPrivate = () => {
                 </span>
               </div>
             </Form.Item>
-            <Form.Item
-              label="NFT is minted: "
-              name="mintedlink"
-              hidden={showLink === false}
-            >
+            <Form.Item name="mintedlink" hidden={showLink === false}>
               <div
                 className="gx-mt-0"
                 style={{
                   whiteSpace: "pre-wrap",
                 }}
               >
-                <span>NFT is minted:</span>
+                <span>NFT is minted:{"  "}</span>
                 <span>
                   <a href={link} target="_blank">
                     {link}
