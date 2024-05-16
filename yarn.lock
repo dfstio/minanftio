@@ -12511,9 +12511,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minanft@npm:^1.11.0":
-  version: 1.11.0
-  resolution: "minanft@npm:1.11.0"
+"minanft@npm:^1.11.3":
+  version: 1.11.3
+  resolution: "minanft@npm:1.11.3"
   dependencies:
     arweave: "npm:^1.15.0"
     axios: "npm:^1.6.8"
@@ -12521,8 +12521,8 @@ __metadata:
     jimp: "npm:^0.22.12"
     mime: "npm:^3.0.0"
   peerDependencies:
-    o1js: ^1.1.0
-  checksum: 10c0/46329c05fadc7aebbd6d350e9a83750f4e7886a04bd608ea80559d25659c1bf67b46296450e28fc8cada5574785ab77d08716ccda6afd993705b7e524a1c2c4c
+    o1js: ^1.2.0
+  checksum: 10c0/0255d14cf2997b79be5cb17776593127c2eb264e77e3beed93fe07fbb3e5e5e5fc3a4dfd8ffd75f7ca0e032b9a89aac02e08c29f19d0de1c30a3f3da67bfa78c
   languageName: node
   linkType: hard
 
@@ -12558,10 +12558,10 @@ __metadata:
     logform: "npm:^2.6.0"
     mailgun-js: "npm:^0.22.0"
     markdown-to-jsx: "npm:^7.4.6"
-    minanft: "npm:^1.11.0"
+    minanft: "npm:^1.11.3"
     moment: "npm:^2.30.1"
     nprogress: "npm:^0.2.0"
-    o1js: "npm:^1.1.0"
+    o1js: "npm:^1.2.0"
     path-browserify: "npm:^1.0.1"
     process: "npm:^0.11.10"
     prop-types: "npm:^15.8.1"
@@ -13078,9 +13078,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"o1js@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "o1js@npm:1.1.0"
+"o1js@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "o1js@npm:1.2.0"
   dependencies:
     blakejs: "npm:1.2.1"
     cachedir: "npm:^2.4.0"
@@ -13090,7 +13090,7 @@ __metadata:
     tslib: "npm:^2.3.0"
   bin:
     snarky-run: src/build/run.js
-  checksum: 10c0/cac9302989290686e03231dec7e2879715dc593722296726f5c802a18180b8fce75b5fa23c3c651d89b6c1f3fa43275a3e9043f84d6871665942a3e54877c064
+  checksum: 10c0/facde84ceb1cde5871676503672ffb99fb1ea4f5c3ae678a5de2b618955291fe41d0a9197f3887670de523297cba6d86a1e8de39707f843e0c4cb426b647acba
   languageName: node
   linkType: hard
 
