@@ -103,6 +103,18 @@ const Tx = ({ match }) => {
                 if (DEBUG) console.log("Block received", block);
                 if (block !== undefined) {
                   delete block.objectID;
+                  block["created"] = new Date(
+                    block.timeCreated
+                  ).toLocaleString();
+                  block["contract address"] = block["contractAddress"];
+                  block["block number"] = tx["blockNumber"];
+                  block["block address"] = tx["blockAddress"];
+                  block["ipfs url"] = block.ipfsUrl;
+                  delete block.timeCreated;
+                  delete block.contractAddress;
+                  delete block.blockNumber;
+                  delete block.blockAddress;
+                  delete block.ipfsUrl;
                   setBlock(block);
                   setBlockLoaded(true);
                 } else setMessageText("Block not found");
@@ -202,7 +214,21 @@ const Tx = ({ match }) => {
                           >
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
-                                {block[key]?.toString() ?? ""}
+                                {key === "ipfs url" ||
+                                key === "contract address" ? (
+                                  <a
+                                    href={
+                                      key === "contract address"
+                                        ? contractLnk
+                                        : tx[key].toString() ?? ""
+                                    }
+                                    target="_blank"
+                                  >
+                                    {tx[key]?.toString() ?? ""}
+                                  </a>
+                                ) : (
+                                  tx[key]?.toString() ?? ""
+                                )}
                               </Descriptions.Item>
                             ))}
                           </Descriptions>
