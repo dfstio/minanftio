@@ -56,6 +56,12 @@ const Tx = ({ match }) => {
           const tx = await rollupTxs.getObject(match.params.txId);
           if (DEBUG) console.log("Tx received", tx);
           if (tx !== undefined) {
+            tx["created"] = new Date(tx.timeReceived).toLocaleString();
+            tx["included in the block"] = new Date(
+              tx.timeIncluded
+            ).toLocaleString();
+            tx.timeReceived = undefined;
+            tx.timeIncluded = undefined;
             setTx(tx);
             setTxLoaded(true);
           } else setMessageText("Tx not found");
@@ -112,23 +118,19 @@ const Tx = ({ match }) => {
               >
                 <div>
                   <Row>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Transaction data"
                         name="txData"
                         placeholder=""
                       >
                         {txLoaded ? (
-                          <Descriptions
-                            bordered={true}
-                            column={1}
-                            title={"Transaction"}
-                          >
+                          <Descriptions bordered={true} column={1}>
                             {Object.keys(tx).map((key) => (
                               <Descriptions.Item label={key}>
                                 {typeof tx[key] === "object"
                                   ? JSON.stringify(tx[key], null, 2)
-                                  : tx[key]}
+                                  : tx[key].toString()}
                               </Descriptions.Item>
                             ))}
                           </Descriptions>
@@ -147,7 +149,7 @@ const Tx = ({ match }) => {
                               <Descriptions.Item label={key}>
                                 {typeof tx[key] === "object"
                                   ? JSON.stringify(tx[key], null, 2)
-                                  : tx[key]}
+                                  : tx[key].toString()}
                               </Descriptions.Item>
                             ))}
                           </Descriptions>
