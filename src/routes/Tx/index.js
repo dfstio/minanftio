@@ -56,44 +56,52 @@ const Tx = ({ match }) => {
           const tx = await rollupTxs.getObject(match.params.txId);
           if (DEBUG) console.log("Tx received", tx);
           if (tx !== undefined) {
-            tx["created"] = new Date(tx.timeReceived).toLocaleString();
-            tx["included in the block"] = new Date(
-              tx.timeIncluded
-            ).toLocaleString();
-            tx["contract address"] = tx["contractAddress"];
-            tx["block number"] = tx["blockNumber"];
-            delete tx.timeReceived;
-            delete tx.timeIncluded;
-            delete tx.objectID;
-            delete tx.contractAddress;
-            delete tx.blockNumber;
-            setTx(tx);
-            setTxLoaded(true);
-          } else setMessageText("Tx not found");
-          if (
-            tx.chain !== undefined &&
-            tx.contractAddress !== undefined &&
-            tx.blockNumber !== undefined
-          ) {
-            try {
+            if (
+              tx.chain !== undefined &&
+              tx.contractAddress !== undefined &&
+              tx.blockNumber !== undefined
+            ) {
               const objectID =
                 tx.chain +
                 "." +
                 tx.contractAddress +
                 "." +
                 tx.blockNumber.toString();
-              const block = await rollupBlocks.getObject(objectID);
-              if (DEBUG) console.log("Block received", block);
-              if (block !== undefined) {
-                delete block.objectID;
-                setBlock(block);
-                setBlockLoaded(true);
-              } else setMessageText("Block not found");
-            } catch (error) {
-              console.log("Block not received", error);
-              setMessageText("Block not found");
-            }
-          } else console.error("Tx object has wrong format", tx);
+              tx["created"] = new Date(tx.timeReceived).toLocaleString();
+              tx["included in the block"] = new Date(
+                tx.timeIncluded
+              ).toLocaleString();
+              tx["contract address"] = tx["contractAddress"];
+              tx["block number"] = tx["blockNumber"];
+              tx["expiry date"] = new Date(tx.expiry).toLocaleString();
+              tx["IPFS URL"] = tx.ipfsUrl;
+              tx["metadata root: kind"] = tx.metadata.kind;
+              tx["metadata root: data"] = tx.metadata.data;
+              delete tx.timeReceived;
+              delete tx.timeIncluded;
+              delete tx.objectID;
+              delete tx.contractAddress;
+              delete tx.blockNumber;
+              delete tx.expiry;
+              delete tx.ipfsUrl;
+              delete tx.metadata;
+              setTx(tx);
+              setTxLoaded(true);
+
+              try {
+                const block = await rollupBlocks.getObject(objectID);
+                if (DEBUG) console.log("Block received", block);
+                if (block !== undefined) {
+                  delete block.objectID;
+                  setBlock(block);
+                  setBlockLoaded(true);
+                } else setMessageText("Block not found");
+              } catch (error) {
+                console.log("Block not received", error);
+                setMessageText("Block not found");
+              }
+            } else console.error("Tx object has wrong format", tx);
+          } else setMessageText("Tx not found");
           setTx(tx);
         } catch (error) {
           console.log("Tx not received", error);
