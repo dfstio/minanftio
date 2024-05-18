@@ -74,8 +74,10 @@ const Tx = ({ match }) => {
               ).toLocaleString();
               tx["contract address"] = tx["contractAddress"];
               tx["block number"] = tx["blockNumber"];
-              tx["expiry date"] = new Date(tx.expiry).toLocaleString();
-              tx["IPFS URL"] = tx.ipfsUrl;
+              tx["expiry date"] = new Date(
+                tx.transaction.expiry
+              ).toLocaleString();
+              tx["ipfs url"] = tx.transaction.ipfsUrl;
               tx["metadata root: kind"] = tx.transaction.metadataRoot.kind;
               tx["metadata root: data"] = tx.transaction.metadataRoot.data;
               delete tx.timeReceived;
