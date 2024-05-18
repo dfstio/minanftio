@@ -120,7 +120,7 @@ const Tx = ({ match }) => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item
-                        label="Transaction data"
+                        label="Transaction details"
                         name="txData"
                         placeholder=""
                       >
@@ -145,7 +145,7 @@ const Tx = ({ match }) => {
                         )}
                       </Form.Item>
                       <Form.Item
-                        label="Block data"
+                        label="Block details"
                         name="blockData"
                         placeholder=""
                       >
@@ -153,9 +153,7 @@ const Tx = ({ match }) => {
                           <Descriptions bordered={true} column={1}>
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
-                                {typeof tx[key] === "object"
-                                  ? JSON.stringify(tx[key], null, 2)
-                                  : tx[key].toString()}
+                                block[key].toString()
                               </Descriptions.Item>
                             ))}
                           </Descriptions>
