@@ -60,8 +60,13 @@ const Tx = ({ match }) => {
             tx["included in the block"] = new Date(
               tx.timeIncluded
             ).toLocaleString();
+            tx["contract address"] = tx["contractAddress"];
+            tx["block number"] = tx["blockNumber"];
             delete tx.timeReceived;
             delete tx.timeIncluded;
+            delete tx.objectID;
+            delete tx.contractAddress;
+            delete tx.blockNumber;
             setTx(tx);
             setTxLoaded(true);
           } else setMessageText("Tx not found");
@@ -80,6 +85,7 @@ const Tx = ({ match }) => {
               const block = await rollupBlocks.getObject(objectID);
               if (DEBUG) console.log("Block received", block);
               if (block !== undefined) {
+                delete block.objectID;
                 setBlock(block);
                 setBlockLoaded(true);
               } else setMessageText("Block not found");
