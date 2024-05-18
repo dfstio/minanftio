@@ -77,12 +77,12 @@ const Tx = ({ match }) => {
               tx["included in the block"] = new Date(
                 tx.timeIncluded
               ).toLocaleString();
-              tx["contract address"] = tx["contractAddress"];
+              tx.transaction["contract address"] = tx["contractAddress"];
               tx["block number"] = tx["blockNumber"];
               tx["expiry date"] = new Date(
                 tx.transaction.expiry
               ).toLocaleString();
-              tx["ipfs url"] = tx.transaction.ipfsUrl;
+              tx.transaction["ipfs url"] = tx.transaction.ipfsUrl;
               tx["metadata root: kind"] = tx.transaction.metadataRoot.kind;
               tx["metadata root: data"] = tx.transaction.metadataRoot.data;
               delete tx.timeReceived;
@@ -220,14 +220,14 @@ const Tx = ({ match }) => {
                                     href={
                                       key === "contract address"
                                         ? contractLnk
-                                        : tx[key].toString() ?? ""
+                                        : block[key].toString() ?? ""
                                     }
                                     target="_blank"
                                   >
-                                    {tx[key]?.toString() ?? ""}
+                                    {block[key]?.toString() ?? ""}
                                   </a>
                                 ) : (
-                                  tx[key]?.toString() ?? ""
+                                  block[key]?.toString() ?? ""
                                 )}
                               </Descriptions.Item>
                             ))}
