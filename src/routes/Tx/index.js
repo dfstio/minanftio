@@ -60,8 +60,8 @@ const Tx = ({ match }) => {
             tx["included in the block"] = new Date(
               tx.timeIncluded
             ).toLocaleString();
-            tx.timeReceived = undefined;
-            tx.timeIncluded = undefined;
+            delete tx.timeReceived;
+            delete tx.timeIncluded;
             setTx(tx);
             setTxLoaded(true);
           } else setMessageText("Tx not found");
