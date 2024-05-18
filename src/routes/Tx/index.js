@@ -58,27 +58,26 @@ const Tx = ({ match }) => {
           const tx = await rollupTxs.getObject(match.params.txId);
           if (DEBUG) console.log("Tx received", tx);
           if (tx !== undefined) {
-            if (
-              tx.chain !== undefined &&
-              tx.contractAddress !== undefined &&
-              tx.blockNumber !== undefined
-            ) {
+            if (tx.chain !== undefined && tx.contractAddress !== undefined) {
               const objectID =
-                tx.chain +
-                "." +
-                tx.contractAddress +
-                "." +
-                tx.blockNumber.toString();
+                tx.blockNumber !== undefined
+                  ? tx.chain +
+                    "." +
+                    tx.contractAddress +
+                    "." +
+                    tx.blockNumber.toString()
+                  : undefined;
               setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
               setContractLnk(
                 `https://zekoscan.io/devnet/account/${tx.contractAddress}/txs?type=zk-acc`
               );
               tx["created"] = new Date(tx.timeReceived).toLocaleString();
-              tx["included in the block"] = new Date(
-                tx.timeIncluded
-              ).toLocaleString();
+              if (tx.timeIncluded)
+                tx["included in the block"] = new Date(
+                  tx.timeIncluded
+                ).toLocaleString();
               tx.transaction["contract address"] = tx["contractAddress"];
-              tx["block number"] = tx["blockNumber"];
+              if (tx.blockNumber) tx["block number"] = tx.blockNumber;
               tx["expiry date"] = new Date(
                 tx.transaction.expiry
               ).toLocaleString();
@@ -97,30 +96,31 @@ const Tx = ({ match }) => {
               if (DEBUG) console.log("link", link);
               setTx(tx);
               setTxLoaded(true);
-
-              try {
-                const block = await rollupBlocks.getObject(objectID);
-                if (DEBUG) console.log("Block received", block);
-                if (block !== undefined) {
-                  delete block.objectID;
-                  block["created"] = new Date(
-                    block.timeCreated
-                  ).toLocaleString();
-                  block["contract address"] = block["contractAddress"];
-                  block["block number"] = tx["blockNumber"];
-                  block["block address"] = tx["blockAddress"];
-                  block["ipfs url"] = block.ipfsUrl;
-                  delete block.timeCreated;
-                  delete block.contractAddress;
-                  delete block.blockNumber;
-                  delete block.blockAddress;
-                  delete block.ipfsUrl;
-                  setBlock(block);
-                  setBlockLoaded(true);
-                } else setMessageText("Block not found");
-              } catch (error) {
-                if (DEBUG) console.log("Block not received", error);
-                setMessageText("Block not found");
+              if (objectID !== undefined) {
+                try {
+                  const block = await rollupBlocks.getObject(objectID);
+                  if (DEBUG) console.log("Block received", block);
+                  if (block !== undefined) {
+                    delete block.objectID;
+                    block["created"] = new Date(
+                      block.timeCreated
+                    ).toLocaleString();
+                    block["contract address"] = block["contractAddress"];
+                    block["block number"] = block["blockNumber"];
+                    block["block address"] = block["blockAddress"];
+                    block["ipfs url"] = block.ipfsUrl;
+                    delete block.timeCreated;
+                    delete block.contractAddress;
+                    delete block.blockNumber;
+                    delete block.blockAddress;
+                    delete block.ipfsUrl;
+                    setBlock(block);
+                    setBlockLoaded(true);
+                  } else setMessageText("Block not found");
+                } catch (error) {
+                  if (DEBUG) console.log("Block not received", error);
+                  setMessageText("Block not found");
+                }
               }
             } else console.error("Tx object has wrong format", tx);
           } else setMessageText("Tx not found");
@@ -233,7 +233,7 @@ const Tx = ({ match }) => {
                             ))}
                           </Descriptions>
                         ) : (
-                          <p>{messageText}</p>
+                          ""
                         )}
                       </Form.Item>
                     </Col>
