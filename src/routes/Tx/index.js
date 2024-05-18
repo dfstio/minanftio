@@ -40,6 +40,7 @@ const Tx = ({ match }) => {
   const [tx, setTx] = useState({});
   const [block, setBlock] = useState({});
   const [link, setLink] = useState("https://minanft.io");
+  const [contractLnk, setContractLnk] = useState("https://zekoscan.io/devnet");
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
@@ -68,6 +69,10 @@ const Tx = ({ match }) => {
                 tx.contractAddress +
                 "." +
                 tx.blockNumber.toString();
+              setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
+              setContractLnk(
+                `https://zekoscan.io/devnet/account/${tx.contractAddress}/txs?type=zk-acc`
+              );
               tx["created"] = new Date(tx.timeReceived).toLocaleString();
               tx["included in the block"] = new Date(
                 tx.timeIncluded
@@ -85,10 +90,10 @@ const Tx = ({ match }) => {
               delete tx.objectID;
               delete tx.contractAddress;
               delete tx.blockNumber;
-              delete tx.expiry;
-              delete tx.ipfsUrl;
+              delete tx.transaction.expiry;
+              delete tx.transaction.ipfsUrl;
               delete tx.transaction.metadataRoot;
-              setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
+
               if (DEBUG) console.log("link", link);
               setTx(tx);
               setTxLoaded(true);
@@ -153,8 +158,19 @@ const Tx = ({ match }) => {
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
                                   <Descriptions.Item label={subKey}>
-                                    {subKey === "name" ? (
-                                      <a href={link} target="_blank">
+                                    {subKey === "name" ||
+                                    subKey === "ipfs url" ||
+                                    subKey === "contract address" ? (
+                                      <a
+                                        href={
+                                          subKey === "name"
+                                            ? link
+                                            : subKey === "contract address"
+                                            ? contractLnk
+                                            : tx[key][subKey].toString() ?? ""
+                                        }
+                                        target="_blank"
+                                      >
                                         {tx[key][subKey]?.toString() ?? ""}
                                       </a>
                                     ) : (
