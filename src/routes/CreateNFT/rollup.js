@@ -1,4 +1,11 @@
-import { RollupNFT, Metadata, Storage, serializeFields } from "minanft";
+import {
+  RollupNFT,
+  Metadata,
+  Storage,
+  serializeFields,
+  api,
+  MINANFT_NAME_SERVICE,
+} from "minanft";
 import { getFileData } from "../../blockchain/file";
 import { minaInit } from "../../blockchain/init";
 import { payment } from "../../blockchain/payment";
@@ -25,19 +32,15 @@ export async function mintRollupNFT(address, auth, token, calculateRoot) {
   await minaInit();
 
   const name = token.name;
-  /*
-  const ownerPublicKey = PublicKey.fromBase58(address);
-  const nftPrivateKey = PrivateKey.random();
-  const nftPublicKey = nftPrivateKey.toPublicKey();
-  const owner = Poseidon.hash(ownerPublicKey.toFields());
-
-  
   const minanft = new api(JWT);
   const reserved = await minanft.reserveName({
     name,
-    publicKey: nftPublicKey.toBase58(),
+    publicKey: address,
+    chain: "zeko",
+    contract: "B62qo2gLfhzbKpSQw3G7yQaajEJEmxovqm5MBRb774PdJUw6a7XnNFT",
   });
   console.log("Reserved:", reserved);
+
   if (
     reserved === undefined ||
     reserved.isReserved !== true ||
@@ -53,7 +56,7 @@ export async function mintRollupNFT(address, auth, token, calculateRoot) {
       reason: reserved.reason,
     };
   }
-  */
+
   const price = nftPrice(name)?.price ?? 10;
   const paymentResult = await payment({
     to: process.env.REACT_APP_ADDRESS,

@@ -6,6 +6,7 @@ import {
   accountBalanceMina,
   makeString,
   api,
+  MINANFT_NAME_SERVICE,
 } from "minanft";
 import { getFileData } from "../../blockchain/file";
 import { minaInit } from "../../blockchain/init";
@@ -40,6 +41,8 @@ export async function mintNFT(address, auth, token, calculateRoot) {
   const reserved = await minanft.reserveName({
     name,
     publicKey: nftPublicKey.toBase58(),
+    chain: "devnet",
+    contract: MINANFT_NAME_SERVICE,
   });
   console.log("Reserved:", reserved);
   if (
