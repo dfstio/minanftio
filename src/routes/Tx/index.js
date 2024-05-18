@@ -119,7 +119,11 @@ const Tx = ({ match }) => {
                         placeholder=""
                       >
                         {txLoaded ? (
-                          <Descriptions bordered={true} column={1}>
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            title={"Transaction"}
+                          >
                             {Object.keys(tx).map((key) => (
                               <Descriptions.Item label={key}>
                                 {typeof tx[key] === "object"
