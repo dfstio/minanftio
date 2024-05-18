@@ -126,13 +126,19 @@ const Tx = ({ match }) => {
                       >
                         {txLoaded ? (
                           <Descriptions bordered={true} column={1}>
-                            {Object.keys(tx).map((key) => (
-                              <Descriptions.Item label={key}>
-                                {typeof tx[key] === "object"
-                                  ? JSON.stringify(tx[key], null, 2)
-                                  : tx[key].toString()}
-                              </Descriptions.Item>
-                            ))}
+                            {Object.keys(tx).map((key) =>
+                              typeof tx[key] === "object" ? (
+                                Object.keys(tx[key]).map((subKey) => (
+                                  <Descriptions.Item label={subKey}>
+                                    tx[key][subKey].toString()
+                                  </Descriptions.Item>
+                                ))
+                              ) : (
+                                <Descriptions.Item label={key}>
+                                  tx[key].toString()
+                                </Descriptions.Item>
+                              )
+                            )}
                           </Descriptions>
                         ) : (
                           <p>{messageText}</p>
