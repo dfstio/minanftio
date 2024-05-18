@@ -119,7 +119,7 @@ const Tx = ({ match }) => {
                         placeholder=""
                       >
                         {txLoaded ? (
-                          <Descriptions bordered>
+                          <Descriptions bordered={true} column={1}>
                             {Object.keys(tx).map((key) => (
                               <Descriptions.Item label={key}>
                                 {typeof tx[key] === "object"
@@ -138,7 +138,7 @@ const Tx = ({ match }) => {
                         placeholder=""
                       >
                         {blockLoaded ? (
-                          <Descriptions bordered>
+                          <Descriptions bordered={true} column={1}>
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
                                 {typeof tx[key] === "object"
