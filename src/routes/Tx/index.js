@@ -141,7 +141,11 @@ const Tx = ({ match }) => {
                         placeholder=""
                       >
                         {txLoaded ? (
-                          <Descriptions bordered={true} column={1}>
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            size={"small"}
+                          >
                             {Object.keys(tx).map((key) =>
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
@@ -172,7 +176,11 @@ const Tx = ({ match }) => {
                         placeholder=""
                       >
                         {blockLoaded ? (
-                          <Descriptions bordered={true} column={1}>
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            size={"small"}
+                          >
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
                                 {block[key].toString()}
