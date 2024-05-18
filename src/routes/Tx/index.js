@@ -130,12 +130,12 @@ const Tx = ({ match }) => {
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
                                   <Descriptions.Item label={subKey}>
-                                    tx[key][subKey].toString()
+                                    {tx[key][subKey].toString()}
                                   </Descriptions.Item>
                                 ))
                               ) : (
                                 <Descriptions.Item label={key}>
-                                  tx[key].toString()
+                                  {tx[key].toString()}
                                 </Descriptions.Item>
                               )
                             )}
@@ -153,7 +153,7 @@ const Tx = ({ match }) => {
                           <Descriptions bordered={true} column={1}>
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
-                                block[key].toString()
+                                {block[key].toString()}
                               </Descriptions.Item>
                             ))}
                           </Descriptions>
