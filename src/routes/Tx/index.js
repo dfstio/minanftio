@@ -76,8 +76,8 @@ const Tx = ({ match }) => {
               tx["block number"] = tx["blockNumber"];
               tx["expiry date"] = new Date(tx.expiry).toLocaleString();
               tx["IPFS URL"] = tx.ipfsUrl;
-              tx["metadata root: kind"] = tx.metadataRoot.kind;
-              tx["metadata root: data"] = tx.metadataRoot.data;
+              tx["metadata root: kind"] = tx.transaction.metadataRoot.kind;
+              tx["metadata root: data"] = tx.transaction.metadataRoot.data;
               delete tx.timeReceived;
               delete tx.timeIncluded;
               delete tx.objectID;
@@ -85,7 +85,7 @@ const Tx = ({ match }) => {
               delete tx.blockNumber;
               delete tx.expiry;
               delete tx.ipfsUrl;
-              delete tx.metadataRoot;
+              delete tx.transaction.metadataRoot;
               setLink("https://minanft.io/nft/i" + tx.ipfs);
               setTx(tx);
               setTxLoaded(true);
