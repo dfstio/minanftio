@@ -86,7 +86,8 @@ const Tx = ({ match }) => {
               delete tx.expiry;
               delete tx.ipfsUrl;
               delete tx.transaction.metadataRoot;
-              setLink("https://minanft.io/nft/i" + tx.ipfs);
+              setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
+              if (DEBUG) console.log("link", link);
               setTx(tx);
               setTxLoaded(true);
 
@@ -99,14 +100,14 @@ const Tx = ({ match }) => {
                   setBlockLoaded(true);
                 } else setMessageText("Block not found");
               } catch (error) {
-                console.log("Block not received", error);
+                if (DEBUG) console.log("Block not received", error);
                 setMessageText("Block not found");
               }
             } else console.error("Tx object has wrong format", tx);
           } else setMessageText("Tx not found");
           setTx(tx);
         } catch (error) {
-          console.log("Tx not received", error);
+          console.error("Tx not received", error);
           setMessageText("Tx not found");
         }
       }
@@ -150,18 +151,18 @@ const Tx = ({ match }) => {
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
                                   <Descriptions.Item label={subKey}>
-                                    {tx[key][subKey].toString()}
+                                    {subKey === "name" ? (
+                                      <a href={link} target="_blank">
+                                        {tx[key][subKey]}
+                                      </a>
+                                    ) : (
+                                      tx[key][subKey].toString()
+                                    )}
                                   </Descriptions.Item>
                                 ))
                               ) : (
                                 <Descriptions.Item label={key}>
-                                  {key === "name" ? (
-                                    <a href={link} target="_blank">
-                                      {tx[key]}
-                                    </a>
-                                  ) : (
-                                    tx[key].toString()
-                                  )}
+                                  {tx[key].toString()}
                                 </Descriptions.Item>
                               )
                             )}
