@@ -39,6 +39,7 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 const Tx = ({ match }) => {
   const [tx, setTx] = useState({});
   const [block, setBlock] = useState({});
+  const [link, setLink] = useState("https://minanft.io");
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
@@ -85,6 +86,7 @@ const Tx = ({ match }) => {
               delete tx.expiry;
               delete tx.ipfsUrl;
               delete tx.metadata;
+              setLink("https://minanft.io/nft/i" + tx.ipfs);
               setTx(tx);
               setTxLoaded(true);
 
@@ -149,7 +151,13 @@ const Tx = ({ match }) => {
                                 ))
                               ) : (
                                 <Descriptions.Item label={key}>
-                                  {tx[key].toString()}
+                                  {key === "name" ? (
+                                    <a href={link} target="_blank">
+                                      {tx[key]}
+                                    </a>
+                                  ) : (
+                                    tx[key].toString()
+                                  )}
                                 </Descriptions.Item>
                               )
                             )}
