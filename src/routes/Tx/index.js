@@ -158,7 +158,7 @@ const Tx = ({ match }) => {
                                         {tx[key][subKey]}
                                       </a>
                                     ) : (
-                                      tx[key][subKey].toString()
+                                      tx[key][subKey]?.toString() ?? ""
                                     )}
                                   </Descriptions.Item>
                                 ))
@@ -186,7 +186,7 @@ const Tx = ({ match }) => {
                           >
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
-                                {block[key].toString()}
+                                {block[key]?.toString() ?? ""}
                               </Descriptions.Item>
                             ))}
                           </Descriptions>
