@@ -155,7 +155,7 @@ const Tx = ({ match }) => {
                                   <Descriptions.Item label={subKey}>
                                     {subKey === "name" ? (
                                       <a href={link} target="_blank">
-                                        {tx[key][subKey]}
+                                        {tx[key][subKey]?.toString() ?? ""}
                                       </a>
                                     ) : (
                                       tx[key][subKey]?.toString() ?? ""
@@ -164,7 +164,7 @@ const Tx = ({ match }) => {
                                 ))
                               ) : (
                                 <Descriptions.Item label={key}>
-                                  {tx[key].toString()}
+                                  {tx[key]?.toString() ?? ""}
                                 </Descriptions.Item>
                               )
                             )}
