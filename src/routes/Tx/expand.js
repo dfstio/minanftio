@@ -1,6 +1,6 @@
 import { Descriptions } from "antd";
 
-export function expandTx(item) {
+export function expandTx(item = undefined) {
   /* tx is a TransactionJson object 
   export interface TransactionJson {
     txId: string;
@@ -33,7 +33,7 @@ export function expandTx(item) {
         description: "NFT owner's address",
         url: `https://zekoscan.io/devnet/account/${item?.address}`,
       },
-      { name: "expiry", type: "number", description: "Expiry date" },
+      { name: "expiry", type: "time", description: "Expiry date" },
       { name: "timeReceived", type: "time", description: "Time created" },
       {
         name: "chain",
@@ -85,6 +85,7 @@ export function expandTx(item) {
   };
 
   const elements = [];
+  if (item === undefined) return { name: TransactionJsonFields.name, elements };
 
   for (const field of TransactionJsonFields.values) {
     const key = field.name;
@@ -126,6 +127,164 @@ export function expandTx(item) {
       }
     }
   }
+  return { name: TransactionJsonFields.name, elements };
+}
+
+export function expandBlock(item = undefined) {
+  /* item is a BlockJson object
+  
+  export interface BlockJson {
+  blockNumber: number;
+  blockAddress: string;
+  chain: string;
+  contractAddress: string;
+  blockProducer: string;
+  root: string;
+  oldRoot: string;
+  ipfs: string;
+  isValidated: boolean;
+  isInvalid: boolean;
+  isProved: boolean;
+  isFinal: boolean;
+  timeCreated: number;
+  txsCount: number;
+  invalidTxsCount: number;
+  txsHash: string;
+  previousBlockAddress: string;
+  previousValidBlockAddress: string;
+  transactions?: BlockTransaction[];
+  database: string;
+  map: string;
+}
+  */
+
+  const BlockJsonFields = {
+    name: "Block data",
+    values: [
+      { name: "blockNumber", type: "number", description: "Block number" },
+      { name: "blockAddress", type: "string", description: "Block address" },
+      {
+        name: "chain",
+        type: "string",
+        description: "Chain",
+        url: `https://zekoscan.io/devnet/home`,
+      },
+      {
+        name: "contractAddress",
+        type: "string",
+        description: "Contract address",
+        url: `https://zekoscan.io/devnet/account/${item?.contractAddress}/txs?type=zk-acc`,
+      },
+      {
+        name: "blockProducer",
+        type: "string",
+        description: "Block producer",
+        url: `https://zekoscan.io/devnet/account/${item?.blockProducer}/txs?type=zk-acc`,
+      },
+      { name: "root", type: "string", description: "Merkle Map root" },
+      {
+        name: "oldRoot",
+        type: "string",
+        description: "Previous Merkle Map root",
+      },
+      {
+        name: "ipfs",
+        type: "string",
+        description: "Off-chain state",
+        url: `https://gateway.pinata.cloud/ipfs/${item?.ipfs}`,
+      },
+      { name: "isValidated", type: "boolean", description: "Is validated" },
+      { name: "isInvalid", type: "boolean", description: "Is invalid" },
+      { name: "isProved", type: "boolean", description: "Is proved" },
+      { name: "isFinal", type: "boolean", description: "Is final" },
+      { name: "timeCreated", type: "time", description: "Time created" },
+      {
+        name: "txsCount",
+        type: "number",
+        description: "Number of transactions",
+      },
+      {
+        name: "invalidTxsCount",
+        type: "number",
+        description: "Number of invalid transactions",
+      },
+      { name: "txsHash", type: "string", description: "Transactions hash" },
+      {
+        name: "previousBlockAddress",
+        type: "string",
+        description: "Previous block address",
+        url: `https://zekoscan.io/devnet/account/${item?.previousBlockAddress}/txs?type=zk-acc`,
+      },
+      {
+        name: "previousValidBlockAddress",
+        type: "string",
+        description: "Previous valid block address",
+        url: `https://zekoscan.io/devnet/account/${item?.previousValidBlockAddress}/txs?type=zk-acc`,
+      },
+      {
+        name: "database",
+        type: "string",
+        description: "Database off-chain state",
+        url: `https://gateway.pinata.cloud/ipfs/${item?.database}`,
+      },
+      {
+        name: "map",
+        type: "string",
+        description: "Merkle Map off-chain state",
+        url: `https://gateway.pinata.cloud/ipfs/${item?.map}`,
+      },
+      {
+        name: "transactions",
+        type: "array",
+        description: "Transactions",
+        optional: true,
+      },
+    ],
+  };
+
+  const elements = [];
+  if (item === undefined) return { name: BlockJsonFields.name, elements };
+
+  for (const field of BlockJsonFields.values) {
+    const key = field.name;
+    if (item[key] !== undefined) {
+      switch (field.type) {
+        case "string":
+          if (field.url !== undefined) {
+            elements.push(
+              <Descriptions.Item label={field.description}>
+                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
+                <a href={field.url} target="_blank">
+                  {item[key]?.toString() ?? ""}
+                </a>
+              </Descriptions.Item>
+            );
+          } else {
+            elements.push(
+              <Descriptions.Item label={field.description}>
+                {item[key]?.toString() ?? ""}
+              </Descriptions.Item>
+            );
+          }
+          break;
+        case "number":
+          elements.push(
+            <Descriptions.Item label={field.description}>
+              {item[key]?.toString() ?? ""}
+            </Descriptions.Item>
+          );
+          break;
+        case "time":
+          elements.push(
+            <Descriptions.Item label={field.description}>
+              {Date(item[key])?.toLocaleString() ?? ""}
+            </Descriptions.Item>
+          );
+          break;
+        default:
+      }
+    }
+  }
   console.log(elements);
-  return elements;
+  return { name: BlockJsonFields.name, elements };
 }

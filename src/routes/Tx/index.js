@@ -16,7 +16,7 @@ import {
   Divider,
   Descriptions,
 } from "antd";
-import { expandTx } from "./expand";
+import { expandTx, expandBlock } from "./expand";
 
 import logger from "../../serverless/logger";
 const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
@@ -37,17 +37,14 @@ const RadioGroup = Radio.Group;
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const Tx = ({ match }) => {
-  const [tx, setTx] = useState({});
-  const [block, setBlock] = useState({});
-  const [link, setLink] = useState("https://minanft.io");
-  const [contractLnk, setContractLnk] = useState("https://zekoscan.io/devnet");
-  const [blockTx, setBlockTx] = useState("https://zekoscan.io/devnet");
+  const [tx, setTx] = useState(expandTx());
+  const [block, setBlock] = useState(expandBlock());
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
   const [form] = Form.useForm();
 
-  const log = logm.child({ winstonComponent: "Faucet" });
+  const log = logm.child({ winstonComponent: "Tx" });
 
   if (DEBUG) console.log("txId", match.params.txId, "match", match);
   if (DEBUG) console.log("Tx", tx);
@@ -60,74 +57,24 @@ const Tx = ({ match }) => {
           if (DEBUG) console.log("Tx received", tx);
           if (tx !== undefined) {
             if (tx.chain !== undefined && tx.contractAddress !== undefined) {
-              /*
-              const objectID = tx.blockHash;
-              setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
-              setContractLnk(
-                `https://zekoscan.io/devnet/account/${tx.contractAddress}/txs?type=zk-acc`
-              );
-              tx["created"] = new Date(tx.timeReceived).toLocaleString();
-              if (tx.timeIncluded)
-                tx["included in the block"] = new Date(
-                  tx.timeIncluded
-                ).toLocaleString();
-              tx.transaction["contract address"] = tx["contractAddress"];
-              if (tx.blockNumber) tx["block number"] = tx.blockNumber;
-              tx["expiry date"] = new Date(
-                tx.transaction.expiry
-              ).toLocaleString();
-              tx.transaction["ipfs url"] = tx.transaction.ipfsUrl;
-              tx["metadata root: kind"] = tx.transaction.metadataRoot.kind;
-              tx["metadata root: data"] = tx.transaction.metadataRoot.data;
-              delete tx.timeReceived;
-              delete tx.timeIncluded;
-              delete tx.objectID;
-              delete tx.contractAddress;
-              delete tx.blockNumber;
-              delete tx.transaction.expiry;
-              delete tx.transaction.ipfsUrl;
-              delete tx.transaction.metadataRoot;
-
-              if (DEBUG) console.log("link", link);
-              */
-              setTx(tx);
+              setTx(expandTx(tx));
               setTxLoaded(true);
-              /*
-              if (objectID !== undefined) {
+              if (tx.blockHash !== undefined) {
+                if (DEBUG) console.log("Block hash", tx.blockHash);
                 try {
-                  const block = await rollupBlocks.getObject(objectID);
+                  const block = await rollupBlocks.getObject(tx.blockHash);
                   if (DEBUG) console.log("Block received", block);
                   if (block !== undefined) {
-                    delete block.objectID;
-                    block["created"] = new Date(
-                      block.timeCreated
-                    ).toLocaleString();
-                    block["contract address"] = block["contractAddress"];
-                    block["block number"] = block["blockNumber"];
-                    block["block address"] = block["blockAddress"];
-                    block["ipfs url"] = block.ipfsUrl;
-                    delete block.timeCreated;
-                    delete block.contractAddress;
-                    delete block.blockNumber;
-                    delete block.blockAddress;
-                    delete block.ipfsUrl;
-                    if (block.hash)
-                      setBlockTx(
-                        `https://zekoscan.io/devnet/tx/${block.hash}?type=zk-tx`
-                      );
-                    setBlock(block);
+                    setBlock(expandBlock(block));
                     setBlockLoaded(true);
                   } else setMessageText("Block not found");
                 } catch (error) {
                   if (DEBUG) console.log("Block not received", error);
                   setMessageText("Block not found");
                 }
-                
               }
             } else console.error("Tx object has wrong format", tx);
-            */
-            } else setMessageText("Tx not found");
-          }
+          } else setMessageText("Tx not found");
         } catch (error) {
           console.error("Tx not received", error);
           setMessageText("Tx not found");
@@ -153,60 +100,25 @@ const Tx = ({ match }) => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={{ publicKey: "", chain: "zeko" }}
               >
                 <div className="gx-mt-2">
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label="Transaction details"
-                        name="txData"
-                        placeholder=""
-                      >
+                      <Form.Item label={tx.name} name="txData" placeholder="">
                         {txLoaded ? (
                           <Descriptions
                             bordered={true}
                             column={1}
                             size={"small"}
                           >
-                            {/*Object.keys(tx).map((key) =>
-                              typeof tx[key] === "object" ? (
-                                Object.keys(tx[key]).map((subKey) => (
-                                  <Descriptions.Item label={subKey}>
-                                    {subKey === "name" ||
-                                    subKey === "ipfs url" ||
-                                    subKey === "contract address" ? (
-                                      <a
-                                        href={
-                                          subKey === "name"
-                                            ? link
-                                            : subKey === "contract address"
-                                            ? contractLnk
-                                            : tx[key][subKey].toString() ?? ""
-                                        }
-                                        target="_blank"
-                                      >
-                                        {tx[key][subKey]?.toString() ?? ""}
-                                      </a>
-                                    ) : (
-                                      tx[key][subKey]?.toString() ?? ""
-                                    )}
-                                  </Descriptions.Item>
-                                ))
-                              ) : (
-                                <Descriptions.Item label={key}>
-                                  {tx[key]?.toString() ?? ""}
-                                </Descriptions.Item>
-                              )
-                            )*/}
-                            {expandTx(tx)}
+                            {tx.elements}
                           </Descriptions>
                         ) : (
                           <p>{messageText}</p>
                         )}
                       </Form.Item>
                       <Form.Item
-                        label="Block details"
+                        label={block.name}
                         name="blockData"
                         placeholder=""
                       >
@@ -216,25 +128,7 @@ const Tx = ({ match }) => {
                             column={1}
                             size={"small"}
                           >
-                            {Object.keys(block).map((key) => (
-                              <Descriptions.Item label={key}>
-                                {key === "ipfs url" ||
-                                key === "contract address" ? (
-                                  <a
-                                    href={
-                                      key === "contract address"
-                                        ? contractLnk
-                                        : block[key].toString() ?? ""
-                                    }
-                                    target="_blank"
-                                  >
-                                    {block[key]?.toString() ?? ""}
-                                  </a>
-                                ) : (
-                                  block[key]?.toString() ?? ""
-                                )}
-                              </Descriptions.Item>
-                            ))}
+                            {block.elements}
                           </Descriptions>
                         ) : (
                           ""
