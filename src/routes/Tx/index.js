@@ -154,7 +154,7 @@ const Tx = ({ match }) => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item
-                        label="\tTransaction details"
+                        label="Transaction details"
                         name="txData"
                         placeholder=""
                       >
@@ -200,7 +200,7 @@ const Tx = ({ match }) => {
                         )}
                       </Form.Item>
                       <Form.Item
-                        label="\tBlock details"
+                        label="Block details"
                         name="blockData"
                         placeholder=""
                       >
