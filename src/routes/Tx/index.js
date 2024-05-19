@@ -150,7 +150,7 @@ const Tx = ({ match }) => {
                 layout="horizontal"
                 initialValues={{ publicKey: "", chain: "zeko" }}
               >
-                <div>
+                <div className="gx-algolia-content-inner">
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item
@@ -199,6 +199,7 @@ const Tx = ({ match }) => {
                           <p>{messageText}</p>
                         )}
                       </Form.Item>
+                      <Divider />
                       <Form.Item
                         label="Block details"
                         name="blockData"
