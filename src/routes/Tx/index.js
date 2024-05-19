@@ -154,12 +154,16 @@ const Tx = ({ match }) => {
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item
-                        label="\t\tTransaction details"
+                        label="\tTransaction details"
                         name="txData"
                         placeholder=""
                       >
                         {txLoaded ? (
-                          <Descriptions column={1} size={"small"}>
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            size={"small"}
+                          >
                             {Object.keys(tx).map((key) =>
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
@@ -196,12 +200,16 @@ const Tx = ({ match }) => {
                         )}
                       </Form.Item>
                       <Form.Item
-                        label="\t\tBlock details"
+                        label="\tBlock details"
                         name="blockData"
                         placeholder=""
                       >
                         {blockLoaded ? (
-                          <Descriptions column={1} size={"small"}>
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            size={"small"}
+                          >
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
                                 {key === "ipfs url" ||
