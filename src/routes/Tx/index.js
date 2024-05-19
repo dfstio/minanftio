@@ -71,7 +71,7 @@ const Tx = ({ match }) => {
                     setBlockLoaded(true);
                   } else setMessageText("Block not found");
                   const blockHistory = await rollupBlocksHistory.search("", {
-                    filters: `blockHash:${tx.blockHash} AND chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND blockNumber:<${tx.blockNumber}`,
+                    filters: `blockHash:${tx.blockHash} AND chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND blockNumber:${tx.blockNumber}`,
                   });
                   console.log("Block history", blockHistory);
                   if (blockHistory.hits !== undefined) {
