@@ -375,7 +375,7 @@ export function expandBlockHistory(item = undefined) {
   return { name: BlockHistoryFields.name, elements };
 }
 
-export function expandTransactionHistory(item = undefined) {
+export function expandTxHistory(item = undefined) {
   /* item is a TransactionHistory object
 export interface TransactionHistory {
   chain: string;
