@@ -10,13 +10,14 @@ import {
   Input,
   Radio,
   Card,
-  Upload,
-  Select,
-  Table,
-  Divider,
   Descriptions,
 } from "antd";
-import { expandTx, expandBlock, expandBlockHistory } from "./expand";
+import {
+  expandTx,
+  expandBlock,
+  expandBlockHistory,
+  expandTxHistory,
+} from "./expand";
 
 import logger from "../../serverless/logger";
 const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
@@ -27,6 +28,7 @@ const searchClient = algoliasearch(
 const rollupTxs = searchClient.initIndex("rollup-txs");
 const rollupBlocks = searchClient.initIndex("rollup-blocks");
 const rollupBlocksHistory = searchClient.initIndex("rollup-blocks-history");
+const rollupTxHistory = searchClient.initIndex("rollup-tx-history");
 
 const logm = logger.info.child({ winstonModule: "Tx" });
 const { REACT_APP_DEBUG } = process.env;
@@ -41,6 +43,7 @@ const Tx = ({ match }) => {
   const [tx, setTx] = useState(expandTx());
   const [block, setBlock] = useState(expandBlock());
   const [blockHistory, setBlockHistory] = useState([]);
+  const [txHistory, setTxHistory] = useState([]);
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
@@ -61,6 +64,15 @@ const Tx = ({ match }) => {
             if (tx.chain !== undefined && tx.contractAddress !== undefined) {
               setTx(expandTx(tx));
               setTxLoaded(true);
+              const txHistory = await rollupTxHistory.search("", {
+                filters: `chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND txId:${tx.txId}`,
+              });
+              console.log("Tx history", blockHistory);
+              if (txHistory.hits !== undefined) {
+                // sort hits by time, more recent first
+                const hits = txHistory.hits.sort((a, b) => b.time - a.time);
+                setTxHistory(hits.map((item) => expandTxHistory(item)));
+              }
               if (tx.blockHash !== undefined) {
                 if (DEBUG) console.log("Block hash", tx.blockHash);
                 try {
@@ -75,8 +87,12 @@ const Tx = ({ match }) => {
                   });
                   console.log("Block history", blockHistory);
                   if (blockHistory.hits !== undefined) {
+                    // sort hits by time, more recent first
+                    const hits = blockHistory.hits.sort(
+                      (a, b) => b.time - a.time
+                    );
                     setBlockHistory(
-                      blockHistory.hits.map((item) => expandBlockHistory(item))
+                      hits.map((item) => expandBlockHistory(item))
                     );
                   }
                 } catch (error) {
@@ -128,6 +144,21 @@ const Tx = ({ match }) => {
                           <p>{messageText}</p>
                         )}
                       </Form.Item>
+                      {txHistory.map((tx) => (
+                        <Form.Item
+                          label={tx.name}
+                          name="txHistory"
+                          placeholder=""
+                        >
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            size={"small"}
+                          >
+                            {tx.elements}
+                          </Descriptions>
+                        </Form.Item>
+                      ))}
                       <Form.Item
                         label={block.name}
                         name="blockData"
@@ -148,7 +179,7 @@ const Tx = ({ match }) => {
                       {blockHistory.map((block) => (
                         <Form.Item
                           label={block.name}
-                          name="blockData"
+                          name="blockHistory"
                           placeholder=""
                         >
                           <Descriptions
