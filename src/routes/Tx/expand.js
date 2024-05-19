@@ -389,7 +389,7 @@ export interface TransactionHistory {
 */
 
   const TransactionHistoryFields = {
-    name: "Transaction data",
+    name: "Transaction event",
     values: [
       { name: "chain", type: "string", description: "Chain" },
       {
