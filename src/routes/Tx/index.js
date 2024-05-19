@@ -59,14 +59,7 @@ const Tx = ({ match }) => {
           if (DEBUG) console.log("Tx received", tx);
           if (tx !== undefined) {
             if (tx.chain !== undefined && tx.contractAddress !== undefined) {
-              const objectID =
-                tx.blockNumber !== undefined
-                  ? tx.chain +
-                    "." +
-                    tx.contractAddress +
-                    "." +
-                    tx.blockNumber.toString()
-                  : undefined;
+              const objectID = tx.blockHash;
               setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
               setContractLnk(
                 `https://zekoscan.io/devnet/account/${tx.contractAddress}/txs?type=zk-acc`
