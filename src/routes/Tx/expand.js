@@ -287,7 +287,6 @@ export function expandBlock(item = undefined) {
       }
     }
   }
-  console.log(elements);
   return { name: BlockJsonFields.name, elements };
 }
 
@@ -374,4 +373,87 @@ export function expandBlockHistory(item = undefined) {
   }
   console.log(elements);
   return { name: BlockHistoryFields.name, elements };
+}
+
+export function expandTxHistory(item = undefined) {
+  /* item is a TransactionHistory object
+export interface TransactionHistory {
+  chain: string;
+  contractAddress: string;
+  txId: string;
+  status: string;
+  blockNumber?: number;
+  reason?: string;
+  time: number;
+}
+*/
+
+  const TransactionHistoryFields = {
+    name: "Transaction event",
+    values: [
+      { name: "chain", type: "string", description: "Chain" },
+      {
+        name: "contractAddress",
+        type: "string",
+        description: "Contract address",
+        url: `https://zekoscan.io/devnet/account/${item?.contractAddress}/txs?type=zk-acc`,
+      },
+      { name: "txId", type: "string", description: "Transaction ID" },
+      { name: "status", type: "string", description: "Status" },
+      {
+        name: "blockNumber",
+        type: "number",
+        description: "Block number",
+        optional: true,
+      },
+      { name: "reason", type: "string", description: "Reason", optional: true },
+      { name: "time", type: "time", description: "Time" },
+    ],
+  };
+
+  const elements = [];
+  if (item === undefined)
+    return { name: TransactionHistoryFields.name, elements };
+
+  for (const field of TransactionHistoryFields.values) {
+    const key = field.name;
+    if (item[key] !== undefined) {
+      switch (field.type) {
+        case "string":
+          if (field.url !== undefined) {
+            elements.push(
+              <Descriptions.Item label={field.description}>
+                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
+                <a href={field.url} target="_blank">
+                  {item[key]?.toString() ?? ""}
+                </a>
+              </Descriptions.Item>
+            );
+          } else {
+            elements.push(
+              <Descriptions.Item label={field.description}>
+                {item[key]?.toString() ?? ""}
+              </Descriptions.Item>
+            );
+          }
+          break;
+        case "number":
+          elements.push(
+            <Descriptions.Item label={field.description}>
+              {item[key]?.toString() ?? ""}
+            </Descriptions.Item>
+          );
+          break;
+        case "time":
+          elements.push(
+            <Descriptions.Item label={field.description}>
+              {new Date(item[key])?.toLocaleString() ?? ""}
+            </Descriptions.Item>
+          );
+          break;
+        default:
+      }
+    }
+  }
+  return { name: TransactionHistoryFields.name, elements };
 }
