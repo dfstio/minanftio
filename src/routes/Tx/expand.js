@@ -126,4 +126,6 @@ export function expandTx(item) {
       }
     }
   }
+  console.log(elements);
+  return elements;
 }
