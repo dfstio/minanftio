@@ -117,9 +117,11 @@ export function expandTx(item = undefined) {
           );
           break;
         case "time":
+          console.log("Time", item[key]);
+          console.log("Time", new Date(item[key]).toLocaleString());
           elements.push(
             <Descriptions.Item label={field.description}>
-              {Date(item[key])?.toLocaleString() ?? ""}
+              {new Date(item[key])?.toLocaleString() ?? ""}
             </Descriptions.Item>
           );
           break;
@@ -277,7 +279,7 @@ export function expandBlock(item = undefined) {
         case "time":
           elements.push(
             <Descriptions.Item label={field.description}>
-              {Date(item[key])?.toLocaleString() ?? ""}
+              {new Date(item[key])?.toLocaleString() ?? ""}
             </Descriptions.Item>
           );
           break;
@@ -305,7 +307,7 @@ export function expandBlockHistory(item = undefined) {
    */
 
   const BlockHistoryFields = {
-    name: "Block Events",
+    name: "Block Event",
     values: [
       { name: "chain", type: "string", description: "Chain" },
       {
@@ -362,7 +364,7 @@ export function expandBlockHistory(item = undefined) {
         case "time":
           elements.push(
             <Descriptions.Item label={field.description}>
-              {Date(item[key])?.toLocaleString() ?? ""}
+              {new Date(item[key])?.toLocaleString() ?? ""}
             </Descriptions.Item>
           );
           break;
