@@ -16,7 +16,6 @@ import {
   Divider,
   Descriptions,
 } from "antd";
-import { expandTx } from "./expand";
 
 import logger from "../../serverless/logger";
 const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
@@ -60,7 +59,6 @@ const Tx = ({ match }) => {
           if (DEBUG) console.log("Tx received", tx);
           if (tx !== undefined) {
             if (tx.chain !== undefined && tx.contractAddress !== undefined) {
-              /*
               const objectID = tx.blockHash;
               setLink("https://minanft.io/nft/i" + tx.transaction.ipfs);
               setContractLnk(
@@ -89,10 +87,8 @@ const Tx = ({ match }) => {
               delete tx.transaction.metadataRoot;
 
               if (DEBUG) console.log("link", link);
-              */
               setTx(tx);
               setTxLoaded(true);
-              /*
               if (objectID !== undefined) {
                 try {
                   const block = await rollupBlocks.getObject(objectID);
@@ -122,12 +118,10 @@ const Tx = ({ match }) => {
                   if (DEBUG) console.log("Block not received", error);
                   setMessageText("Block not found");
                 }
-                
               }
             } else console.error("Tx object has wrong format", tx);
-            */
-            } else setMessageText("Tx not found");
-          }
+          } else setMessageText("Tx not found");
+          setTx(tx);
         } catch (error) {
           console.error("Tx not received", error);
           setMessageText("Tx not found");
@@ -169,7 +163,7 @@ const Tx = ({ match }) => {
                             column={1}
                             size={"small"}
                           >
-                            {/*Object.keys(tx).map((key) =>
+                            {Object.keys(tx).map((key) =>
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
                                   <Descriptions.Item label={subKey}>
@@ -198,8 +192,7 @@ const Tx = ({ match }) => {
                                   {tx[key]?.toString() ?? ""}
                                 </Descriptions.Item>
                               )
-                            )*/}
-                            {expandTx(tx)}
+                            )}
                           </Descriptions>
                         ) : (
                           <p>{messageText}</p>
