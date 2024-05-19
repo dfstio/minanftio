@@ -213,14 +213,11 @@ const Tx = ({ match }) => {
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
                                 {key === "ipfs url" ||
-                                key === "hash" ||
                                 key === "contract address" ? (
                                   <a
                                     href={
                                       key === "contract address"
                                         ? contractLnk
-                                        : key === "hash"
-                                        ? blockTx
                                         : block[key].toString() ?? ""
                                     }
                                     target="_blank"
