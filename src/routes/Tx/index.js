@@ -150,7 +150,7 @@ const Tx = ({ match }) => {
                 layout="horizontal"
                 initialValues={{ publicKey: "", chain: "zeko" }}
               >
-                <div>
+                <div className="gx-mt-2">
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item

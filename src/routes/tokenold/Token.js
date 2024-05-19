@@ -347,7 +347,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
             singer: media[i].artist === undefined ? "" : media[i].artist,
           };
           if (image !== "")
-            track.cover = `https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/${image}`;
+            track.cover = `https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/${image}`;
           newAudio.push(track);
         }
         //onLoadAudio(newMedia);
@@ -560,7 +560,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setDescription(item.description);
         if (item.markdown !== undefined) setDescriptionMarkdown(item.markdown);
         setImage(
-          "https://res.cloudinary.com/virtuoso/image/fetch/h_300,q_100,f_auto/" +
+          "https://res.cloudinary.com/minanft/image/fetch/h_300,q_100,f_auto/" +
             item.image
         );
         setFirstRun(false);
@@ -880,7 +880,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       includeMargin={true}
                       onClick={hideQRCodeFunction}
                       imageSettings={{
-                        src: `https://res.cloudinary.com/virtuoso/image/fetch/h_100,q_100,f_auto/${item.image}`,
+                        src: `https://res.cloudinary.com/minanft/image/fetch/h_100,q_100,f_auto/${item.image}`,
                         width: 100,
                         height: 100,
                       }}
