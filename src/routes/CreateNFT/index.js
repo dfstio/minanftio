@@ -293,9 +293,11 @@ const MintPrivate = () => {
           });
           fileSaver.saveAs(blob, name + ".rollup.nft.json");
           const linkURL = mintResult?.url ?? "https://minanft.io/";
+          const hash = `https://minanft.io/rollup/tx/${mintResult.hash}`;
           console.log("linkURL", linkURL);
           const openResult = window.open(linkURL, "_blank");
           console.log("openResult", openResult);
+          setHash(hash);
           setLink(linkURL);
           setShowLink(true);
         } else

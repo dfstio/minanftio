@@ -285,6 +285,7 @@ interface Transaction {
         error: "txId is undefined",
       };
     }
+
     return {
       success: true,
       hash: transactions[0].txId,
