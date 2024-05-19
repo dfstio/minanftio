@@ -41,6 +41,7 @@ const Tx = ({ match }) => {
   const [block, setBlock] = useState({});
   const [link, setLink] = useState("https://minanft.io");
   const [contractLnk, setContractLnk] = useState("https://zekoscan.io/devnet");
+  const [blockTx, setBlockTx] = useState("https://zekoscan.io/devnet");
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
@@ -107,6 +108,10 @@ const Tx = ({ match }) => {
                     delete block.blockNumber;
                     delete block.blockAddress;
                     delete block.ipfsUrl;
+                    if (block.hash)
+                      setBlockTx(
+                        `https://zekoscan.io/devnet/tx/${block.hash}?type=zk-tx`
+                      );
                     setBlock(block);
                     setBlockLoaded(true);
                   } else setMessageText("Block not found");
@@ -208,11 +213,14 @@ const Tx = ({ match }) => {
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
                                 {key === "ipfs url" ||
+                                key === "hash" ||
                                 key === "contract address" ? (
                                   <a
                                     href={
                                       key === "contract address"
                                         ? contractLnk
+                                        : key === "hash"
+                                        ? blockTx
                                         : block[key].toString() ?? ""
                                     }
                                     target="_blank"
