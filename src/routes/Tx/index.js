@@ -159,11 +159,7 @@ const Tx = ({ match }) => {
                         placeholder=""
                       >
                         {txLoaded ? (
-                          <Descriptions
-                            bordered={true}
-                            column={1}
-                            size={"small"}
-                          >
+                          <Descriptions column={1} size={"small"}>
                             {Object.keys(tx).map((key) =>
                               typeof tx[key] === "object" ? (
                                 Object.keys(tx[key]).map((subKey) => (
@@ -199,18 +195,13 @@ const Tx = ({ match }) => {
                           <p>{messageText}</p>
                         )}
                       </Form.Item>
-                      <Divider />
                       <Form.Item
                         label="Block details"
                         name="blockData"
                         placeholder=""
                       >
                         {blockLoaded ? (
-                          <Descriptions
-                            bordered={true}
-                            column={1}
-                            size={"small"}
-                          >
+                          <Descriptions column={1} size={"small"}>
                             {Object.keys(block).map((key) => (
                               <Descriptions.Item label={key}>
                                 {key === "ipfs url" ||
