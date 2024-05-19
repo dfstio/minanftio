@@ -150,7 +150,7 @@ const Tx = ({ match }) => {
                 layout="horizontal"
                 initialValues={{ publicKey: "", chain: "zeko" }}
               >
-                <div className="gx-algolia-content-inner">
+                <div style={{ position: "relative" }}>
                   <Row>
                     <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                       <Form.Item
