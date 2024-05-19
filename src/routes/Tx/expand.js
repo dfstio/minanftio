@@ -225,13 +225,13 @@ export function expandBlock(item = undefined) {
         name: "database",
         type: "string",
         description: "Database off-chain state",
-        url: `https://gateway.pinata.cloud/ipfs/${item?.database}`,
+        url: `https://gateway.pinata.cloud/ipfs/${item?.database?.slice(2)}`,
       },
       {
         name: "map",
         type: "string",
         description: "Merkle Map off-chain state",
-        url: `https://gateway.pinata.cloud/ipfs/${item?.map}`,
+        url: `https://gateway.pinata.cloud/ipfs/${item?.map?.slice(2)}`,
       },
       {
         name: "transactions",
@@ -287,4 +287,89 @@ export function expandBlock(item = undefined) {
   }
   console.log(elements);
   return { name: BlockJsonFields.name, elements };
+}
+
+export function expandBlockHistory(item = undefined) {
+  /* item is a BlockHistory object
+
+  interface BlockHistory {
+    chain: string;
+    contractAddress: string;
+    blockHash: string;
+    blockNumber: number;
+    event: string;
+    txId: string;
+    memo: string;
+    time: number;
+  }
+   */
+
+  const BlockHistoryFields = {
+    name: "Block Events",
+    values: [
+      { name: "chain", type: "string", description: "Chain" },
+      {
+        name: "contractAddress",
+        type: "string",
+        description: "Contract address",
+        url: `https://zekoscan.io/devnet/account/${item?.contractAddress}/txs?type=zk-acc`,
+      },
+      { name: "blockHash", type: "string", description: "Block hash" },
+      { name: "event", type: "string", description: "Event" },
+      {
+        name: "txId",
+        type: "string",
+        description: "Transaction ID",
+        url: `https://zekoscan.io/devnet/tx/${item?.txId}?type=zk-tx`,
+      },
+      { name: "memo", type: "string", description: "Memo" },
+      { name: "time", type: "time", description: "Time" },
+    ],
+  };
+
+  const elements = [];
+  if (item === undefined) return { name: BlockHistoryFields.name, elements };
+
+  for (const field of BlockHistoryFields.values) {
+    const key = field.name;
+    if (item[key] !== undefined) {
+      switch (field.type) {
+        case "string":
+          if (field.url !== undefined) {
+            elements.push(
+              <Descriptions.Item label={field.description}>
+                {/*eslint-disable-next-line react/jsx-no-target-blank*/}
+                <a href={field.url} target="_blank">
+                  {item[key]?.toString() ?? ""}
+                </a>
+              </Descriptions.Item>
+            );
+          } else {
+            elements.push(
+              <Descriptions.Item label={field.description}>
+                {item[key]?.toString() ?? ""}
+              </Descriptions.Item>
+            );
+          }
+          break;
+        case "number":
+          elements.push(
+            <Descriptions.Item label={field.description}>
+              {item[key]?.toString() ?? ""}
+            </Descriptions.Item>
+          );
+          break;
+        case "time":
+          elements.push(
+            <Descriptions.Item label={field.description}>
+              {Date(item[key])?.toLocaleString() ?? ""}
+            </Descriptions.Item>
+          );
+          break;
+        default:
+      }
+    }
+  }
+  console.log(elements);
+  return { name: BlockHistoryFields.name, elements };
 }

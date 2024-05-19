@@ -16,7 +16,7 @@ import {
   Divider,
   Descriptions,
 } from "antd";
-import { expandTx, expandBlock } from "./expand";
+import { expandTx, expandBlock, expandBlockHistory } from "./expand";
 
 import logger from "../../serverless/logger";
 const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
@@ -26,6 +26,7 @@ const searchClient = algoliasearch(
 );
 const rollupTxs = searchClient.initIndex("rollup-txs");
 const rollupBlocks = searchClient.initIndex("rollup-blocks");
+const rollupBlocksHistory = searchClient.initIndex("rollup-blocks-history");
 
 const logm = logger.info.child({ winstonModule: "Tx" });
 const { REACT_APP_DEBUG } = process.env;
@@ -39,6 +40,7 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 const Tx = ({ match }) => {
   const [tx, setTx] = useState(expandTx());
   const [block, setBlock] = useState(expandBlock());
+  const [blockHistory, setBlockHistory] = useState([]);
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
@@ -68,6 +70,15 @@ const Tx = ({ match }) => {
                     setBlock(expandBlock(block));
                     setBlockLoaded(true);
                   } else setMessageText("Block not found");
+                  const blockHistory = await rollupBlocksHistory.search("", {
+                    filters: `blockHash:${tx.blockHash} AND chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND blockNumber:<${tx.blockNumber}`,
+                  });
+                  console.log("Block history", blockHistory);
+                  if (blockHistory.hits !== undefined) {
+                    setBlockHistory(
+                      blockHistory.hits.map((item) => expandBlockHistory(item))
+                    );
+                  }
                 } catch (error) {
                   if (DEBUG) console.log("Block not received", error);
                   setMessageText("Block not found");
@@ -134,6 +145,21 @@ const Tx = ({ match }) => {
                           ""
                         )}
                       </Form.Item>
+                      {blockHistory.map((block) => (
+                        <Form.Item
+                          label={block.name}
+                          name="blockData"
+                          placeholder=""
+                        >
+                          <Descriptions
+                            bordered={true}
+                            column={1}
+                            size={"small"}
+                          >
+                            {block.elements}
+                          </Descriptions>
+                        </Form.Item>
+                      ))}
                     </Col>
                   </Row>
                 </div>
