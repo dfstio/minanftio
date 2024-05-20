@@ -25,7 +25,12 @@ export function expandTx(item = undefined) {
     values: [
       { name: "txId", type: "string", description: "Transaction ID" },
       { name: "status", type: "string", description: "Status" },
-      { name: "name", type: "string", description: "NFT name" },
+      {
+        name: "name",
+        type: "string",
+        description: "NFT name",
+        url: item?.ipfs ? `https://minanft.io/nft/i${item?.ipfs}` : undefined,
+      },
       { name: "operation", type: "string", description: "Operation" },
       {
         name: "address",
