@@ -38,7 +38,7 @@ export async function sendTransaction(params) {
   const jobId = answer.jobId;
   console.log(`jobId:`, jobId);
   let result;
-  while (result === undefined || answer.jobStatus !== "failed") {
+  while (result === undefined && answer.jobStatus !== "failed") {
     await sleep(5000);
     answer = await zkCloudWorkerRequest({
       command: "jobResult",
@@ -46,6 +46,7 @@ export async function sendTransaction(params) {
     });
     console.log(`jobResult api call result:`, answer);
     result = answer.result;
+    if (result !== undefined) console.log(`jobResult result:`, result);
   }
   if (answer.jobStatus === "failed") {
     return { isSent: false, hash: result };
