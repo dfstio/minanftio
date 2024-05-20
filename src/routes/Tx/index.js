@@ -20,6 +20,7 @@ import {
 } from "./expand";
 
 import logger from "../../serverless/logger";
+import { set } from "nprogress";
 const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
 const searchClient = algoliasearch(
   REACT_APP_ALGOLIA_PROJECT,
@@ -47,6 +48,7 @@ const Tx = ({ match }) => {
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
+  const [counter, setCounter] = useState(0);
   const [form] = Form.useForm();
 
   const refreshTime = 20000;
@@ -106,6 +108,7 @@ const Tx = ({ match }) => {
         setMessageText("Tx not found");
       }
     }
+    setCounter(counter + 1);
   }
 
   useEffect(() => {
