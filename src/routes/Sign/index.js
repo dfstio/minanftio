@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   message,
@@ -18,6 +19,8 @@ import {
 import logger from "../../serverless/logger";
 import { contract } from "./contract";
 import { explorerTransaction } from "../../blockchain/explorer";
+import { minaLogin } from "../../blockchain/mina";
+import { updateAddress } from "../../appRedux/actions";
 
 const logm = logger.info.child({ winstonModule: "Sign" });
 const { REACT_APP_DEBUG } = process.env;
@@ -30,6 +33,8 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const Sign = () => {
   const [form] = Form.useForm();
+  const address = useSelector(({ blockchain }) => blockchain.address);
+  const dispatch = useDispatch();
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
@@ -59,6 +64,12 @@ const Sign = () => {
   async function signButton() {
     console.log("Sign", { chain, value });
     setLoading(true);
+    if (address === "") {
+      const newAddress = await minaLogin();
+      console.log("newAddress", newAddress);
+      dispatch(updateAddress(newAddress));
+      return;
+    }
 
     const key = "Faucet";
 
@@ -68,7 +79,7 @@ const Sign = () => {
         key,
         duration: 600,
       });
-      const hashResult = await contract(value, 10);
+      const hashResult = await contract(value, address);
       //await faucet(value, chain);
       if (hashResult.isCalculated === true) {
         setVerificationResult(hashResult.hash);
@@ -77,7 +88,9 @@ const Sign = () => {
           key,
           duration: 240,
         });
-        setVerificationResult(explorerTransaction(chain) + hashResult.hash);
+        setVerificationResult(
+          "https://minascan.io/devnet/tx/" + hashResult.hash
+        );
       } else {
         console.error("faucetResult", hashResult);
         message.error({
