@@ -49,6 +49,7 @@ export async function contract(value, address) {
   const transaction = tx.toJSON();
   const txResult = await window.mina?.sendTransaction({
     transaction,
+    onlySign: true,
     feePayer: {
       fee: fee,
       memo: memo,
