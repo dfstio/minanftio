@@ -5249,6 +5249,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "axios@npm:1.7.1"
+  dependencies:
+    follow-redirects: "npm:^1.15.6"
+    form-data: "npm:^4.0.0"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/554395472f18f4ddb43b4be2900473bc1a4d589464a8ab16f6954c53d9cace4317d5c9e009d5bb05f098d9565b2fa45f152a5d4cecb87536c8f0c370c25a7770
+  languageName: node
+  linkType: hard
+
 "axobject-query@npm:^3.2.1":
   version: 3.2.1
   resolution: "axobject-query@npm:3.2.1"
@@ -12511,9 +12522,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minanft@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "minanft@npm:1.12.0"
+"minanft@npm:^1.12.1":
+  version: 1.12.1
+  resolution: "minanft@npm:1.12.1"
   dependencies:
     arweave: "npm:^1.15.0"
     axios: "npm:^1.6.8"
@@ -12522,7 +12533,7 @@ __metadata:
     mime: "npm:^3.0.0"
   peerDependencies:
     o1js: ^1.2.0
-  checksum: 10c0/ff962ac94751bd7d30845d5a80c39797d0793ecd523eadff84439a9115261433e373c077dfa7a1264b74f745364516000fe4807f569abc3c4b1270a9e7db118a
+  checksum: 10c0/bc133fe5866f2b015c61f79d18daba8943d591c46dd017edc6f4f42631e0a4ff43c2a1026ca6903620e64a698b5790a045b880110a09684dd722caa33ade519c
   languageName: node
   linkType: hard
 
@@ -12539,7 +12550,7 @@ __metadata:
     antd-theme-webpack-plugin: "npm:^1.3.9"
     app-redux: "npm:^2.0.3"
     assert: "npm:^2.1.0"
-    axios: "npm:^1.6.8"
+    axios: "npm:^1.7.1"
     babel-plugin-import: "npm:^1.13.8"
     browserify-zlib: "npm:^0.2.0"
     connected-react-router: "npm:^6.9.3"
@@ -12558,7 +12569,7 @@ __metadata:
     logform: "npm:^2.6.0"
     mailgun-js: "npm:^0.22.0"
     markdown-to-jsx: "npm:^7.4.7"
-    minanft: "npm:^1.12.0"
+    minanft: "npm:^1.12.1"
     moment: "npm:^2.30.1"
     nprogress: "npm:^0.2.0"
     o1js: "npm:^1.2.0"

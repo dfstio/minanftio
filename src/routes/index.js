@@ -51,6 +51,10 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./Faucet"))}
       />
       <Route
+        path={`${match.url}sign`}
+        component={asyncComponent(() => import("./Sign"))}
+      />
+      <Route
         path={`${match.url}tools`}
         component={asyncComponent(() => import("./Tools"))}
       />
