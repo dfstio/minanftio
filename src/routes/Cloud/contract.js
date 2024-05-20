@@ -38,6 +38,7 @@ export async function contract(value, address) {
     },
   });
   const signedData = txResult?.signedData;
+  console.time("ProvedAndSent");
   const result = await sendTransaction({
     serializedTransaction,
     signedData,
@@ -45,6 +46,7 @@ export async function contract(value, address) {
     address,
     value,
   });
+  console.time("ProvedAndSent");
   console.log("Result", result);
 
   return result;

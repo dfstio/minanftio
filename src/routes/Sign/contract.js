@@ -41,6 +41,7 @@ export async function contract(value, address) {
   tx.transaction.feePayer.authorization =
     signedDataJson.zkappCommand.feePayer.authorization;
   console.log("TxSigned", tx);
+  console.time("ProvedAndSent");
   console.log("Compiling contract");
   console.time("Compiled");
   await SignTestContract.compile();
@@ -51,6 +52,7 @@ export async function contract(value, address) {
   const txSent = await tx.send();
   console.log("TxSent", txSent);
   const hash = txSent?.hash;
+  console.timeEnd("ProvedAndSent");
   console.log("Hash", hash);
 
   return { isCalculated: true, hash: hash };
