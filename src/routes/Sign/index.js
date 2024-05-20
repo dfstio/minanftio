@@ -137,7 +137,6 @@ const Sign = () => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={{ value: "", chain: "zeko" }}
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
@@ -145,7 +144,7 @@ const Sign = () => {
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
-                        label="Value"
+                        label="Enter the number"
                         name="value"
                         rules={[
                           {
@@ -170,7 +169,6 @@ const Sign = () => {
                       <Form.Item>
                         <Button
                           type="primary"
-                          disabled={value === ""}
                           loading={loading}
                           onClick={signButton}
                           key="proveButton"
