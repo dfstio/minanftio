@@ -56,7 +56,12 @@ export async function contract(value, address) {
     },
   });
   console.log("txResult", txResult);
-  const txSigned = Mina.Transaction.fromJSON(JSON.parse(txResult.signedData));
+  const signedData = txResult?.signedTx;
+  console.log("SignedData", signedData);
+  const signedDataJson = JSON.parse(signedData);
+  console.log("SignedDataJson", signedDataJson);
+  const txSigned = Mina.Transaction.fromJSON(signedDataJson);
+  console.log("TxSigned", txSigned.toPretty());
   console.log("Compiling contract");
   console.time("Compiled");
   await SignTestContract.compile();
