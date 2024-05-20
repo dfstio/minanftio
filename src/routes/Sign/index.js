@@ -16,7 +16,7 @@ import {
 } from "antd";
 
 import logger from "../../serverless/logger";
-import { faucet } from "../../blockchain/faucet";
+import { contract } from "./contract";
 import { explorerTransaction } from "../../blockchain/explorer";
 
 const logm = logger.info.child({ winstonModule: "Faucet" });
@@ -72,7 +72,7 @@ const Sign = () => {
         key,
         duration: 600,
       });
-      const hashResult = { isCalculated: true, hash: "hash" };
+      const hashResult = await contract(publicKey, 10);
       //await faucet(publicKey, chain);
       if (hashResult.isCalculated === true) {
         setVerificationResult(hashResult.hash);
