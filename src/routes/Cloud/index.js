@@ -10,9 +10,6 @@ import {
   Input,
   Radio,
   Card,
-  Upload,
-  Select,
-  Table,
   Divider,
 } from "antd";
 
@@ -81,7 +78,7 @@ const Cloud = () => {
         duration: 600,
       });
       const hashResult = await contract(value, address);
-      //await faucet(value, chain);
+      console.log("Result of sending tx", hashResult);
       if (hashResult.isSent === true) {
         setVerificationResult(hashResult.hash);
         message.success({
