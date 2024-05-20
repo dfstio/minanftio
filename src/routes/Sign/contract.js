@@ -74,7 +74,9 @@ export async function contract(value, address) {
   console.timeEnd("Compiled");
   await tx.prove();
   const txSent = await tx.send();
+  console.log("TxSent", txSent);
   const hash = txSent?.hash;
+  console.log("Hash", hash);
 
-  return { isCalculated: true, hash: 1 };
+  return { isCalculated: true, hash: hash };
 }
