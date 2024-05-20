@@ -46,7 +46,7 @@ export async function contract(value, address) {
     address,
     value,
   });
-  console.time("ProvedAndSent");
+  console.timeEnd("ProvedAndSent");
   console.log("Result", result);
 
   return result;
