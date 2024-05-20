@@ -30,10 +30,7 @@ export async function contract(value, address) {
   const resultNumber = Number(result.toBigInt());
   console.log("ResultNumber", resultNumber);
   await initBlockchain("devnet");
-  console.log("Compiling contract");
-  console.time("Compiled");
-  await SignTestContract.compile();
-  console.timeEnd("Compiled");
+
   const sender = PublicKey.fromBase58(address);
   console.log("Sender", sender.toBase58());
   console.log("Sender balance", await accountBalanceMina(sender));
@@ -48,7 +45,7 @@ export async function contract(value, address) {
   const tx = await Mina.transaction({ sender, fee, memo }, async () => {
     await zkApp.setValue(fieldValue);
   });
-  await tx.prove();
+
   const transaction = tx.toJSON();
   const txResult = await window.mina?.sendTransaction({
     transaction,
@@ -58,7 +55,14 @@ export async function contract(value, address) {
     },
   });
   console.log("txResult", txResult);
-  const hash = txResult?.hash;
+  const txSigned = Mina.Transaction.fromJSON(JSON.parse(tx));
+  console.log("Compiling contract");
+  console.time("Compiled");
+  await SignTestContract.compile();
+  console.timeEnd("Compiled");
+  await txSigned.prove();
+  const txSent = await txSigned.send();
+  const hash = txSent?.hash;
 
   return { isCalculated: true, hash };
 }
