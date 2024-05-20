@@ -18,6 +18,7 @@ export function expandTx(item = undefined) {
     metadataRootKind: string;
     metadataRootData: string;
   }
+  
   */
 
   const TransactionJsonFields = {

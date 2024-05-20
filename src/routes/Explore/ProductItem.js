@@ -19,7 +19,7 @@ const ProductItem = ({ item }) => {
   let buttonId = "sidebar.algolia.buy";
   const imageUrl = storageUrlFromURL(item.image);
   let canSell = false;
-  if (address.toUpperCase() === item.owner.toUpperCase()) {
+  if (address?.toUpperCase() === item?.owner?.toUpperCase()) {
     buttonId = "sidebar.algolia.sell";
     canSell = true;
   }
