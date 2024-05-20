@@ -63,13 +63,14 @@ const Sign = () => {
 
   async function signButton() {
     console.log("Sign", { chain, value });
-    setLoading(true);
+
     if (address === "") {
       const newAddress = await minaLogin();
       console.log("newAddress", newAddress);
       dispatch(updateAddress(newAddress));
       return;
     }
+    setLoading(true);
 
     const key = "Faucet";
 
@@ -174,7 +175,7 @@ const Sign = () => {
                           onClick={signButton}
                           key="proveButton"
                         >
-                          Sign
+                          {address === "" ? "Connect Auro" : "Sign"}
                         </Button>
                       </Form.Item>
                       <Divider />

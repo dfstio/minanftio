@@ -17,7 +17,7 @@ import {
   state,
   State,
 } from "o1js";
-import { SignTestContract, accountBalanceMina } from "minanft";
+import { SignTestContract, accountBalanceMina, initBlockchain } from "minanft";
 
 export async function contract(value, address) {
   console.log("Contract", { value, address });
@@ -29,6 +29,7 @@ export async function contract(value, address) {
   console.log("Result", result.toJSON());
   const resultNumber = Number(result.toBigInt());
   console.log("ResultNumber", resultNumber);
+  await initBlockchain("devnet");
   console.log("Compiling contract");
   console.time("Compiled");
   await SignTestContract.compile();
