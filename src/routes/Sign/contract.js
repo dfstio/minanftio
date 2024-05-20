@@ -45,6 +45,8 @@ export async function contract(value, address) {
   const tx = await Mina.transaction({ sender, fee, memo }, async () => {
     await zkApp.setValue(fieldValue);
   });
+  console.log("Tx", tx);
+  console.log("Tx pretty", tx.toPretty());
 
   const transaction = tx.toJSON();
   const txResult = await window.mina?.sendTransaction({
@@ -60,6 +62,7 @@ export async function contract(value, address) {
   console.log("SignedData", signedData);
   const signedDataJson = JSON.parse(signedData);
   console.log("SignedDataJson", signedDataJson);
+  /*
   const txSigned = Mina.Transaction.fromJSON(signedDataJson);
   console.log("TxSigned", txSigned.toPretty());
   console.log("Compiling contract");
@@ -69,6 +72,7 @@ export async function contract(value, address) {
   await txSigned.prove();
   const txSent = await txSigned.send();
   const hash = txSent?.hash;
+  */
 
-  return { isCalculated: true, hash };
+  return { isCalculated: true, hash: 1 };
 }
