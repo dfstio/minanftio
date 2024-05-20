@@ -36,7 +36,7 @@ async function zkCloudWorkerRequest(params) {
     },
     chain: `zeko`,
   };
-  const endpoint = process.env.REACT_APP_ZKCW_ENDPOINT;
+  const endpoint = process.env.REACT_APP_ZKCW_ENDPOINT + "zeko";
 
   const response = await axios.post(endpoint, apiData);
   return response.data;
