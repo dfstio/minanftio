@@ -19,7 +19,7 @@ import logger from "../../serverless/logger";
 import { contract } from "./contract";
 import { explorerTransaction } from "../../blockchain/explorer";
 
-const logm = logger.info.child({ winstonModule: "Faucet" });
+const logm = logger.info.child({ winstonModule: "Sign" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
@@ -30,7 +30,7 @@ const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const Sign = () => {
   const [form] = Form.useForm();
-  const [publicKey, setPublicKey] = useState("");
+  const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [verificationResult, setVerificationResult] = useState("");
@@ -45,14 +45,10 @@ const Sign = () => {
       setButtonDisabled(newButtonDisabled);
   };
 
-  const beforeUpload = (file) => {
-    return false;
-  };
-
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
-    if (values.publicKey !== undefined && values.publicKey !== publicKey)
-      setPublicKey(values.publicKey);
+    if (values.value !== undefined && values.value !== value)
+      setValue(values.value);
     if (values.chain !== undefined && values.chain !== chain)
       setChain(values.chain);
 
@@ -60,8 +56,8 @@ const Sign = () => {
     checkCanCreate();
   };
 
-  async function proveButton() {
-    console.log("Faucet", { chain, publicKey });
+  async function signButton() {
+    console.log("Sign", { chain, value });
     setLoading(true);
 
     const key = "Faucet";
@@ -72,8 +68,8 @@ const Sign = () => {
         key,
         duration: 600,
       });
-      const hashResult = await contract(publicKey, 10);
-      //await faucet(publicKey, chain);
+      const hashResult = await contract(value, 10);
+      //await faucet(value, chain);
       if (hashResult.isCalculated === true) {
         setVerificationResult(hashResult.hash);
         message.success({
@@ -85,7 +81,7 @@ const Sign = () => {
       } else {
         console.error("faucetResult", hashResult);
         message.error({
-          content: `Error sendig tx: ${hashResult?.error ?? ""} ${
+          content: `Error sending tx: ${hashResult?.error ?? ""} ${
             hashResult?.reason ?? ""
           }`,
           key,
@@ -116,7 +112,7 @@ const Sign = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card className="gx-card" key="faucetCard" title="Faucet">
+            <Card className="gx-card" key="faucetCard" title="Sign Test">
               <Form
                 form={form}
                 key="faucetForm"
@@ -127,7 +123,7 @@ const Sign = () => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={{ publicKey: "", chain: "zeko" }}
+                initialValues={{ value: "", chain: "zeko" }}
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
@@ -136,7 +132,7 @@ const Sign = () => {
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                       <Form.Item
                         label="Value"
-                        name="publicKey"
+                        name="value"
                         rules={[
                           {
                             required: true,
@@ -160,9 +156,9 @@ const Sign = () => {
                       <Form.Item>
                         <Button
                           type="primary"
-                          disabled={publicKey === ""}
+                          disabled={value === ""}
                           loading={loading}
-                          onClick={proveButton}
+                          onClick={signButton}
                           key="proveButton"
                         >
                           Sign

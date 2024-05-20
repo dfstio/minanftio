@@ -17,15 +17,9 @@ import {
   state,
   State,
 } from "o1js";
+import { SignTestContract } from "minanft";
 
-export function contract(a, b) {
-  /*
-  class SignTestContract extends SmartContract {
-    @method async setValue(value: Field) {
-      this.value.set(value);
-    }
-  }
-  */
+export async function contract(a, b) {
   console.log("Summing", a, b);
   const field1 = Field(a);
   console.log("Field1", field1.toJSON());
@@ -35,5 +29,9 @@ export function contract(a, b) {
   console.log("Result", result.toJSON());
   const resultNumber = Number(result.toBigInt());
   console.log("ResultNumber", resultNumber);
+  console.log("Compiling contract");
+  console.time("Compiled");
+  await SignTestContract.compile();
+  console.timeEnd("Compiled");
   return { isCalculated: true, hash: resultNumber };
 }
