@@ -2,7 +2,8 @@ import axios from "axios";
 import { sleep } from "minanft";
 
 export async function sendTransaction(params) {
-  const { serializedTransaction, signedData, contractAddress } = params;
+  const { serializedTransaction, signedData, contractAddress, address, value } =
+    params;
   console.log("sendTransaction", {
     serializedTransaction,
     signedData,
@@ -17,6 +18,8 @@ export async function sendTransaction(params) {
     {
       serializedTransaction,
       signedData,
+      address,
+      value,
     },
     null,
     2

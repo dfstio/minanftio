@@ -42,6 +42,8 @@ export async function contract(value, address) {
     serializedTransaction,
     signedData,
     contractAddress,
+    address,
+    value,
   });
   console.log("Result", result);
 
