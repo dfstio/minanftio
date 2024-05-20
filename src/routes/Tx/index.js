@@ -49,67 +49,73 @@ const Tx = ({ match }) => {
   const [messageText, setMessageText] = useState("Loading tx data");
   const [form] = Form.useForm();
 
+  const refreshTime = 20000;
+
   const log = logm.child({ winstonComponent: "Tx" });
 
   if (DEBUG) console.log("txId", match.params.txId, "match", match);
   if (DEBUG) console.log("Tx", tx);
 
-  useEffect(() => {
-    async function getItem() {
-      if (match.params.txId !== undefined) {
-        try {
-          const tx = await rollupTxs.getObject(match.params.txId);
-          if (DEBUG) console.log("Tx received", tx);
-          if (tx !== undefined) {
-            if (tx.chain !== undefined && tx.contractAddress !== undefined) {
-              setTx(expandTx(tx));
-              setTxLoaded(true);
-              const txHistory = await rollupTxHistory.search("", {
-                filters: `chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND txId:${tx.txId}`,
-              });
-              console.log("Tx history", blockHistory);
-              if (txHistory.hits !== undefined) {
-                // sort hits by time, more recent first
-                const hits = txHistory.hits.sort((a, b) => b.time - a.time);
-                setTxHistory(hits.map((item) => expandTxHistory(item)));
-              }
-              if (tx.blockHash !== undefined) {
-                if (DEBUG) console.log("Block hash", tx.blockHash);
-                try {
-                  const block = await rollupBlocks.getObject(tx.blockHash);
-                  if (DEBUG) console.log("Block received", block);
-                  if (block !== undefined) {
-                    setBlock(expandBlock(block));
-                    setBlockLoaded(true);
-                  } else setMessageText("Block not found");
-                  const blockHistory = await rollupBlocksHistory.search("", {
-                    filters: `blockHash:${tx.blockHash} AND chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND blockNumber:${tx.blockNumber}`,
-                  });
-                  console.log("Block history", blockHistory);
-                  if (blockHistory.hits !== undefined) {
-                    // sort hits by time, more recent first
-                    const hits = blockHistory.hits.sort(
-                      (a, b) => b.time - a.time
-                    );
-                    setBlockHistory(
-                      hits.map((item) => expandBlockHistory(item))
-                    );
-                  }
-                } catch (error) {
-                  if (DEBUG) console.log("Block not received", error);
-                  setMessageText("Block not found");
+  async function getItem() {
+    if (match.params.txId !== undefined) {
+      try {
+        const tx = await rollupTxs.getObject(match.params.txId);
+        if (DEBUG) console.log("Tx received", tx);
+        if (tx !== undefined) {
+          if (tx.chain !== undefined && tx.contractAddress !== undefined) {
+            setTx(expandTx(tx));
+            setTxLoaded(true);
+            const txHistory = await rollupTxHistory.search("", {
+              filters: `chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND txId:${tx.txId}`,
+            });
+            console.log("Tx history", blockHistory);
+            if (txHistory.hits !== undefined) {
+              // sort hits by time, more recent first
+              const hits = txHistory.hits.sort((a, b) => b.time - a.time);
+              setTxHistory(hits.map((item) => expandTxHistory(item)));
+            }
+            if (tx.blockHash !== undefined) {
+              if (DEBUG) console.log("Block hash", tx.blockHash);
+              try {
+                const block = await rollupBlocks.getObject(tx.blockHash);
+                if (DEBUG) console.log("Block received", block);
+                if (block !== undefined) {
+                  setBlock(expandBlock(block));
+                  setBlockLoaded(true);
+                } else setMessageText("Block not found");
+                const blockHistory = await rollupBlocksHistory.search("", {
+                  filters: `blockHash:${tx.blockHash} AND chain:${tx.chain} AND contractAddress:${tx.contractAddress} AND blockNumber:${tx.blockNumber}`,
+                });
+                console.log("Block history", blockHistory);
+                if (blockHistory.hits !== undefined) {
+                  // sort hits by time, more recent first
+                  const hits = blockHistory.hits.sort(
+                    (a, b) => b.time - a.time
+                  );
+                  setBlockHistory(hits.map((item) => expandBlockHistory(item)));
                 }
+              } catch (error) {
+                if (DEBUG) console.log("Block not received", error);
+                setMessageText("Block not found");
               }
-            } else console.error("Tx object has wrong format", tx);
-          } else setMessageText("Tx not found");
-        } catch (error) {
-          console.error("Tx not received", error);
-          setMessageText("Tx not found");
-        }
+            }
+          } else console.error("Tx object has wrong format", tx);
+        } else setMessageText("Tx not found");
+      } catch (error) {
+        console.error("Tx not received", error);
+        setMessageText("Tx not found");
       }
     }
+  }
+
+  useEffect(() => {
     getItem();
   }, [match]);
+
+  useEffect(() => {
+    const comInterval = setInterval(getItem, refreshTime); //This will refresh the data at regularIntervals of refreshTime
+    return () => clearInterval(comInterval); //Clear interval on component unmount to avoid memory leak
+  }, []);
 
   return (
     <>
