@@ -48,7 +48,7 @@ const Tx = ({ match }) => {
   const [txLoaded, setTxLoaded] = useState(false);
   const [blockLoaded, setBlockLoaded] = useState(false);
   const [messageText, setMessageText] = useState("Loading tx data");
-  const [counter, setCounter] = useState(0);
+  const [time, setTime] = useState(new Date());
   const [form] = Form.useForm();
 
   const refreshTime = 20000;
@@ -108,17 +108,19 @@ const Tx = ({ match }) => {
         setMessageText("Tx not found");
       }
     }
-    setCounter(counter + 1);
   }
 
   useEffect(() => {
-    getItem();
-  }, [match]);
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, refreshTime);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
-    const comInterval = setInterval(getItem, refreshTime); //This will refresh the data at regularIntervals of refreshTime
-    return () => clearInterval(comInterval); //Clear interval on component unmount to avoid memory leak
-  }, []);
+    getItem();
+  }, [match, time]);
 
   return (
     <>
