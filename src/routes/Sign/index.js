@@ -35,14 +35,14 @@ const Sign = () => {
   const [form] = Form.useForm();
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [chain, setChain] = useState("zeko");
 
-  const log = logm.child({ winstonComponent: "Faucet" });
+  const log = logm.child({ winstonComponent: "Sign" });
 
   const checkCanCreate = () => {
     let newButtonDisabled = false;
