@@ -56,7 +56,7 @@ export async function contract(value, address) {
     },
   });
   console.log("txResult", txResult);
-  const signedData = txResult?.signedTx;
+  const signedData = txResult?.signedData;
   console.log("SignedData", signedData);
   const signedDataJson = JSON.parse(signedData);
   console.log("SignedDataJson", signedDataJson);
