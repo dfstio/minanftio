@@ -1,6 +1,5 @@
-import { MerkleTree, Field, Encoding } from "o1js";
-import { FileData, File, calculateMerkleTreeRootFast } from "minanft";
-//import { createHash } from "crypto";
+import { Field } from "o1js";
+import { FileData } from "minanft";
 import axios from "axios";
 import { ARWEAVE } from "minanft";
 const CryptoJS = require("crypto-js");
@@ -56,6 +55,7 @@ export async function getFileData(
   let height = 0;
   let root = Field(0);
   let storage = "";
+  /*
   if (calculateRoot) {
     const bytes = new Uint8Array(binary.byteLength);
     bytes.set(binary);
@@ -79,6 +79,7 @@ export async function getFileData(
     //tree.fill();
     //root = tree.getRoot();
   }
+  */
 
   const binaryWA = CryptoJS.lib.WordArray.create(binary);
   var sha3_512 = CryptoJS.SHA3(binaryWA, { outputLength: 512 }).toString(
