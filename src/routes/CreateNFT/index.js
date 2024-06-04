@@ -374,7 +374,7 @@ const MintPrivate = () => {
           key,
           duration: 240,
         });
-        const linkURL = "https://minanft.io/@" + name;
+        const linkURL = window.Location.origin + "/@" + name;
         console.log("linkURL", linkURL);
         const openResult = window.open(linkURL, "_blank");
         console.log("openResult", openResult);

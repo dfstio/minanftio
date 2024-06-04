@@ -31,6 +31,9 @@ const searchClient = algoliasearch(
 
 const App = (props) => {
   const [visible, setVisible] = useState(false);
+  console.log(process.env);
+  console.log(window.location);
+  console.log(window.location.href);
 
   function onCloseFunction() {
     setVisible(!visible);
