@@ -119,6 +119,7 @@ const startToken = {
   description: "",
   sellPrice: "",
   image: "",
+  collection: "",
   unlockable: {
     media: "",
     attachments: "",
@@ -205,6 +206,8 @@ const MintPrivate = () => {
     if (values.description !== undefined)
       newToken.description = values.description;
     if (values.sellPrice !== undefined) newToken.sellPrice = values.sellPrice;
+    if (values.collection !== undefined)
+      newToken.collection = values.collection;
     if (values.unlockable_description !== undefined)
       newToken.unlockable_description = values.unlockable_description;
 

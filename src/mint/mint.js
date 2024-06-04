@@ -176,8 +176,6 @@ export async function mintNFT(
     nft.update({ key, value, isPrivate: isPublic === false });
   }
 
-  nft.update({ key: "rarity", value: "70%" });
-
   console.time("calculated sha3_512");
   const sha3_512 = await calculateSHA512(image);
   console.timeEnd("calculated sha3_512");
