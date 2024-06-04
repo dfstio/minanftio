@@ -374,7 +374,7 @@ const MintPrivate = () => {
           key,
           duration: 240,
         });
-        const linkURL = window.Location.origin + "/@" + name;
+        const linkURL = window.location.origin + "/@" + name;
         console.log("linkURL", linkURL);
         const openResult = window.open(linkURL, "_blank");
         console.log("openResult", openResult);
