@@ -204,6 +204,7 @@ const MintPrivate = () => {
     //if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
       newToken.description = values.description;
+    if (values.sellPrice !== undefined) newToken.sellPrice = values.sellPrice;
     if (values.unlockable_description !== undefined)
       newToken.unlockable_description = values.unlockable_description;
 
