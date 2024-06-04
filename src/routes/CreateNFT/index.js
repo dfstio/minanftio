@@ -22,8 +22,9 @@ import { explorerTransaction } from "../../blockchain/explorer";
 import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
-import { mintNFT, waitForMint } from "./mint";
-import { mintRollupNFT } from "./rollup";
+import { mintNFT } from "../../mint/mint";
+import { waitForMint } from "../../mint/send";
+//import { mintRollupNFT } from "./rollup";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
@@ -38,13 +39,16 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
-import { set } from "nprogress";
-import { add } from "winston";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
-const { REACT_APP_PINATA_JWT, REACT_APP_CHAIN_NAME } = process.env;
+const {
+  REACT_APP_PINATA_JWT,
+  REACT_APP_CHAIN_NAME,
+  REACT_APP_CHAIN_ID,
+  REACT_APP_MINANFT_JWT,
+} = process.env;
 const { TextArea } = Input;
 const { Option } = Select;
 const Dragger = Upload.Dragger;
@@ -184,7 +188,7 @@ const MintPrivate = () => {
         const priceObject = nftPrice(name);
         setPrice(
           name === "@"
-            ? "Name (like @mynft)"
+            ? "Name"
             : priceObject.description +
                 ":" +
                 priceObject.price +
@@ -289,7 +293,7 @@ const MintPrivate = () => {
       return;
     }
 
-    const key = "Minting Mina Avatar NFT";
+    const key = "Minting Mina NFT";
 
     try {
       setMinting(true);
@@ -298,7 +302,91 @@ const MintPrivate = () => {
         key,
         duration: 240,
       });
-      const name = token.name[0] === "@" ? token.name : "@" + token.name;
+      const name = token.name[0] === "@" ? token.name.slice(1) : token.name;
+      /*
+      export async function mintNFT(
+        params
+        /*: {
+        name: string;
+        image: File;
+        collection: string;
+        description: string;
+        price: number;
+        keys: ProofOfNFT[];
+        developer: string;
+        repo: string;
+        owner: string;
+        chain: blockchain;
+        contractAddress: string;
+        pinataJWT: string;
+        jwt: string;
+      }*/
+      let mintResult = await mintNFT({
+        name,
+        image: token.main.image,
+        collection: token.collection,
+        description: token.description,
+        price: token.sellPrice,
+        keys: [],
+        developer: "DFST",
+        repo: "minanft_io",
+        owner: address,
+        chain: REACT_APP_CHAIN_ID,
+        pinataJWT: REACT_APP_PINATA_JWT,
+        jwt: REACT_APP_MINANFT_JWT,
+      });
+      console.log("Mint result", mintResult);
+      if (
+        mintResult?.success === true &&
+        mintResult?.jobId !== undefined &&
+        mintResult?.json !== undefined
+      ) {
+        message.loading({
+          content: `Started mint job ${mintResult.jobId}`,
+          key,
+          duration: 240,
+        });
+        const blob = new Blob([mintResult.json], {
+          type: "text/plain;charset=utf-8",
+        });
+        fileSaver.saveAs(blob, name + ".v1.json");
+      } else {
+        message.error({
+          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          key,
+          duration: 20,
+        });
+        setMinting(false);
+        return;
+      }
+      const jobId = mintResult.jobId;
+      mintResult = await waitForMint(jobId, auth);
+      console.log("Final mint result", mintResult);
+      if (mintResult?.success === true && mintResult?.hash !== undefined) {
+        message.success({
+          content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
+          key,
+          duration: 240,
+        });
+        const linkURL = "https://minanft.io/@" + name;
+        console.log("linkURL", linkURL);
+        const openResult = window.open(linkURL, "_blank");
+        console.log("openResult", openResult);
+        setLink(linkURL);
+        setHash(explorerTransaction() + mintResult.hash);
+        setShowLink(true);
+      } else
+        message.error({
+          content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          key,
+          duration: 60,
+        });
+
+      /*
       let mintResult =
         token.chain === "devnet"
           ? await mintNFT(address, auth, token, merkleTree)
@@ -382,6 +470,7 @@ const MintPrivate = () => {
             duration: 60,
           });
       }
+      */
       /*
 
       if (DEBUG) console.log("Mint token: ", ipfs, token);

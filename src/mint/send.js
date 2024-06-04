@@ -51,9 +51,24 @@ export async function sendTransaction(
   });
 
   if (DEBUG) console.log(`zkCloudWorker answer:`, answer);
-  const jobId = answer.jobId;
+  const jobId = answer?.jobId;
   if (DEBUG) console.log(`jobId:`, jobId);
+  return jobId;
+}
+
+export async function waitForMint(jobId) {
+  if (jobId === undefined || jobId === "") {
+    console.error("JobId is undefined");
+    return {
+      success: false,
+      error: "JobId is undefined",
+    };
+  }
   let result;
+  let answer = await zkCloudWorkerRequest({
+    command: "jobResult",
+    jobId,
+  });
   while (result === undefined && answer.jobStatus !== "failed") {
     await sleep(5000);
     answer = await zkCloudWorkerRequest({
@@ -65,10 +80,10 @@ export async function sendTransaction(
     if (result !== undefined) console.log(`jobResult result:`, result);
   }
   if (answer.jobStatus === "failed") {
-    return { isSent: false, hash: result };
+    return { success: false, error: result };
   } else if (result === undefined) {
-    return { isSent: false, hash: "job error" };
-  } else return { isSent: true, hash: result };
+    return { success: false, error: "job error" };
+  } else return { success: true, hash: result };
 }
 
 async function zkCloudWorkerRequest(params) {
