@@ -4,6 +4,8 @@ import { isMobile } from "react-device-detect";
 import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "mina" });
 
+const { REACT_APP_CHAIN_ID, REACT_APP_CHAIN_NAME } = process.env;
+
 export async function initAccount(
   handleEvents,
   handleChainChanged,
@@ -29,7 +31,7 @@ export async function getAddress(force = false) {
     }
   } catch (error) {
     // if user reject, requestAccounts will throw an error with code and message filed
-    console.log("getAddress", error.message, error.code);
+    console.error("getAddress", error.message, error.code);
   }
   console.log("getAddress address", address);
   return address;
@@ -106,27 +108,25 @@ export async function minaLogin(openlink = true) {
     if (window.mina !== undefined) {
       //await initVirtuoso();
       let network = await window.mina
-        .requestNetwork()
+        ?.requestNetwork()
         .catch((err) => console.log(err));
       console.log("mina login network", network);
-      /*
-      if (network?.chainId !== chainId()) {
+      if (network?.chainId !== REACT_APP_CHAIN_ID) {
         const switchNetwork = await window.mina
-          .switchChain({ chainId: chainId() })
+          .switchChain({ chainId: REACT_APP_CHAIN_ID })
           .catch((err) => console.log(err));
         console.log("mina login switch network", switchNetwork);
         let network = await window.mina
           .requestNetwork()
           .catch((err) => console.log(err));
       }
-      */
       console.log("mina login network", network);
 
       const account = await window.mina.requestAccounts();
       log.debug("account", { account, network });
       console.log("mina login account", account, network);
 
-      if (account.length > 0 /* && network?.chainId === chainId()*/)
+      if (account.length > 0 && network?.chainId === REACT_APP_CHAIN_ID)
         address = account[0];
     } else {
       if (openlink) {

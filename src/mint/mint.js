@@ -260,7 +260,7 @@ export async function mintNFT(
   const mintParams = {
     name: MinaNFT.stringToField(nft.name),
     address,
-    price: UInt64.from(price * 1e9),
+    price: UInt64.from(parseInt(price * 1e9)),
     fee: UInt64.from(reserved.price.price * 1_000_000_000),
     feeMaster: wallet,
     verificationKey,

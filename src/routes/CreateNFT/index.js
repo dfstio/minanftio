@@ -326,7 +326,10 @@ const MintPrivate = () => {
         image: token.main.image,
         collection: token.collection,
         description: token.description,
-        price: token.sellPrice,
+        price:
+          token.sellPrice && token.sellPrice !== ""
+            ? parseFloat(token.sellPrice)
+            : 0,
         keys: [],
         developer: "DFST",
         repo: "minanft_io",
