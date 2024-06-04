@@ -295,6 +295,9 @@ const MintPrivate = () => {
     }
 
     const key = "Minting Mina NFT";
+    message.config({
+      top: 100,
+    });
 
     try {
       setMinting(true);
