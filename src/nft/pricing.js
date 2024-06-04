@@ -19,18 +19,18 @@ export function nftPrice(name) {
 const prices = [
   {
     price: 999,
-    description: "Exclusive NFT name",
+    description: "Exclusive NFT name, mint price",
   },
   {
     price: 99,
-    description: "Super Short NFT Name",
+    description: "Super Short NFT Name, mint price",
   },
   {
     price: 19,
-    description: "Short NFT name",
+    description: "Short NFT name, mint price",
   },
   {
     price: 10,
-    description: "Standard NFT name",
+    description: "Standard NFT name, mint price",
   },
 ];

@@ -1,4 +1,4 @@
-const REACT_APP_PINATA_GATEWAY_KEY = process.env.REACT_APP_PINATA_GATEWAY_KEY;
+const { REACT_APP_PINATA_GATEWAY_KEY, REACT_APP_PINATA_URL } = process.env;
 
 export function storageUrl(storage, big = false, nocache = false) {
   const cacheUrl = "https://res.cloudinary.com/minanft/image/fetch/";
@@ -36,10 +36,7 @@ export function storageUrlFromURL(url) {
   if (url.includes("https://gateway.pinata.cloud/ipfs/")) {
     return (
       cacheSmallUrl +
-      url.replace(
-        "https://gateway.pinata.cloud/ipfs/",
-        "https://salmon-effective-amphibian-898.mypinata.cloud/ipfs/"
-      ) +
+      url.replace("https://gateway.pinata.cloud/ipfs/", REACT_APP_PINATA_URL) +
       `?pinataGatewayToken=${REACT_APP_PINATA_GATEWAY_KEY}`
     );
   } else return cacheSmallUrl + url;

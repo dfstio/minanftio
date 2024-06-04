@@ -16,7 +16,7 @@ import {
 } from "../../../appRedux/actions";
 import IntlMessages from "../../../util/IntlMessages";
 import { TAB_SIZE } from "../../../constants/ThemeSetting";
-import MetaMaskAccount from "../../../blockchain/account";
+import AuroWallet from "../../../blockchain/account";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
 
 const { Header } = Layout;
@@ -68,6 +68,7 @@ const HorizontalDefault = () => {
       <div className="gx-header-horizontal-top">
         <div className="gx-container">
           <div className="gx-header-horizontal-top-flex">
+            {/*
             {isDesktop ? (
               <div className="gx-header-horizontal-top-left">
                 <i className="icon icon-alert gx-mr-3" />
@@ -79,11 +80,60 @@ const HorizontalDefault = () => {
             ) : (
               ""
             )}
-            <MetaMaskAccount />
+          */}
+            <Link
+              to="/"
+              className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
+            >
+              <img alt="" src="/assets/images/minanft.png" />
+            </Link>
+            <div
+              style={{
+                fontSize: "22px",
+                paddingLeft: "10px",
+                paddingRight: "50px",
+              }}
+            >
+              Mina NFT
+            </div>
+            <div
+              className="gx-header-horizontal-main-flex"
+              style={{ paddingRight: "20px", fontSize: "20px" }}
+            >
+              <Link
+                to="/explore"
+                className="gx-menu-list"
+                style={{ paddingRight: "20px" }}
+              >
+                <IntlMessages id="sidebar.avatars" />
+              </Link>
+              <Link
+                to="/create"
+                className="gx-menu-list"
+                style={{ paddingRight: "20px" }}
+              >
+                <IntlMessages id="sidebar.create" />
+              </Link>
+            </div>
+            <AuroWallet />
+            <Popover
+              overlayClassName="gx-popover-horizantal"
+              placement="bottomRight"
+              content={languageMenu()}
+              trigger="click"
+            >
+              <span
+                className="gx-pointer gx-flex-row gx-align-items-center"
+                style={{ paddingLeft: "10px" }}
+              >
+                <i className={`flag flag-24 flag-${locale.icon}`} />
+              </span>
+            </Popover>
           </div>
         </div>
       </div>
 
+      {/*
       <Header className="gx-header-horizontal-main">
         <div className="gx-container">
           <div className="gx-header-horizontal-main-flex">
@@ -126,12 +176,13 @@ const HorizontalDefault = () => {
               </Select>
 
             </div>
-*/}
+
+
             <ul
               className="gx-header-notifications gx-ml-auto"
               style={{ paddingRight: "10px" }}
             >
-              {/*}
+
               <li className="gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none">
                 <Popover overlayClassName="gx-popover-horizantal" placement="bottomRight" content={
                   <div className="gx-d-flex">
@@ -166,7 +217,7 @@ const HorizontalDefault = () => {
                 </span>
                 </Popover>
               </li>
-*/}
+
               <li className="gx-user-nav">
                 <UserInfo />
               </li>
@@ -192,17 +243,12 @@ const HorizontalDefault = () => {
           <div className="gx-container">
             <div className="gx-header-horizontal-nav-flex-align-content-around">
               <HorizontalNav />
-              {/*}
-              <ul className="gx-header-notifications gx-ml-auto">
-                <li><span className="gx-pointer gx-d-block"><i className="icon icon-menu-lines"/></span></li>
-                <li><span className="gx-pointer gx-d-block"><i className="icon icon-setting"/></span></li>
-                <li><span className="gx-pointer gx-d-block"><i className="icon icon-apps-new"/></span></li>
-              </ul>
-*/}
+
             </div>
           </div>
         </div>
       )}
+    */}
     </div>
   );
 };

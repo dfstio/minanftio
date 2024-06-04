@@ -10,7 +10,7 @@ import UserInfo from "../../components/UserInfo";
 import AppNotification from "../../components/AppNotification";
 import MailNotification from "../../components/MailNotification";
 import Auxiliary from "util/Auxiliary";
-import MetaMaskAccount from "../../blockchain/account";
+import AuroWallet from "../../blockchain/account";
 
 import {
   NAV_STYLE_DRAWER,

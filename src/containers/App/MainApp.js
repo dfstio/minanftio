@@ -21,6 +21,8 @@ import {
   footerDocsLink,
   footerGitHub,
   footerGitHubLink,
+  footerTestnet,
+  footerTestnetLink,
 } from "../../util/config";
 import App from "../../routes/index";
 
@@ -111,31 +113,62 @@ const MainApp = () => {
             <div className="gx-layout-footer-content">
               <ul className="gx-login-list">
                 <li>
-                  <a href={footerTextLink} target="_blank">
+                  <a
+                    href={footerTextLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
                     {footerText}
                   </a>
                 </li>
                 <li>
-                  <a href={footerAgreementLink} target="_blank">
+                  <a
+                    href={footerAgreementLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
                     {footerAgreement}
                   </a>
                 </li>
                 <li>
-                  <a href={footerEmail}>{footerContact}</a>
+                  <a href={footerEmail} style={{ fontSize: "14px" }}>
+                    {footerContact}
+                  </a>
                 </li>
                 <li>
-                  <a href={footerDocsLink} target="_blank">
+                  <a
+                    href={footerDocsLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
                     {footerDocs}
                   </a>
                 </li>
                 <li>
-                  <a href={footerTwitterLink} target="_blank">
+                  <a
+                    href={footerTwitterLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
                     {footerTwitter}
                   </a>
                 </li>
                 <li>
-                  <a href={footerGitHubLink} target="_blank">
+                  <a
+                    href={footerGitHubLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
                     {footerGitHub}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={footerTestnetLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
+                    {footerTestnet}
                   </a>
                 </li>
               </ul>

@@ -2,29 +2,25 @@ import React, { useState, useEffect } from "react";
 import TokenItem from "./Token";
 import { getRollupNFT } from "../../nft/rollup";
 import algoliasearch from "algoliasearch";
-const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
+const {
+  REACT_APP_ALGOLIA_KEY,
+  REACT_APP_ALGOLIA_PROJECT,
+  REACT_APP_ALGOLIA_INDEX,
+  REACT_APP_CONTRACT_ADDRESS,
+  REACT_APP_CHAIN_ID,
+} = process.env;
 const searchClient = algoliasearch(
   REACT_APP_ALGOLIA_PROJECT,
   REACT_APP_ALGOLIA_KEY
 );
-const searchIndex = searchClient.initIndex("minanft");
+const searchIndex = searchClient.initIndex(REACT_APP_ALGOLIA_INDEX);
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const Token = ({ match }) => {
   const [item, setItem] = useState();
   const [messageText, setMessageText] = useState("Loading token");
 
-  if (DEBUG)
-    console.log(
-      "Token match",
-      match.params.chainId,
-      match.params.contract,
-      match.params.tokenId,
-      match.params.postId,
-      match.params.rollupId,
-      "match",
-      match
-    );
+  if (DEBUG) console.log("Token match", match);
   if (DEBUG) console.log("Token item", item);
 
   useEffect(() => {
@@ -40,12 +36,11 @@ const Token = ({ match }) => {
         }
       } else {
         let objectID =
-          match.params.postId === undefined
-            ? match.params.tokenId.toString()
-            : match.params.tokenId.toString() +
-              "." +
-              match.params.postId.toString();
-        if (objectID[0] !== "@") objectID = "@" + objectID;
+          REACT_APP_CHAIN_ID +
+          "." +
+          REACT_APP_CONTRACT_ADDRESS +
+          "." +
+          match.params.tokenId.toString();
         if (DEBUG) console.log("Token objectID", objectID);
         try {
           let newItem = await searchIndex.getObject(objectID);

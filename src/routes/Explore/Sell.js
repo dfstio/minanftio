@@ -13,17 +13,17 @@ const logm = logger.info.child({
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const BuyButton = ({ item }) => {
+const SellButton = ({ item }) => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
-  const log = logm.child({ wf: "BuyButton", item, address });
+  const log = logm.child({ wf: "SellButton", item, address });
 
   return (
     <Button type="primary">
-      <IntlMessages id="sidebar.algolia.buy" />
+      <IntlMessages id="sidebar.algolia.sell" />
     </Button>
   );
 };
 
-export default BuyButton;
+export default SellButton;

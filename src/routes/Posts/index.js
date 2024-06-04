@@ -19,7 +19,11 @@ import algoliasearch from "algoliasearch";
 
 const { Content } = Layout;
 
-const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
+const {
+  REACT_APP_ALGOLIA_KEY,
+  REACT_APP_ALGOLIA_PROJECT,
+  REACT_APP_ALGOLIA_INDEX,
+} = process.env;
 const searchClient = algoliasearch(
   REACT_APP_ALGOLIA_PROJECT,
   REACT_APP_ALGOLIA_KEY
@@ -36,7 +40,7 @@ const App = (props) => {
   return (
     <InstantSearch
       className="gx-main-content"
-      indexName="minanft"
+      indexName={REACT_APP_ALGOLIA_INDEX}
       searchState={props.searchState}
       createURL={props.createURL}
       searchClient={searchClient}
@@ -49,7 +53,7 @@ const App = (props) => {
           <Drawer
             placement="left"
             closable={false}
-            visible={visible}
+            open={visible}
             onClose={onCloseFunction}
           >
             <Sidebar />

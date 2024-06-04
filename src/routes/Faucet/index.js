@@ -58,6 +58,7 @@ const Faucet = () => {
 
     setCounter(counter + 1);
     checkCanCreate();
+    console.log("Faucet", process.env);
   };
 
   async function proveButton() {

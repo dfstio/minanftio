@@ -106,12 +106,12 @@ const Sidebar = () => {
 
           <Panel
             header=<span>
-              <IntlMessages id="sidebar.algolia.category" />
+              <IntlMessages id="sidebar.algolia.collection" />
             </span>
           >
             <RefinementList
               className="gx-algolia-refinementList"
-              attribute="category"
+              attribute="collection"
               operator="or"
               limit={5}
               searchable

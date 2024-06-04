@@ -1,6 +1,7 @@
 const {
   REACT_APP_ALGOLIA_KEY,
   REACT_APP_ALGOLIA_PROJECT,
+  REACT_APP_ALGOLIA_INDEX,
   URL,
   STRIPE_KEY,
   STRIPE_ENDPOINT_SECRET,
@@ -30,7 +31,7 @@ async function getToken(tokenId) {
     REACT_APP_ALGOLIA_PROJECT,
     REACT_APP_ALGOLIA_KEY
   );
-  const index = client.initIndex("minanft");
+  const index = client.initIndex(REACT_APP_ALGOLIA_INDEX);
   const filterStr = ``;
   let token = await index.getObject(tokenId);
   console.log("getToken result", tokenId, token);

@@ -1,5 +1,5 @@
 {
-  "app.announced": "Crea un nuovo Avatar NFT di Mina con l'aiuto del bot telegram @MinaNFT_bot",
+  "app.announced": "MinaNFT is now live on the mainnet! Mint your NFT now!",
   "app.announced2": "Buone Feste! Augurando gioia e innovazione alla nostra comunità Mina in questa stagione festiva",
   "sidebar.main": "Principale",
   "sidebar.avatars": "Esplora",
@@ -300,6 +300,7 @@
   "sidebar.algolia.creator": "Creatore",
   "sidebar.algolia.onsale": "In vendita",
   "sidebar.algolia.category": "Categoria",
+  "sidebar.algolia.collection": "Collection",
   "sidebar.algolia.price": "Prezzo",
   "sidebar.algolia.currency": "Valuta",
   "sidebar.algolia.buy": "Compra",

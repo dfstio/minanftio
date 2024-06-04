@@ -9,7 +9,7 @@ import {
   CaretDownFilled,
 } from "@ant-design/icons";
 import IntlMessages from "util/IntlMessages";
-//import SellButton from "../Explore/Sell";
+import SellButton from "../Explore/Sell";
 import BuyButton from "../Explore/Buy";
 import ReactPlayer from "react-player";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
@@ -174,21 +174,21 @@ const TokenMedia = ({
               className="gx-product-image"
               key={"DocumentPDF" + media.SHA3_512}
               onLoadSuccess={onDocumentLoadSuccess}
-              crossorigin="anonymous"
+              crossOrigin="anonymous"
             >
               <Page
                 pageNumber={pageNumber}
                 key={"PagePDF" + media.SHA3_512}
                 className="gx-product-name"
                 width={800}
-                crossorigin="anonymous"
+                crossOrigin="anonymous"
               />
             </Document>
           </div>
         ) : (
           <div>
             {type === "image" ? (
-              <img src={url} alt={media.filename} crossorigin="anonymous" />
+              <img src={url} alt={media.filename} crossOrigin="anonymous" />
             ) : (
               ""
             )}
@@ -200,10 +200,10 @@ const TokenMedia = ({
                 width="100%"
                 height={type === "audio" ? "50px" : "100%"}
                 key={"VideoPlayer" + media.id}
-                crossorigin="anonymous"
+                crossOrigin="anonymous"
                 config={{
                   file: {
-                    attributes: { crossorigin: "anonymous" },
+                    attributes: { crossOrigin: "anonymous" },
                     //forceVideo: true,
                   },
                 }}
@@ -399,7 +399,7 @@ const TokenAudio = ({ media, onLoadAudio, image }) => {
           showMiniProcessBar={true}
           onAudioPlay={onAudioPlay}
           onAudioPause={onAudioPause}
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         />
       ) : (
         ""
@@ -622,6 +622,12 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     "https://" + REACT_APP_VIRTUOSO_URL
   );
   const [checkout, setCheckout] = useState("");
+  const [onSale, setOnSale] = useState(
+    item.price && item.price > 0 ? true : false
+  );
+  const [canSell, setCanSell] = useState(
+    address?.toUpperCase() === item?.owner?.toUpperCase()
+  );
 
   function showQRCodeFunction() {
     setShowQRCode(true);
@@ -877,13 +883,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     }
     loadMedia();
   }, [item, address, signature]);
-
-  let buttonId = "sidebar.algolia.buy";
-  let canSell = false;
-  if (address.toUpperCase() === item.owner.toUpperCase()) {
-    buttonId = "sidebar.algolia.sell";
-    canSell = true;
-  }
 
   async function register() {
     if (DEBUG) console.log("Register clicked", address);
@@ -1251,7 +1250,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       src={image}
                       alt={name}
                       onClick={showQRCodeFunction}
-                      crossorigin="anonymous"
+                      crossOrigin="anonymous"
                     />
                   )}
                 </div>
@@ -1269,11 +1268,11 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </span>
                     {canSell ? (
                       <span style={{ float: "right" }}>
-                        {/*<SellButton item={item} address={address} />*/}
+                        <SellButton item={item} address={address} />
                       </span>
                     ) : (
                       <span>
-                        {item.onSale ? (
+                        {onSale ? (
                           <span
                             style={{
                               float: "right",
@@ -1289,9 +1288,9 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   </div>
                   <div className="gx-mb-3">
                     Address:{" "}
-                    <a href={item.minaExplorer} target="_blank">
+                    <a href={item.external_url} target="_blank">
                       {" "}
-                      {item.minaPublicKey}{" "}
+                      {item.address}{" "}
                     </a>
                   </div>
 
@@ -1327,7 +1326,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
 
                   {small === false &&
                   preview === false &&
-                  item.uri.contains_unlockable_content === true &&
+                  item.uri?.contains_unlockable_content === true &&
                   unlockable.loaded === true ? (
                     <div className="gx-mt-4">
                       <div

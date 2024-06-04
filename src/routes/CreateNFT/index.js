@@ -11,6 +11,7 @@ import {
   Upload,
   Select,
   Checkbox,
+  InputNumber,
 } from "antd";
 import {
   LoadingOutlined,
@@ -43,23 +44,25 @@ const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
-
+const { REACT_APP_PINATA_JWT, REACT_APP_CHAIN_NAME } = process.env;
 const { TextArea } = Input;
 const { Option } = Select;
 const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
+/*
 const startToken = {
   tokenId: "@mynft",
   updated: 1633284972170,
   creator: "",
   name: "",
   description: "",
-  chain: "zeko",
+  chain: REACT_APP_CHAIN_NAME,
   url: "",
   shortdescription: "",
   saleID: "0",
+  sellPrice: "",
   onSale: false,
   saleStatus: "not on sale",
   price: 0,
@@ -105,9 +108,28 @@ const startToken = {
   },
   folder: "",
 };
+*/
+
+const startToken = {
+  name: "",
+  description: "",
+  sellPrice: "",
+  image: "",
+  unlockable: {
+    media: "",
+    attachments: "",
+  },
+  main: {
+    image: "",
+    video: "",
+    media: "",
+    attachments: "",
+  },
+  folder: "",
+};
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
-const { REACT_APP_PINATA_JWT } = process.env;
+
 //const mintPrivateText = '$10 to create one Private NFT token. Private NFT token will not be visible on Mina NFT marketplace except for sale';
 const mintText = "Free to create Mina NFT token for Christmas and New Year";
 //"$9 to create one Mina Avatar NFT token";
@@ -123,7 +145,8 @@ const MintPrivate = () => {
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
   const [hash, setHash] = useState("");
-  const [price, setPrice] = useState("Name (like @mynft)");
+  const [price, setPrice] = useState("Name");
+  const [collection, setCollection] = useState("Collection");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
@@ -522,7 +545,77 @@ const MintPrivate = () => {
           onValuesChange={onValuesChange}
         >
           <Row>
-            <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+            <Col xxl={16} xl={16} lg={16} md={16} sm={24} xs={24}>
+              <Form.Item
+                label={price}
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please name your NFT",
+                  },
+                ]}
+                placeholder="Please name your NFT"
+              >
+                <Input maxLength={30} showCount={true} />
+              </Form.Item>
+              <Form.Item
+                label={collection}
+                name="collection"
+                rules={[
+                  {
+                    required: false,
+                    message: "Please choose collection name for your NFT",
+                  },
+                ]}
+                placeholder="Please choose collection name your NFT"
+              >
+                <Input maxLength={30} showCount={true} />
+              </Form.Item>
+
+              <Form.Item
+                label={
+                  <span>
+                    <span>
+                      <IntlMessages id={"create.description"} />
+                    </span>
+                    <span>
+                      {" "}
+                      <a
+                        href="https://www.markdownguide.org/cheat-sheet/"
+                        target="_blank"
+                      >
+                        markdown
+                      </a>
+                    </span>
+                  </span>
+                }
+                name="description"
+                rules={[
+                  {
+                    required: false,
+                    message: "Please describe your NFT",
+                  },
+                ]}
+                placeholder="Please describe your NFT"
+              >
+                <TextArea
+                  autoSize={{
+                    minRows: 1,
+                    maxRows: 10,
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Description preview"
+                name="descriptionpreview"
+                hidden={token.description === ""}
+              >
+                <Markdown>{token.description}</Markdown>
+              </Form.Item>
+            </Col>
+
+            <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
               <Row>
                 <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
                   <Form.Item
@@ -577,80 +670,35 @@ const MintPrivate = () => {
                   </Form.Item>
                 </Col>
               </Row>
-
               <Form.Item
-                label={price}
-                name="name"
+                label=""
+                name="sellPrice"
                 rules={[
                   {
-                    required: true,
-                    message: "Please name your NFT",
+                    required: false,
+                    message: "Please choose sell price for your NFT",
                   },
                 ]}
-                placeholder="Please name your NFT like @mynft"
+                placeholder="Please choose sell price for your NFT"
               >
-                <Input maxLength={30} showCount={true} />
+                <InputNumber addonBefore="Sell price" addonAfter="MINA" />
               </Form.Item>
-            </Col>
-
-            <Col xxl={10} xl={8} lg={10} md={10} sm={12} xs={16}>
               <Form.Item
                 label="Chain"
                 name="chain"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Please choose chain",
                   },
                 ]}
               >
                 <RadioGroup>
-                  <RadioButton value="zeko">Zeko</RadioButton>
-                  <RadioButton value="devnet">Devnet</RadioButton>
+                  <RadioButton value={REACT_APP_CHAIN_NAME}>
+                    {REACT_APP_CHAIN_NAME}
+                  </RadioButton>
                 </RadioGroup>
               </Form.Item>
-              <Form.Item
-                label={
-                  <span>
-                    <span>
-                      <IntlMessages id={"create.description"} />
-                    </span>
-                    <span>
-                      {" "}
-                      <a
-                        href="https://www.markdownguide.org/cheat-sheet/"
-                        target="_blank"
-                      >
-                        markdown
-                      </a>
-                    </span>
-                  </span>
-                }
-                name="description"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please describe your NFT",
-                  },
-                ]}
-                placeholder="Please describe your NFT"
-              >
-                <TextArea
-                  autoSize={{
-                    minRows: 1,
-                    maxRows: 10,
-                  }}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Description preview"
-                name="descriptionpreview"
-                hidden={token.description === ""}
-              >
-                <Markdown>{token.description}</Markdown>
-              </Form.Item>
-            </Col>
-            <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
               <Form.Item name="advanced" valuePropName="advanced">
                 <Checkbox onChange={onChangeAdvanced}>
                   Advanced options
@@ -898,7 +946,7 @@ const MintPrivate = () => {
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     name="uattachments"
-                    label="Private Attachments - will NOT be uploaded to IPFS, but will be verifiable on-chain (if needed in sanitised form) in case checkbox below is checked"
+                    label="Private Attachments - will NOT be uploaded to IPFS"
                   >
                     <Upload
                       name="uattachments"
@@ -917,13 +965,16 @@ const MintPrivate = () => {
                       </div>
                     </Upload>
                   </Form.Item>
+                  {/*
                   <Form.Item name="calculateroot" valuePropName="checked">
                     <Checkbox onChange={onChangeMerkleTree}>
                       Calculate Merkle Tree root of the private attachments
                       (takes time)
                     </Checkbox>
                   </Form.Item>
+                  */}
                 </Col>
+                {/*
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     label="NFT Storage"
@@ -941,13 +992,14 @@ const MintPrivate = () => {
                     </RadioGroup>
                   </Form.Item>
                 </Col>
+                  */}
               </Row>
               {/*
               <Form.Item label="Price" name="price">
                 {mintPrice}
               </Form.Item>
                   */}
-
+              {/*
               <Form.Item
                 label={
                   <span>
@@ -968,12 +1020,13 @@ const MintPrivate = () => {
               >
                 <TextArea autoSize={{ minRows: 2, maxRows: 3 }} />
               </Form.Item>
+              */}
             </div>
           ) : (
             <div></div>
           )}
           <Row>
-            <Form.Item>
+            <Form.Item style={{ paddingLeft: "10px" }}>
               <Button
                 type="primary"
                 onClick={mint}
@@ -985,7 +1038,10 @@ const MintPrivate = () => {
             </Form.Item>
           </Row>
           <Row>
-            <Form.Item hidden={showLink === true}>
+            <Form.Item
+              hidden={showLink === true}
+              style={{ paddingLeft: "15px" }}
+            >
               <div
                 className="gx-mt-0"
                 style={{

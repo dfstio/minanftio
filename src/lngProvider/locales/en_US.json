@@ -1,7 +1,8 @@
 {
   "app.announced1": "Create a new Mina Avatar NFT with the help of the telegram bot @MinaNFT_bot",
   "app.announced2": "Happy Holidays! Wishing joy and innovation to our Mina community this festive season!",
-  "app.announced": "Zeko Rollup NFTs are live, mint your NFT now by choosing a Zeko chain!",
+  "app.announced": "MinaNFT is now live on the mainnet! Mint your NFT now!",
+  "app.announced4": "Zeko Rollup NFTs are live, mint your NFT now by choosing a Zeko chain!",
   "app.announced3": "Devnet testnet was upgraded, please mint new NFTs on the new testnet",
   "sidebar.main": "Main",
   "sidebar.avatars": "Explore",
@@ -302,6 +303,7 @@
   "sidebar.algolia.chain": "Chain",
   "sidebar.algolia.onsale": "OnSale",
   "sidebar.algolia.category": "Category",
+  "sidebar.algolia.collection": "Collection",
   "sidebar.algolia.price": "Price",
   "sidebar.algolia.currency": "Currency",
   "sidebar.algolia.buy": "Buy",

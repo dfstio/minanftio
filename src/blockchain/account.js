@@ -26,7 +26,7 @@ const {
 } = process.env;
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const MinaAccount = () => {
+const AuroWallet = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const username = useSelector(({ blockchain }) => blockchain.username);
   const dispatch = useDispatch();
@@ -54,6 +54,7 @@ const MinaAccount = () => {
   let result = (
     <ul className="gx-login-list">
       <li
+        style={{ fontSize: "16px" }}
         onClick={async () => {
           if (DEBUG) console.log("Connect to Auro clicked");
           const newAddress = await minaLogin();
@@ -72,6 +73,7 @@ const MinaAccount = () => {
     result = (
       <ul className="gx-login-list">
         <li
+          style={{ fontSize: "16px" }}
           onClick={async () => {
             window.open(blockExplorer);
           }}
@@ -85,4 +87,4 @@ const MinaAccount = () => {
   return result;
 };
 
-export default MinaAccount;
+export default AuroWallet;

@@ -10,20 +10,51 @@ import {
   RatingMenu,
   RefinementList,
   Configure,
+  connectStateResults,
+  Stats,
 } from "react-instantsearch-dom";
+
 import IntlMessages from "../../util/IntlMessages";
-import { hash } from "../../blockchain/hash";
+import Header from "./Header";
+//import { hash } from "../../blockchain/hash";
 
 const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
 const chainId = Number(REACT_APP_CHAIN_ID);
+const defaultFilter = `status:pending OR status:minted`;
 
 const { Sider } = Layout;
-const Sidebar = () => {
+
+const CustomStats = connectStateResults(({ searchState, searchResult }) => {
+  if (searchResult && searchResult.nbHits === 0) {
+    return (
+      <div className="gx-algolia-content-inner">
+        <div
+          className="gx-algolia-no-results"
+          style={{ paddingBottom: "25px" }}
+        >
+          No results found matching{" "}
+          <span className="gx-algolia-query">{searchState.query}</span>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className="gx-algolia-content-inner"
+        style={{ paddingBottom: "25px" }}
+      >
+        <Stats />
+      </div>
+    );
+  }
+});
+
+const Sidebar = (onCloseFunction, searchState, searchResult) => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   //const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
   //const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState(`type:nft`);
+  const [filter, setFilter] = useState(defaultFilter); //`type:nft`
 
   //const [filter, setFilter] = useState(`(uri.visibility:public OR onSale:true) AND chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS}`);
   const [disabled, setDisabled] = useState(true);
@@ -33,19 +64,16 @@ const Sidebar = () => {
     if (address !== "") {
       setDisabled(false);
       if (e.target.checked === true) {
-        const hashResult = await hash(address);
-        if (hashResult.isCalculated === true) {
-          const filterStr = `(owner:${hashResult.hash} OR address:${address}) AND type:nft`;
-          setFilter(filterStr);
-          console.log("On change", e.target.checked, filterStr);
-        } else console.error("hashResult", hashResult);
+        const filterStr = `owner:${address}`;
+        setFilter(filterStr);
+        console.log("On change", e.target.checked, filterStr);
       } else {
-        const filterStr = `type:nft`;
+        const filterStr = ``;
         setFilter(filterStr);
       }
     } else {
       setDisabled(true);
-      setFilter(`type:nft`);
+      setFilter(defaultFilter);
     }
   }
 
@@ -53,10 +81,10 @@ const Sidebar = () => {
     async function loadHash() {
       if (address === "") {
         setDisabled(true);
-        setFilter(`type:nft`);
+        setFilter(defaultFilter);
       } else {
         setDisabled(false);
-        const filterStr = `type:nft`;
+        const filterStr = ``;
         setFilter(filterStr);
       }
     }
@@ -76,6 +104,8 @@ const Sidebar = () => {
   return (
     <Sider className="gx-algolia-sidebar">
       <div className="gx-algolia-sidebar-content">
+        <Header onCloseFunction={onCloseFunction} />
+        <CustomStats />
         <ClearRefinements
           translations={{
             reset: "Clear all filters",
@@ -112,7 +142,7 @@ const Sidebar = () => {
           >
             <RefinementList
               className="gx-algolia-refinementList"
-              attribute="chainId"
+              attribute="chain"
               operator="or"
               limit={3}
             />
@@ -120,44 +150,16 @@ const Sidebar = () => {
 
           <Panel
             header=<span>
-              <IntlMessages id="sidebar.algolia.onsale" />
+              <IntlMessages id="sidebar.algolia.collection" />
             </span>
           >
             <RefinementList
               className="gx-algolia-refinementList"
-              attribute="saleStatus"
+              attribute="collection"
               operator="or"
-              limit={5}
-            />
-          </Panel>
-
-          <Panel
-            header=<span>
-              <IntlMessages id="sidebar.algolia.category" />
-            </span>
-          >
-            <RefinementList
-              className="gx-algolia-refinementList"
-              attribute="category"
-              operator="or"
-              limit={5}
+              limit={15}
               searchable
               searchableIsAlwaysActive={false}
-            />
-          </Panel>
-
-          <Panel
-            header=<span>
-              <IntlMessages id="sidebar.algolia.creator" />
-            </span>
-          >
-            <RefinementList
-              className="gx-algolia-refinementList"
-              attribute="creator"
-              operator="or"
-              limit={10}
-              searchable
-              showMore
             />
           </Panel>
 
@@ -166,29 +168,6 @@ const Sidebar = () => {
           <RatingMenu className="gx-algolia-refinementList" attribute="owner" max={5}/>
         </Panel>
 */}
-          <Panel
-            header=<span>
-              <IntlMessages id="sidebar.algolia.price" />
-            </span>
-          >
-            <RangeInput
-              className="gx-algolia-refinementList"
-              attribute="price"
-            />
-          </Panel>
-
-          <Panel
-            header=<span>
-              <IntlMessages id="sidebar.algolia.currency" />
-            </span>
-          >
-            <RefinementList
-              className="gx-algolia-refinementList"
-              attribute="currency"
-              operator="or"
-              limit={5}
-            />
-          </Panel>
         </div>
       </div>
     </Sider>

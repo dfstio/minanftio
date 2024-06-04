@@ -21,7 +21,11 @@ import {
 
 import logger from "../../serverless/logger";
 import { set } from "nprogress";
-const { REACT_APP_ALGOLIA_KEY, REACT_APP_ALGOLIA_PROJECT } = process.env;
+const {
+  REACT_APP_ALGOLIA_KEY,
+  REACT_APP_ALGOLIA_PROJECT,
+  REACT_APP_ALGOLIA_INDEX,
+} = process.env;
 const searchClient = algoliasearch(
   REACT_APP_ALGOLIA_PROJECT,
   REACT_APP_ALGOLIA_KEY

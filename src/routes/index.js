@@ -15,7 +15,7 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./Posts"))}
       />
       <Route
-        path={`${match.url}create/nft`}
+        path={`${match.url}create`}
         component={asyncComponent(() => import("./CreateNFT"))}
       />
       <Route

@@ -1,5 +1,5 @@
 {
-  "app.announced": "Telegram botu @MinaNFT_bot ile yeni Mina Avatar NFT oluşturun",
+  "app.announced": "MinaNFT is now live on the mainnet! Mint your NFT now!",
   "app.announced2": "Mutlu Bayramlar! Mina topluluğumuza bu bayram sezonunda neşe ve yenilikler dileriz!",
   "sidebar.main": "Ana",
   "sidebar.avatars": "Keşfet",
@@ -300,6 +300,7 @@
   "sidebar.algolia.creator": "Yaratıcı",
   "sidebar.algolia.onsale": "Satışta",
   "sidebar.algolia.category": "Kategori",
+  "sidebar.algolia.collection": "Collection",
   "sidebar.algolia.price": "Fiyat",
   "sidebar.algolia.currency": "Para Birimi",
   "sidebar.algolia.buy": "Satın Al",
