@@ -12,7 +12,6 @@ import {
   Upload,
   Select,
   Table,
-  Divider,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import IntlMessages from "util/IntlMessages";
@@ -226,7 +225,6 @@ const ProveAttributes = () => {
                 <div>
                   <Row>
                     <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Divider />
                       <Form.Item
                         name="json"
                         label="Upload the JSON file with NFT data here that you've got when you have minted an NFT"
@@ -342,7 +340,6 @@ const ProveAttributes = () => {
                         Create Proof
                       </Button>
                     </Form.Item>
-                    <Divider />
                     <Form.Item
                       label=""
                       name="prooflink"

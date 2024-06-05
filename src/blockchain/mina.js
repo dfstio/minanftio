@@ -106,7 +106,6 @@ export async function minaLogin(openlink = true) {
 
   try {
     if (window.mina !== undefined) {
-      //await initVirtuoso();
       let network = await window.mina
         ?.requestNetwork()
         .catch((err) => console.log(err));
@@ -116,7 +115,7 @@ export async function minaLogin(openlink = true) {
           .switchChain({ chainId: REACT_APP_CHAIN_ID })
           .catch((err) => console.log(err));
         console.log("mina login switch network", switchNetwork);
-        let network = await window.mina
+        network = await window.mina
           .requestNetwork()
           .catch((err) => console.log(err));
       }
