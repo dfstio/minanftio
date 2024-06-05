@@ -85,11 +85,15 @@ const HorizontalDefault = () => {
               to="/"
               className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
             >
-              <img alt="" src="/assets/images/minanft.png" />
+              <img
+                alt=""
+                src="/assets/images/minanft-big-logo.png"
+                style={{ height: "32px" }}
+              />
             </Link>
             <div
               style={{
-                fontSize: "22px",
+                fontSize: "24px",
                 paddingLeft: "10px",
                 paddingRight: "50px",
               }}
@@ -98,21 +102,35 @@ const HorizontalDefault = () => {
             </div>
             <div
               className="gx-header-horizontal-main-flex"
-              style={{ paddingRight: "20px", fontSize: "20px" }}
+              style={{ paddingRight: "20px", fontSize: "16px" }}
             >
               <Link
                 to="/explore"
                 className="gx-menu-list"
-                style={{ paddingRight: "20px" }}
+                style={{ paddingRight: "40px" }}
               >
                 <IntlMessages id="sidebar.avatars" />
               </Link>
               <Link
                 to="/create"
                 className="gx-menu-list"
-                style={{ paddingRight: "20px" }}
+                style={{ paddingRight: "40px" }}
               >
                 <IntlMessages id="sidebar.create" />
+              </Link>
+              <Link
+                to="/prove"
+                className="gx-menu-list"
+                style={{ paddingRight: "40px" }}
+              >
+                <IntlMessages id="sidebar.prove" />
+              </Link>
+              <Link
+                to="/verify"
+                className="gx-menu-list"
+                style={{ paddingRight: "40px" }}
+              >
+                <IntlMessages id="sidebar.verify" />
               </Link>
             </div>
             <AuroWallet />

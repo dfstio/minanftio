@@ -31,7 +31,7 @@ const AuroWallet = () => {
   const username = useSelector(({ blockchain }) => blockchain.username);
   const dispatch = useDispatch();
 
-  let auroText = "CONNECT WITH AURO";
+  let auroText = "CONNECT";
   let usernameText = "";
   let topup = "";
   let blockExplorer = "";
@@ -54,7 +54,7 @@ const AuroWallet = () => {
   let result = (
     <ul className="gx-login-list">
       <li
-        style={{ fontSize: "16px" }}
+        style={{ fontSize: "14px" }}
         onClick={async () => {
           if (DEBUG) console.log("Connect to Auro clicked");
           const newAddress = await minaLogin();
@@ -73,7 +73,7 @@ const AuroWallet = () => {
     result = (
       <ul className="gx-login-list">
         <li
-          style={{ fontSize: "16px" }}
+          style={{ fontSize: "14px" }}
           onClick={async () => {
             window.open(blockExplorer);
           }}

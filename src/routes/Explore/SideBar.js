@@ -169,6 +169,7 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
         </Panel>
 */}
         </div>
+        <img alt="" src="/assets/images/minanft-full-logo.svg" />
       </div>
     </Sider>
   );
