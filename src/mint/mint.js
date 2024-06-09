@@ -150,7 +150,7 @@ export async function mintNFT(
   const reservedPromise = minanft.reserveName({
     name,
     publicKey: owner,
-    chain: "devnet",
+    chain,
     contract: contractAddress,
     version: "v2",
     developer: "DFST",
