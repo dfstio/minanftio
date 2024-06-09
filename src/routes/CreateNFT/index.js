@@ -175,7 +175,7 @@ const MintPrivate = () => {
   };
 
   const onValuesChange = async (values) => {
-    if (DEBUG) console.log("onValuesChange", values);
+    //if (DEBUG) console.log("onValuesChange", values);
     let newToken = token;
 
     if (values.name !== undefined) {

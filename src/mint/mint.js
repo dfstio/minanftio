@@ -128,6 +128,7 @@ export async function mintNFT(
   const nftPrivateKey = PrivateKey.random();
   const address = nftPrivateKey.toPublicKey();
   const net = await initBlockchain(chain);
+  console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
   if (pinataJWT === undefined) {
     console.error("Pinata JWT is undefined");
