@@ -163,6 +163,8 @@ const MintPrivate = () => {
   const [advanced, setAdvanced] = useState(false);
   const [merkleTree, setMerkleTree] = useState(false);
   const [form] = Form.useForm();
+  const [image, setImage] = useState(undefined);
+  const [url, setUrl] = useState(undefined);
 
   const checkCanMint = () => {
     let newMintDisabled = true;
@@ -235,8 +237,11 @@ const MintPrivate = () => {
       console.log("chain", values.chain);
     }
 
-    if (values.mainimage !== undefined)
+    if (values.mainimage !== undefined) {
       newToken.main.image = values.mainimage.file;
+      setImage(values.mainimage.file);
+      setUrl(URL.createObjectURL(values.mainimage.file));
+    }
     if (values.mainvideo !== undefined)
       newToken.main.video = values.mainvideo.file;
     if (values.media !== undefined) newToken.main.media = values.media.fileList;
@@ -328,6 +333,32 @@ const MintPrivate = () => {
         pinataJWT: string;
         jwt: string;
       }*/
+      const keys = [];
+      if (token.public_key1 !== undefined && token.public_key1 !== "")
+        keys.push({
+          key: token.public_key1.substring(0, 30),
+          value: token.public_value1?.substring(0, 30) ?? "",
+          isPrivate: false,
+        });
+      if (token.public_key2 !== undefined && token.public_key2 !== "")
+        keys.push({
+          key: token.public_key2.substring(0, 30),
+          value: token.public_value2?.substring(0, 30) ?? "",
+          isPrivate: false,
+        });
+      if (token.private_key1 !== undefined && token.private_key1 !== "")
+        keys.push({
+          key: token.private_key1.substring(0, 30),
+          value: token.private_value1?.substring(0, 30) ?? "",
+          isPrivate: true,
+        });
+      if (token.private_key2 !== undefined && token.private_key2 !== "")
+        keys.push({
+          key: token.private_key2.substring(0, 30),
+          value: token.private_value2?.substring(0, 30) ?? "",
+          isPrivate: true,
+        });
+
       let mintResult = await mintNFT({
         name,
         image: token.main.image,
@@ -337,7 +368,7 @@ const MintPrivate = () => {
           token.sellPrice && token.sellPrice !== ""
             ? parseFloat(token.sellPrice)
             : 0,
-        keys: [],
+        keys,
         developer: "DFST",
         repo: "minanft_io",
         owner: address,
@@ -644,7 +675,99 @@ const MintPrivate = () => {
           onValuesChange={onValuesChange}
         >
           <Row>
-            <Col xxl={16} xl={16} lg={16} md={16} sm={24} xs={24}>
+            <Col xxl={10} xl={10} lg={10} md={8} sm={24} xs={24}>
+              <Row>
+                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                  {url && (
+                    <img
+                      src={url}
+                      alt="Preview"
+                      className="w-[341.33px] h-64 bg-[#30363D] rounded-lg"
+                    />
+                  )}
+                  <Form.Item
+                    name="mainimage"
+                    label="Main image"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please upload NFT image",
+                      },
+                    ]}
+                  >
+                    <Dragger
+                      name="mainimage"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="image/*"
+                      showUploadList={false}
+                      multiple={false}
+                      maxCount={1}
+                      beforeUpload={beforeUpload}
+                      isImageUrl={() => true}
+                    >
+                      {" "}
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">
+                          {url ? "Change" : "Main Image"}
+                        </div>
+                      </div>
+                    </Dragger>
+                  </Form.Item>
+                </Col>
+                {/*
+                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Form.Item name="mainvideo" label="Main Video/Audio">
+                    <Upload
+                      name="video"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      accept="video/*,audio/*"
+                      showUploadList={true}
+                      multiple={false}
+                      maxCount={1}
+                      //action="//jsonplaceholder.typicode.com/posts/"
+                      beforeUpload={beforeUpload}
+                      //onChange={this.handleChange}
+                    >
+                      <div>
+                        <PlusOutlined />
+                        <div className="ant-upload-text">
+                          Main Video or Audio
+                        </div>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Col>
+                */}
+              </Row>
+
+              {/*
+              <Form.Item
+                label="Chain"
+                name="chain"
+                rules={[
+                  {
+                    required: false,
+                    message: "Please choose chain",
+                  },
+                ]}
+              >
+                <RadioGroup>
+                  <RadioButton value={REACT_APP_CHAIN_NAME}>
+                    {REACT_APP_CHAIN_NAME}
+                  </RadioButton>
+                </RadioGroup>
+              </Form.Item>
+              */}
+              <Form.Item name="advanced" valuePropName="advanced">
+                <Checkbox onChange={onChangeAdvanced}>
+                  Advanced options
+                </Checkbox>
+              </Form.Item>
+            </Col>
+            <Col xxl={14} xl={14} lg={14} md={16} sm={24} xs={24}>
               <Form.Item
                 label={price}
                 name="name"
@@ -670,6 +793,19 @@ const MintPrivate = () => {
                 placeholder="Please choose collection name your NFT"
               >
                 <Input maxLength={30} showCount={true} />
+              </Form.Item>
+              <Form.Item
+                label=""
+                name="sellPrice"
+                rules={[
+                  {
+                    required: false,
+                    message: "Please choose sell price for your NFT",
+                  },
+                ]}
+                placeholder="Please choose sell price for your NFT"
+              >
+                <InputNumber addonBefore="Sell price" addonAfter="MINA" />
               </Form.Item>
 
               <Form.Item
@@ -713,100 +849,10 @@ const MintPrivate = () => {
                 <Markdown>{token.description}</Markdown>
               </Form.Item>
             </Col>
-
-            <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
-              <Row>
-                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <Form.Item
-                    name="mainimage"
-                    label="Main image"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please upload NFT image",
-                      },
-                    ]}
-                  >
-                    <Upload
-                      name="mainimage"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      accept="image/*"
-                      showUploadList={true}
-                      multiple={false}
-                      maxCount={1}
-                      beforeUpload={beforeUpload}
-                    >
-                      {" "}
-                      <div>
-                        <PlusOutlined />
-                        <div className="ant-upload-text">Main Image</div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
-                </Col>
-                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <Form.Item name="mainvideo" label="Main Video/Audio">
-                    <Upload
-                      name="video"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      accept="video/*,audio/*"
-                      showUploadList={true}
-                      multiple={false}
-                      maxCount={1}
-                      //action="//jsonplaceholder.typicode.com/posts/"
-                      beforeUpload={beforeUpload}
-                      //onChange={this.handleChange}
-                    >
-                      <div>
-                        <PlusOutlined />
-                        <div className="ant-upload-text">
-                          Main Video or Audio
-                        </div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Form.Item
-                label=""
-                name="sellPrice"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please choose sell price for your NFT",
-                  },
-                ]}
-                placeholder="Please choose sell price for your NFT"
-              >
-                <InputNumber addonBefore="Sell price" addonAfter="MINA" />
-              </Form.Item>
-              <Form.Item
-                label="Chain"
-                name="chain"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please choose chain",
-                  },
-                ]}
-              >
-                <RadioGroup>
-                  <RadioButton value={REACT_APP_CHAIN_NAME}>
-                    {REACT_APP_CHAIN_NAME}
-                  </RadioButton>
-                </RadioGroup>
-              </Form.Item>
-              <Form.Item name="advanced" valuePropName="advanced">
-                <Checkbox onChange={onChangeAdvanced}>
-                  Advanced options
-                </Checkbox>
-              </Form.Item>
-            </Col>
           </Row>
           {advanced === true ? (
             <div className="gx-main-content">
+              {/*
               <Row>
                 <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                   <Form.Item
@@ -887,95 +933,102 @@ const MintPrivate = () => {
                   </Form.Item>
                 </Col>
               </Row>
+              */}
               <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Public key 1 (will be published to IPFS)"
-                    name="public_key1"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Public value 1 (will be published to IPFS)"
-                    name="public_value1"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Public key 2 (will be published to IPFS)"
-                    name="public_key2"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Public value 2 (will be published to IPFS)"
-                    name="public_value2"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
+                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                  <Card className="gx-card" title="Proof of NFT - public data">
+                    <Row>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Public key 1 (will be published to IPFS)"
+                          name="public_key1"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Public value 1 (will be published to IPFS)"
+                          name="public_value1"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Public key 2 (will be published to IPFS)"
+                          name="public_key2"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Public value 2 (will be published to IPFS)"
+                          name="public_value2"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
                 </Col>
               </Row>
 
               <Row>
                 <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                  <Card
-                    className="gx-card"
-                    title="Private data - will be verifiable on-chain without disclosing content"
-                  />
+                  <Card className="gx-card" title="Proof of NFT - private data">
+                    <Row>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Private key 1 (will NOT be published to IPFS)"
+                          name="private_key1"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Private value 1 (will NOT be published to IPFS, but will be verifiable)"
+                          name="private_value1"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Private key 2 (will NOT be published to IPFS)"
+                          name="private_key2"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          label="Private value 2 (will NOT be published to IPFS, but will be verifiable)"
+                          name="private_value2"
+                          placeholder="Some string (less than 30 chars)"
+                        >
+                          <Input maxLength={30} showCount={true} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Card>
                 </Col>
               </Row>
-              <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Private key 1 (will NOT be published to IPFS)"
-                    name="private_key1"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Private value 1 (will NOT be published to IPFS, but will be verifiable on-chain)"
-                    name="private_value1"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Private key 2 (will NOT be published to IPFS)"
-                    name="private_key2"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-                <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    label="Private value 2 (will NOT be published to IPFS, but will be verifiable on-chain)"
-                    name="private_value2"
-                    placeholder="Some string (less than 30 chars)"
-                  >
-                    <Input maxLength={30} showCount={true} />
-                  </Form.Item>
-                </Col>
-              </Row>
+
+              {/*
               <Row>
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
@@ -1064,16 +1117,16 @@ const MintPrivate = () => {
                       </div>
                     </Upload>
                   </Form.Item>
-                  {/*
+                  
                   <Form.Item name="calculateroot" valuePropName="checked">
                     <Checkbox onChange={onChangeMerkleTree}>
                       Calculate Merkle Tree root of the private attachments
                       (takes time)
                     </Checkbox>
                   </Form.Item>
-                  */}
+                  
                 </Col>
-                {/*
+                
                 <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
                   <Form.Item
                     label="NFT Storage"
@@ -1091,14 +1144,14 @@ const MintPrivate = () => {
                     </RadioGroup>
                   </Form.Item>
                 </Col>
-                  */}
+                  
               </Row>
-              {/*
+              
               <Form.Item label="Price" name="price">
                 {mintPrice}
               </Form.Item>
-                  */}
-              {/*
+                  
+              
               <Form.Item
                 label={
                   <span>
@@ -1158,6 +1211,7 @@ const MintPrivate = () => {
                 </span>
               </div>
             </Form.Item>
+
             <Form.Item name="mintedlink" hidden={showLink === false}>
               <div
                 className="gx-mt-0"

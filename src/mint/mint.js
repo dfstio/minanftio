@@ -52,6 +52,8 @@ export async function mintNFT(
 }*/
 ) {
   console.time("ready to sign");
+  console.log("Mint NFT", params);
+
   const {
     name,
     image,
@@ -172,8 +174,8 @@ export async function mintNFT(
     });
 
   for (const item of keys) {
-    const { key, value, isPublic } = item;
-    nft.update({ key, value, isPrivate: isPublic === false });
+    const { key, value, isPrivate } = item;
+    nft.update({ key, value, isPrivate });
   }
 
   console.time("calculated sha3_512");
