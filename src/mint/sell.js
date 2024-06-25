@@ -118,7 +118,7 @@ export async function sellNFT(params) {
     name,
     serializedTransaction,
     signedData,
-    mintParams: serializeFields(SellParams.toFields(sellParams)),
+    sellParams: serializeFields(SellParams.toFields(sellParams)),
     contractAddress,
     chain,
   });
