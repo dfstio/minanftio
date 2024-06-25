@@ -8,7 +8,7 @@ const {
 } = process.env;
 const DEBUG = REACT_APP_DEBUG === "true";
 
-export async function sendTransaction(
+export async function sendMintTransaction(
   params
   /* {
   serializedTransaction: string,
@@ -62,7 +62,64 @@ export async function sendTransaction(
   return jobId;
 }
 
-export async function waitForMint(jobId) {
+export async function sendSellTransaction(
+  params
+  /* {
+  serializedTransaction: string,
+  signedData: string,
+  mintParams: string,
+  contractAddress: string,
+}*/
+) /*: Promise<{ isSent: boolean, hash: string }> */ {
+  const {
+    serializedTransaction,
+    signedData,
+    contractAddress,
+    sellParams,
+    chain,
+    name,
+  } = params;
+  if (DEBUG)
+    console.log("sendTransaction", {
+      serializedTransaction,
+      signedData,
+      contractAddress,
+      sellParams,
+      chain,
+      name,
+    });
+
+  let args = JSON.stringify({
+    contractAddress,
+  });
+
+  const transaction = JSON.stringify(
+    {
+      serializedTransaction,
+      signedData,
+      sellParams,
+      name,
+    },
+    null,
+    2
+  );
+
+  let answer = await zkCloudWorkerRequest({
+    command: "execute",
+    transactions: [transaction],
+    task: "sell",
+    args,
+    metadata: `sell`,
+    mode: "async",
+  });
+
+  if (DEBUG) console.log(`zkCloudWorker answer:`, answer);
+  const jobId = answer?.jobId;
+  if (DEBUG) console.log(`jobId:`, jobId);
+  return jobId;
+}
+
+export async function waitForTransaction(jobId) {
   if (jobId === undefined || jobId === "") {
     console.error("JobId is undefined");
     return {

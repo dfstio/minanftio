@@ -23,7 +23,7 @@ import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import { mintNFT } from "../../mint/mint";
-import { waitForMint } from "../../mint/send";
+import { waitForTransaction } from "../../mint/send";
 //import { mintRollupNFT } from "./rollup";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
@@ -338,7 +338,7 @@ const MintPrivate = () => {
         return;
       }
       const jobId = mintResult.jobId;
-      mintResult = await waitForMint(jobId, auth);
+      mintResult = await waitForTransaction(jobId, auth);
       console.log("Final mint result", mintResult);
       if (mintResult?.success === true && mintResult?.hash !== undefined) {
         message.success({

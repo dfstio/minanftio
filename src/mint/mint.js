@@ -1,7 +1,7 @@
 import { calculateSHA512 } from "./sha512";
 import { pinFile } from "./ipfs";
 import { serializeTransaction } from "./transaction";
-import { sendTransaction } from "./send";
+import { sendMintTransaction } from "./send";
 import {
   Field,
   PrivateKey,
@@ -323,7 +323,7 @@ export class MintParams extends Struct({
     };
   }
 
-  const jobId = await sendTransaction({
+  const jobId = await sendMintTransaction({
     serializedTransaction,
     signedData,
     mintParams: serializeFields(MintParams.toFields(mintParams)),
