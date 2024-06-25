@@ -13,9 +13,6 @@ import {
 import IntlMessages from "../../util/IntlMessages";
 import { hash } from "../../blockchain/hash";
 
-const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
-const chainId = Number(REACT_APP_CHAIN_ID);
-
 const { Sider } = Layout;
 const Sidebar = () => {
   const address = useSelector(({ blockchain }) => blockchain.address);

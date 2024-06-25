@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import TokenItem from "./Token";
 import { getRollupNFT } from "../../nft/rollup";
 import algoliasearch from "algoliasearch";
+import { chainId } from "../../blockchain/explorer";
 const {
   REACT_APP_ALGOLIA_KEY,
   REACT_APP_ALGOLIA_PROJECT,
   REACT_APP_ALGOLIA_INDEX,
   REACT_APP_CONTRACT_ADDRESS,
-  REACT_APP_CHAIN_ID,
 } = process.env;
 const searchClient = algoliasearch(
   REACT_APP_ALGOLIA_PROJECT,
@@ -36,7 +36,7 @@ const Token = ({ match }) => {
         }
       } else {
         let objectID =
-          (REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet") +
+          chainId() +
           "." +
           REACT_APP_CONTRACT_ADDRESS +
           "." +

@@ -21,11 +21,6 @@ import { prepareMetadata } from "./metadata";
 import { storageUrl, storageUrlFromURL } from "../../blockchain/storage";
 //import '../../styles/token/audio-player.less';
 
-const {
-  REACT_APP_CONTRACT_ADDRESS,
-  REACT_APP_CHAIN_ID,
-  REACT_APP_VIRTUOSO_URL,
-} = process.env;
 var QRCode = require("qrcode.react");
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
@@ -592,15 +587,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
   const dispatch = useDispatch();
   const [unlockable, setUnlockable] = useState(content);
-  const [loadingUnlockable, setLoadingUnlockable] = useState(false);
 
-  const [streamingContent, setStreamingContent] = useState(false);
-  const [loadingStreaming, setLoadingStreaming] = useState(false);
-  const [streamingContentLoaded, setStreamingContentLoaded] = useState(false);
   const [signature, setSignature] = useState("");
-  const [signatureTime, setSignatureTime] = useState("");
-
-  const [showUnlockableButton, setShowUnlockableButton] = useState(false);
 
   const [media, setMedia] = useState([]);
   const [texts, setTexts] = useState([]);
@@ -613,14 +601,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [firstRun, setFirstRun] = useState(true);
-
-  const [audio, setAudio] = useState([]);
-  const [uaudio, setUAudio] = useState([]);
   const [counter, setCounter] = useState(0);
-  const [showQRCode, setShowQRCode] = useState(false);
-  const [qrCodeURL, setQRCodeURL] = useState(
-    "https://" + REACT_APP_VIRTUOSO_URL
-  );
   const [checkout, setCheckout] = useState("");
   const [onSale, setOnSale] = useState(
     item.price && item.price > 0 ? true : false
@@ -628,13 +609,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const [canSell, setCanSell] = useState(
     address?.toUpperCase() === item?.owner?.toUpperCase()
   );
-
-  function showQRCodeFunction() {
-    setShowQRCode(true);
-  }
-  function hideQRCodeFunction() {
-    setShowQRCode(false);
-  }
 
   const [currentMedia, setCurrentMedia] = useState(null);
 
@@ -648,19 +622,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setImage(storageUrlFromURL(item.image));
         setFirstRun(false);
       }
-
-      const qrURL = item.tokenId
-        ? "https://" +
-          REACT_APP_VIRTUOSO_URL +
-          "/token/" +
-          item.tokenId.toString()
-        : item.rollupId
-        ? "https://" +
-          REACT_APP_VIRTUOSO_URL +
-          "/nft/" +
-          item.rollupId.toString()
-        : "https://minanft.io";
-      setQRCodeURL(qrURL);
 
       //if(DEBUG) console.log("Token window ", window.location.pathname);
       const path = window.location.pathname.split("/");
@@ -677,171 +638,8 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       let newName = item.name;
       let newImage = storageUrlFromURL(item.image);
 
-      /*
-      let newAnimation = item.animation_url; // USE IT LATER!!!
-
-      let newMedia = [];
-      let newAudio = [];
-      let newAttachments = [];
-      let newTexts = [];
-      let newStrings = [];
-      */
-
       const metadata = prepareMetadata(item);
 
-      /*
-            const timedContent = await getOnLoad(
-                item.tokenId,
-                signature,
-                signatureTime,
-            );
-
-            if (
-                !timedContent.success ||
-                timedContent.content === undefined ||
-                timedContent.content.replace_media === undefined ||
-                timedContent.content.replace_media === false
-            ) {
-*/
-      /*
-      if (
-        item.properties.animation !== "" &&
-        item.properties.animation !== undefined
-      ) {
-        const type = item.uri.properties.animation.filetype.replace(
-          /\/[^/.]+$/,
-          ""
-        );
-        if (type === "video") {
-          const id = newMedia.length;
-          newMedia.push({
-            data: item.uri.properties.animation,
-            id: id,
-          });
-        }
-        if (type === "audio") newAudio.push(item.uri.properties.animation);
-      }
-      let count = item.media_count === undefined ? 0 : item.media_count;
-
-      if (count > 0) {
-        let i;
-        console.log("Media count", count);
-        for (i = 0; i < count; i++) {
-          const type = item.media[i].filetype.replace(/\/[^/.]+$/, "");
-          const id = newMedia.length;
-          if (type === "video") newMedia.push({ data: item.media[i], id: id });
-          if (type === "image") newMedia.push({ data: item.media[i], id: id });
-          if (type === "audio") newAudio.push(item.media[i]);
-          if (type === "application") {
-            if (item.media[i].filetype === "application/pdf")
-              newMedia.push({
-                data: item.media[i],
-                id: id,
-              });
-          }
-        }
-      }
-
-      if (DEBUG) console.log(`TokenItem media ${count}:`, newMedia, newAudio);
-      //            }
-      /*
-            if (
-                !timedContent.success ||
-                timedContent.content === undefined ||
-                timedContent.content.replace_attachments === undefined ||
-                timedContent.content.replace_attachments === false
-            ) {
-*/
-      /*
-      let acount =
-        item.attachments_count === undefined ? 0 : item.attachments_count;
-      if (acount > 0) newAttachments = item.attachments;
-      //            }
-
-      let show = false;
-      if (address === item.owner) show = true;
-      if (show !== showUnlockableButton) setShowUnlockableButton(show);
-
-      //if (DEBUG) console.log(`TokenItem content`, timedContent);
-
-      let newDescription = item.markdown === undefined ? "" : item.markdown;
-      let newName = item.name;
-      let newImage = item.image;
-      let newAnimation = item.animation_url; // USE IT LATER!!!
-      /*
-            if (timedContent.success && timedContent.content !== undefined) {
-                if (timedContent.signed) setStreamingContent(true);
-
-                if (
-                    timedContent.content.description !== undefined &&
-                    timedContent.content.description !== ""
-                )
-                    newDescription = timedContent.content.description;
-                if (
-                    timedContent.content.name !== undefined &&
-                    timedContent.content.name !== ""
-                )
-                    newName = timedContent.content.name;
-                if (
-                    timedContent.content.image !== undefined &&
-                    timedContent.content.image !== ""
-                )
-                    newImage = timedContent.content.image;
-                if (
-                    timedContent.content.animation_url !== undefined &&
-                    timedContent.content.animation_url !== ""
-                )
-                    newAnimation = timedContent.content.animation_url;
-
-                let count =
-                    timedContent.content.media_count === undefined
-                        ? 0
-                        : timedContent.content.media_count;
-
-                if (count > 0) {
-                    let i;
-
-                    for (i = 0; i < count; i++) {
-                        const type = timedContent.content.media[
-                            i
-                        ].filetype.replace(/\/[^/.]+$/, "");
-                        const id = newMedia.length;
-                        if (type === "video")
-                            newMedia.push({
-                                data: timedContent.content.media[i],
-                                id: id,
-                            });
-                        if (type === "image")
-                            newMedia.push({
-                                data: timedContent.content.media[i],
-                                id: id,
-                            });
-                        if (type === "audio")
-                            newAudio.push(timedContent.content.media[i]);
-                        if (type === "application") {
-                            if (
-                                timedContent.content.media[i].filetype ===
-                                "application/pdf"
-                            )
-                                newMedia.push({
-                                    data: timedContent.content.media[i],
-                                    id: id,
-                                });
-                        }
-                    }
-               }
-
-                let acount =
-                    timedContent.content.attachments_count === undefined
-                        ? 0
-                        : timedContent.content.attachments_count;
-                if (acount > 0)
-                    newAttachments = [
-                        ...newAttachments,
-                        ...timedContent.content.attachments,
-                    ];
-            }
-*/
       if (descriptionMarkdown !== newDescription)
         setDescriptionMarkdown(newDescription);
       if (name !== newName) setName(newName);
@@ -851,34 +649,9 @@ const TokenItem = ({ item, small = false, preview = false }) => {
       //setAttachments(newAttachments);
       console.log("metadata", metadata);
       setMedia(metadata.media);
-      setAudio(metadata.audio);
       setAttachments(metadata.attachments);
       setTexts(metadata.texts);
       setStrings(metadata.strings);
-
-      /*
-            if (loadingStreaming) {
-                setLoadingStreaming(false);
-
-                if (
-                    timedContent.good_signature !== undefined &&
-                    timedContent.good_signature === true
-                ) {
-                    setStreamingContentLoaded(true);
-                    message.success({
-                        content: `Secret content was loaded`,
-                        key: "loadSecret",
-                        duration: 10,
-                    });
-                } else {
-                    message.error({
-                        content: `Secret content was not loaded - bad signature`,
-                        key: "loadSecret",
-                        duration: 30,
-                    });
-                }
-            }
-            */
       setCounter(counter + 1);
     }
     loadMedia();
@@ -936,230 +709,10 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     }
     return false;
   }
-  /*
-  const fetchUnlockable = async (newMedia, initial_count, count) => {
-    let i;
-    let media2 = newMedia;
-    if (DEBUG) console.log(`fetchUnlockable:`, initial_count, count, newMedia);
-
-    for (i = initial_count; i < count + initial_count; i++) {
-      const size1 = formatBytes(newMedia[i].data.size);
-      const size = " (" + size1 + ")";
-      message.loading({
-        content: `Loading unlockable file ${newMedia[i].data.filename} ${size} from IPFS`,
-        key: "loadUnlockable",
-        duration: 6000,
-      });
-      const url = getEncryptedFileFromIPFS(
-        newMedia[i].data.IPFShash,
-        newMedia[i].data.password,
-        newMedia[i].data.filetype
-      ).then(function (data) {
-        return data;
-      });
-      if (DEBUG) console.log(`fetchUnlockable url:`, url);
-
-      media2[i].data.url = url;
-      setMedia(media2);
-      setCounter(counter + 1);
-    }
-  };
-
-  const addUnlockable = async (media1, count) => {
-    let newMedia = media;
-    let newAudio = audio;
-
-    if (count > 0) {
-      let i;
-
-      for (i = 0; i < count; i++) {
-        const type = media1[i].filetype.replace(/\/[^/.]+$/, "");
-        const id = newMedia.length;
-        if (type === "video") {
-          newMedia.push({ data: media1[i], id: id });
-          setMedia(newMedia);
-          setCounter(counter + 1);
-        }
-        if (type === "image") {
-          newMedia.push({ data: media1[i], id: id });
-          setMedia(newMedia);
-          setCounter(counter + 1);
-        }
-        if (type === "audio") newAudio.push(media1[i]);
-
-        if (type === "application") {
-          if (media1[i].filetype === "application/pdf") {
-            newMedia.push({ data: media1[i], id: id });
-            setMedia(newMedia);
-            setCounter(counter + 1);
-          }
-        }
-      }
-    }
-    setMedia(newMedia);
-    setAudio(newAudio);
-
-    if (DEBUG) console.log(`addUnlockable media ${count}:`, newMedia, newAudio);
-    //await fetchUnlockable(newMedia, initial_count, newCount);
-  };
-
-  const loadUnlockable = async (again = false) => {
-    /*
-    setLoadingUnlockable(true);
-    message.loading({
-      content: `Loading unlockable content from blockchain`,
-      key: "loadUnlockable",
-      duration: 6000,
-    });
-
-    try {
-      let encryptedKey = await getVirtuosoUnlockableContentKey(
-        item.tokenId,
-        address
-      );
-      if (DEBUG) console.log("View - unlockable key: ", encryptedKey);
-
-      if (encryptedKey === "" && again === true) {
-        let i = 0;
-        while (encryptedKey === "" && i < 20) {
-          //await api.unlockable(item.tokenId, address);
-          await sleep(10000);
-          encryptedKey = await getVirtuosoUnlockableContentKey(
-            item.tokenId,
-            address
-          );
-          i++;
-          if (DEBUG) console.log("View - unlockable key", i, ":", encryptedKey);
-        }
-      }
-
-      if (encryptedKey !== "") {
-        const unlockableIPFS = await getFromIPFS(encryptedKey);
-        //if(DEBUG)  console.log("unlockable unlockableIPFS: ", unlockableIPFS );
-        let unlockableJSON = JSON.parse(unlockableIPFS.toString());
-        const password = await metamaskDecrypt(unlockableJSON.key, address);
-
-        if (password === "") {
-          setLoadingUnlockable(false);
-          message.error({
-            content: `Error loading unlockable content`,
-            key: "loadUnlockable",
-            duration: 30,
-          });
-          return;
-        }
-        const decryptedData = await decryptUnlockableToken(
-          unlockableJSON.data,
-          password
-        );
-
-        setUnlockable(decryptedData);
-        setUAttachments(decryptedData.attachments);
-        if (DEBUG) console.log("View - Decrypted data: ", decryptedData);
-
-        setCounter(counter + 1);
-        await addUnlockable(decryptedData.media, decryptedData.media_count);
-        message.success({
-          content: `Unlockable content and files have loaded`,
-          key: "loadUnlockable",
-          duration: 30,
-        });
-        if (DEBUG) console.log(`loadUnlockable media:`, media, "audio", audio);
-      } else {
-        message.error({
-          content: `Error loading unlockable content, please try later`,
-          key: "loadUnlockable",
-          duration: 30,
-        });
-        await api.unlockable(item.tokenId, address);
-      }
-    } catch (error) {
-      console.error("loadUnlockable error:", error);
-      message.error({
-        content: `Error loading unlockable content`,
-        key: "loadUnlockable",
-        duration: 30,
-      });
-     
-    }
-
-    setLoadingUnlockable(false);
-    setCounter(counter + 1);
-    await sleep(1000);
-    setCounter(counter + 1);
-    await sleep(1000);
-    setCounter(counter + 1);
-     */
-  //};
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
-  /*
-  async function showUnlockableContent() {
-    if (DEBUG) console.log("showUnlockableContent", publicKey, address);
-    if (isChrome === false || isDesktop === false) {
-      message.error(
-        "Please use desktop version of Chrome with MetaMask to view unlockable content"
-      );
-      return;
-    }
-    if (address !== undefined && address !== "") {
-      if (publicKey === undefined || publicKey === "" || publicKey === "a") {
-        if (DEBUG)
-          console.log("showUnlockableContent wrong public key", publicKey);
-        const result = await register();
-        if (result) {
-          await sleep(5000);
-          await loadUnlockable(true);
-        }
-      } else {
-        await loadUnlockable();
-      }
-    } else message.error("Please connect with MetaMask");
-  }
-
-  async function showStreamingContent() {
-    if (address !== undefined && address !== "") {
-      setLoadingStreaming(true);
-      message.loading({
-        content: `Loading secret content`,
-        key: "loadSecret",
-        duration: 6000,
-      });
-      if (DEBUG) console.log("showStreamingContent", address);
-      const result = await getContentMessage(item.tokenId);
-      if (result.success) {
-        setSignatureTime(result.time);
-        message.loading({
-          content: `Please sign request to open secret content`,
-          key: "loadSecret",
-          duration: 6000,
-        });
-        const signature = await getSignature(result.message);
-        if (signature !== "") setSignature(signature);
-        else {
-          setLoadingStreaming(false);
-          message.error({
-            content: `Error opening secret content`,
-            key: "loadSecret",
-            duration: 30,
-          });
-          return;
-        }
-      } else {
-        setLoadingStreaming(false);
-        message.error({
-          content: `Error opening secret content`,
-          key: "loadSecret",
-          duration: 30,
-        });
-        return;
-      }
-    } else message.error("Please connect with MetaMask");
-  }
-*/
   function onSelect(id) {
     if (DEBUG) console.log("onSelect current", currentMedia, "selected", id);
     if (currentMedia !== null) setCurrentMedia(null);
@@ -1178,11 +731,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
     let newMedia = media;
     newMedia[id].data.pdf = { numPages: numPages, page: page };
     setMedia(newMedia);
-  }
-
-  function onLoadAudio(newAudio) {
-    if (DEBUG) console.log("onLoadAudio", newAudio);
-    setAudio(newAudio);
   }
 
   return (
@@ -1232,27 +780,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     marginLeft: "15px",
                   }}
                 >
-                  {showQRCode ? (
-                    <QRCode
-                      value={qrCodeURL}
-                      size={300}
-                      level="H"
-                      includeMargin={true}
-                      onClick={hideQRCodeFunction}
-                      imageSettings={{
-                        src: storageUrlFromURL(item.image),
-                        width: 100,
-                        height: 100,
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={image}
-                      alt={name}
-                      onClick={showQRCodeFunction}
-                      crossOrigin="anonymous"
-                    />
-                  )}
+                  <img src={image} alt={name} crossOrigin="anonymous" />
                 </div>
               </Col>
               <Col xl={16} lg={16} md={24} sm={24} xs={24}>
@@ -1347,45 +875,6 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   ) : (
                     ""
                   )}
-
-                  {/*showUnlockableButton &&
-                  small === false &&
-                  preview === false &&
-                  item.uri.contains_unlockable_content === true &&
-                  unlockable.loaded === false ? (
-                    <div
-                      className="gx-product-image"
-                      style={{ marginTop: "25px" }}
-                    >
-                      <Button
-                        onClick={showUnlockableContent}
-                        loading={loadingUnlockable}
-                      >
-                        Show Unlockable Content
-                      </Button>
-                    </div>
-                  ) : (
-                    ""
-                  )*/}
-                  {/*showUnlockableButton &&
-                  small === false &&
-                  preview === false &&
-                  streamingContent === true &&
-                  streamingContentLoaded === false ? (
-                    <div
-                      className="gx-product-image"
-                      style={{ marginTop: "25px" }}
-                    >
-                      <Button
-                        onClick={showStreamingContent}
-                        loading={loadingStreaming}
-                      >
-                        Show Secret Content
-                      </Button>
-                    </div>
-                  ) : (
-                    ""
-                  )*/}
                 </div>
               </Col>
             </Row>

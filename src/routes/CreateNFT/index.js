@@ -43,76 +43,12 @@ const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
-const {
-  REACT_APP_PINATA_JWT,
-  REACT_APP_CHAIN_NAME,
-  REACT_APP_CHAIN_ID,
-  REACT_APP_MINANFT_JWT,
-} = process.env;
+const { REACT_APP_PINATA_JWT, REACT_APP_MINANFT_JWT } = process.env;
 const { TextArea } = Input;
 const { Option } = Select;
 const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-
-/*
-const startToken = {
-  tokenId: "@mynft",
-  updated: 1633284972170,
-  creator: "",
-  name: "",
-  description: "",
-  chain: REACT_APP_CHAIN_NAME,
-  url: "",
-  shortdescription: "",
-  saleID: "0",
-  sellPrice: "",
-  onSale: false,
-  saleStatus: "not on sale",
-  price: 0,
-  currency: "USD",
-  category: "MINA protocol",
-  image: "",
-  type: "individual",
-  contains_private_content: false,
-  private_content_description: "",
-  storagetype: "IPFS",
-  uri: {
-    name: "",
-    type: "object",
-    image: "",
-    external_url: "minanft.io",
-    animation_url: "",
-    description: "",
-    license: "Mina NFT License Agreement V1",
-    license_id: "1",
-    license_url: "https://minanft.io/agreement/MinaNFT_agreement_v1.pdf",
-    contains_private_content: false,
-    properties: {
-      image: "",
-      animation: "",
-    },
-    attributes: [
-      {
-        trait_type: "Artist",
-        value: "",
-      },
-    ],
-  },
-  //  "objectID": "80001.0x49368c4ed51be6484705f07b63ebd92270923081.17",
-  unlockable: {
-    media: "",
-    attachments: "",
-  },
-  main: {
-    image: "",
-    video: "",
-    media: "",
-    attachments: "",
-  },
-  folder: "",
-};
-*/
 
 const startToken = {
   name: "",
@@ -372,7 +308,6 @@ const MintPrivate = () => {
         developer: "DFST",
         repo: "minanft_io",
         owner: address,
-        chain: REACT_APP_CHAIN_ID,
         pinataJWT: REACT_APP_PINATA_JWT,
         jwt: REACT_APP_MINANFT_JWT,
       });
@@ -743,24 +678,6 @@ const MintPrivate = () => {
                 */}
               </Row>
 
-              {/*
-              <Form.Item
-                label="Chain"
-                name="chain"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please choose chain",
-                  },
-                ]}
-              >
-                <RadioGroup>
-                  <RadioButton value={REACT_APP_CHAIN_NAME}>
-                    {REACT_APP_CHAIN_NAME}
-                  </RadioButton>
-                </RadioGroup>
-              </Form.Item>
-              */}
               <Form.Item name="advanced" valuePropName="advanced">
                 <Checkbox onChange={onChangeAdvanced}>
                   Advanced options

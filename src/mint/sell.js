@@ -26,7 +26,6 @@ import {
   serializeFields,
   MintParams,
 } from "minanft";
-import { chainId } from "../blockchain/explorer";
 
 /*
 export interface ProofOfNFT {
@@ -36,41 +35,13 @@ export interface ProofOfNFT {
 }
 */
 
-export async function mintNFT(
-  params
-  /*: {
-  name: string;
-  image: File;
-  collection: string;
-  description: string;
-  price: number;
-  keys: ProofOfNFT[];
-  developer: string;
-  repo: string;
-  owner: string;
-  chain: blockchain;
-  pinataJWT: string;
-  jwt: string;
-}*/
-) {
+export async function sellNFT(params) {
   console.time("ready to sign");
-  console.log("Mint NFT", params);
+  console.log("Sell NFT", params);
 
-  const {
-    name,
-    image,
-    price,
-    collection,
-    description,
-    keys,
-    developer,
-    repo,
-    owner,
-    jwt,
-    pinataJWT,
-  } = params;
+  const { address, price, developer, repo, owner, jwt } = params;
 
-  const chain = chainId();
+  const chain = params.chain === "mina:mainnet" ? "mainnet" : "devnet";
 
   if (owner === undefined) {
     console.error("Owner address is undefined");

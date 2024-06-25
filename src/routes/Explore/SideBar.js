@@ -18,8 +18,6 @@ import IntlMessages from "../../util/IntlMessages";
 import Header from "./Header";
 //import { hash } from "../../blockchain/hash";
 
-const { REACT_APP_CONTRACT_ADDRESS, REACT_APP_CHAIN_ID } = process.env;
-const chainId = Number(REACT_APP_CHAIN_ID);
 const defaultFilter = `status:pending OR status:minted`;
 
 const { Sider } = Layout;

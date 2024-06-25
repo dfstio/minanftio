@@ -1,10 +1,10 @@
 import axios from "axios";
+import { chainId } from "../blockchain/explorer";
 const {
   REACT_APP_DEBUG,
   REACT_APP_ZKCW_JWT,
   REACT_APP_ZKCW_AUTH,
   REACT_APP_ZKCW_ENDPOINT,
-  REACT_APP_CHAIN_ID,
 } = process.env;
 const DEBUG = REACT_APP_DEBUG === "true";
 
@@ -94,7 +94,7 @@ export async function waitForMint(jobId) {
 
 async function zkCloudWorkerRequest(params) {
   const { command, task, transactions, args, metadata, mode, jobId } = params;
-  const chain = REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet";
+  const chain = chainId();
   const apiData = {
     auth: REACT_APP_ZKCW_AUTH,
     command: command,
