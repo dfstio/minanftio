@@ -27,7 +27,7 @@ const SellButton = ({ item }) => {
     }
     let sellResult = await sellNFT({
       name: item.name,
-      price: Number(item.price ?? 100) + 10,
+      price: Number(item.price ?? 100000000000) + 10000000000,
       owner: address,
       address: item.address,
     });
