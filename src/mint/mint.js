@@ -10,6 +10,7 @@ import {
   Mina,
   AccountUpdate,
   Signature,
+  UInt32,
 } from "o1js";
 import {
   MinaNFT,
@@ -195,6 +196,7 @@ export async function mintNFT(
     reserved.isReserved !== true ||
     reserved.signature === undefined ||
     reserved.signature === "" ||
+    reserved.expiry === undefined ||
     reserved.price === undefined ||
     reserved.price?.price === undefined
   ) {
@@ -207,6 +209,7 @@ export async function mintNFT(
   }
 
   const signature = Signature.fromBase58(reserved.signature);
+  const expiry = UInt32.from(reserved.expiry);
   if (signature === undefined) {
     console.error("Signature is undefined");
     return {
@@ -259,9 +262,24 @@ export async function mintNFT(
     hash: Field.fromJSON(VERIFICATION_KEY_V2_JSON[chain].hash),
     data: VERIFICATION_KEY_V2_JSON[chain].data,
   };
+  /*
+export class MintParams extends Struct({
+  name: Field,
+  address: PublicKey,
+  owner: PublicKey,
+  price: UInt64,
+  fee: UInt64,
+  feeMaster: PublicKey,
+  metadataParams: MetadataParams,
+  verificationKey: VerificationKey,
+  signature: Signature,
+  expiry: UInt32,
+}) {}
+  */
   const mintParams = {
     name: MinaNFT.stringToField(nft.name),
     address,
+    owner: sender,
     price: UInt64.from(parseInt(price * 1e9)),
     fee: UInt64.from(reserved.price.price * 1_000_000_000),
     feeMaster: wallet,
@@ -271,6 +289,7 @@ export async function mintNFT(
       metadata: nft.metadataRoot,
       storage: nft.storage,
     },
+    expiry,
   };
   const tx = await Mina.transaction({ sender, fee, memo }, async () => {
     AccountUpdate.fundNewAccount(sender);
