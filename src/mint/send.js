@@ -94,6 +94,7 @@ export async function waitForMint(jobId) {
 
 async function zkCloudWorkerRequest(params) {
   const { command, task, transactions, args, metadata, mode, jobId } = params;
+  const chain = REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet";
   const apiData = {
     auth: REACT_APP_ZKCW_AUTH,
     command: command,
@@ -108,9 +109,9 @@ async function zkCloudWorkerRequest(params) {
       mode: mode ?? "sync",
       jobId,
     },
-    chain: REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet",
+    chain,
   };
-  const endpoint = REACT_APP_ZKCW_ENDPOINT + REACT_APP_CHAIN_ID;
+  const endpoint = REACT_APP_ZKCW_ENDPOINT + chain;
 
   const response = await axios.post(endpoint, apiData);
   return response.data;
