@@ -64,10 +64,11 @@ export async function mintNFT(
     developer,
     repo,
     owner,
-    chain,
     jwt,
     pinataJWT,
   } = params;
+
+  const chain = params.chain === "mina:mainnet" ? "mainnet" : "devnet";
 
   if (owner === undefined) {
     console.error("Owner address is undefined");
