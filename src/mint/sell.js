@@ -16,7 +16,7 @@ export async function sellNFT(params) {
   console.time("ready to sign");
   console.log("Sell NFT", params);
 
-  const { price, developer, repo, owner, jwt, name } = params;
+  const { price, owner, name } = params;
 
   const chain = chainId();
 
@@ -60,14 +60,6 @@ export async function sellNFT(params) {
   const net = await initBlockchain(chain);
   console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
-
-  if (jwt === undefined) {
-    console.error("JWT is undefined");
-    return {
-      success: false,
-      error: "JWT is undefined",
-    };
-  }
 
   console.timeEnd("prepared data");
 

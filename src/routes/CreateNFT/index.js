@@ -338,7 +338,7 @@ const MintPrivate = () => {
         return;
       }
       const jobId = mintResult.jobId;
-      mintResult = await waitForTransaction(jobId, auth);
+      mintResult = await waitForTransaction(jobId);
       console.log("Final mint result", mintResult);
       if (mintResult?.success === true && mintResult?.hash !== undefined) {
         message.success({
