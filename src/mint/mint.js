@@ -327,6 +327,7 @@ export class MintParams extends Struct({
     signedData,
     mintParams: serializeFields(MintParams.toFields(mintParams)),
     contractAddress,
+    chain,
   });
   console.timeEnd("sent transaction");
   console.log("Sent transaction, jobId", jobId);

@@ -17,14 +17,20 @@ export async function sendTransaction(
   contractAddress: string,
 }*/
 ) /*: Promise<{ isSent: boolean, hash: string }> */ {
-  const { serializedTransaction, signedData, contractAddress, mintParams } =
-    params;
+  const {
+    serializedTransaction,
+    signedData,
+    contractAddress,
+    mintParams,
+    chain,
+  } = params;
   if (DEBUG)
     console.log("sendTransaction", {
       serializedTransaction,
       signedData,
       contractAddress,
       mintParams,
+      chain,
     });
 
   let args = JSON.stringify({
@@ -102,7 +108,7 @@ async function zkCloudWorkerRequest(params) {
       mode: mode ?? "sync",
       jobId,
     },
-    chain: REACT_APP_CHAIN_ID,
+    chain: REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet",
   };
   const endpoint = REACT_APP_ZKCW_ENDPOINT + REACT_APP_CHAIN_ID;
 
