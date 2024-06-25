@@ -2,15 +2,15 @@ const { REACT_APP_CHAIN_ID } = process.env;
 
 export function explorerAccount() {
   const chain = chainId();
-  if (chain === "devnet") return "https://minascan.io/devnet/account/";
-  if (chain === "mainnet") return "https://minascan.io/mainnet/account/";
+  if (chain === "mina:testnet") return "https://minascan.io/devnet/account/";
+  if (chain === "mina:mainnet") return "https://minascan.io/mainnet/account/";
   else return "https://zekoscan.io/devnet/account/";
 }
 
 export function explorerTransaction() {
   const chain = chainId();
-  if (chain === "devnet") return "https://minascan.io/devnet/tx/";
-  if (chain === "mainnet") return "https://minascan.io/mainnet/tx/";
+  if (chain === "mina:testnet") return "https://minascan.io/devnet/tx/";
+  if (chain === "mina:mainnet") return "https://minascan.io/mainnet/tx/";
   else return "https://zekoscan.io/devnet/tx/";
 }
 
