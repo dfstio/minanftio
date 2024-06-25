@@ -4,7 +4,7 @@ import { isMobile } from "react-device-detect";
 import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "mina" });
 
-const { REACT_APP_CHAIN_ID, REACT_APP_CHAIN_NAME } = process.env;
+const { REACT_APP_CHAIN_ID } = process.env;
 
 export async function initAccount(
   handleEvents,
@@ -110,9 +110,9 @@ export async function minaLogin(openlink = true) {
         ?.requestNetwork()
         .catch((err) => console.log(err));
       console.log("mina login network", network);
-      if (network?.chainId !== REACT_APP_CHAIN_ID) {
+      if (network?.networkID !== REACT_APP_CHAIN_ID) {
         const switchNetwork = await window.mina
-          .switchChain({ chainId: REACT_APP_CHAIN_ID })
+          .switchChain({ networkID: REACT_APP_CHAIN_ID })
           .catch((err) => console.log(err));
         console.log("mina login switch network", switchNetwork);
         network = await window.mina
@@ -125,7 +125,7 @@ export async function minaLogin(openlink = true) {
       log.debug("account", { account, network });
       console.log("mina login account", account, network);
 
-      if (account.length > 0 && network?.chainId === REACT_APP_CHAIN_ID)
+      if (account.length > 0 && network?.networkID === REACT_APP_CHAIN_ID)
         address = account[0];
     } else {
       if (openlink) {
