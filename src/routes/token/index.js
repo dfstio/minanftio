@@ -36,7 +36,7 @@ const Token = ({ match }) => {
         }
       } else {
         let objectID =
-          REACT_APP_CHAIN_ID +
+          (REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet") +
           "." +
           REACT_APP_CONTRACT_ADDRESS +
           "." +
