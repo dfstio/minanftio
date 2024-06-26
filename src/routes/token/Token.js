@@ -822,7 +822,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </a>
                   </div>
 
-                  {item.onSale ? (
+                  {item.price > 0 ? (
                     <div className="gx-product-price">
                       <span>Token {item.vrtTokenId}</span>
                       <span style={{ float: "right" }}>

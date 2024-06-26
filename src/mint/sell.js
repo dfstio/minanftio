@@ -1,17 +1,5 @@
 import { serializeTransaction } from "./transaction";
 import { sendSellTransaction } from "./send";
-import { PublicKey, UInt64, Mina } from "o1js";
-import {
-  MinaNFT,
-  NameContractV2,
-  SellParams,
-  initBlockchain,
-  MINANFT_NAME_SERVICE_V2,
-  fetchMinaAccount,
-  serializeFields,
-  NFTContractV2,
-  sleep,
-} from "minanft";
 import { chainId } from "../blockchain/explorer";
 
 export async function sellNFT(params) {
@@ -38,6 +26,17 @@ export async function sellNFT(params) {
       error: "NFT name is undefined",
     };
   }
+
+  const { PublicKey, UInt64, Mina } = await import("o1js");
+  const {
+    MinaNFT,
+    NameContractV2,
+    SellParams,
+    initBlockchain,
+    MINANFT_NAME_SERVICE_V2,
+    fetchMinaAccount,
+    serializeFields,
+  } = await import("minanft");
 
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
