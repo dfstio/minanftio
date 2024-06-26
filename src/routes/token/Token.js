@@ -603,14 +603,14 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const [firstRun, setFirstRun] = useState(true);
   const [counter, setCounter] = useState(0);
   const [checkout, setCheckout] = useState("");
-  const [onSale, setOnSale] = useState(
-    item.price && item.price > 0 ? true : false
-  );
   const [canSell, setCanSell] = useState(
     address?.toUpperCase() === item?.owner?.toUpperCase()
   );
 
   const [currentMedia, setCurrentMedia] = useState(null);
+  const [onSale, setOnSale] = useState(
+    item.price && item.price > 0 ? true : false
+  );
 
   useEffect(() => {
     async function loadMedia() {
@@ -619,6 +619,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         setName(item.name);
         setDescription(item.description);
         if (item.markdown !== undefined) setDescriptionMarkdown(item.markdown);
+        setOnSale(item.price && item.price > 0 ? true : false);
         setImage(storageUrlFromURL(item.image));
         setFirstRun(false);
       }
@@ -822,11 +823,10 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     </a>
                   </div>
 
-                  {item.price > 0 ? (
+                  {onSale ? (
                     <div className="gx-product-price">
-                      <span>Token {item.vrtTokenId}</span>
                       <span style={{ float: "right" }}>
-                        {item.currency} {item.price}
+                        {item.price / 1_000_000_000} {"MINA"}
                       </span>
                     </div>
                   ) : (
