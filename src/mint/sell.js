@@ -70,11 +70,18 @@ export async function sellNFT(params) {
   const tokenId = zkApp.deriveTokenId();
   const fee = Number((await MinaNFT.fee()).toBigInt());
   const memo = ("sell NFT @" + name).substring(0, 30);
+  console.log("memo", memo);
+  console.log("sender", sender.toBase58());
+  console.log("zkAppAddress", zkAppAddress.toBase58());
+  console.log("address", address.toBase58());
+  console.log("tokenId", tokenId.toBase58());
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
   const nft = new NFTContractV2({ address, tokenId });
   const nftOwner = nft.owner.get();
+  console.log("x", nftOwner.x);
+  console.log("x1", nftOwner.x.toJSON());
   console.log("NFT owner", nftOwner.toBase58());
   console.time("prepared tx");
 
