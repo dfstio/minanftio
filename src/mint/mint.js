@@ -293,7 +293,7 @@ export class MintParams extends Struct({
     expiry,
   };
   const tx = await Mina.transaction({ sender, fee, memo }, async () => {
-    AccountUpdate.fundNewAccount(sender);
+    //AccountUpdate.fundNewAccount(sender);
     await zkApp.mint(mintParams);
   });
 
