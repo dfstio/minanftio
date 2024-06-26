@@ -74,7 +74,7 @@ export async function sellNFT(params) {
   console.log("sender", sender.toBase58());
   console.log("zkAppAddress", zkAppAddress.toBase58());
   console.log("address", address.toBase58());
-  console.log("tokenId", tokenId.toBase58());
+  console.log("tokenId", tokenId.toJSON());
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
