@@ -23,9 +23,11 @@ export async function sendMintTransaction(
     contractAddress,
     mintParams,
     chain,
+    name,
   } = params;
   if (DEBUG)
-    console.log("sendTransaction", {
+    console.log("sendMintTransaction", {
+      name,
       serializedTransaction,
       signedData,
       contractAddress,
@@ -52,7 +54,7 @@ export async function sendMintTransaction(
     transactions: [transaction],
     task: "mint",
     args,
-    metadata: `mint`,
+    metadata: `mint @${name}`,
     mode: "async",
   });
 
@@ -80,13 +82,13 @@ export async function sendSellTransaction(
     name,
   } = params;
   if (DEBUG)
-    console.log("sendTransaction", {
+    console.log("sendSellTransaction", {
+      name,
       serializedTransaction,
       signedData,
       contractAddress,
       sellParams,
       chain,
-      name,
     });
 
   let args = JSON.stringify({
@@ -109,7 +111,7 @@ export async function sendSellTransaction(
     transactions: [transaction],
     task: "sell",
     args,
-    metadata: `sell`,
+    metadata: `sell @${name}`,
     mode: "async",
   });
 

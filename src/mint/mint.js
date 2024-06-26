@@ -324,6 +324,7 @@ export class MintParams extends Struct({
   }
 
   const jobId = await sendMintTransaction({
+    name,
     serializedTransaction,
     signedData,
     mintParams: serializeFields(MintParams.toFields(mintParams)),
