@@ -1,14 +1,14 @@
 import axios from "axios";
+import { chainId } from "../blockchain/explorer";
 const {
   REACT_APP_DEBUG,
   REACT_APP_ZKCW_JWT,
   REACT_APP_ZKCW_AUTH,
   REACT_APP_ZKCW_ENDPOINT,
-  REACT_APP_CHAIN_ID,
 } = process.env;
 const DEBUG = REACT_APP_DEBUG === "true";
 
-export async function sendTransaction(
+export async function sendMintTransaction(
   params
   /* {
   serializedTransaction: string,
@@ -17,14 +17,22 @@ export async function sendTransaction(
   contractAddress: string,
 }*/
 ) /*: Promise<{ isSent: boolean, hash: string }> */ {
-  const { serializedTransaction, signedData, contractAddress, mintParams } =
-    params;
+  const {
+    serializedTransaction,
+    signedData,
+    contractAddress,
+    mintParams,
+    chain,
+    name,
+  } = params;
   if (DEBUG)
-    console.log("sendTransaction", {
+    console.log("sendMintTransaction", {
+      name,
       serializedTransaction,
       signedData,
       contractAddress,
       mintParams,
+      chain,
     });
 
   let args = JSON.stringify({
@@ -46,7 +54,7 @@ export async function sendTransaction(
     transactions: [transaction],
     task: "mint",
     args,
-    metadata: `mint`,
+    metadata: `mint @${name}`,
     mode: "async",
   });
 
@@ -56,7 +64,64 @@ export async function sendTransaction(
   return jobId;
 }
 
-export async function waitForMint(jobId) {
+export async function sendSellTransaction(
+  params
+  /* {
+  serializedTransaction: string,
+  signedData: string,
+  mintParams: string,
+  contractAddress: string,
+}*/
+) /*: Promise<{ isSent: boolean, hash: string }> */ {
+  const {
+    serializedTransaction,
+    signedData,
+    contractAddress,
+    sellParams,
+    chain,
+    name,
+  } = params;
+  if (DEBUG)
+    console.log("sendSellTransaction", {
+      name,
+      serializedTransaction,
+      signedData,
+      contractAddress,
+      sellParams,
+      chain,
+    });
+
+  let args = JSON.stringify({
+    contractAddress,
+  });
+
+  const transaction = JSON.stringify(
+    {
+      serializedTransaction,
+      signedData,
+      sellParams,
+      name,
+    },
+    null,
+    2
+  );
+
+  let answer = await zkCloudWorkerRequest({
+    command: "execute",
+    transactions: [transaction],
+    task: "sell",
+    args,
+    metadata: `sell @${name}`,
+    mode: "async",
+  });
+
+  if (DEBUG) console.log(`zkCloudWorker answer:`, answer);
+  const jobId = answer?.jobId;
+  if (DEBUG) console.log(`jobId:`, jobId);
+  return jobId;
+}
+
+export async function waitForTransaction(jobId) {
   if (jobId === undefined || jobId === "") {
     console.error("JobId is undefined");
     return {
@@ -88,6 +153,7 @@ export async function waitForMint(jobId) {
 
 async function zkCloudWorkerRequest(params) {
   const { command, task, transactions, args, metadata, mode, jobId } = params;
+  const chain = chainId();
   const apiData = {
     auth: REACT_APP_ZKCW_AUTH,
     command: command,
@@ -102,9 +168,9 @@ async function zkCloudWorkerRequest(params) {
       mode: mode ?? "sync",
       jobId,
     },
-    chain: REACT_APP_CHAIN_ID,
+    chain,
   };
-  const endpoint = REACT_APP_ZKCW_ENDPOINT + REACT_APP_CHAIN_ID;
+  const endpoint = REACT_APP_ZKCW_ENDPOINT + chain;
 
   const response = await axios.post(endpoint, apiData);
   return response.data;

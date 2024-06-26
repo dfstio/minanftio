@@ -17,5 +17,5 @@ export function explorerTransaction() {
 export function chainId() {
   if (REACT_APP_CHAIN_ID === undefined)
     console.error("REACT_APP_CHAIN_ID is undefined");
-  return REACT_APP_CHAIN_ID;
+  return REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet";
 }
