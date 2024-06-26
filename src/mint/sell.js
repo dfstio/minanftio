@@ -27,6 +27,7 @@ export async function sellNFT(params) {
       error: "Owner address is undefined",
     };
   }
+  console.log("Owner", owner);
 
   if (name === undefined || name === "") {
     console.error("NFT name is undefined");
