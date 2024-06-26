@@ -77,6 +77,11 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
   useEffect(() => {
     async function addressChanged() {
       setFilter(defaultFilter);
+      if (address !== "") {
+        setDisabled(false);
+      } else {
+        setDisabled(true);
+      }
     }
     addressChanged();
   }, [address]);
