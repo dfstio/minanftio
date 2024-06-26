@@ -230,13 +230,15 @@ const MintPrivate = () => {
   };
 
   const mint = async () => {
-    if (address === "") {
-      const newAddress = await minaLogin();
-      console.log("newAddress", newAddress);
-      dispatch(updateAddress(newAddress));
-      checkCanMint();
-      return;
-    }
+    //if (address === "") {
+    const newAddress = await minaLogin();
+    console.log("newAddress", newAddress);
+    dispatch(updateAddress(newAddress));
+    checkCanMint();
+    //return;
+    //}
+    if (newAddress === "" || newAddress === undefined) return;
+    const owner = newAddress;
 
     const key = "Minting Mina NFT";
     message.config({
@@ -307,7 +309,7 @@ const MintPrivate = () => {
         keys,
         developer: "DFST",
         repo: "minanft_io",
-        owner: address,
+        owner,
         pinataJWT: REACT_APP_PINATA_JWT,
         jwt: REACT_APP_MINANFT_JWT,
       });
