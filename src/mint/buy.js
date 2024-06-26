@@ -27,6 +27,7 @@ export async function buyNFT(params) {
       error: "Buyer address is undefined",
     };
   }
+  console.log("Buyer", buyer);
 
   if (name === undefined || name === "") {
     console.error("NFT name is undefined");
