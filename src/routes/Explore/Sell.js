@@ -21,14 +21,12 @@ const SellButton = ({ item }) => {
 
   async function sell() {
     if (DEBUG) console.log("SellButton onClick", item);
-    if (address === "") {
-      const newAddress = await minaLogin();
-      dispatch(updateAddress(newAddress));
-    }
+    const newAddress = await minaLogin();
+    dispatch(updateAddress(newAddress));
     let sellResult = await sellNFT({
       name: item.name,
       price: Number(item.price ?? 100000000000) + 10000000000,
-      owner: address,
+      owner: newAddress,
       address: item.address,
     });
     console.log("SellButton sellResult", sellResult);

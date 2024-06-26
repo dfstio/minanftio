@@ -54,7 +54,7 @@ export async function sendMintTransaction(
     transactions: [transaction],
     task: "mint",
     args,
-    metadata: `mint @${name}`,
+    metadata: `mint NFT @${name}`,
     mode: "async",
   });
 
@@ -111,7 +111,64 @@ export async function sendSellTransaction(
     transactions: [transaction],
     task: "sell",
     args,
-    metadata: `sell @${name}`,
+    metadata: `sell NFT @${name}`,
+    mode: "async",
+  });
+
+  if (DEBUG) console.log(`zkCloudWorker answer:`, answer);
+  const jobId = answer?.jobId;
+  if (DEBUG) console.log(`jobId:`, jobId);
+  return jobId;
+}
+
+export async function sendBuyTransaction(
+  params
+  /* {
+  serializedTransaction: string,
+  signedData: string,
+  mintParams: string,
+  contractAddress: string,
+}*/
+) /*: Promise<{ isSent: boolean, hash: string }> */ {
+  const {
+    serializedTransaction,
+    signedData,
+    contractAddress,
+    buyParams,
+    chain,
+    name,
+  } = params;
+  if (DEBUG)
+    console.log("sendBuyTransaction", {
+      name,
+      serializedTransaction,
+      signedData,
+      contractAddress,
+      buyParams,
+      chain,
+    });
+
+  let args = JSON.stringify({
+    contractAddress,
+  });
+
+  const transaction = JSON.stringify(
+    {
+      serializedTransaction,
+      signedData,
+      buyParams,
+      name,
+    },
+    null,
+    2
+  );
+
+  let answer = await zkCloudWorkerRequest({
+    command: "execute",
+    transactions: [transaction],
+    task: "buy",
+    args,
+    metadata: `buy NFT @${name}`,
     mode: "async",
   });
 

@@ -1,35 +1,33 @@
 import { serializeTransaction } from "./transaction";
-import { sendSellTransaction } from "./send";
+import { sendBuyTransaction } from "./send";
 import { PublicKey, UInt64, Mina } from "o1js";
 import {
   MinaNFT,
   NameContractV2,
-  SellParams,
   initBlockchain,
   MINANFT_NAME_SERVICE_V2,
   fetchMinaAccount,
   serializeFields,
-  NFTContractV2,
-  sleep,
+  BuyParams,
 } from "minanft";
 import { chainId } from "../blockchain/explorer";
 
-export async function sellNFT(params) {
+export async function buyNFT(params) {
   console.time("ready to sign");
-  console.log("Sell NFT", params);
+  console.log("Buy NFT", params);
 
-  const { price, owner, name } = params;
+  const { price, buyer, name } = params;
 
   const chain = chainId();
 
-  if (owner === undefined) {
-    console.error("Owner address is undefined");
+  if (buyer === undefined) {
+    console.error("Buyer address is undefined");
     return {
       success: false,
-      error: "Owner address is undefined",
+      error: "Buyer address is undefined",
     };
   }
-  console.log("Owner", owner);
+  console.log("Buyer", buyer);
 
   if (name === undefined || name === "") {
     console.error("NFT name is undefined");
@@ -62,7 +60,7 @@ export async function sellNFT(params) {
   const address = PublicKey.fromBase58(params.address);
   const net = await initBlockchain(chain);
   console.log("network id", Mina.getNetworkId());
-  const sender = PublicKey.fromBase58(owner);
+  const sender = PublicKey.fromBase58(buyer);
 
   console.timeEnd("prepared data");
 
@@ -70,24 +68,10 @@ export async function sellNFT(params) {
   const zkApp = new NameContractV2(zkAppAddress);
   const tokenId = zkApp.deriveTokenId();
   const fee = Number((await MinaNFT.fee()).toBigInt());
-  const memo = ("sell NFT @" + name).substring(0, 30);
-  console.log("memo", memo);
-  console.log("sender", sender.toBase58());
-  console.log("zkAppAddress", zkAppAddress.toBase58());
-  console.log("address", address.toBase58());
-  console.log("tokenId", tokenId.toJSON());
+  const memo = ("buy NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
-  /*
-  const nft = new NFTContractV2({ address, tokenId });
-  const nftOwner = nft.owner.get();
-  console.log("nftOwner", nftOwner);
-  await sleep(5000);
-  console.log("x", nftOwner.x);
-  console.log("x1", nftOwner.x.toJSON());
-  //console.log("NFT owner", nftOwner.toBase58());
-  */
   console.time("prepared tx");
 
   /*
@@ -97,13 +81,13 @@ export async function sellNFT(params) {
       }) {}
   */
 
-  const sellParams = new SellParams({
+  const buyParams = new BuyParams({
     address,
     price: UInt64.from(price),
   });
 
   const tx = await Mina.transaction({ sender, fee, memo }, async () => {
-    await zkApp.sell(sellParams);
+    await zkApp.buy(buyParams);
   });
 
   const serializedTransaction = serializeTransaction(tx);
@@ -131,11 +115,11 @@ export async function sellNFT(params) {
     };
   }
 
-  const jobId = await sendSellTransaction({
+  const jobId = await sendBuyTransaction({
     name,
     serializedTransaction,
     signedData,
-    sellParams: serializeFields(SellParams.toFields(sellParams)),
+    buyParams: serializeFields(BuyParams.toFields(buyParams)),
     contractAddress,
     chain,
   });
