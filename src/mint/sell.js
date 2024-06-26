@@ -9,6 +9,7 @@ import {
   MINANFT_NAME_SERVICE_V2,
   fetchMinaAccount,
   serializeFields,
+  NFTContractV2,
 } from "minanft";
 import { chainId } from "../blockchain/explorer";
 
@@ -72,6 +73,9 @@ export async function sellNFT(params) {
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
+  const nft = new NFTContractV2({ address, tokenId });
+  const nftOwner = nft.owner.get();
+  console.log("NFT owner", nftOwner.toBase58());
   console.time("prepared tx");
 
   /*
