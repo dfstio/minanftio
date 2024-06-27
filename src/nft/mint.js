@@ -261,7 +261,7 @@ export async function mintNFT(
     };
   }
 
-  await showText(`NFT name @${name} reserved`, "green");
+  await showText(`NFT name @${name} is reserved`, "green");
   await showPending("Uploading the image to IPFs...");
 
   const signature = Signature.fromBase58(reserved.signature);
@@ -277,7 +277,7 @@ export async function mintNFT(
   console.time("uploaded image");
   const ipfs = await ipfsPromise;
   console.timeEnd("uploaded image");
-  await showText(`Image uploaded to the IPFS`, "green");
+  await showText(`Image is uploaded to the IPFS`, "green");
   await showPending(
     "Getting the NFT contract data from the Mina blockchain..."
   );
@@ -304,16 +304,15 @@ export async function mintNFT(
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await showText(
-    "Sucessfully fetched NFT state from the Mina blockchain",
+    "Successfully fetched the NFT contract state from the Mina blockchain",
     "green"
   );
 
-  await showPending("Creating the provable data...");
+  await showPending("Preparing mint transaction...");
   console.time("prepared commit data");
   await commitPromise;
   console.timeEnd("prepared commit data");
-  await showText(`Provable data created`, "green");
-  await showPending("Preparing mint transaction...");
+
   console.time("prepared tx");
 
   if (nft.storage === undefined) throw new Error("Storage is undefined");
@@ -378,7 +377,7 @@ export class MintParams extends Struct({
   };
   console.timeEnd("prepared tx");
   console.timeEnd("ready to sign");
-  await showText("Transaction prepared", "green");
+  await showText("Mint transaction is prepared", "green");
   await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
   console.log("Transaction result", txResult);

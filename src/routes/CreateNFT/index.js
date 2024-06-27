@@ -357,7 +357,7 @@ const MintPrivate = () => {
         });
         fileSaver.saveAs(blob, name + ".v1.json");
         await showText(
-          `"NFT private data is saved to ${name}.v1.json`,
+          `NFT private data is saved to the ${name}.v1.json`,
           "green"
         );
         const jobInfo = (
@@ -414,10 +414,10 @@ const MintPrivate = () => {
           <span>
             Buy transaction successfully sent with hash:{" "}
             <a href={explorerTransaction() + txResult.hash} target="_blank">
-              {mintResult.hash}
+              {txResult.hash}
             </a>
             <br />
-            You can close this form and wait for the transaction to be included
+            You can close this page and wait for the transaction to be included
             in the block.
           </span>
         );
