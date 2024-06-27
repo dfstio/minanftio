@@ -16,6 +16,7 @@ import { sellNFT } from "../../mint/sell";
 import { waitForTransaction } from "../../mint/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
+import { set } from "nprogress";
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -88,7 +89,7 @@ const SellButton = ({ item }) => {
     if (txResult.success) {
       const txInfo = (
         <span>
-          Transaction sent with hash:{" "}
+          Sell transaction sent with hash:{" "}
           <a href={explorerTransaction() + txResult.hash} target="_blank">
             {txResult.hash}
           </a>
@@ -98,6 +99,7 @@ const SellButton = ({ item }) => {
     } else {
       setModalText("Error: " + txResult.error ?? "");
     }
+    setLoading(false);
   };
 
   const handleCancel = () => {
