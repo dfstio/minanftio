@@ -27,7 +27,17 @@ export async function sellNFT(params) {
     };
   }
 
-  await showText("Loading o1js library...");
+  const o1jsInfo = (
+    <span>
+      Loading{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library...
+    </span>
+  );
+  await showText(o1jsInfo);
+
   const { PublicKey, UInt64, Mina } = await import("o1js");
   const {
     MinaNFT,
