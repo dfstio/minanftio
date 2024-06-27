@@ -25,7 +25,7 @@ const BuyButton = ({ item }) => {
   const [modalText, setModalText] = useState("");
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState("Sell NFT @" + item.name);
+  const [title, setTitle] = useState("Buy NFT @" + item.name);
   const [price, setPrice] = useState(100);
   const [okDisabled, setOkDisabled] = useState(true);
   const address = useSelector(({ blockchain }) => blockchain.address);
@@ -51,6 +51,7 @@ const BuyButton = ({ item }) => {
       price: Number(item.price),
       buyer: newAddress,
       address: item.address,
+      showText,
     });
     if (buyResult.success === false || buyResult.jobId === undefined) {
       setModalText("Error: " + buyResult.error ?? "");
@@ -129,9 +130,6 @@ const BuyButton = ({ item }) => {
           onValuesChange={handleChange}
           layout="vertical"
           name="form_in_modal"
-          initialValues={{
-            price: 100,
-          }}
         >
           <Form.Item>
             <div
