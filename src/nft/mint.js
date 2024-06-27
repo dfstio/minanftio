@@ -2,31 +2,8 @@ import { calculateSHA512 } from "./sha512";
 import { pinFile } from "./ipfs";
 import { serializeTransaction } from "./transaction";
 import { sendMintTransaction } from "./send";
-import {
-  Field,
-  PrivateKey,
-  PublicKey,
-  UInt64,
-  Mina,
-  AccountUpdate,
-  Signature,
-  UInt32,
-} from "o1js";
-import {
-  MinaNFT,
-  NameContractV2,
-  RollupNFT,
-  FileData,
-  initBlockchain,
-  MINANFT_NAME_SERVICE_V2,
-  VERIFICATION_KEY_V2_JSON,
-  wallet,
-  fetchMinaAccount,
-  api,
-  serializeFields,
-  MintParams,
-} from "minanft";
 import { chainId } from "../blockchain/explorer";
+const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 /*
 export interface ProofOfNFT {
@@ -68,9 +45,27 @@ export async function mintNFT(
     owner,
     jwt,
     pinataJWT,
+    showText,
+    showPending,
   } = params;
 
   const chain = chainId();
+
+  if (chain === undefined) {
+    console.error("Chain is undefined");
+    return {
+      success: false,
+      error: "Chain is undefined",
+    };
+  }
+
+  if (REACT_APP_CONTRACT_ADDRESS === undefined) {
+    console.error("Contract address is undefined");
+    return {
+      success: false,
+      error: "Contract address is undefined",
+    };
+  }
 
   if (owner === undefined) {
     console.error("Owner address is undefined");
@@ -95,6 +90,72 @@ export async function mintNFT(
       error: "Image is undefined",
     };
   }
+
+  const arweaveKey = undefined;
+
+  if (jwt === undefined) {
+    console.error("JWT is undefined");
+    return {
+      success: false,
+      error: "JWT is undefined",
+    };
+  }
+
+  if (pinataJWT === undefined) {
+    console.error("Pinata JWT is undefined");
+    return {
+      success: false,
+      error: "Pinata JWT is undefined",
+    };
+  }
+
+  const ipfsPromise = pinFile({
+    file: image,
+    keyvalues: {
+      name,
+      owner,
+      contractAddress: REACT_APP_CONTRACT_ADDRESS,
+      chain,
+      developer,
+      repo,
+    },
+  });
+
+  const o1jsInfo = (
+    <span>
+      Loading{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library...
+    </span>
+  );
+  await showPending(o1jsInfo);
+
+  const {
+    Field,
+    PrivateKey,
+    PublicKey,
+    UInt64,
+    Mina,
+    AccountUpdate,
+    Signature,
+    UInt32,
+  } = await import("o1js");
+  const {
+    MinaNFT,
+    NameContractV2,
+    RollupNFT,
+    FileData,
+    initBlockchain,
+    MINANFT_NAME_SERVICE_V2,
+    VERIFICATION_KEY_V2_JSON,
+    wallet,
+    fetchMinaAccount,
+    api,
+    serializeFields,
+    MintParams,
+  } = await import("minanft");
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
     console.error("Contract address is undefined");
@@ -104,25 +165,24 @@ export async function mintNFT(
     };
   }
 
-  if (chain === undefined) {
-    console.error("Chain is undefined");
+  if (contractAddress !== REACT_APP_CONTRACT_ADDRESS) {
+    console.error("Wrong contract address");
     return {
       success: false,
-      error: "Chain is undefined",
+      error: "Wrong contract address",
     };
   }
-
-  const ipfsPromise = pinFile({
-    file: image,
-    keyvalues: {
-      name,
-      owner,
-      contractAddress,
-      chain,
-      developer,
-      repo,
-    },
-  });
+  const o1jsInfoDone = (
+    <span>
+      Loaded{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library
+    </span>
+  );
+  await showText(o1jsInfoDone, "green");
+  await showPending("Reserving NFT name...");
 
   console.time("prepared data");
 
@@ -133,22 +193,7 @@ export async function mintNFT(
   const net = await initBlockchain(chain);
   console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
-  if (pinataJWT === undefined) {
-    console.error("Pinata JWT is undefined");
-    return {
-      success: false,
-      error: "Pinata JWT is undefined",
-    };
-  }
-  const arweaveKey = undefined;
 
-  if (jwt === undefined) {
-    console.error("JWT is undefined");
-    return {
-      success: false,
-      error: "JWT is undefined",
-    };
-  }
   const minanft = new api(jwt);
   const reservedPromise = minanft.reserveName({
     name,
@@ -202,12 +247,22 @@ export async function mintNFT(
     reserved.price?.price === undefined
   ) {
     console.error("Name is not reserved");
+    await showText(
+      `NFT name @${name} is not reserved${
+        reserved.reason ? ": " + reserved.reason : ""
+      }`,
+      "red"
+    );
+    await showPending(undefined);
     return {
       success: false,
       error: "Name is not reserved",
       reason: reserved.reason,
     };
   }
+
+  await showText(`NFT name @${name} is reserved`, "green");
+  await showPending("Uploading the image to IPFs...");
 
   const signature = Signature.fromBase58(reserved.signature);
   const expiry = UInt32.from(reserved.expiry);
@@ -222,6 +277,10 @@ export async function mintNFT(
   console.time("uploaded image");
   const ipfs = await ipfsPromise;
   console.timeEnd("uploaded image");
+  await showText(`Image is uploaded to the IPFS`, "green");
+  await showPending(
+    "Getting the NFT contract data from the Mina blockchain..."
+  );
   console.log("image ipfs", ipfs);
 
   const imageData = new FileData({
@@ -244,9 +303,16 @@ export async function mintNFT(
   const memo = ("mint NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
+  await showText(
+    "Successfully fetched the NFT contract state from the Mina blockchain",
+    "green"
+  );
+
+  await showPending("Preparing mint transaction...");
   console.time("prepared commit data");
   await commitPromise;
   console.timeEnd("prepared commit data");
+
   console.time("prepared tx");
 
   if (nft.storage === undefined) throw new Error("Storage is undefined");
@@ -311,6 +377,8 @@ export class MintParams extends Struct({
   };
   console.timeEnd("prepared tx");
   console.timeEnd("ready to sign");
+  await showText("Mint transaction is prepared", "green");
+  await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
   console.log("Transaction result", txResult);
   console.time("sent transaction");
@@ -322,7 +390,8 @@ export class MintParams extends Struct({
       error: "No user signature",
     };
   }
-
+  await showText("User signature received", "green");
+  await showPending("Starting cloud proving job...");
   const jobId = await sendMintTransaction({
     name,
     serializedTransaction,
