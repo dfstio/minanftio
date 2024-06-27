@@ -80,6 +80,8 @@ const SellButton = ({ item }) => {
         <a href={"https://minarollupscan.com/"} target="_blank">
           {jobId}
         </a>
+        <br />
+        You can close this form and check the status later.
       </span>
     );
 
