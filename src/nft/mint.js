@@ -3,6 +3,7 @@ import { pinFile } from "./ipfs";
 import { serializeTransaction } from "./transaction";
 import { sendMintTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
+const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 /*
 export interface ProofOfNFT {
@@ -56,6 +57,14 @@ export async function mintNFT(
     };
   }
 
+  if (REACT_APP_CONTRACT_ADDRESS === undefined) {
+    console.error("Contract address is undefined");
+    return {
+      success: false,
+      error: "Contract address is undefined",
+    };
+  }
+
   if (owner === undefined) {
     console.error("Owner address is undefined");
     return {
@@ -103,7 +112,7 @@ export async function mintNFT(
     keyvalues: {
       name,
       owner,
-      contractAddress,
+      contractAddress: REACT_APP_CONTRACT_ADDRESS,
       chain,
       developer,
       repo,
@@ -140,6 +149,14 @@ export async function mintNFT(
     return {
       success: false,
       error: "Contract address is undefined",
+    };
+  }
+
+  if (contractAddress !== REACT_APP_CONTRACT_ADDRESS) {
+    console.error("Wrong contract address");
+    return {
+      success: false,
+      error: "Wrong contract address",
     };
   }
 
