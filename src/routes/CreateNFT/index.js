@@ -674,6 +674,7 @@ const MintPrivate = () => {
       //setToken(startToken);
       //if (address !== "") await getSignature(strJSON);
       //setMinting(false);
+      setLoading(false);
     } catch (error) {
       console.log("Mint error", error);
       showText(`Error minting NFT token: ${error}`, "red");
