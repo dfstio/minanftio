@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-//import { updatePublicKey } from "../../appRedux/actions";
 import {
   ClearRefinements,
   HierarchicalMenu,
@@ -62,11 +61,11 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
     if (address !== "") {
       setDisabled(false);
       if (e.target.checked === true) {
-        const filterStr = `owner:${address}`;
+        const filterStr = `owner:${address} AND (status:pending OR status:minted)`;
         setFilter(filterStr);
         console.log("On change", e.target.checked, filterStr);
       } else {
-        const filterStr = ``;
+        const filterStr = defaultFilter;
         setFilter(filterStr);
       }
     } else {
@@ -76,29 +75,17 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
   }
 
   useEffect(() => {
-    async function loadHash() {
-      if (address === "") {
-        setDisabled(true);
-        setFilter(defaultFilter);
-      } else {
+    async function addressChanged() {
+      setFilter(defaultFilter);
+      if (address !== "") {
         setDisabled(false);
-        const filterStr = ``;
-        setFilter(filterStr);
+      } else {
+        setDisabled(true);
       }
     }
-    loadHash();
+    addressChanged();
   }, [address]);
-  /*
-  useEffect(() => {
-    async function fetchHash() {
-      const result = await api.hash(address);
-      console.log("Hash result: ", result);
-      if (result.hash !== undefined && result.hash !== "")
-        dispatch(updatePublicKey(result.hash));
-    }
-    fetchHash();
-  }, [dispatch, address]);
-*/
+
   return (
     <Sider className="gx-algolia-sidebar">
       <div className="gx-algolia-sidebar-content">

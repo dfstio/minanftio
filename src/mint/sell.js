@@ -1,24 +1,12 @@
 import { serializeTransaction } from "./transaction";
 import { sendSellTransaction } from "./send";
-import { PublicKey, UInt64, Mina } from "o1js";
-import {
-  MinaNFT,
-  NameContractV2,
-  SellParams,
-  initBlockchain,
-  MINANFT_NAME_SERVICE_V2,
-  fetchMinaAccount,
-  serializeFields,
-  NFTContractV2,
-  sleep,
-} from "minanft";
 import { chainId } from "../blockchain/explorer";
 
 export async function sellNFT(params) {
   console.time("ready to sign");
   console.log("Sell NFT", params);
 
-  const { price, owner, name } = params;
+  const { price, owner, name, showText, showPending } = params;
 
   const chain = chainId();
 
@@ -39,6 +27,38 @@ export async function sellNFT(params) {
     };
   }
 
+  const o1jsInfo = (
+    <span>
+      Loading{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library...
+    </span>
+  );
+  await showPending(o1jsInfo);
+
+  const { PublicKey, UInt64, Mina } = await import("o1js");
+  const {
+    MinaNFT,
+    NameContractV2,
+    SellParams,
+    initBlockchain,
+    MINANFT_NAME_SERVICE_V2,
+    fetchMinaAccount,
+    serializeFields,
+  } = await import("minanft");
+  const o1jsInfoDone = (
+    <span>
+      Loaded{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library
+    </span>
+  );
+  await showText(o1jsInfoDone, "green");
+  await showPending("Getting current NFT state from the Mina blockchain...");
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
     console.error("Contract address is undefined");
@@ -79,6 +99,11 @@ export async function sellNFT(params) {
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
+  await showText(
+    "Sucessfully fetched NFT state from the Mina blockchain",
+    "green"
+  );
+  await showPending("Preparing transaction...");
   /*
   const nft = new NFTContractV2({ address, tokenId });
   const nftOwner = nft.owner.get();
@@ -119,17 +144,23 @@ export async function sellNFT(params) {
   };
   console.timeEnd("prepared tx");
   console.timeEnd("ready to sign");
+  await showText("Transaction prepared", "green");
+  await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
   console.log("Transaction result", txResult);
   console.time("sent transaction");
   const signedData = txResult?.signedData;
   if (signedData === undefined) {
     console.log("No signed data");
+    await showText("No user signature received", "red");
+    await showPending(undefined);
     return {
       success: false,
       error: "No user signature",
     };
   }
+  await showText("User signature received", "green");
+  await showPending("Starting cloud proving job...");
 
   const jobId = await sendSellTransaction({
     name,

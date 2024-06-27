@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress } from "../../appRedux/actions";
@@ -8,6 +8,7 @@ import { buyNFT } from "../../mint/buy";
 import { waitForTransaction } from "../../mint/send";
 
 import logger from "../../serverless/logger";
+import { set } from "nprogress";
 const logm = logger.info.child({
   winstonModule: "Algolia",
   winstonComponent: "Buy",
@@ -16,6 +17,7 @@ const logm = logger.info.child({
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const BuyButton = ({ item }) => {
+  const [working, setWorking] = useState(false);
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
@@ -23,8 +25,13 @@ const BuyButton = ({ item }) => {
 
   async function buy() {
     if (DEBUG) console.log("SellButton onClick", item);
+    setWorking(true);
     const newAddress = await minaLogin();
     dispatch(updateAddress(newAddress));
+    if (newAddress === "" || newAddress === undefined) {
+      setWorking(false);
+      return;
+    }
     let buyResult = await buyNFT({
       name: item.name,
       price: Number(item.price),
@@ -35,10 +42,11 @@ const BuyButton = ({ item }) => {
     const jobId = buyResult.jobId;
     buyResult = await waitForTransaction(jobId);
     console.log("BuyButton tx buyResult", buyResult);
+    setWorking(false);
   }
 
   return (
-    <Button type="primary" onClick={buy}>
+    <Button type="primary" onClick={buy} loading={working}>
       <IntlMessages id="sidebar.algolia.buy" />
     </Button>
   );
