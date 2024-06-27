@@ -6,7 +6,7 @@ export async function sellNFT(params) {
   console.time("ready to sign");
   console.log("Sell NFT", params);
 
-  const { price, owner, name, showText, showPending } = params;
+  const { price, owner, name, showText, showPending, libraries } = params;
 
   const chain = chainId();
 
@@ -27,6 +27,14 @@ export async function sellNFT(params) {
     };
   }
 
+  if (libraries === undefined) {
+    console.error("o1js library is missing");
+    return {
+      success: false,
+      error: "o1js library is missing",
+    };
+  }
+
   const o1jsInfo = (
     <span>
       Loading{" "}
@@ -37,8 +45,9 @@ export async function sellNFT(params) {
     </span>
   );
   await showPending(o1jsInfo);
+  const lib = await libraries;
 
-  const { PublicKey, UInt64, Mina } = await import("o1js");
+  const { PublicKey, UInt64, Mina } = lib.o1js;
   const {
     MinaNFT,
     NameContractV2,
@@ -47,7 +56,7 @@ export async function sellNFT(params) {
     MINANFT_NAME_SERVICE_V2,
     fetchMinaAccount,
     serializeFields,
-  } = await import("minanft");
+  } = lib.minanft;
   const o1jsInfoDone = (
     <span>
       Loaded{" "}

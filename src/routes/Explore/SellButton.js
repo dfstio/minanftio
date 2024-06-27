@@ -4,6 +4,7 @@ import { footerAgreement, footerAgreementLink } from "../../util/config";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress } from "../../appRedux/actions";
 import { sellNFT } from "../../nft/sell";
+import { loadLibraries } from "../../nft/libraries";
 import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
@@ -20,6 +21,7 @@ const SellButton = ({ item }) => {
   const [okDisabled, setOkDisabled] = useState(true);
   const [timeline, setTimeline] = useState([]);
   const [pending, setPending] = useState(undefined);
+  const [libraries, setLibraries] = useState(undefined);
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
@@ -28,6 +30,7 @@ const SellButton = ({ item }) => {
     setPending(undefined);
     setLoading(false);
     setVisible(true);
+    setLibraries(loadLibraries());
   };
 
   const showText = async (text, color) => {
@@ -68,6 +71,7 @@ const SellButton = ({ item }) => {
       address: item.address,
       showText,
       showPending,
+      libraries,
     });
     if (sellResult.success === false || sellResult.jobId === undefined) {
       showText("Error: " + sellResult.error ?? "", "red");
