@@ -88,10 +88,15 @@ const SellButton = ({ item }) => {
     setModalText(jobInfo);
     const txResult = await waitForTransaction(jobId);
     console.log("SellButton tx sellResult", txResult);
-    if (txResult.success) {
+    if (
+      txResult.success &&
+      txResult.hash !== undefined &&
+      txResult.hash !== "" &&
+      txResult.hash.toLowerCase().includes("error") === false
+    ) {
       const txInfo = (
         <span>
-          Sell transaction sent with hash:{" "}
+          Sell transaction successfully sent with hash:{" "}
           <a href={explorerTransaction() + txResult.hash} target="_blank">
             {txResult.hash}
           </a>
@@ -99,6 +104,14 @@ const SellButton = ({ item }) => {
       );
       setModalText(txInfo);
     } else {
+      const txError = (
+        <span>
+          Error {txResult.hash ? ": " + txResult.hash : " sending transaction"}
+          <br />
+          Please try again later, after all the previous transactions are
+          included in the block.
+        </span>
+      );
       setModalText("Error: " + txResult.error ?? "");
     }
     setLoading(false);
