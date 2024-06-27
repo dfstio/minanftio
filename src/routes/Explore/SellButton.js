@@ -133,7 +133,7 @@ const SellButton = ({ item }) => {
           included in the block.
         </span>
       );
-      await showText("Error: " + txResult.error ?? "", "red");
+      await showText(txError, "red");
       setPending(undefined);
     }
     setLoading(false);
