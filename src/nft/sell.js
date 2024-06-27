@@ -114,7 +114,10 @@ export async function sellNFT(params) {
     !Mina.hasAccount(address, tokenId)
   ) {
     console.error("Account not found");
-    await showText("Account not found", "red");
+    await showText(
+      "Account not found. Please try again later, after all the previous transactions are included in the block.",
+      "red"
+    );
     await showPending(undefined);
     return {
       success: false,
