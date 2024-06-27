@@ -6,7 +6,7 @@ import { Button } from "antd";
 import IntlMessages from "util/IntlMessages";
 import { minaLogin } from "../../blockchain/mina";
 import { storageUrlFromURL } from "../../blockchain/storage";
-import SellButton from "./Sell";
+import SellButton from "./SellButton";
 import BuyButton from "./Buy";
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 

@@ -8,7 +8,6 @@ import { sellNFT } from "../../mint/sell";
 import { waitForTransaction } from "../../mint/send";
 
 import logger from "../../serverless/logger";
-import { set } from "nprogress";
 const logm = logger.info.child({
   winstonModule: "Algolia",
   winstonComponent: "Buy",

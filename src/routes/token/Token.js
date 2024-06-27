@@ -9,14 +9,13 @@ import {
   CaretDownFilled,
 } from "@ant-design/icons";
 import IntlMessages from "util/IntlMessages";
-import SellButton from "../Explore/Sell";
+import SellButton from "../Explore/SellButton";
 import BuyButton from "../Explore/Buy";
 import ReactPlayer from "react-player";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
 import "./style.css";
 import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
-import api from "../../serverless/api";
 import { prepareMetadata } from "./metadata";
 import { storageUrl, storageUrlFromURL } from "../../blockchain/storage";
 //import '../../styles/token/audio-player.less';
