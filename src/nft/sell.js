@@ -6,7 +6,7 @@ export async function sellNFT(params) {
   console.time("ready to sign");
   console.log("Sell NFT", params);
 
-  const { price, owner, name, showText, showPending } = params;
+  const { price, owner, name, showText, showPending, libraries } = params;
 
   const chain = chainId();
 
@@ -27,6 +27,14 @@ export async function sellNFT(params) {
     };
   }
 
+  if (libraries === undefined) {
+    console.error("o1js library is missing");
+    return {
+      success: false,
+      error: "o1js library is missing",
+    };
+  }
+
   const o1jsInfo = (
     <span>
       Loading{" "}
@@ -37,8 +45,9 @@ export async function sellNFT(params) {
     </span>
   );
   await showPending(o1jsInfo);
+  const lib = await libraries;
 
-  const { PublicKey, UInt64, Mina } = await import("o1js");
+  const { PublicKey, UInt64, Mina } = lib.o1js;
   const {
     MinaNFT,
     NameContractV2,
@@ -47,7 +56,7 @@ export async function sellNFT(params) {
     MINANFT_NAME_SERVICE_V2,
     fetchMinaAccount,
     serializeFields,
-  } = await import("minanft");
+  } = lib.minanft;
   const o1jsInfoDone = (
     <span>
       Loaded{" "}
@@ -99,6 +108,22 @@ export async function sellNFT(params) {
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
+  if (
+    !Mina.hasAccount(sender) ||
+    !Mina.hasAccount(zkAppAddress) ||
+    !Mina.hasAccount(address, tokenId)
+  ) {
+    console.error("Account not found");
+    await showText(
+      "Account not found. Please try again later, after all the previous transactions are included in the block.",
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
   await showText(
     "Sucessfully fetched NFT state from the Mina blockchain",
     "green"

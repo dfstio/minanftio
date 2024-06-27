@@ -47,6 +47,7 @@ export async function mintNFT(
     pinataJWT,
     showText,
     showPending,
+    libraries,
   } = params;
 
   const chain = chainId();
@@ -131,6 +132,7 @@ export async function mintNFT(
     </span>
   );
   await showPending(o1jsInfo);
+  const lib = await libraries;
 
   const {
     Field,
@@ -141,7 +143,7 @@ export async function mintNFT(
     AccountUpdate,
     Signature,
     UInt32,
-  } = await import("o1js");
+  } = lib.o1js;
   const {
     MinaNFT,
     NameContractV2,
@@ -155,7 +157,7 @@ export async function mintNFT(
     api,
     serializeFields,
     MintParams,
-  } = await import("minanft");
+  } = lib.minanft;
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
     console.error("Contract address is undefined");
@@ -303,6 +305,18 @@ export async function mintNFT(
   const memo = ("mint NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
+  if (!Mina.hasAccount(sender) || !Mina.hasAccount(zkAppAddress)) {
+    console.error("Account not found");
+    await showText(
+      "Account not found. Please try again later, after all the previous transactions are included in the block.",
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
   await showText(
     "Successfully fetched the NFT contract state from the Mina blockchain",
     "green"

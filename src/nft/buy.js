@@ -94,6 +94,22 @@ export async function buyNFT(params) {
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
   console.time("prepared tx");
+  if (
+    !Mina.hasAccount(sender) ||
+    !Mina.hasAccount(zkAppAddress) ||
+    !Mina.hasAccount(address, tokenId)
+  ) {
+    console.error("Account not found");
+    await showText(
+      "Account not found. Please try again later, after all the previous transactions are included in the block.",
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
   await showText(
     "Sucessfully fetched NFT state from the Mina blockchain",
     "green"

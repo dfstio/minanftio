@@ -4,6 +4,7 @@ import { footerAgreement, footerAgreementLink } from "../../util/config";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress } from "../../appRedux/actions";
 import { sellNFT } from "../../nft/sell";
+import { loadLibraries } from "../../nft/libraries";
 import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
@@ -20,6 +21,7 @@ const SellButton = ({ item }) => {
   const [okDisabled, setOkDisabled] = useState(true);
   const [timeline, setTimeline] = useState([]);
   const [pending, setPending] = useState(undefined);
+  const [libraries, setLibraries] = useState(undefined);
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
@@ -28,6 +30,7 @@ const SellButton = ({ item }) => {
     setPending(undefined);
     setLoading(false);
     setVisible(true);
+    setLibraries(loadLibraries());
   };
 
   const showText = async (text, color) => {
@@ -54,85 +57,93 @@ const SellButton = ({ item }) => {
   const handleOk = async () => {
     setPending("Preparing sale transaction...");
     setLoading(true);
-
-    const newAddress = await minaLogin();
-    dispatch(updateAddress(newAddress));
-    if (newAddress === "" || newAddress === undefined) {
-      setVisible(false);
-      return;
-    }
-    let sellResult = await sellNFT({
-      name: item.name,
-      price: Number(price) * 1_000_000_000,
-      owner: newAddress,
-      address: item.address,
-      showText,
-      showPending,
-    });
-    if (sellResult.success === false || sellResult.jobId === undefined) {
-      showText("Error: " + sellResult.error ?? "", "red");
-      setPending(undefined);
-      return;
-    }
-    console.log("SellButton sellResult", sellResult);
-    const jobId = sellResult.jobId;
-    await showText("Cloud proving job started", "green");
-    const jobInfo = (
-      <span>
-        Proving transaction, cloud prove job id:{" "}
-        <a href={"https://minarollupscan.com/"} target="_blank">
-          {jobId}
-        </a>
-        <br />
-        You can close this form and check the transaction status later.
-      </span>
-    );
-
-    setPending(jobInfo);
-    const txResult = await waitForTransaction(jobId);
-    console.log("SellButton tx sellResult", txResult);
-    if (
-      txResult.success &&
-      txResult.hash !== undefined &&
-      txResult.hash !== "" &&
-      txResult.hash.toLowerCase().includes("error") === false
-    ) {
+    try {
+      const newAddress = await minaLogin();
+      dispatch(updateAddress(newAddress));
+      if (newAddress === "" || newAddress === undefined) {
+        setVisible(false);
+        return;
+      }
+      let sellResult = await sellNFT({
+        name: item.name,
+        price: Number(price) * 1_000_000_000,
+        owner: newAddress,
+        address: item.address,
+        showText,
+        showPending,
+        libraries: libraries ?? loadLibraries(),
+      });
+      if (sellResult.success === false || sellResult.jobId === undefined) {
+        showText("Error: " + sellResult.error ?? "", "red");
+        setPending(undefined);
+        return;
+      }
+      console.log("SellButton sellResult", sellResult);
+      const jobId = sellResult.jobId;
+      await showText("Cloud proving job started", "green");
       const jobInfo = (
         <span>
-          Sucessfully proved transaction, cloud prove job id:{" "}
+          Proving transaction, cloud prove job id:{" "}
           <a href={"https://minarollupscan.com/"} target="_blank">
             {jobId}
           </a>
           <br />
+          You can close this form and check the transaction status later.
         </span>
       );
-      await showText(jobInfo, "green");
-      const txInfo = (
-        <span>
-          Sell transaction successfully sent with hash:{" "}
-          <a href={explorerTransaction() + txResult.hash} target="_blank">
-            {txResult.hash}
-          </a>
-          <br />
-          You can close this form and wait for the transaction to be included in
-          the block.
-        </span>
-      );
-      await showText(txInfo, "green");
+
+      setPending(jobInfo);
+      const txResult = await waitForTransaction(jobId);
+      console.log("SellButton tx sellResult", txResult);
+      if (
+        txResult.success &&
+        txResult.hash !== undefined &&
+        txResult.hash !== "" &&
+        txResult.hash.toLowerCase().includes("error") === false
+      ) {
+        const jobInfo = (
+          <span>
+            Sucessfully proved transaction, cloud prove job id:{" "}
+            <a href={"https://minarollupscan.com/"} target="_blank">
+              {jobId}
+            </a>
+            <br />
+          </span>
+        );
+        await showText(jobInfo, "green");
+        const txInfo = (
+          <span>
+            Sell transaction successfully sent with hash:{" "}
+            <a href={explorerTransaction() + txResult.hash} target="_blank">
+              {txResult.hash}
+            </a>
+            <br />
+            You can close this form and wait for the transaction to be included
+            in the block.
+          </span>
+        );
+        await showText(txInfo, "green");
+        setPending(undefined);
+      } else {
+        const txError = (
+          <span>
+            Error{" "}
+            {txResult.hash ? ": " + txResult.hash : " sending transaction"}
+            <br />
+            Please try again later, after all the previous transactions are
+            included in the block.
+          </span>
+        );
+        await showText(txError, "red");
+        setPending(undefined);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("SellButton error", error);
+      showText(error?.message ? error.message : error, "red");
       setPending(undefined);
-    } else {
-      const txError = (
-        <span>
-          Error {txResult.hash ? ": " + txResult.hash : " sending transaction"}
-          <br />
-          Please try again later, after all the previous transactions are
-          included in the block.
-        </span>
-      );
-      await showText(txError, "red");
-      setPending(undefined);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleCancel = () => {
