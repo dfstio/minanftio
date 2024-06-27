@@ -615,13 +615,6 @@ const MintPrivate = () => {
             <Col xxl={10} xl={10} lg={10} md={8} sm={24} xs={24}>
               <Row>
                 <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                  {url && (
-                    <img
-                      src={url}
-                      alt="Preview"
-                      className="w-[341.33px] h-64 bg-[#30363D] rounded-lg"
-                    />
-                  )}
                   <Form.Item
                     name="mainimage"
                     label="Main image"
@@ -643,11 +636,17 @@ const MintPrivate = () => {
                       beforeUpload={beforeUpload}
                       isImageUrl={() => true}
                     >
-                      {" "}
+                      {url && (
+                        <img
+                          src={url}
+                          alt="Preview"
+                          className="w-[341.33px] h-64 bg-[#30363D] rounded-lg"
+                        />
+                      )}{" "}
                       <div>
-                        <PlusOutlined />
+                        {!url && <PlusOutlined />}
                         <div className="ant-upload-text">
-                          {url ? "Change" : "Main Image"}
+                          {url ? "" : "Main Image"}
                         </div>
                       </div>
                     </Dragger>
@@ -682,7 +681,7 @@ const MintPrivate = () => {
 
               <Form.Item name="advanced" valuePropName="advanced">
                 <Checkbox onChange={onChangeAdvanced}>
-                  Advanced options
+                  Add Proof of NFT
                 </Checkbox>
               </Form.Item>
             </Col>
