@@ -15,6 +15,7 @@ import { updateAddress } from "../../appRedux/actions";
 import { sellNFT } from "../../mint/sell";
 import { waitForTransaction } from "../../mint/send";
 import { minaLogin } from "../../blockchain/mina";
+import { explorerTransaction } from "../../blockchain/explorer";
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -64,16 +65,39 @@ const SellButton = ({ item }) => {
       price: Number(price),
       owner: newAddress,
       address: item.address,
+      showText,
     });
+    if (sellResult.success === false || sellResult.jobId === undefined) {
+      setModalText("Error: " + sellResult.error ?? "");
+      return;
+    }
     console.log("SellButton sellResult", sellResult);
     const jobId = sellResult.jobId;
-    setModalText(`Sending tx, jobId: ${jobId}`);
-    const tx = await waitForTransaction(jobId);
-    console.log("SellButton tx sellResult", tx);
+    const jobInfo = (
+      <span>
+        Proving transaction, cloud prove job id:
+        <a href={"https://minarollupscan.com/"} target="_blank">
+          {jobId}
+        </a>
+      </span>
+    );
 
-    setModalText("Result: " + tx.hash);
-
-    setVisible(false);
+    setModalText(jobInfo);
+    const txResult = await waitForTransaction(jobId);
+    console.log("SellButton tx sellResult", txResult);
+    if (txResult.success) {
+      const txInfo = (
+        <span>
+          Transaction sent with hash:
+          <a href={explorerTransaction() + txResult.hash} target="_blank">
+            {txResult.hash}
+          </a>
+        </span>
+      );
+      setModalText(txInfo);
+    } else {
+      setModalText("Error: " + txResult.error ?? "");
+    }
   };
 
   const handleCancel = () => {
