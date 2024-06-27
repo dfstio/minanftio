@@ -71,7 +71,7 @@ const SellButton = ({ item }) => {
       address: item.address,
       showText,
       showPending,
-      libraries,
+      libraries: libraries ?? loadLibraries(),
     });
     if (sellResult.success === false || sellResult.jobId === undefined) {
       showText("Error: " + sellResult.error ?? "", "red");

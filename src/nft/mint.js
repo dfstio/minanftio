@@ -47,6 +47,7 @@ export async function mintNFT(
     pinataJWT,
     showText,
     showPending,
+    libraries,
   } = params;
 
   const chain = chainId();
@@ -131,6 +132,7 @@ export async function mintNFT(
     </span>
   );
   await showPending(o1jsInfo);
+  const lib = await libraries;
 
   const {
     Field,
@@ -141,7 +143,7 @@ export async function mintNFT(
     AccountUpdate,
     Signature,
     UInt32,
-  } = await import("o1js");
+  } = lib.o1js;
   const {
     MinaNFT,
     NameContractV2,
@@ -155,7 +157,7 @@ export async function mintNFT(
     api,
     serializeFields,
     MintParams,
-  } = await import("minanft");
+  } = lib.minanft;
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
     console.error("Contract address is undefined");

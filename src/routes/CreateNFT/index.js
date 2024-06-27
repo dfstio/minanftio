@@ -25,6 +25,7 @@ import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import { mintNFT } from "../../nft/mint";
 import { waitForTransaction } from "../../nft/send";
+import { loadLibraries } from "../../nft/libraries";
 //import { mintRollupNFT } from "./rollup";
 import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
@@ -105,6 +106,7 @@ const MintPrivate = () => {
   const [url, setUrl] = useState(undefined);
   const [timeline, setTimeline] = useState([]);
   const [pending, setPending] = useState(undefined);
+  const [libraries, setLibraries] = useState(undefined);
 
   const checkCanMint = () => {
     let newMintDisabled = true;
@@ -193,6 +195,7 @@ const MintPrivate = () => {
       newToken.main.image = values.mainimage.file;
       setImage(values.mainimage.file);
       setUrl(URL.createObjectURL(values.mainimage.file));
+      setLibraries(loadLibraries());
     }
     if (values.mainvideo !== undefined)
       newToken.main.video = values.mainvideo.file;
@@ -225,20 +228,6 @@ const MintPrivate = () => {
   const onChangeAdvanced = async (value) => {
     if (DEBUG) console.log("onChangeAdvanced", value);
     setAdvanced(value.target.checked);
-  };
-
-  const onChangeMerkleTree = async (value) => {
-    if (DEBUG) console.log("onChangeMerkleTree", value);
-    setMerkleTree(value.target.checked);
-  };
-
-  const categoryChange = (value) => {
-    if (DEBUG) console.log("categoryChange", value);
-    let newToken = token;
-    newToken.category = value;
-    setToken(newToken);
-    setCounter(counter + 1);
-    checkCanMint();
   };
 
   const beforeUpload = (file) => {
@@ -335,6 +324,7 @@ const MintPrivate = () => {
         jwt: REACT_APP_MINANFT_JWT,
         showText,
         showPending,
+        libraries: libraries ?? loadLibraries(),
       });
       const jobId = mintResult.jobId;
       console.log("Mint result", mintResult);
