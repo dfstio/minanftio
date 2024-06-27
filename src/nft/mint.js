@@ -305,6 +305,15 @@ export async function mintNFT(
   const memo = ("mint NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
+  if (!Mina.hasAccount(sender) || !Mina.hasAccount(zkAppAddress)) {
+    console.error("Account not found");
+    await showText("Account not found", "red");
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
   await showText(
     "Successfully fetched the NFT contract state from the Mina blockchain",
     "green"

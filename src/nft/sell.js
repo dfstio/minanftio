@@ -108,6 +108,19 @@ export async function sellNFT(params) {
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
+  if (
+    !Mina.hasAccount(sender) ||
+    !Mina.hasAccount(zkAppAddress) ||
+    !Mina.hasAccount(address, tokenId)
+  ) {
+    console.error("Account not found");
+    await showText("Account not found", "red");
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
   await showText(
     "Sucessfully fetched NFT state from the Mina blockchain",
     "green"
