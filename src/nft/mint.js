@@ -2,30 +2,6 @@ import { calculateSHA512 } from "./sha512";
 import { pinFile } from "./ipfs";
 import { serializeTransaction } from "./transaction";
 import { sendMintTransaction } from "./send";
-import {
-  Field,
-  PrivateKey,
-  PublicKey,
-  UInt64,
-  Mina,
-  AccountUpdate,
-  Signature,
-  UInt32,
-} from "o1js";
-import {
-  MinaNFT,
-  NameContractV2,
-  RollupNFT,
-  FileData,
-  initBlockchain,
-  MINANFT_NAME_SERVICE_V2,
-  VERIFICATION_KEY_V2_JSON,
-  wallet,
-  fetchMinaAccount,
-  api,
-  serializeFields,
-  MintParams,
-} from "minanft";
 import { chainId } from "../blockchain/explorer";
 
 /*
@@ -72,6 +48,14 @@ export async function mintNFT(
 
   const chain = chainId();
 
+  if (chain === undefined) {
+    console.error("Chain is undefined");
+    return {
+      success: false,
+      error: "Chain is undefined",
+    };
+  }
+
   if (owner === undefined) {
     console.error("Owner address is undefined");
     return {
@@ -95,20 +79,22 @@ export async function mintNFT(
       error: "Image is undefined",
     };
   }
-  const contractAddress = MINANFT_NAME_SERVICE_V2;
-  if (contractAddress === undefined) {
-    console.error("Contract address is undefined");
+
+  const arweaveKey = undefined;
+
+  if (jwt === undefined) {
+    console.error("JWT is undefined");
     return {
       success: false,
-      error: "Contract address is undefined",
+      error: "JWT is undefined",
     };
   }
 
-  if (chain === undefined) {
-    console.error("Chain is undefined");
+  if (pinataJWT === undefined) {
+    console.error("Pinata JWT is undefined");
     return {
       success: false,
-      error: "Chain is undefined",
+      error: "Pinata JWT is undefined",
     };
   }
 
@@ -124,6 +110,39 @@ export async function mintNFT(
     },
   });
 
+  const {
+    Field,
+    PrivateKey,
+    PublicKey,
+    UInt64,
+    Mina,
+    AccountUpdate,
+    Signature,
+    UInt32,
+  } = await import("o1js");
+  const {
+    MinaNFT,
+    NameContractV2,
+    RollupNFT,
+    FileData,
+    initBlockchain,
+    MINANFT_NAME_SERVICE_V2,
+    VERIFICATION_KEY_V2_JSON,
+    wallet,
+    fetchMinaAccount,
+    api,
+    serializeFields,
+    MintParams,
+  } = await import("minanft");
+  const contractAddress = MINANFT_NAME_SERVICE_V2;
+  if (contractAddress === undefined) {
+    console.error("Contract address is undefined");
+    return {
+      success: false,
+      error: "Contract address is undefined",
+    };
+  }
+
   console.time("prepared data");
 
   console.log("contractAddress", contractAddress);
@@ -133,22 +152,7 @@ export async function mintNFT(
   const net = await initBlockchain(chain);
   console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
-  if (pinataJWT === undefined) {
-    console.error("Pinata JWT is undefined");
-    return {
-      success: false,
-      error: "Pinata JWT is undefined",
-    };
-  }
-  const arweaveKey = undefined;
 
-  if (jwt === undefined) {
-    console.error("JWT is undefined");
-    return {
-      success: false,
-      error: "JWT is undefined",
-    };
-  }
   const minanft = new api(jwt);
   const reservedPromise = minanft.reserveName({
     name,

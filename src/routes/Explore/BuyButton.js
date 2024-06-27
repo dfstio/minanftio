@@ -3,8 +3,8 @@ import { Button, Modal, Form, Timeline } from "antd";
 import { footerAgreement, footerAgreementLink } from "../../util/config";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress } from "../../appRedux/actions";
-import { buyNFT } from "../../mint/buy";
-import { waitForTransaction } from "../../mint/send";
+import { buyNFT } from "../../nft/buy";
+import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 
