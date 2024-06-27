@@ -12,6 +12,7 @@ import {
   Select,
   Checkbox,
   InputNumber,
+  Timeline,
 } from "antd";
 import {
   LoadingOutlined,
@@ -19,7 +20,7 @@ import {
   InboxOutlined,
 } from "@ant-design/icons";
 import { explorerTransaction } from "../../blockchain/explorer";
-import { message } from "antd";
+//import { message } from "antd";
 import IntlMessages from "util/IntlMessages";
 import Markdown from "markdown-to-jsx";
 import { mintNFT } from "../../nft/mint";
@@ -92,6 +93,7 @@ const MintPrivate = () => {
   const [counter, setCounter] = useState(0);
   const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(false);
   const [showUnlockable, setShowUnlockable] = useState(false);
   const [mintDisabled, setMintDisabled] = useState(true);
@@ -101,6 +103,8 @@ const MintPrivate = () => {
   const [form] = Form.useForm();
   const [image, setImage] = useState(undefined);
   const [url, setUrl] = useState(undefined);
+  const [timeline, setTimeline] = useState([]);
+  const [pending, setPending] = useState(undefined);
 
   const checkCanMint = () => {
     let newMintDisabled = true;
@@ -108,6 +112,18 @@ const MintPrivate = () => {
     else if (token.name !== "" && token.main.image !== "")
       newMintDisabled = false;
     if (newMintDisabled !== mintDisabled) setMintDisabled(newMintDisabled);
+  };
+
+  const showText = async (text, color) => {
+    setTimeline((prev) => {
+      const newTimeline = prev;
+      newTimeline.push({ text, color });
+      return newTimeline;
+    });
+  };
+
+  const showPending = async (text) => {
+    setPending(text);
   };
 
   const onValuesChange = async (values) => {
@@ -230,28 +246,33 @@ const MintPrivate = () => {
   };
 
   const mint = async () => {
-    //if (address === "") {
-    const newAddress = await minaLogin();
-    console.log("newAddress", newAddress);
-    dispatch(updateAddress(newAddress));
-    checkCanMint();
-    //return;
-    //}
-    if (newAddress === "" || newAddress === undefined) return;
-    const owner = newAddress;
-
-    const key = "Minting Mina NFT";
+    //const key = "Minting Mina NFT";
+    /*
     message.config({
       top: 100,
     });
-
+    */
+    setLoading(true);
+    setTimeline([]);
+    setPending("Preparing mint transaction...");
+    setMinting(true);
     try {
-      setMinting(true);
+      const newAddress = await minaLogin();
+      console.log("newAddress", newAddress);
+      dispatch(updateAddress(newAddress));
+      checkCanMint();
+      //return;
+      //}
+      if (newAddress === "" || newAddress === undefined) return;
+      const owner = newAddress;
+
+      /*
       message.loading({
         content: `Minting NFT token: creating token metadata`,
         key,
         duration: 240,
       });
+      */
       const name = token.name[0] === "@" ? token.name.slice(1) : token.name;
       /*
       export async function mintNFT(
@@ -312,23 +333,47 @@ const MintPrivate = () => {
         owner,
         pinataJWT: REACT_APP_PINATA_JWT,
         jwt: REACT_APP_MINANFT_JWT,
+        showText,
+        showPending,
       });
+      const jobId = mintResult.jobId;
       console.log("Mint result", mintResult);
       if (
         mintResult?.success === true &&
-        mintResult?.jobId !== undefined &&
+        jobId !== undefined &&
         mintResult?.json !== undefined
       ) {
+        /*
         message.loading({
           content: `Started mint job ${mintResult.jobId}`,
           key,
           duration: 240,
         });
+        */
+
+        await showText("Cloud proving job started", "green");
         const blob = new Blob([mintResult.json], {
           type: "text/plain;charset=utf-8",
         });
         fileSaver.saveAs(blob, name + ".v1.json");
+        await showText(
+          `"NFT private data is saved to ${name}.v1.json`,
+          "green"
+        );
+        const jobInfo = (
+          <span>
+            Proving transaction, cloud prove job id:{" "}
+            <a href={"https://minarollupscan.com/"} target="_blank">
+              {jobId}
+            </a>
+            <br />
+            You can close this form and check the transaction status later.
+          </span>
+        );
+
+        setPending(jobInfo);
       } else {
+        /*
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
@@ -336,13 +381,49 @@ const MintPrivate = () => {
           key,
           duration: 20,
         });
-        setMinting(false);
+        */
+        showText(
+          `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
         return;
       }
-      const jobId = mintResult.jobId;
-      mintResult = await waitForTransaction(jobId);
+      const txResult = await waitForTransaction(jobId);
       console.log("Final mint result", mintResult);
-      if (mintResult?.success === true && mintResult?.hash !== undefined) {
+      if (
+        txResult.success &&
+        txResult.hash !== undefined &&
+        txResult.hash !== "" &&
+        txResult.hash.toLowerCase().includes("error") === false
+      ) {
+        const jobInfo = (
+          <span>
+            Sucessfully proved transaction, cloud prove job id:{" "}
+            <a href={"https://minarollupscan.com/"} target="_blank">
+              {jobId}
+            </a>
+            <br />
+          </span>
+        );
+        await showText(jobInfo, "green");
+        const txInfo = (
+          <span>
+            Buy transaction successfully sent with hash:{" "}
+            <a href={explorerTransaction() + txResult.hash} target="_blank">
+              {mintResult.hash}
+            </a>
+            <br />
+            You can close this form and wait for the transaction to be included
+            in the block.
+          </span>
+        );
+        await showText(txInfo, "green");
+        setPending(undefined);
+        /*
         message.success({
           content: `NFT token minted successfully with transaction hash ${mintResult.hash}`,
           key,
@@ -355,7 +436,9 @@ const MintPrivate = () => {
         setLink(linkURL);
         setHash(explorerTransaction() + mintResult.hash);
         setShowLink(true);
-      } else
+        */
+      } else {
+        /*
         message.error({
           content: `Error minting NFT token: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
@@ -363,6 +446,15 @@ const MintPrivate = () => {
           key,
           duration: 60,
         });
+        */
+        await showText(
+          `Error minting NFT token: ${mintResult?.error ?? ""} ${
+            mintResult?.reason ?? ""
+          }`,
+          "red"
+        );
+        setPending(undefined);
+      }
 
       /*
       let mintResult =
@@ -581,15 +673,12 @@ const MintPrivate = () => {
     */
       //setToken(startToken);
       //if (address !== "") await getSignature(strJSON);
-      setMinting(false);
+      //setMinting(false);
     } catch (error) {
       console.log("Mint error", error);
-      setMinting(false);
-      message.error({
-        content: `Error minting NFT token: ${error}`,
-        key,
-        duration: 30,
-      });
+      showText(`Error minting NFT token: ${error}`, "red");
+      setPending(undefined);
+      setLoading(false);
     }
   };
 
@@ -613,162 +702,177 @@ const MintPrivate = () => {
         >
           <Row>
             <Col xxl={10} xl={10} lg={10} md={8} sm={24} xs={24}>
-              <Row>
-                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                  <Form.Item
-                    name="mainimage"
-                    label="Main image"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please upload NFT image",
-                      },
-                    ]}
-                  >
-                    <Dragger
+              {!minting && (
+                <Row>
+                  <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                    <Form.Item
                       name="mainimage"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      accept="image/*"
-                      showUploadList={false}
-                      multiple={false}
-                      maxCount={1}
-                      beforeUpload={beforeUpload}
-                      isImageUrl={() => true}
+                      label="Main image"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please upload NFT image",
+                        },
+                      ]}
                     >
-                      {url && (
-                        <img
-                          src={url}
-                          alt="Preview"
-                          className="w-[341.33px] h-64 bg-[#30363D] rounded-lg"
-                        />
-                      )}{" "}
-                      <div>
-                        {!url && <PlusOutlined />}
-                        <div className="ant-upload-text">
-                          {url ? "" : "Main Image"}
-                        </div>
-                      </div>
-                    </Dragger>
-                  </Form.Item>
-                </Col>
-                {/*
-                <Col xxl={12} xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <Form.Item name="mainvideo" label="Main Video/Audio">
-                    <Upload
-                      name="video"
-                      listType="picture-card"
-                      className="avatar-uploader"
-                      accept="video/*,audio/*"
-                      showUploadList={true}
-                      multiple={false}
-                      maxCount={1}
-                      //action="//jsonplaceholder.typicode.com/posts/"
-                      beforeUpload={beforeUpload}
-                      //onChange={this.handleChange}
-                    >
-                      <div>
-                        <PlusOutlined />
-                        <div className="ant-upload-text">
-                          Main Video or Audio
-                        </div>
-                      </div>
-                    </Upload>
-                  </Form.Item>
-                </Col>
-                */}
-              </Row>
-
-              <Form.Item name="advanced" valuePropName="advanced">
-                <Checkbox onChange={onChangeAdvanced}>
-                  Add Proof of NFT
-                </Checkbox>
-              </Form.Item>
-            </Col>
-            <Col xxl={14} xl={14} lg={14} md={16} sm={24} xs={24}>
-              <Form.Item
-                label={price}
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please name your NFT",
-                  },
-                ]}
-                placeholder="Please name your NFT"
-              >
-                <Input maxLength={30} showCount={true} />
-              </Form.Item>
-              <Form.Item
-                label={collection}
-                name="collection"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please choose collection name for your NFT",
-                  },
-                ]}
-                placeholder="Please choose collection name your NFT"
-              >
-                <Input maxLength={30} showCount={true} />
-              </Form.Item>
-              <Form.Item
-                label=""
-                name="sellPrice"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please choose sell price for your NFT",
-                  },
-                ]}
-                placeholder="Please choose sell price for your NFT"
-              >
-                <InputNumber addonBefore="Sell price" addonAfter="MINA" />
-              </Form.Item>
-
-              <Form.Item
-                label={
-                  <span>
-                    <span>
-                      <IntlMessages id={"create.description"} />
-                    </span>
-                    <span>
-                      {" "}
-                      <a
-                        href="https://www.markdownguide.org/cheat-sheet/"
-                        target="_blank"
+                      <Dragger
+                        name="mainimage"
+                        listType="picture-card"
+                        className="avatar-uploader"
+                        accept="image/*"
+                        showUploadList={false}
+                        multiple={false}
+                        maxCount={1}
+                        beforeUpload={beforeUpload}
+                        isImageUrl={() => true}
                       >
-                        markdown
-                      </a>
-                    </span>
-                  </span>
-                }
-                name="description"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please describe your NFT",
-                  },
-                ]}
-                placeholder="Please describe your NFT"
-              >
-                <TextArea
-                  autoSize={{
-                    minRows: 1,
-                    maxRows: 10,
-                  }}
+                        {url && (
+                          <img
+                            src={url}
+                            alt="Preview"
+                            className="w-[341.33px] h-64 bg-[#30363D] rounded-lg"
+                          />
+                        )}{" "}
+                        <div>
+                          {!url && <PlusOutlined />}
+                          <div className="ant-upload-text">
+                            {url ? "" : "Main Image"}
+                          </div>
+                        </div>
+                      </Dragger>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              )}
+
+              {!minting && (
+                <Form.Item name="advanced" valuePropName="advanced">
+                  <Checkbox onChange={onChangeAdvanced}>
+                    Add Proof of NFT
+                  </Checkbox>
+                </Form.Item>
+              )}
+              {minting && (
+                <img
+                  src={url}
+                  alt="Preview"
+                  className="w-[341.33px] h-64 bg-[#30363D] rounded-lg"
                 />
-              </Form.Item>
-              <Form.Item
-                label="Description preview"
-                name="descriptionpreview"
-                hidden={token.description === ""}
-              >
-                <Markdown>{token.description}</Markdown>
-              </Form.Item>
+              )}
+              {minting && (
+                <Form.Item name="nftName" valuePropName="nftName">
+                  {token.name[0] === "@" ? token.name : "@" + token.name}
+                </Form.Item>
+              )}
             </Col>
+
+            {!minting && (
+              <Col xxl={14} xl={14} lg={14} md={16} sm={24} xs={24}>
+                <Form.Item
+                  label={price}
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please name your NFT",
+                    },
+                  ]}
+                  placeholder="Please name your NFT"
+                >
+                  <Input maxLength={30} showCount={true} />
+                </Form.Item>
+                <Form.Item
+                  label={collection}
+                  name="collection"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please choose collection name for your NFT",
+                    },
+                  ]}
+                  placeholder="Please choose collection name your NFT"
+                >
+                  <Input maxLength={30} showCount={true} />
+                </Form.Item>
+                <Form.Item
+                  label=""
+                  name="sellPrice"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please choose sell price for your NFT",
+                    },
+                  ]}
+                  placeholder="Please choose sell price for your NFT"
+                >
+                  <InputNumber addonBefore="Sell price" addonAfter="MINA" />
+                </Form.Item>
+
+                <Form.Item
+                  label={
+                    <span>
+                      <span>
+                        <IntlMessages id={"create.description"} />
+                      </span>
+                      <span>
+                        {" "}
+                        <a
+                          href="https://www.markdownguide.org/cheat-sheet/"
+                          target="_blank"
+                        >
+                          markdown
+                        </a>
+                      </span>
+                    </span>
+                  }
+                  name="description"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Please describe your NFT",
+                    },
+                  ]}
+                  placeholder="Please describe your NFT"
+                >
+                  <TextArea
+                    autoSize={{
+                      minRows: 1,
+                      maxRows: 10,
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Description preview"
+                  name="descriptionpreview"
+                  hidden={token.description === ""}
+                >
+                  <Markdown>{token.description}</Markdown>
+                </Form.Item>
+              </Col>
+            )}
+            {minting && (
+              <Col xxl={14} xl={14} lg={14} md={16} sm={24} xs={24}>
+                <Form.Item
+                  name="info"
+                  className="currency-sell-form_last-form-item"
+                  hidden={timeline.length === 0 && pending === undefined}
+                >
+                  <Timeline
+                    pending={pending}
+                    reverse={false}
+                    hidden={timeline.length === 0 && pending === undefined}
+                  >
+                    {timeline.map((item) => (
+                      <Timeline.Item color={item.color}>
+                        {item.text}
+                      </Timeline.Item>
+                    ))}
+                  </Timeline>
+                </Form.Item>
+              </Col>
+            )}
           </Row>
-          {advanced === true ? (
+          {advanced === true && !minting ? (
             <div className="gx-main-content">
               {/*
               <Row>
@@ -1101,7 +1205,7 @@ const MintPrivate = () => {
                 type="primary"
                 onClick={mint}
                 disabled={mintDisabled}
-                loading={minting}
+                loading={loading}
               >
                 {address === "" ? "Connect with AURO" : "Mint NFT"}
               </Button>
@@ -1127,27 +1231,6 @@ const MintPrivate = () => {
                     {footerAgreement}
                   </a>
                 </span>
-              </div>
-            </Form.Item>
-
-            <Form.Item name="mintedlink" hidden={showLink === false}>
-              <div
-                className="gx-mt-0"
-                style={{
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                <span>NFT is minted:{"  "}</span>
-                <span>
-                  <a href={link} target="_blank">
-                    {link}
-                  </a>
-                </span>
-              </div>
-              <div>
-                <a href={hash} target="_blank">
-                  {hash}
-                </a>
               </div>
             </Form.Item>
           </Row>

@@ -45,6 +45,8 @@ export async function mintNFT(
     owner,
     jwt,
     pinataJWT,
+    showText,
+    showPending,
   } = params;
 
   const chain = chainId();
@@ -119,6 +121,17 @@ export async function mintNFT(
     },
   });
 
+  const o1jsInfo = (
+    <span>
+      Loading{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library...
+    </span>
+  );
+  await showPending(o1jsInfo);
+
   const {
     Field,
     PrivateKey,
@@ -159,6 +172,17 @@ export async function mintNFT(
       error: "Wrong contract address",
     };
   }
+  const o1jsInfoDone = (
+    <span>
+      Loaded{" "}
+      <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+        o1js
+      </a>{" "}
+      library
+    </span>
+  );
+  await showText(o1jsInfoDone, "green");
+  await showPending("Reserving NFT name...");
 
   console.time("prepared data");
 
@@ -223,12 +247,22 @@ export async function mintNFT(
     reserved.price?.price === undefined
   ) {
     console.error("Name is not reserved");
+    await showText(
+      `NFT name @${name} is not reserved${
+        reserved.reason ? ": " + reserved.reason : ""
+      }`,
+      "red"
+    );
+    await showPending(undefined);
     return {
       success: false,
       error: "Name is not reserved",
       reason: reserved.reason,
     };
   }
+
+  await showText(`NFT name @${name} reserved`, "green");
+  await showPending("Uploading the image to IPFs...");
 
   const signature = Signature.fromBase58(reserved.signature);
   const expiry = UInt32.from(reserved.expiry);
@@ -243,6 +277,10 @@ export async function mintNFT(
   console.time("uploaded image");
   const ipfs = await ipfsPromise;
   console.timeEnd("uploaded image");
+  await showText(`Image uploaded to the IPFS`, "green");
+  await showPending(
+    "Getting the NFT contract data from the Mina blockchain..."
+  );
   console.log("image ipfs", ipfs);
 
   const imageData = new FileData({
@@ -265,9 +303,17 @@ export async function mintNFT(
   const memo = ("mint NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
+  await showText(
+    "Sucessfully fetched NFT state from the Mina blockchain",
+    "green"
+  );
+
+  await showPending("Creating the provable data...");
   console.time("prepared commit data");
   await commitPromise;
   console.timeEnd("prepared commit data");
+  await showText(`Provable data created`, "green");
+  await showPending("Preparing mint transaction...");
   console.time("prepared tx");
 
   if (nft.storage === undefined) throw new Error("Storage is undefined");
@@ -332,6 +378,8 @@ export class MintParams extends Struct({
   };
   console.timeEnd("prepared tx");
   console.timeEnd("ready to sign");
+  await showText("Transaction prepared", "green");
+  await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
   console.log("Transaction result", txResult);
   console.time("sent transaction");
@@ -343,7 +391,8 @@ export class MintParams extends Struct({
       error: "No user signature",
     };
   }
-
+  await showText("User signature received", "green");
+  await showPending("Starting cloud proving job...");
   const jobId = await sendMintTransaction({
     name,
     serializedTransaction,
