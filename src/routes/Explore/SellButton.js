@@ -122,6 +122,7 @@ const SellButton = ({ item }) => {
         </span>
       );
       await showText(txInfo, "green");
+      setPending(undefined);
     } else {
       const txError = (
         <span>
@@ -220,7 +221,11 @@ const SellButton = ({ item }) => {
               Sell
             </Button>
           </Form.Item>
-          <Form.Item name="info" className="currency-sell-form_last-form-item">
+          <Form.Item
+            name="info"
+            className="currency-sell-form_last-form-item"
+            hidden={timeline.length === 0 && pending === undefined}
+          >
             <Timeline
               pending={pending}
               reverse={false}
