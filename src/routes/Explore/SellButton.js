@@ -81,7 +81,7 @@ const SellButton = ({ item }) => {
           {jobId}
         </a>
         <br />
-        You can close this form and check the status later.
+        You can close this form and check the transaction status later.
       </span>
     );
 
@@ -100,6 +100,8 @@ const SellButton = ({ item }) => {
           <a href={explorerTransaction() + txResult.hash} target="_blank">
             {txResult.hash}
           </a>
+          You can close this form and wait for the transaction to be included in
+          the block.
         </span>
       );
       setModalText(txInfo);
