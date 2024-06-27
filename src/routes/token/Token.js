@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import IntlMessages from "util/IntlMessages";
 import SellButton from "../Explore/SellButton";
-import BuyButton from "../Explore/Buy";
+import BuyButton from "../Explore/BuyButton";
 import ReactPlayer from "react-player";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
 import "./style.css";

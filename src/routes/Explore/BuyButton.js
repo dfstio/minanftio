@@ -12,15 +12,14 @@ import {
 import { footerAgreement, footerAgreementLink } from "../../util/config";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress } from "../../appRedux/actions";
-import { sellNFT } from "../../mint/sell";
+import { buyNFT } from "../../mint/buy";
 import { waitForTransaction } from "../../mint/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
-import { set } from "nprogress";
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-const SellButton = ({ item }) => {
+const BuyButton = ({ item }) => {
   //class SellButton extends React.Component {
 
   const [modalText, setModalText] = useState("");
@@ -32,28 +31,14 @@ const SellButton = ({ item }) => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
-  const showModal = () => {
-    setModalText("");
-    setLoading(false);
-    setVisible(true);
-  };
-
   const showText = async (text) => {
     setModalText(text);
   };
 
-  useEffect(() => {
-    async function checkOkButton() {
-      const newOkDisabled = Number(price) < 1 || Number(price) > 500;
-      if (newOkDisabled !== okDisabled) setOkDisabled(newOkDisabled);
-      //if( DEBUG) console.log("Sell okDisabled: ", newOkDisabled, price, accepted);
-    }
-    checkOkButton();
-  }, [price]);
-
-  const handleOk = async () => {
-    setModalText("Preparing sale transaction...");
+  const showModal = async () => {
+    setModalText("Preparing buy transaction...");
     setLoading(true);
+    setVisible(true);
 
     const newAddress = await minaLogin();
     dispatch(updateAddress(newAddress));
@@ -61,19 +46,18 @@ const SellButton = ({ item }) => {
       setVisible(false);
       return;
     }
-    let sellResult = await sellNFT({
+    let buyResult = await buyNFT({
       name: item.name,
-      price: Number(price) * 1_000_000_000,
-      owner: newAddress,
+      price: Number(item.price),
+      buyer: newAddress,
       address: item.address,
-      showText,
     });
-    if (sellResult.success === false || sellResult.jobId === undefined) {
-      setModalText("Error: " + sellResult.error ?? "");
+    if (buyResult.success === false || buyResult.jobId === undefined) {
+      setModalText("Error: " + buyResult.error ?? "");
       return;
     }
-    console.log("SellButton sellResult", sellResult);
-    const jobId = sellResult.jobId;
+    console.log("SellButton sellResult", buyResult);
+    const jobId = buyResult.jobId;
     const jobInfo = (
       <span>
         Proving transaction, cloud prove job id:{" "}
@@ -87,7 +71,7 @@ const SellButton = ({ item }) => {
 
     setModalText(jobInfo);
     const txResult = await waitForTransaction(jobId);
-    console.log("SellButton tx sellResult", txResult);
+    console.log("BuyButton tx sellResult", txResult);
     if (
       txResult.success &&
       txResult.hash !== undefined &&
@@ -96,7 +80,7 @@ const SellButton = ({ item }) => {
     ) {
       const txInfo = (
         <span>
-          Sell transaction successfully sent with hash:{" "}
+          Buy transaction successfully sent with hash:{" "}
           <a href={explorerTransaction() + txResult.hash} target="_blank">
             {txResult.hash}
           </a>
@@ -132,12 +116,11 @@ const SellButton = ({ item }) => {
   return (
     <div>
       <Button type="primary" onClick={showModal}>
-        Sell
+        Buy
       </Button>
       <Modal
         title={title}
         visible={visible}
-        onOk={handleOk}
         confirmLoading={loading}
         onCancel={handleCancel}
         footer={null}
@@ -150,29 +133,6 @@ const SellButton = ({ item }) => {
             price: 100,
           }}
         >
-          <Form.Item
-            name="price"
-            label="Price"
-            rules={[
-              {
-                validator: (_, value) =>
-                  value >= 1 || value <= 500
-                    ? Promise.resolve()
-                    : Promise.reject(
-                        new Error(
-                          `Price should be higher than 1 MINA and less than 500 MINA`
-                        )
-                      ),
-              },
-
-              {
-                required: true,
-                message: "Please input the the price between 1 and 500 MINA",
-              },
-            ]}
-          >
-            <InputNumber min={1} max={500} addonAfter="MINA" />
-          </Form.Item>
           <Form.Item>
             <div
               className="gx-mt-0"
@@ -181,28 +141,18 @@ const SellButton = ({ item }) => {
               }}
             >
               <span>
-                By clicking the Sell button, you are confirming your agreement
+                Price: {item.price / 1_000_000_000} MINA
+                <br />
+                <br />
+                By signing the transaction, you are confirming your agreement
                 with our
               </span>
               <span>
                 <a href={footerAgreementLink} target="_blank">
                   {footerAgreement}
                 </a>
-                <br />
-                MinaNFT commission on this sale is 10%.{" "}
               </span>
             </div>
-          </Form.Item>
-
-          <Form.Item name="sell" className="currency-sell-form_last-form-item">
-            <Button
-              type="primary"
-              onClick={handleOk}
-              disabled={okDisabled}
-              loading={loading}
-            >
-              Sell
-            </Button>
           </Form.Item>
           <p>{modalText}</p>
         </Form>
@@ -211,4 +161,4 @@ const SellButton = ({ item }) => {
   );
 };
 
-export default SellButton;
+export default BuyButton;

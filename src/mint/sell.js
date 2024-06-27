@@ -49,7 +49,7 @@ export async function sellNFT(params) {
     serializeFields,
   } = await import("minanft");
 
-  await showText("Getting current NFT state from Mina blockchain...");
+  await showText("Getting current NFT state from the Mina blockchain...");
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
     console.error("Contract address is undefined");
