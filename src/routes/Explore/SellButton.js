@@ -75,7 +75,7 @@ const SellButton = ({ item }) => {
     const jobId = sellResult.jobId;
     const jobInfo = (
       <span>
-        Proving transaction, cloud prove job id:
+        Proving transaction, cloud prove job id:{" "}
         <a href={"https://minarollupscan.com/"} target="_blank">
           {jobId}
         </a>
@@ -88,7 +88,7 @@ const SellButton = ({ item }) => {
     if (txResult.success) {
       const txInfo = (
         <span>
-          Transaction sent with hash:
+          Transaction sent with hash:{" "}
           <a href={explorerTransaction() + txResult.hash} target="_blank">
             {txResult.hash}
           </a>
