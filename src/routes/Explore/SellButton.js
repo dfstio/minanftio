@@ -7,6 +7,7 @@ import { sellNFT } from "../../mint/sell";
 import { waitForTransaction } from "../../mint/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
+import { set } from "nprogress";
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -132,7 +133,8 @@ const SellButton = ({ item }) => {
           included in the block.
         </span>
       );
-      setModalText("Error: " + txResult.error ?? "");
+      await showText("Error: " + txResult.error ?? "", "red");
+      setPending(undefined);
     }
     setLoading(false);
   };
