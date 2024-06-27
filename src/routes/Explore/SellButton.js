@@ -7,14 +7,12 @@ import { sellNFT } from "../../mint/sell";
 import { waitForTransaction } from "../../mint/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
-import { set } from "nprogress";
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 const SellButton = ({ item }) => {
   //class SellButton extends React.Component {
 
-  const [modalText, setModalText] = useState("");
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("Sell NFT @" + item.name);
@@ -26,7 +24,6 @@ const SellButton = ({ item }) => {
   const dispatch = useDispatch();
 
   const showModal = () => {
-    setModalText("");
     setTimeline([]);
     setPending(undefined);
     setLoading(false);
@@ -34,7 +31,6 @@ const SellButton = ({ item }) => {
   };
 
   const showText = async (text, color) => {
-    //setModalText(text);
     setTimeline((prev) => {
       const newTimeline = prev;
       newTimeline.push({ text, color });

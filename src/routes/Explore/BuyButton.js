@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Card,
-  Modal,
-  Form,
-  InputNumber,
-  Input,
-  Radio,
-  Checkbox,
-} from "antd";
+import { Button, Modal, Form, Timeline } from "antd";
 import { footerAgreement, footerAgreementLink } from "../../util/config";
 import { useDispatch, useSelector } from "react-redux";
 import { updateAddress } from "../../appRedux/actions";
@@ -26,17 +17,25 @@ const BuyButton = ({ item }) => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("Buy NFT @" + item.name);
-  const [price, setPrice] = useState(100);
-  const [okDisabled, setOkDisabled] = useState(true);
-  const address = useSelector(({ blockchain }) => blockchain.address);
+  const [timeline, setTimeline] = useState([]);
+  const [pending, setPending] = useState(undefined);
   const dispatch = useDispatch();
 
-  const showText = async (text) => {
-    setModalText(text);
+  const showText = async (text, color) => {
+    setTimeline((prev) => {
+      const newTimeline = prev;
+      newTimeline.push({ text, color });
+      return newTimeline;
+    });
+  };
+
+  const showPending = async (text) => {
+    setPending(text);
   };
 
   const showModal = async () => {
-    setModalText("Preparing buy transaction...");
+    setTimeline([]);
+    setPending("Preparing buy transaction...");
     setLoading(true);
     setVisible(true);
 
@@ -52,13 +51,16 @@ const BuyButton = ({ item }) => {
       buyer: newAddress,
       address: item.address,
       showText,
+      showPending,
     });
     if (buyResult.success === false || buyResult.jobId === undefined) {
-      setModalText("Error: " + buyResult.error ?? "");
+      showText("Error: " + buyResult.error ?? "", "red");
+      setPending(undefined);
       return;
     }
     console.log("SellButton sellResult", buyResult);
     const jobId = buyResult.jobId;
+    await showText("Cloud proving job started", "green");
     const jobInfo = (
       <span>
         Proving transaction, cloud prove job id:{" "}
@@ -70,7 +72,7 @@ const BuyButton = ({ item }) => {
       </span>
     );
 
-    setModalText(jobInfo);
+    setPending(jobInfo);
     const txResult = await waitForTransaction(jobId);
     console.log("BuyButton tx sellResult", txResult);
     if (
@@ -79,6 +81,16 @@ const BuyButton = ({ item }) => {
       txResult.hash !== "" &&
       txResult.hash.toLowerCase().includes("error") === false
     ) {
+      const jobInfo = (
+        <span>
+          Sucessfully proved transaction, cloud prove job id:{" "}
+          <a href={"https://minarollupscan.com/"} target="_blank">
+            {jobId}
+          </a>
+          <br />
+        </span>
+      );
+      await showText(jobInfo, "green");
       const txInfo = (
         <span>
           Buy transaction successfully sent with hash:{" "}
@@ -90,7 +102,8 @@ const BuyButton = ({ item }) => {
           the block.
         </span>
       );
-      setModalText(txInfo);
+      await showText(txInfo, "green");
+      setPending(undefined);
     } else {
       const txError = (
         <span>
@@ -100,18 +113,14 @@ const BuyButton = ({ item }) => {
           included in the block.
         </span>
       );
-      setModalText("Error: " + txResult.error ?? "");
+      await showText(txError, "red");
+      setPending(undefined);
     }
     setLoading(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
-  };
-
-  const handleChange = (values) => {
-    if (DEBUG) console.log("Sell values changed", values);
-    if (values.price !== undefined) setPrice(values.price);
   };
 
   return (
@@ -126,11 +135,7 @@ const BuyButton = ({ item }) => {
         onCancel={handleCancel}
         footer={null}
       >
-        <Form
-          onValuesChange={handleChange}
-          layout="vertical"
-          name="form_in_modal"
-        >
+        <Form layout="vertical" name="form_in_modal">
           <Form.Item>
             <div
               className="gx-mt-0"
@@ -152,7 +157,21 @@ const BuyButton = ({ item }) => {
               </span>
             </div>
           </Form.Item>
-          <p>{modalText}</p>
+          <Form.Item
+            name="info"
+            className="currency-sell-form_last-form-item"
+            hidden={timeline.length === 0 && pending === undefined}
+          >
+            <Timeline
+              pending={pending}
+              reverse={false}
+              hidden={timeline.length === 0 && pending === undefined}
+            >
+              {timeline.map((item) => (
+                <Timeline.Item color={item.color}>{item.text}</Timeline.Item>
+              ))}
+            </Timeline>
+          </Form.Item>
         </Form>
       </Modal>
     </div>
