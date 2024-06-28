@@ -87,6 +87,7 @@ const MintPrivate = () => {
 
   const [token, setToken] = useState(startToken);
   const [nameField, setNameField] = useState("");
+  const [hot, setHot] = useState(false);
   const [ipfs, setIpfs] = useState("");
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
@@ -111,15 +112,23 @@ const MintPrivate = () => {
   const [pending, setPending] = useState(undefined);
   const [libraries, setLibraries] = useState(undefined);
 
+  function warm() {
+    if (hot) return;
+    setHot(true);
+    lookupName("test");
+  }
+
   useEffect(() => {
     async function nameChanged() {
       const name = nameField[0] === "@" ? nameField : "@" + nameField;
       if (name.length < 3) {
         setPrice("Name");
+        warm();
         return;
       }
       if (reservedNames.includes(name) === true) {
         setPrice("This name is reserved");
+        warm();
         return;
       }
 
@@ -154,6 +163,7 @@ const MintPrivate = () => {
         setPrice(
           "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
         );
+        warm();
       }
     }
     nameChanged();
