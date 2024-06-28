@@ -118,6 +118,7 @@ const MintPrivate = () => {
     if (hot) return;
     setHot(true);
     lookupName("test");
+    if (libraries === undefined) setLibraries(loadLibraries());
   }
 
   useEffect(() => {
