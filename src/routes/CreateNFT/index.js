@@ -191,11 +191,7 @@ const MintPrivate = () => {
 
   useEffect(() => {
     async function checkCanMint() {
-      setMintDisabled((prev) => {
-        let newMintDisabled =
-          nameAvailable && token.main.image !== "" ? false : true;
-        if (newMintDisabled !== prev) setMintDisabled(newMintDisabled);
-      });
+      setMintDisabled(nameAvailable && token.main.image !== "" ? false : true);
     }
     checkCanMint();
   }, [nameAvailable, address, token]);
