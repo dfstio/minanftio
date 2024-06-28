@@ -488,7 +488,7 @@ const MintPrivate = () => {
         await showText(jobInfo, "green");
         const txInfo = (
           <span>
-            Buy transaction successfully sent with hash:{" "}
+            Mint transaction successfully sent with hash:{" "}
             <a href={explorerTransaction() + txResult.hash} target="_blank">
               {txResult.hash}
             </a>
@@ -836,7 +836,7 @@ const MintPrivate = () => {
               )}
               {minting && (
                 <Form.Item name="nftName" valuePropName="nftName">
-                  {token.name[0] === "@" ? token.name : "@" + token.name}
+                  {nameField[0] === "@" ? nameField : "@" + nameField}
                 </Form.Item>
               )}
             </Col>
