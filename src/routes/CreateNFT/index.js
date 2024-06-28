@@ -343,7 +343,7 @@ const MintPrivate = () => {
 
         await showText("Cloud proving job started", "green");
         const blob = new Blob([mintResult.json], {
-          type: "text/plain;charset=utf-8",
+          type: "application/json",
         });
         const blobName = name + ".v1.json";
         fileSaver.saveAs(blob, blobName);
@@ -351,7 +351,7 @@ const MintPrivate = () => {
         const blobInfo = (
           <span>
             NFT private data saved to the{" "}
-            <a href={blobURL} target="_blank">
+            <a href={blobURL} download={blobName}>
               {blobName}
             </a>
           </span>
