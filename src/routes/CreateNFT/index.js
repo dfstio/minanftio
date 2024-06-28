@@ -43,6 +43,7 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
+import { set } from "nprogress";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -121,12 +122,14 @@ const MintPrivate = () => {
   useEffect(() => {
     async function nameChanged() {
       const name = nameField[0] === "@" ? nameField : "@" + nameField;
+      console.log("name", name);
       if (name.length < 3) {
         setPrice("Name");
         warm();
         return;
       }
       if (reservedNames.includes(name) === true) {
+        console.log("reserved name", name);
         setPrice("This name is reserved");
         warm();
         return;
@@ -150,13 +153,16 @@ const MintPrivate = () => {
           return;
         } else {
           const priceObject = nftPrice(name);
-          setPrice("This name is available");
-          setPrice(
-            "This name is available:" +
-              priceObject.price +
-              " " +
-              priceObject.currency
-          );
+          if (priceObject === "This name is reserved.")
+            setPrice("This name is reserved.");
+          else if (priceObject !== undefined)
+            setPrice(
+              "This name is available: " +
+                priceObject.price +
+                " " +
+                priceObject.currency
+            );
+          else setPrice("Name");
           return;
         }
       } else {
