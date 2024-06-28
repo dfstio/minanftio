@@ -3,6 +3,7 @@ import { pinFile } from "./ipfs";
 import { serializeTransaction } from "./transaction";
 import { sendMintTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
+import { reserveName } from "./name";
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 
 /*
@@ -109,6 +110,15 @@ export async function mintNFT(
       error: "Pinata JWT is undefined",
     };
   }
+  const reservedPromise = reserveName({
+    name,
+    publicKey: owner,
+    chain,
+    contract: REACT_APP_CONTRACT_ADDRESS,
+    version: "v2",
+    developer: "DFST",
+    repo: "web-mint-example",
+  });
 
   const ipfsPromise = pinFile({
     file: image,
@@ -154,7 +164,6 @@ export async function mintNFT(
     VERIFICATION_KEY_V2_JSON,
     wallet,
     fetchMinaAccount,
-    api,
     serializeFields,
     MintParams,
   } = lib.minanft;
@@ -195,17 +204,6 @@ export async function mintNFT(
   const net = await initBlockchain(chain);
   console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
-
-  const minanft = new api(jwt);
-  const reservedPromise = minanft.reserveName({
-    name,
-    publicKey: owner,
-    chain,
-    contract: contractAddress,
-    version: "v2",
-    developer: "DFST",
-    repo: "web-mint-example",
-  });
 
   const nft = new RollupNFT({
     name,
