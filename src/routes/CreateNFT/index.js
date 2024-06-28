@@ -89,6 +89,7 @@ const MintPrivate = () => {
 
   const [token, setToken] = useState(startToken);
   const [nameField, setNameField] = useState("");
+  const [nameAvailable, setNameAvailable] = useState(false);
   const [hot, setHot] = useState(false);
   const [ipfs, setIpfs] = useState("");
   const [auth, setAuth] = useState("");
@@ -126,7 +127,7 @@ const MintPrivate = () => {
       console.log("name", name);
       if (name.length < 3) {
         setPrice("Name");
-        setMintDisabled(true);
+        setNameAvailable(false);
         warm();
         return;
       }
@@ -135,7 +136,7 @@ const MintPrivate = () => {
       ) {
         console.log("reserved name", name);
         setPrice("This name is reserved");
-        setMintDisabled(true);
+        setNameAvailable(false);
         warm();
         return;
       }
@@ -155,26 +156,33 @@ const MintPrivate = () => {
         }
         if (status.found === true) {
           setPrice("This name is already registered");
-          setMintDisabled(true);
+          setNameAvailable(false);
           return;
         } else {
           const priceObject = nftPrice(name);
-          if (priceObject === "This name is reserved.")
+          if (priceObject === "This name is reserved.") {
             setPrice("This name is reserved.");
-          else if (priceObject !== undefined)
+            setNameAvailable(false);
+          } else if (priceObject !== undefined) {
             setPrice(
               "This name is available: " +
                 priceObject.price +
                 " " +
                 priceObject.currency
             );
-          else setPrice("Name");
+            setNameAvailable(true);
+          } else {
+            console.error("Invalid price object", priceObject);
+            setPrice("Name");
+            setNameAvailable(true);
+          }
           return;
         }
       } else {
         setPrice(
           "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
         );
+        setNameAvailable(false);
         warm();
       }
     }
@@ -184,19 +192,13 @@ const MintPrivate = () => {
   useEffect(() => {
     async function checkCanMint() {
       setMintDisabled((prev) => {
-        let newMintDisabled = true;
-        if (address === "") newMintDisabled = false;
-        else if (
-          nameField !== "" &&
-          token.main.image !== "" &&
-          nameField.length > 2
-        )
-          newMintDisabled = false;
+        let newMintDisabled =
+          nameAvailable && token.main.image !== "" ? false : true;
         if (newMintDisabled !== prev) setMintDisabled(newMintDisabled);
       });
     }
     checkCanMint();
-  }, [nameField, address, token]);
+  }, [nameAvailable, address, token]);
 
   const showText = async (text, color) => {
     setTimeline((prev) => {
