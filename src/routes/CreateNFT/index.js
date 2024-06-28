@@ -31,6 +31,8 @@ import fileSaver from "file-saver";
 import { updateAddress } from "../../appRedux/actions";
 import { minaLogin } from "../../blockchain/mina";
 import { nftPrice } from "../../nft/pricing";
+import { lookupName } from "../../nft/name";
+import { reservedNames } from "../../nft/reservednames";
 
 import logger from "../../serverless/logger";
 import {
@@ -41,11 +43,13 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
+import { set } from "nprogress";
+import { add } from "winston";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
 });
-const { REACT_APP_PINATA_JWT, REACT_APP_MINANFT_JWT } = process.env;
+const { REACT_APP_PINATA_JWT } = process.env;
 const { TextArea } = Input;
 const { Option } = Select;
 const Dragger = Upload.Dragger;
@@ -84,6 +88,9 @@ const MintPrivate = () => {
   const dispatch = useDispatch();
 
   const [token, setToken] = useState(startToken);
+  const [nameField, setNameField] = useState("");
+  const [nameAvailable, setNameAvailable] = useState(false);
+  const [hot, setHot] = useState(false);
   const [ipfs, setIpfs] = useState("");
   const [auth, setAuth] = useState("");
   const [link, setLink] = useState("");
@@ -92,7 +99,6 @@ const MintPrivate = () => {
   const [collection, setCollection] = useState("Collection");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
-  const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -108,13 +114,88 @@ const MintPrivate = () => {
   const [pending, setPending] = useState(undefined);
   const [libraries, setLibraries] = useState(undefined);
 
-  const checkCanMint = () => {
-    let newMintDisabled = true;
-    if (address === "") newMintDisabled = false;
-    else if (token.name !== "" && token.main.image !== "")
-      newMintDisabled = false;
-    if (newMintDisabled !== mintDisabled) setMintDisabled(newMintDisabled);
-  };
+  function warm() {
+    if (hot) return;
+    setHot(true);
+    lookupName("test");
+    if (libraries === undefined) setLibraries(loadLibraries());
+  }
+
+  useEffect(() => {
+    async function nameChanged() {
+      const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
+      console.log("name", name);
+      if (name.length < 3) {
+        setPrice("Name");
+        setNameAvailable(false);
+        warm();
+        return;
+      }
+      if (
+        reservedNames.includes(name.toLowerCase().substring(0, 30)) === true
+      ) {
+        setPrice("This name is reserved");
+        setNameAvailable(false);
+        warm();
+        return;
+      }
+
+      function validateName(value) {
+        if (value.length > 30) return false;
+        if (value.length <= 2) return true;
+        const regExp = /^[a-zA-Z]\w+$/g;
+        return regExp.test(value.substring(1));
+      }
+
+      if (validateName(name)) {
+        const status = await lookupName(name);
+        console.log("status", status);
+        if (status.success === false) {
+          setPrice("Name");
+          console.error("Error in name lookup", status);
+          return;
+        }
+        if (status.found === true) {
+          setPrice("This name is already registered");
+          setNameAvailable(false);
+          return;
+        } else {
+          const priceObject = nftPrice(name);
+          if (priceObject === "This name is reserved.") {
+            setPrice("This name is reserved.");
+            setNameAvailable(false);
+          } else if (priceObject !== undefined) {
+            setPrice(
+              "This name is available: " +
+                priceObject.price +
+                " " +
+                priceObject.currency
+            );
+            setNameAvailable(true);
+          } else {
+            console.error("Invalid price object", priceObject);
+            setPrice("Name");
+            setNameAvailable(true);
+          }
+          return;
+        }
+      } else {
+        setPrice(
+          "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
+        );
+        setNameAvailable(false);
+        warm();
+      }
+    }
+    nameChanged();
+  }, [nameField]);
+
+  useEffect(() => {
+    async function checkCanMint() {
+      setMintDisabled(nameAvailable && image ? false : true);
+    }
+    checkCanMint();
+  }, [nameAvailable, image]);
 
   const showText = async (text, color) => {
     setTimeline((prev) => {
@@ -131,7 +212,7 @@ const MintPrivate = () => {
   const onValuesChange = async (values) => {
     //if (DEBUG) console.log("onValuesChange", values);
     let newToken = token;
-
+    /*
     if (values.name !== undefined) {
       const name = values.name[0] === "@" ? values.name : "@" + values.name;
       function validateName(value) {
@@ -158,6 +239,7 @@ const MintPrivate = () => {
         );
       }
     }
+      */
     //if (values.url !== undefined) newToken.url = values.url;
     if (values.description !== undefined)
       newToken.description = values.description;
@@ -195,7 +277,7 @@ const MintPrivate = () => {
       newToken.main.image = values.mainimage.file;
       setImage(values.mainimage.file);
       setUrl(URL.createObjectURL(values.mainimage.file));
-      setLibraries(loadLibraries());
+      if (libraries === undefined) setLibraries(loadLibraries());
     }
     if (values.mainvideo !== undefined)
       newToken.main.video = values.mainvideo.file;
@@ -218,7 +300,6 @@ const MintPrivate = () => {
 
     setToken(newToken);
     setCounter(counter + 1);
-    checkCanMint();
   };
 
   const onFinish = async (values) => {
@@ -249,7 +330,6 @@ const MintPrivate = () => {
       const newAddress = await minaLogin();
       console.log("newAddress", newAddress);
       dispatch(updateAddress(newAddress));
-      checkCanMint();
       //return;
       //}
       if (newAddress === "" || newAddress === undefined) return;
@@ -262,7 +342,7 @@ const MintPrivate = () => {
         duration: 240,
       });
       */
-      const name = token.name[0] === "@" ? token.name.slice(1) : token.name;
+      const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
       /*
       export async function mintNFT(
         params
@@ -321,7 +401,6 @@ const MintPrivate = () => {
         repo: "minanft_io",
         owner,
         pinataJWT: REACT_APP_PINATA_JWT,
-        jwt: REACT_APP_MINANFT_JWT,
         showText,
         showPending,
         libraries: libraries ?? loadLibraries(),
@@ -343,13 +422,21 @@ const MintPrivate = () => {
 
         await showText("Cloud proving job started", "green");
         const blob = new Blob([mintResult.json], {
-          type: "text/plain;charset=utf-8",
+          type: "application/json",
         });
-        fileSaver.saveAs(blob, name + ".v1.json");
-        await showText(
-          `NFT private data is saved to the ${name}.v1.json`,
-          "green"
+        const blobName = name + ".v1.json";
+        fileSaver.saveAs(blob, blobName);
+        const blobURL = URL.createObjectURL(blob);
+        const blobInfo = (
+          <span>
+            NFT private data saved to the{" "}
+            <a href={blobURL} download={blobName}>
+              {blobName}
+            </a>
+          </span>
         );
+
+        await showText(blobInfo, "green");
         const jobInfo = (
           <span>
             Proving transaction, cloud prove job id:{" "}
@@ -372,8 +459,9 @@ const MintPrivate = () => {
           duration: 20,
         });
         */
+        console.error("Error minting NFT token: ", mintResult);
         showText(
-          `Error minting NFT token: ${mintResult?.error ?? ""} ${
+          `Error minting NFT: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           "red"
@@ -383,7 +471,7 @@ const MintPrivate = () => {
         return;
       }
       const txResult = await waitForTransaction(jobId);
-      console.log("Final mint result", mintResult);
+      console.log("Final mint result", txResult);
       if (
         txResult.success &&
         txResult.hash !== undefined &&
@@ -402,7 +490,7 @@ const MintPrivate = () => {
         await showText(jobInfo, "green");
         const txInfo = (
           <span>
-            Buy transaction successfully sent with hash:{" "}
+            Mint transaction successfully sent with hash:{" "}
             <a href={explorerTransaction() + txResult.hash} target="_blank">
               {txResult.hash}
             </a>
@@ -438,8 +526,8 @@ const MintPrivate = () => {
         });
         */
         await showText(
-          `Error minting NFT token: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
+          `Error minting NFT token: ${txResult?.hash ?? ""} ${
+            txResult?.error ?? ""
           }`,
           "red"
         );
@@ -667,13 +755,14 @@ const MintPrivate = () => {
       setLoading(false);
     } catch (error) {
       console.log("Mint error", error);
-      showText(`Error minting NFT token: ${error}`, "red");
+      showText(
+        `Error minting NFT: ${error?.message ?? error ?? "error C759"}`,
+        "red"
+      );
       setPending(undefined);
       setLoading(false);
     }
   };
-
-  checkCanMint();
 
   return (
     <div className="gx-main-content">
@@ -752,7 +841,7 @@ const MintPrivate = () => {
               )}
               {minting && (
                 <Form.Item name="nftName" valuePropName="nftName">
-                  {token.name[0] === "@" ? token.name : "@" + token.name}
+                  {nameField[0] === "@" ? nameField : "@" + nameField}
                 </Form.Item>
               )}
             </Col>
@@ -762,15 +851,13 @@ const MintPrivate = () => {
                 <Form.Item
                   label={price}
                   name="name"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please name your NFT",
-                    },
-                  ]}
                   placeholder="Please name your NFT"
                 >
-                  <Input maxLength={30} showCount={true} />
+                  <Input
+                    maxLength={30}
+                    showCount={true}
+                    onChange={(e) => setNameField(e.target.value)}
+                  />
                 </Form.Item>
                 <Form.Item
                   label={collection}
