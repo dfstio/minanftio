@@ -121,7 +121,7 @@ const MintPrivate = () => {
 
   useEffect(() => {
     async function nameChanged() {
-      const name = nameField[0] === "@" ? nameField : "@" + nameField;
+      const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
       console.log("name", name);
       if (name.length < 3) {
         setPrice("Name");
