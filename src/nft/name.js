@@ -20,7 +20,7 @@ export async function lookupName(name) {
     developer: "@dfst",
     name: "lookupName",
     task: "lookupName",
-    args: [name],
+    args: [name[0] === "@" ? name : "@" + name],
   });
   try {
     console.log("lookupName", result);
