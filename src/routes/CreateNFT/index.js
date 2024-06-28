@@ -99,7 +99,6 @@ const MintPrivate = () => {
   const [collection, setCollection] = useState("Collection");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
-  const [loadingImage, setLoadingImage] = useState(false);
   const [minting, setMinting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingVideo, setLoadingVideo] = useState(false);
@@ -134,7 +133,6 @@ const MintPrivate = () => {
       if (
         reservedNames.includes(name.toLowerCase().substring(0, 30)) === true
       ) {
-        console.log("reserved name", name);
         setPrice("This name is reserved");
         setNameAvailable(false);
         warm();
@@ -147,11 +145,13 @@ const MintPrivate = () => {
         const regExp = /^[a-zA-Z]\w+$/g;
         return regExp.test(value.substring(1));
       }
+
       if (validateName(name)) {
         const status = await lookupName(name);
         console.log("status", status);
         if (status.success === false) {
           setPrice("Name");
+          console.error("Error in name lookup", status);
           return;
         }
         if (status.found === true) {
@@ -191,10 +191,10 @@ const MintPrivate = () => {
 
   useEffect(() => {
     async function checkCanMint() {
-      setMintDisabled(nameAvailable && token.main.image !== "" ? false : true);
+      setMintDisabled(nameAvailable && image ? false : true);
     }
     checkCanMint();
-  }, [nameAvailable, address, token]);
+  }, [nameAvailable, image]);
 
   const showText = async (text, color) => {
     setTimeline((prev) => {
@@ -276,7 +276,7 @@ const MintPrivate = () => {
       newToken.main.image = values.mainimage.file;
       setImage(values.mainimage.file);
       setUrl(URL.createObjectURL(values.mainimage.file));
-      setLibraries(loadLibraries());
+      if (libraries === undefined) setLibraries(loadLibraries());
     }
     if (values.mainvideo !== undefined)
       newToken.main.video = values.mainvideo.file;
