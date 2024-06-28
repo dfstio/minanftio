@@ -303,7 +303,6 @@ const MintPrivate = () => {
 
     setToken(newToken);
     setCounter(counter + 1);
-    checkCanMint();
   };
 
   const onFinish = async (values) => {
@@ -334,7 +333,6 @@ const MintPrivate = () => {
       const newAddress = await minaLogin();
       console.log("newAddress", newAddress);
       dispatch(updateAddress(newAddress));
-      checkCanMint();
       //return;
       //}
       if (newAddress === "" || newAddress === undefined) return;
@@ -764,8 +762,6 @@ const MintPrivate = () => {
       setLoading(false);
     }
   };
-
-  checkCanMint();
 
   return (
     <div className="gx-main-content">
