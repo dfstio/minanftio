@@ -389,6 +389,8 @@ export class MintParams extends Struct({
   const signedData = txResult?.signedData;
   if (signedData === undefined) {
     console.log("No signed data");
+    await showText("No user signature received", "red");
+    await showPending(undefined);
     return {
       success: false,
       error: "No user signature",

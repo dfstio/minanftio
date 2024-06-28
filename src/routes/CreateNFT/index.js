@@ -459,8 +459,9 @@ const MintPrivate = () => {
           duration: 20,
         });
         */
+        console.error("Error minting NFT token: ", mintResult);
         showText(
-          `Error minting NFT token: ${mintResult?.error ?? ""} ${
+          `Error minting NFT: ${mintResult?.error ?? ""} ${
             mintResult?.reason ?? ""
           }`,
           "red"
@@ -754,7 +755,10 @@ const MintPrivate = () => {
       setLoading(false);
     } catch (error) {
       console.log("Mint error", error);
-      showText(`Error minting NFT token: ${error}`, "red");
+      showText(
+        `Error minting NFT: ${error?.message ?? error ?? "error C759"}`,
+        "red"
+      );
       setPending(undefined);
       setLoading(false);
     }
