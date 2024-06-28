@@ -23,7 +23,8 @@ export async function lookupName(name) {
     args: [name],
   });
   try {
-    const data = JSON.parse(result.data);
+    console.log("lookupName", result);
+    const data = result.data;
     const { found, name, publicKey, chain, contract } = data;
     if (found === true)
       return {
@@ -86,6 +87,7 @@ export async function reserveName(data) {
     task: "reserveName",
     args: [JSON.stringify(data, null, 2)],
   });
+  console.log("reserveName", result);
   const reserved = result.data === undefined ? { success: false } : result.data;
   const price = reserved.price ? JSON.parse(reserved.price) : {};
   return {
