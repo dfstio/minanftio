@@ -391,7 +391,7 @@ const MintPrivate = () => {
         return;
       }
       const txResult = await waitForTransaction(jobId);
-      console.log("Final mint result", mintResult);
+      console.log("Final mint result", txResult);
       if (
         txResult.success &&
         txResult.hash !== undefined &&
@@ -446,8 +446,8 @@ const MintPrivate = () => {
         });
         */
         await showText(
-          `Error minting NFT token: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
+          `Error minting NFT token: ${txResult?.hash ?? ""} ${
+            txResult?.error ?? ""
           }`,
           "red"
         );
