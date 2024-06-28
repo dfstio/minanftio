@@ -128,7 +128,9 @@ const MintPrivate = () => {
         warm();
         return;
       }
-      if (reservedNames.includes(name) === true) {
+      if (
+        reservedNames.includes(name.toLowerCase().substring(0, 30)) === true
+      ) {
         console.log("reserved name", name);
         setPrice("This name is reserved");
         warm();
