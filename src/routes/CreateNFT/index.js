@@ -345,11 +345,19 @@ const MintPrivate = () => {
         const blob = new Blob([mintResult.json], {
           type: "text/plain;charset=utf-8",
         });
-        fileSaver.saveAs(blob, name + ".v1.json");
-        await showText(
-          `NFT private data is saved to the ${name}.v1.json`,
-          "green"
+        const blobName = name + ".v1.json";
+        fileSaver.saveAs(blob, blobName);
+        const blobURL = URL.createObjectURL(blob);
+        const blobInfo = (
+          <span>
+            NFT private data saved to the{" "}
+            <a href={blobURL} target="_blank">
+              {blobName}
+            </a>
+          </span>
         );
+
+        await showText(blobInfo, "green");
         const jobInfo = (
           <span>
             Proving transaction, cloud prove job id:{" "}
