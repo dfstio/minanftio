@@ -23,7 +23,6 @@ export async function lookupName(name) {
     args: [name[0] === "@" ? name : "@" + name],
   });
   try {
-    console.log("lookupName", result);
     const data = result.data;
     const { found, name, publicKey, chain, contract } = data;
     if (found === true)

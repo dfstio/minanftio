@@ -44,6 +44,7 @@ import {
   accountingEmail,
 } from "../../util/config";
 import { set } from "nprogress";
+import { add } from "winston";
 const logm = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "Custom",
@@ -125,6 +126,7 @@ const MintPrivate = () => {
       console.log("name", name);
       if (name.length < 3) {
         setPrice("Name");
+        setMintDisabled(true);
         warm();
         return;
       }
@@ -133,6 +135,7 @@ const MintPrivate = () => {
       ) {
         console.log("reserved name", name);
         setPrice("This name is reserved");
+        setMintDisabled(true);
         warm();
         return;
       }
@@ -152,6 +155,7 @@ const MintPrivate = () => {
         }
         if (status.found === true) {
           setPrice("This name is already registered");
+          setMintDisabled(true);
           return;
         } else {
           const priceObject = nftPrice(name);
@@ -177,17 +181,22 @@ const MintPrivate = () => {
     nameChanged();
   }, [nameField]);
 
-  const checkCanMint = () => {
-    let newMintDisabled = true;
-    if (address === "") newMintDisabled = false;
-    else if (
-      nameField !== "" &&
-      token.main.image !== "" &&
-      nameField.length > 2
-    )
-      newMintDisabled = false;
-    if (newMintDisabled !== mintDisabled) setMintDisabled(newMintDisabled);
-  };
+  useEffect(() => {
+    async function checkCanMint() {
+      setMintDisabled((prev) => {
+        let newMintDisabled = true;
+        if (address === "") newMintDisabled = false;
+        else if (
+          nameField !== "" &&
+          token.main.image !== "" &&
+          nameField.length > 2
+        )
+          newMintDisabled = false;
+        if (newMintDisabled !== prev) setMintDisabled(newMintDisabled);
+      });
+    }
+    checkCanMint();
+  }, [nameField, address, token]);
 
   const showText = async (text, color) => {
     setTimeline((prev) => {

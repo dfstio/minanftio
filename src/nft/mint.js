@@ -95,14 +95,6 @@ export async function mintNFT(
 
   const arweaveKey = undefined;
 
-  if (jwt === undefined) {
-    console.error("JWT is undefined");
-    return {
-      success: false,
-      error: "JWT is undefined",
-    };
-  }
-
   if (pinataJWT === undefined) {
     console.error("Pinata JWT is undefined");
     return {
