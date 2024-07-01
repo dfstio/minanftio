@@ -128,6 +128,7 @@ const BuyButton = ({ item }) => {
 
   const handleCancel = () => {
     setVisible(false);
+    window.location.reload(false);
   };
 
   return (

@@ -148,6 +148,7 @@ const SellButton = ({ item }) => {
 
   const handleCancel = () => {
     setVisible(false);
+    window.location.reload(false);
   };
 
   const handleChange = (values) => {
