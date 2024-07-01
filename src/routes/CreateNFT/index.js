@@ -444,7 +444,7 @@ const MintPrivate = () => {
               {jobId}
             </a>
             <br />
-            You can close this form and check the transaction status later.
+            You can close this page and check the transaction status later.
           </span>
         );
 
@@ -1285,7 +1285,7 @@ const MintPrivate = () => {
                 disabled={mintDisabled}
                 loading={loading}
               >
-                {address === "" ? "Connect with AURO" : "Mint NFT"}
+                Mint NFT
               </Button>
             </Form.Item>
           </Row>

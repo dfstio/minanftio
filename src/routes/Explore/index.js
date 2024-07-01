@@ -45,6 +45,7 @@ const App = (props) => {
       createURL={props.createURL}
       searchClient={searchClient}
       onSearchStateChange={props.onSearchStateChange}
+      refresh={true}
     >
       <Configure hitsPerPage={15} />
 
