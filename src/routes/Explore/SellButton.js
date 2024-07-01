@@ -22,6 +22,7 @@ const SellButton = ({ item }) => {
   const [timeline, setTimeline] = useState([]);
   const [pending, setPending] = useState(undefined);
   const [libraries, setLibraries] = useState(undefined);
+  const [reload, setReload] = useState(false);
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
@@ -29,6 +30,7 @@ const SellButton = ({ item }) => {
     setTimeline([]);
     setPending(undefined);
     setLoading(false);
+    setReload(false);
     setVisible(true);
     setLibraries(loadLibraries());
   };
@@ -78,6 +80,7 @@ const SellButton = ({ item }) => {
         setPending(undefined);
         return;
       }
+      setReload(true);
       console.log("SellButton sellResult", sellResult);
       const jobId = sellResult.jobId;
       await showText("Cloud proving job started", "green");
@@ -148,7 +151,7 @@ const SellButton = ({ item }) => {
 
   const handleCancel = () => {
     setVisible(false);
-    window.location.reload(false);
+    if (reload) window.location.reload(false);
   };
 
   const handleChange = (values) => {
