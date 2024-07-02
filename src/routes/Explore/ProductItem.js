@@ -55,10 +55,10 @@ const ProductItem = ({ item }) => {
         <div className="gx-mb-3">
           <Highlight attribute="collection" hit={item} />
         </div>
-
         {onSale ? (
           <div className="gx-product-price">
             <span style={{ float: "right" }}>
+              {item.collection ? "" : <br />}
               {item.price / 1_000_000_000} {"MINA"}
             </span>
           </div>
