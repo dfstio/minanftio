@@ -388,6 +388,7 @@ const Mint = () => {
           </span>
         );
         await showText(jobInfo, "green");
+        const linkURL = window.location.origin + "/@" + name;
         const txInfo = (
           <span>
             Mint transaction successfully sent with hash:{" "}
@@ -397,6 +398,11 @@ const Mint = () => {
             <br />
             You can close this page and wait for the transaction to be included
             in the block.
+            <br />
+            You can see your NFT at the{" "}
+            <a href={linkURL} target="_blank">
+              {linkURL}
+            </a>
           </span>
         );
         await showText(txInfo, "green");
