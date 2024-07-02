@@ -82,6 +82,10 @@ const Mint = () => {
   const dispatch = useDispatch();
 
   const [token, setToken] = useState(startToken);
+  const [keys, setKeys] = useState([
+    { key: "", value: "", isPrivate: true },
+    { key: "", value: "", isPrivate: true },
+  ]);
   const [nameField, setNameField] = useState("");
   const [nameAvailable, setNameAvailable] = useState(false);
   const [hot, setHot] = useState(false);
@@ -92,7 +96,6 @@ const Mint = () => {
   const [minting, setMinting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mintDisabled, setMintDisabled] = useState(true);
-  const [advanced, setAdvanced] = useState(false);
   const [form] = Form.useForm();
   const [image, setImage] = useState(undefined);
   const [url, setUrl] = useState(undefined);
@@ -249,9 +252,7 @@ const Mint = () => {
     if (values.folder !== undefined) newToken.folder = values.folder;
     if (values.calculateroot !== undefined)
       newToken.calculateroot = values.calculateroot;
-    if (values.advanced !== undefined) {
-      setAdvanced(values.advanced === true);
-    }
+
     if (values.storagetype !== undefined)
       newToken.storagetype = values.storagetype;
 
@@ -261,11 +262,6 @@ const Mint = () => {
 
   const onFinish = async (values) => {
     if (DEBUG) console.log("onFinish", values);
-  };
-
-  const onChangeAdvanced = async (value) => {
-    if (DEBUG) console.log("onChangeAdvanced", value);
-    setAdvanced(value.target.checked);
   };
 
   const beforeUpload = (file) => {
@@ -303,31 +299,10 @@ const Mint = () => {
         pinataJWT: string;
         jwt: string;
       }*/
-      const keys = [];
-      if (token.public_key1 !== undefined && token.public_key1 !== "")
-        keys.push({
-          key: token.public_key1.substring(0, 30),
-          value: token.public_value1?.substring(0, 30) ?? "",
-          isPrivate: false,
-        });
-      if (token.public_key2 !== undefined && token.public_key2 !== "")
-        keys.push({
-          key: token.public_key2.substring(0, 30),
-          value: token.public_value2?.substring(0, 30) ?? "",
-          isPrivate: false,
-        });
-      if (token.private_key1 !== undefined && token.private_key1 !== "")
-        keys.push({
-          key: token.private_key1.substring(0, 30),
-          value: token.private_value1?.substring(0, 30) ?? "",
-          isPrivate: true,
-        });
-      if (token.private_key2 !== undefined && token.private_key2 !== "")
-        keys.push({
-          key: token.private_key2.substring(0, 30),
-          value: token.private_value2?.substring(0, 30) ?? "",
-          isPrivate: true,
-        });
+      const checkedKeys = [];
+      for (const key of keys) {
+        if (key.key !== "" && key.value !== "") checkedKeys.push(key);
+      }
 
       let mintResult = await mintNFT({
         name,
@@ -338,7 +313,7 @@ const Mint = () => {
           token.sellPrice && token.sellPrice !== ""
             ? parseFloat(token.sellPrice)
             : 0,
-        keys,
+        keys: checkedKeys,
         developer: "DFST",
         repo: "minanft_io",
         owner,
@@ -509,13 +484,6 @@ const Mint = () => {
                 </Row>
               )}
 
-              {!minting && (
-                <Form.Item name="advanced" valuePropName="advanced">
-                  <Checkbox onChange={onChangeAdvanced}>
-                    Add Proof of NFT
-                  </Checkbox>
-                </Form.Item>
-              )}
               {minting && (
                 <img
                   src={url}
@@ -536,6 +504,12 @@ const Mint = () => {
                   label={price}
                   name="name"
                   placeholder="Please name your NFT"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please name your NFT",
+                    },
+                  ]}
                 >
                   <Input
                     maxLength={30}
@@ -610,6 +584,101 @@ const Mint = () => {
                 >
                   <Markdown>{token.description}</Markdown>
                 </Form.Item>
+                <Card
+                  title={
+                    <span style={{ marginLeft: "20px", fontWeight: "normal" }}>
+                      Proof of NFT{" "}
+                      <PlusOutlined
+                        onClick={() => {
+                          console.log("Add key", keys);
+                          setKeys((prev) => [
+                            ...prev,
+                            { key: "", value: "", isPrivate: true },
+                          ]);
+                        }}
+                      />
+                    </span>
+                  }
+                  name="keys"
+                >
+                  {keys.map((key, index) => (
+                    <Row
+                      className="gx-content"
+                      key={`Proof of NFT Keys ${index}`}
+                    >
+                      <Col xxl={9} xl={9} lg={9} md={16} sm={24} xs={24}>
+                        <Form.Item name={`key-${index}`}>
+                          <Input
+                            addonBefore="Key"
+                            maxLength={30}
+                            showCount={true}
+                            onChange={(e) =>
+                              setKeys((prev) => {
+                                const newKeys = prev;
+                                newKeys[index].key = e.target.value;
+                                return newKeys;
+                              })
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xxl={9} xl={9} lg={9} md={16} sm={24} xs={24}>
+                        <Form.Item name={`value-${index}`}>
+                          <Input
+                            addonBefore="Value"
+                            maxLength={30}
+                            showCount={true}
+                            onChange={(e) =>
+                              setKeys((prev) => {
+                                const newKeys = prev;
+                                newKeys[index].value = e.target.value;
+                                return newKeys;
+                              })
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xxl={5} xl={5} lg={5} md={10} sm={12} xs={12}>
+                        <Form.Item
+                          name={`public-${index}`}
+                          initialValue="Private"
+                        >
+                          <Select
+                            name={`public-select-${index}`}
+                            onChange={(e) =>
+                              setKeys((prev) => {
+                                const newKeys = prev;
+                                newKeys[index].isPrivate =
+                                  e === "Private" ? true : false;
+                                return newKeys;
+                              })
+                            }
+                          >
+                            <Option value="Private">Private</Option>
+                            <Option value="Public">Public</Option>
+                          </Select>
+                        </Form.Item>
+                        {/*}
+                        <Form.Item
+                          name={`public-${index}`}
+                          valuePropName="public"
+                        >
+                          <Checkbox
+                            onChange={(e) =>
+                              setKeys((prev) => {
+                                const newKeys = prev;
+                                newKeys[index].isPublic = e.target.checked;
+                                return newKeys;
+                              })
+                            }
+                          >
+                            public
+                          </Checkbox>
+                        </Form.Item>*/}
+                      </Col>
+                    </Row>
+                  ))}
+                </Card>
               </Col>
             )}
             {minting && (
@@ -634,105 +703,7 @@ const Mint = () => {
               </Col>
             )}
           </Row>
-          {advanced === true && !minting ? (
-            <div className="gx-main-content">
-              <Row>
-                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                  <Card className="gx-card" title="Proof of NFT - public data">
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public key 1 (will be published to IPFS)"
-                          name="public_key1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public value 1 (will be published to IPFS)"
-                          name="public_value1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public key 2 (will be published to IPFS)"
-                          name="public_key2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Public value 2 (will be published to IPFS)"
-                          name="public_value2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
-              </Row>
 
-              <Row>
-                <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                  <Card className="gx-card" title="Proof of NFT - private data">
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private key 1 (will NOT be published to IPFS)"
-                          name="private_key1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private value 1 (will NOT be published to IPFS, but will be verifiable)"
-                          name="private_value1"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private key 2 (will NOT be published to IPFS)"
-                          name="private_key2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                      <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Private value 2 (will NOT be published to IPFS, but will be verifiable)"
-                          name="private_value2"
-                          placeholder="Some string (less than 30 chars)"
-                        >
-                          <Input maxLength={30} showCount={true} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          ) : (
-            <div></div>
-          )}
           <Row>
             <Form.Item style={{ paddingLeft: "10px" }}>
               <Button
