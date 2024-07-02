@@ -12,6 +12,7 @@ import {
   Upload,
   Select,
   Table,
+  Timeline,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import IntlMessages from "util/IntlMessages";
@@ -22,14 +23,17 @@ import {
 } from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { prepareTable, prove, waitForProof, getKeys } from "./prove";
+import { prepareTable, prove, waitForProof, getKeys } from "../../nft/prove";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
+import { sleep } from "../../blockchain/mina";
+import { loadLibraries } from "../../nft/libraries";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
+const Dragger = Upload.Dragger;
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -53,18 +57,19 @@ const columns = [
 
 const ProveAttributes = () => {
   const [form] = Form.useForm();
-  const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   const [name, setName] = useState("");
+  const [fileName, setFileName] = useState(undefined);
   const [nftAddress, setNftAddress] = useState("");
   const [json, setJson] = useState(undefined);
   const [table, setTable] = useState([]);
-  const [proof, setProof] = useState(undefined);
-  const [proofname, setProofname] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [messageApi, contextHolder] = message.useMessage();
+  const [timeline, setTimeline] = useState([]);
+  const [pending, setPending] = useState(undefined);
+  const [proving, setProving] = useState(false);
+  const [libraries, setLibraries] = useState(loadLibraries());
 
   const log = logm.child({ winstonComponent: "ProveAttributes" });
 
@@ -88,23 +93,15 @@ const ProveAttributes = () => {
     return false;
   };
 
-  async function onDownloadClick() {
-    if (DEBUG) console.log("Download clicked");
-    const blob = new Blob([proof], {
-      type: "text/plain;charset=utf-8",
-    });
-    fileSaver.saveAs(blob, proofname);
-  }
-
   const onValuesChange = async (values) => {
     if (DEBUG) console.log("onValuesChange", values);
-    if (values.auth !== undefined && values.auth !== auth) setAuth(values.auth);
     if (values.json !== undefined) {
       const json = await getJSON(values.json.file);
       if (json !== undefined) {
         if (json.name !== undefined) setName(json.name);
         if (json.address !== undefined) setNftAddress(json.address);
         setJson(json);
+        setFileName(values.json.file.name);
         const table = prepareTable(json);
         console.log("table", table);
         setTable(table);
@@ -114,78 +111,89 @@ const ProveAttributes = () => {
     checkCanCreate();
   };
 
+  const showText = async (text, color) => {
+    setTimeline((prev) => {
+      const newTimeline = prev;
+      newTimeline.push({ text, color });
+      return newTimeline;
+    });
+  };
+
+  const showPending = async (text) => {
+    setPending(text);
+  };
+
   async function proveButton() {
     console.log("Prove button clicked");
+    const o1jsInfo = (
+      <span>
+        Loading{" "}
+        <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+          o1js
+        </a>{" "}
+        library...
+      </span>
+    );
+    await showPending(o1jsInfo);
+    setProving(true);
     setLoading(true);
+    await sleep(500);
     console.log("rowSelection", selectedRowKeys);
     console.log("table", table);
     console.log("keys", getKeys(selectedRowKeys, table));
-    const key = "Creating proof message";
 
     try {
-      message.loading({
-        content: `Creating proof...`,
-        key,
-        duration: 600,
-      });
-
-      const jobResult = await prove(auth, json, selectedRowKeys);
+      const jobResult = await prove(
+        json,
+        selectedRowKeys,
+        libraries,
+        showText,
+        showPending
+      );
       console.log("Prove job result", jobResult);
-      if (jobResult?.success === true && jobResult?.jobId !== undefined) {
-        message.loading({
-          content: `Started proof job ${jobResult.jobId}`,
-          key,
-          duration: 600,
-        });
+      const jobId = jobResult?.jobId;
+      if (jobResult?.success === true && jobId !== undefined) {
+        await showText("Cloud proving job started", "green");
+        const jobInfo = (
+          <span>Proving NFT metadata, cloud prove job id: {jobId}</span>
+        );
+
+        setPending(jobInfo);
       } else {
-        message.error({
-          content: `Error creating proof: ${jobResult?.error ?? ""} ${
-            jobResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
+        showText("Error staring cloud prove job", "red");
+        setPending(undefined);
         setLoading(false);
         return;
       }
-      const jobId = jobResult.jobId;
-      const mintResult = await waitForProof(
-        jobId,
-        json,
-        selectedRowKeys,
-        table,
-        auth
-      );
-      if (mintResult?.success === true && mintResult?.proof !== undefined) {
-        message.success({
-          content: `Proof created and verified successfully`,
-          key,
-          duration: 240,
+      const result = await waitForProof(jobId, json, selectedRowKeys, table);
+      if (result?.success === true && result?.proof !== undefined) {
+        const blob = new Blob([result.proof], {
+          type: "application/json",
         });
-        setProof(mintResult.proof);
-        setProofname(name + ".proof.json");
-        const blob = new Blob([mintResult.proof], {
-          type: "text/plain;charset=utf-8",
-        });
-        fileSaver.saveAs(blob, name + ".proof.json");
-      } else
-        message.error({
-          content: `Error creating proof: ${mintResult?.error ?? ""} ${
-            mintResult?.reason ?? ""
-          }`,
-          key,
-          duration: 60,
-        });
+        const blobName = name + ".proof.json";
+        fileSaver.saveAs(blob, blobName);
+        const blobURL = URL.createObjectURL(blob);
+        const proofInfo = (
+          <span>
+            Proof created successfully, the file with proof saved to the{" "}
+            <a href={blobURL} download={blobName}>
+              {blobName}
+            </a>
+          </span>
+        );
+
+        await showText(proofInfo, "green");
+        setPending(undefined);
+      } else {
+        await showText("Error: cannot create proof", "red");
+        setPending(undefined);
+      }
 
       setLoading(false);
     } catch (error) {
       console.log("Proof creation error", error);
-      setLoading(false);
-      message.error({
-        content: `Error creating proof: ${error}`,
-        key,
-        duration: 30,
-      });
+      await showText("Error: cannot create proof", "red");
+      setPending(undefined);
     }
 
     setLoading(false);
@@ -203,11 +211,8 @@ const ProveAttributes = () => {
             <Card
               className="gx-card"
               key="billingCard"
-              title=<IntlMessages id="create.proofs.strings.form.title" />
+              title="Create a Proof of NFT Metadata"
             >
-              <div className="gx-d-flex justify-content-center">
-                <IntlMessages id="create.proofs.strings.form.description" />
-              </div>
               <Form
                 form={form}
                 key="billingForm"
@@ -224,10 +229,9 @@ const ProveAttributes = () => {
               >
                 <div>
                   <Row>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                    <Col xxl={8} xl={8} lg={8} md={24} sm={24} xs={24}>
                       <Form.Item
                         name="json"
-                        label="Upload the JSON file with NFT data here that you've got when you have minted an NFT"
                         rules={[
                           {
                             required: true,
@@ -236,6 +240,32 @@ const ProveAttributes = () => {
                           },
                         ]}
                       >
+                        <Dragger
+                          name="jsondata"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="application/json"
+                          showUploadList={false}
+                          multiple={false}
+                          maxCount={1}
+                          beforeUpload={beforeUpload}
+                        >
+                          {fileName && <span>{fileName} </span>}
+                          {!fileName && (
+                            <span>
+                              Click or drag the JSON file
+                              <br />
+                              with NFT private data
+                              <br />
+                              that you've got when
+                              <br />
+                              you have minted an NFT
+                              <br />
+                              to this area
+                            </span>
+                          )}
+                        </Dragger>
+                        {/*
                         <Upload
                           name="jsondata"
                           listType="picture-card"
@@ -252,82 +282,62 @@ const ProveAttributes = () => {
                             <div className="ant-upload-text">JSON file</div>
                           </div>
                         </Upload>
+                        */}
                       </Form.Item>
                     </Col>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
+                    <Col xxl={16} xl={16} lg={16} md={24} sm={24} xs={24}>
                       <Form.Item hidden={name === ""}>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
+                        NFT name: {name}
+                        <br />
+                        <br />
+                        NFT address: {nftAddress}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  {json && !proving && (
+                    <Row>
+                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                        <Form.Item>
+                          <Table
+                            rowSelection={{
+                              type: "checkbox",
+                              ...rowSelection,
+                            }}
+                            dataSource={table}
+                            columns={columns}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  )}
+                  {proving && (
+                    <Row>
+                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          name="info"
+                          className="currency-sell-form_last-form-item"
+                          hidden={
+                            timeline.length === 0 && pending === undefined
+                          }
                         >
-                          NFT name: {name}
-                        </div>
-                      </Form.Item>
-                      <Form.Item hidden={nftAddress === ""}>
-                        <div
-                          className="gx-mt-4"
-                          style={{
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          NFT address: {nftAddress}
-                        </div>
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                          <Timeline
+                            pending={pending}
+                            reverse={false}
+                            hidden={
+                              timeline.length === 0 && pending === undefined
+                            }
+                          >
+                            {timeline.map((item) => (
+                              <Timeline.Item color={item.color}>
+                                {item.text}
+                              </Timeline.Item>
+                            ))}
+                          </Timeline>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  )}
 
-                  <Row>
-                    <Col xxl={12} xl={12} lg={14} md={24} sm={24} xs={24}>
-                      <Form.Item
-                        label={
-                          <span>
-                            <span>Authorisation code. </span>
-                            <span>
-                              {" "}
-                              <a
-                                href="https://t.me/minanft_bot?start=auth"
-                                target="_blank"
-                              >
-                                Get it here
-                              </a>
-                            </span>
-                          </span>
-                        }
-                        name="auth"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please enter authorisation code",
-                          },
-                        ]}
-                        placeholder="Get the code by sending /auth command to telegram bot @MinaNFT_bot"
-                      >
-                        <TextArea
-                          autoSize={{
-                            minRows: 2,
-                            maxRows: 3,
-                          }}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                      <Form.Item>
-                        <Table
-                          rowSelection={{
-                            type: "checkbox",
-                            ...rowSelection,
-                          }}
-                          dataSource={table}
-                          columns={columns}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
                   <Row>
                     <Form.Item>
                       <Button
@@ -338,16 +348,6 @@ const ProveAttributes = () => {
                         key="proveButton"
                       >
                         Create Proof
-                      </Button>
-                    </Form.Item>
-                    <Form.Item
-                      label=""
-                      name="prooflink"
-                      hidden={proofname === ""}
-                    >
-                      Proof is created:{" "}
-                      <Button onClick={onDownloadClick} type="link">
-                        {proofname}
                       </Button>
                     </Form.Item>
                   </Row>
