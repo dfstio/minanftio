@@ -26,6 +26,14 @@ const App = ({ match }) => (
         path={`${match.url}@:tokenId`}
         component={asyncComponent(() => import("./token"))}
       />
+      <Route
+        path={`${match.url}nft/:rollupId`}
+        component={asyncComponent(() => import("./token"))}
+      />
+      <Route
+        path={`${match.url}rollup/tx/:txId`}
+        component={asyncComponent(() => import("./Tx"))}
+      />
       {/*
       <Route
         path={`${match.url}create/post`}
@@ -89,14 +97,7 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./token"))}
       />
 
-      <Route
-        path={`${match.url}nft/:rollupId`}
-        component={asyncComponent(() => import("./token"))}
-      />
-      <Route
-        path={`${match.url}rollup/tx/:txId`}
-        component={asyncComponent(() => import("./Tx"))}
-      />
+
       <Route
         path={`${match.url}posts`}
         component={asyncComponent(() => import("./Posts"))}
