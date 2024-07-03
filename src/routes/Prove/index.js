@@ -310,6 +310,18 @@ const Prove = () => {
                       </Col>
                     </Row>
                   )}
+                  {json && proving && (
+                    <Row>
+                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                        <Form.Item>
+                          <Table
+                            dataSource={selectedRowKeys}
+                            columns={columns}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  )}
                   {proving && (
                     <Row>
                       <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>

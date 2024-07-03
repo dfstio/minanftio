@@ -280,7 +280,7 @@ const Verify = () => {
                       </Form.Item>
                     </Col>
                   </Row>
-                  {json && !proving && (
+                  {json && (
                     <Row>
                       <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                         <Form.Item>
