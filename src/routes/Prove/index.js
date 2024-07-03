@@ -28,6 +28,7 @@ import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { sleep } from "../../blockchain/mina";
 import { loadLibraries } from "../../nft/libraries";
+import { set } from "nprogress";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -64,6 +65,7 @@ const Prove = () => {
   const [nftAddress, setNftAddress] = useState("");
   const [json, setJson] = useState(undefined);
   const [table, setTable] = useState([]);
+  const [keys, setKeys] = useState([]);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [timeline, setTimeline] = useState([]);
@@ -135,6 +137,12 @@ const Prove = () => {
       </span>
     );
     await showPending(o1jsInfo);
+    const keys = [];
+    selectedRowKeys.forEach((key) => {
+      const row = table.find((row) => row.key === key);
+      if (row !== undefined) keys.push(row);
+    });
+    setKeys(keys);
     setProving(true);
     setLoading(true);
     await sleep(500);
@@ -314,10 +322,7 @@ const Prove = () => {
                     <Row>
                       <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
                         <Form.Item>
-                          <Table
-                            dataSource={selectedRowKeys}
-                            columns={columns}
-                          />
+                          <Table dataSource={keys} columns={columns} />
                         </Form.Item>
                       </Col>
                     </Row>
