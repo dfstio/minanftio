@@ -254,7 +254,7 @@ export async function mintNFT(
   }
 
   await showText(`NFT name @${name} is reserved`, "green");
-  await showPending("Uploading the image to IPFs...");
+  await showPending("Uploading the image to IPFS...");
 
   const signature = Signature.fromBase58(reserved.signature);
   const expiry = UInt32.from(reserved.expiry);

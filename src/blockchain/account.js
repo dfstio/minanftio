@@ -49,7 +49,7 @@ const AuroWallet = () => {
     fetchAddress();
   }, [dispatch]);
 
-  if (DEBUG) console.log(`Address ${address} ${username}`);
+  if (DEBUG) console.log(`Address ${address}, username: ${username}`);
 
   let result = (
     <ul className="gx-login-list">

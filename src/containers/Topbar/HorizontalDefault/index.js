@@ -134,6 +134,7 @@ const HorizontalDefault = () => {
               </Link>
             </div>
             <AuroWallet />
+            {/*}
             <Popover
               overlayClassName="gx-popover-horizantal"
               placement="bottomRight"
@@ -147,6 +148,7 @@ const HorizontalDefault = () => {
                 <i className={`flag flag-24 flag-${locale.icon}`} />
               </span>
             </Popover>
+            */}
           </div>
         </div>
       </div>

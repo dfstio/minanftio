@@ -16,6 +16,7 @@ const BuyButton = ({ item }) => {
   const [modalText, setModalText] = useState("");
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
   const [title, setTitle] = useState("Buy NFT @" + item.name);
   const [timeline, setTimeline] = useState([]);
   const [pending, setPending] = useState(undefined);
@@ -37,6 +38,7 @@ const BuyButton = ({ item }) => {
     setTimeline([]);
     setPending("Preparing buy transaction...");
     setLoading(true);
+    setReload(false);
     setVisible(true);
     try {
       const newAddress = await minaLogin();
@@ -58,6 +60,7 @@ const BuyButton = ({ item }) => {
         setPending(undefined);
         return;
       }
+      setReload(true);
       console.log("SellButton sellResult", buyResult);
       const jobId = buyResult.jobId;
       await showText("Cloud proving job started", "green");
@@ -128,6 +131,7 @@ const BuyButton = ({ item }) => {
 
   const handleCancel = () => {
     setVisible(false);
+    if (reload) window.location.reload(false);
   };
 
   return (
