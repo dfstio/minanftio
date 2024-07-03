@@ -8,7 +8,6 @@ import { buyNFT } from "../../mint/buy";
 import { waitForTransaction } from "../../mint/send";
 
 import logger from "../../serverless/logger";
-import { set } from "nprogress";
 const logm = logger.info.child({
   winstonModule: "Algolia",
   winstonComponent: "Buy",
@@ -38,10 +37,10 @@ const BuyButton = ({ item }) => {
       buyer: newAddress,
       address: item.address,
     });
-    console.log("BuyButton buyResult", buyResult);
+    if (DEBUG) console.log("BuyButton buyResult", buyResult);
     const jobId = buyResult.jobId;
     buyResult = await waitForTransaction(jobId);
-    console.log("BuyButton tx buyResult", buyResult);
+    if (DEBUG) console.log("BuyButton tx buyResult", buyResult);
     setWorking(false);
   }
 

@@ -5,25 +5,26 @@ import logger from "../serverless/logger";
 const logm = logger.debug.child({ winstonModule: "mina" });
 
 const { REACT_APP_CHAIN_ID } = process.env;
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 export async function initAccount(
   handleEvents,
   handleChainChanged,
   handleAccountsChanged
 ) {
-  console.log("initAccount called");
+  if (DEBUG) console.log("initAccount called");
   const address = await getAddress();
   return address;
 }
 
 export async function getAddress(force = false) {
-  console.log("getAddress called");
+  if (DEBUG) console.log("getAddress called");
   let address = "";
   try {
     if (window.mina !== undefined) {
       const network = await window.mina.requestNetwork();
       let account = await window.mina.getAccounts();
-      console.log("getAddress account", account, network);
+      if (DEBUG) console.log("getAddress account", account, network);
 
       if (account.length > 0 /*&& network?.chainId === chainId()*/) {
         address = account[0];
@@ -33,7 +34,7 @@ export async function getAddress(force = false) {
     // if user reject, requestAccounts will throw an error with code and message filed
     console.error("getAddress", error.message, error.code);
   }
-  console.log("getAddress address", address);
+  if (DEBUG) console.log("getAddress address", address);
   return address;
 }
 
@@ -102,28 +103,28 @@ export async function minaLogin(openlink = true) {
   let address = "";
   const log = logm.child({ openlink, wf: "minaLogin" });
   log.debug("called: ", { mina: window.mina });
-  console.log("mina login start");
+  if (DEBUG) console.log("mina login start");
 
   try {
     if (window.mina !== undefined) {
       let network = await window.mina
         ?.requestNetwork()
         .catch((err) => console.log(err));
-      console.log("mina login network", network);
+      if (DEBUG) console.log("mina login network", network);
       if (network?.networkID !== REACT_APP_CHAIN_ID) {
         const switchNetwork = await window.mina
           .switchChain({ networkID: REACT_APP_CHAIN_ID })
           .catch((err) => console.log(err));
-        console.log("mina login switch network", switchNetwork);
+        if (DEBUG) console.log("mina login switch network", switchNetwork);
         network = await window.mina
           .requestNetwork()
           .catch((err) => console.log(err));
       }
-      console.log("mina login network", network);
+      if (DEBUG) console.log("mina login network", network);
 
       const account = await window.mina.requestAccounts();
       log.debug("account", { account, network });
-      console.log("mina login account", account, network);
+      if (DEBUG) console.log("mina login account", account, network);
 
       if (account.length > 0 && network?.networkID === REACT_APP_CHAIN_ID)
         address = account[0];

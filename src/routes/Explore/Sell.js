@@ -35,10 +35,10 @@ const SellButton = ({ item }) => {
       owner: newAddress,
       address: item.address,
     });
-    console.log("SellButton sellResult", sellResult);
+    if (DEBUG) console.log("SellButton sellResult", sellResult);
     const jobId = sellResult.jobId;
     sellResult = await waitForTransaction(jobId);
-    console.log("SellButton tx sellResult", sellResult);
+    if (DEBUG) console.log("SellButton tx sellResult", sellResult);
     setWorking(false);
   }
 

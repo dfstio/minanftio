@@ -48,10 +48,10 @@ const SellButton = ({ item }) => {
   };
 
   useEffect(() => {
-    async function checkOkButton() {
+    function checkOkButton() {
       const newOkDisabled = Number(price) < 1 || Number(price) > 500;
       if (newOkDisabled !== okDisabled) setOkDisabled(newOkDisabled);
-      //if( DEBUG) console.log("Sell okDisabled: ", newOkDisabled, price, accepted);
+      //if( DEBUG) if(DEBUG) console.log("Sell okDisabled: ", newOkDisabled, price, accepted);
     }
     checkOkButton();
   }, [price]);
@@ -81,7 +81,7 @@ const SellButton = ({ item }) => {
         return;
       }
       setReload(true);
-      console.log("SellButton sellResult", sellResult);
+      if (DEBUG) console.log("SellButton sellResult", sellResult);
       const jobId = sellResult.jobId;
       await showText("Cloud proving job started", "green");
       const jobInfo = (
@@ -97,7 +97,7 @@ const SellButton = ({ item }) => {
 
       setPending(jobInfo);
       const txResult = await waitForTransaction(jobId);
-      console.log("SellButton tx sellResult", txResult);
+      if (DEBUG) console.log("SellButton tx sellResult", txResult);
       if (
         txResult.success &&
         txResult.hash !== undefined &&
@@ -166,7 +166,7 @@ const SellButton = ({ item }) => {
       </Button>
       <Modal
         title={title}
-        visible={visible}
+        open={visible}
         onOk={handleOk}
         confirmLoading={loading}
         onCancel={handleCancel}

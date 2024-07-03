@@ -28,6 +28,7 @@ import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { sleep } from "../../blockchain/mina";
 import { loadLibraries } from "../../nft/libraries";
+import { set } from "nprogress";
 
 const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
@@ -55,7 +56,7 @@ const columns = [
   },
 ];
 
-const ProveAttributes = () => {
+const Prove = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
@@ -64,6 +65,7 @@ const ProveAttributes = () => {
   const [nftAddress, setNftAddress] = useState("");
   const [json, setJson] = useState(undefined);
   const [table, setTable] = useState([]);
+  const [keys, setKeys] = useState([]);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [timeline, setTimeline] = useState([]);
@@ -74,7 +76,7 @@ const ProveAttributes = () => {
   const log = logm.child({ winstonComponent: "ProveAttributes" });
 
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    if (DEBUG) console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -94,7 +96,7 @@ const ProveAttributes = () => {
   };
 
   const onValuesChange = async (values) => {
-    if (DEBUG) console.log("onValuesChange", values);
+    if (DEBUG) if (DEBUG) console.log("onValuesChange", values);
     if (values.json !== undefined) {
       const json = await getJSON(values.json.file);
       if (json !== undefined) {
@@ -103,7 +105,7 @@ const ProveAttributes = () => {
         setJson(json);
         setFileName(values.json.file.name);
         const table = prepareTable(json);
-        console.log("table", table);
+        if (DEBUG) console.log("table", table);
         setTable(table);
       }
     }
@@ -124,7 +126,7 @@ const ProveAttributes = () => {
   };
 
   async function proveButton() {
-    console.log("Prove button clicked");
+    if (DEBUG) console.log("Prove button clicked");
     const o1jsInfo = (
       <span>
         Loading{" "}
@@ -135,12 +137,18 @@ const ProveAttributes = () => {
       </span>
     );
     await showPending(o1jsInfo);
+    const keys = [];
+    selectedRowKeys.forEach((key) => {
+      const row = table.find((row) => row.key === key);
+      if (row !== undefined) keys.push(row);
+    });
+    setKeys(keys);
     setProving(true);
     setLoading(true);
     await sleep(500);
-    console.log("rowSelection", selectedRowKeys);
-    console.log("table", table);
-    console.log("keys", getKeys(selectedRowKeys, table));
+    if (DEBUG) console.log("rowSelection", selectedRowKeys);
+    if (DEBUG) console.log("table", table);
+    if (DEBUG) console.log("keys", getKeys(selectedRowKeys, table));
 
     try {
       const jobResult = await prove(
@@ -150,7 +158,7 @@ const ProveAttributes = () => {
         showText,
         showPending
       );
-      console.log("Prove job result", jobResult);
+      if (DEBUG) console.log("Prove job result", jobResult);
       const jobId = jobResult?.jobId;
       if (jobResult?.success === true && jobId !== undefined) {
         await showText("Cloud proving job started", "green");
@@ -160,7 +168,7 @@ const ProveAttributes = () => {
 
         setPending(jobInfo);
       } else {
-        showText("Error staring cloud prove job", "red");
+        await showText("Error staring cloud prove job", "red");
         setPending(undefined);
         setLoading(false);
         return;
@@ -191,7 +199,7 @@ const ProveAttributes = () => {
 
       setLoading(false);
     } catch (error) {
-      console.log("Proof creation error", error);
+      if (DEBUG) console.log("Proof creation error", error);
       await showText("Error: cannot create proof", "red");
       setPending(undefined);
     }
@@ -310,6 +318,15 @@ const ProveAttributes = () => {
                       </Col>
                     </Row>
                   )}
+                  {json && proving && (
+                    <Row>
+                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                        <Form.Item>
+                          <Table dataSource={keys} columns={columns} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  )}
                   {proving && (
                     <Row>
                       <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
@@ -327,8 +344,11 @@ const ProveAttributes = () => {
                               timeline.length === 0 && pending === undefined
                             }
                           >
-                            {timeline.map((item) => (
-                              <Timeline.Item color={item.color}>
+                            {timeline.map((item, index) => (
+                              <Timeline.Item
+                                color={item.color}
+                                key={"timelineProve" + index}
+                              >
                                 {item.text}
                               </Timeline.Item>
                             ))}
@@ -361,4 +381,4 @@ const ProveAttributes = () => {
   );
 };
 
-export default ProveAttributes;
+export default Prove;

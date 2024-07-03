@@ -36,7 +36,7 @@ export async function pinFile(params) {
       headers,
     });
     if (response && response.data && response.data.IpfsHash) {
-      console.log("pinFile response", response.data);
+      if (DEBUG) console.log("pinFile response", response.data);
       return response.data.IpfsHash;
     } else {
       console.error("pinFile error 1", response.data.error);
