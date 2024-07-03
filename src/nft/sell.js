@@ -1,10 +1,11 @@
 import { serializeTransaction } from "./transaction";
 import { sendSellTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 export async function sellNFT(params) {
   console.time("ready to sign");
-  console.log("Sell NFT", params);
+  if (DEBUG) console.log("Sell NFT", params);
 
   const { price, owner, name, showText, showPending, libraries } = params;
 
@@ -17,7 +18,7 @@ export async function sellNFT(params) {
       error: "Owner address is undefined",
     };
   }
-  console.log("Owner", owner);
+  if (DEBUG) console.log("Owner", owner);
 
   if (name === undefined || name === "") {
     console.error("NFT name is undefined");
@@ -86,11 +87,11 @@ export async function sellNFT(params) {
   }
 
   console.time("prepared data");
-  console.log("contractAddress", contractAddress);
+  if (DEBUG) console.log("contractAddress", contractAddress);
 
   const address = PublicKey.fromBase58(params.address);
   const net = await initBlockchain(chain);
-  console.log("network id", Mina.getNetworkId());
+  if (DEBUG) console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
 
   console.timeEnd("prepared data");
@@ -100,11 +101,11 @@ export async function sellNFT(params) {
   const tokenId = zkApp.deriveTokenId();
   const fee = Number((await MinaNFT.fee()).toBigInt());
   const memo = ("sell NFT @" + name).substring(0, 30);
-  console.log("memo", memo);
-  console.log("sender", sender.toBase58());
-  console.log("zkAppAddress", zkAppAddress.toBase58());
-  console.log("address", address.toBase58());
-  console.log("tokenId", tokenId.toJSON());
+  if (DEBUG) console.log("memo", memo);
+  if (DEBUG) console.log("sender", sender.toBase58());
+  if (DEBUG) console.log("zkAppAddress", zkAppAddress.toBase58());
+  if (DEBUG) console.log("address", address.toBase58());
+  if (DEBUG) console.log("tokenId", tokenId.toJSON());
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
@@ -132,11 +133,11 @@ export async function sellNFT(params) {
   /*
   const nft = new NFTContractV2({ address, tokenId });
   const nftOwner = nft.owner.get();
-  console.log("nftOwner", nftOwner);
+  if(DEBUG) console.log("nftOwner", nftOwner);
   await sleep(5000);
-  console.log("x", nftOwner.x);
-  console.log("x1", nftOwner.x.toJSON());
-  //console.log("NFT owner", nftOwner.toBase58());
+  if(DEBUG) console.log("x", nftOwner.x);
+  if(DEBUG) console.log("x1", nftOwner.x.toJSON());
+  //if(DEBUG) console.log("NFT owner", nftOwner.toBase58());
   */
   console.time("prepared tx");
 
@@ -158,7 +159,7 @@ export async function sellNFT(params) {
 
   const serializedTransaction = serializeTransaction(tx);
   const transaction = tx.toJSON();
-  console.log("Transaction", tx.toPretty());
+  if (DEBUG) console.log("Transaction", tx.toPretty());
   const payload = {
     transaction,
     onlySign: true,
@@ -172,11 +173,11 @@ export async function sellNFT(params) {
   await showText("Transaction prepared", "green");
   await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
-  console.log("Transaction result", txResult);
+  if (DEBUG) console.log("Transaction result", txResult);
   console.time("sent transaction");
   const signedData = txResult?.signedData;
   if (signedData === undefined) {
-    console.log("No signed data");
+    if (DEBUG) console.log("No signed data");
     await showText("No user signature received", "red");
     await showPending(undefined);
     return {
@@ -196,7 +197,7 @@ export async function sellNFT(params) {
     chain,
   });
   console.timeEnd("sent transaction");
-  console.log("Sent transaction, jobId", jobId);
+  if (DEBUG) console.log("Sent transaction, jobId", jobId);
   if (jobId === undefined) {
     console.error("JobId is undefined");
     return {

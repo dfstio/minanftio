@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 /**
  * Gets the address (publicKey) of the NFT using serverless api call
  * @param name The name of the NFT
@@ -86,7 +86,7 @@ export async function reserveName(data) {
     task: "reserveName",
     args: [JSON.stringify(data, null, 2)],
   });
-  console.log("reserveName", result);
+  if (DEBUG) console.log("reserveName", result);
   const reserved = result.data === undefined ? { success: false } : result.data;
   const price = reserved.price ? JSON.parse(reserved.price) : {};
   return {

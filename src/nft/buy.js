@@ -1,10 +1,11 @@
 import { serializeTransaction } from "./transaction";
 import { sendBuyTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 export async function buyNFT(params) {
   console.time("ready to sign");
-  console.log("Buy NFT", params);
+  if (DEBUG) console.log("Buy NFT", params);
 
   const { price, buyer, name, showText, showPending } = params;
 
@@ -17,7 +18,7 @@ export async function buyNFT(params) {
       error: "Buyer address is undefined",
     };
   }
-  console.log("Buyer", buyer);
+  if (DEBUG) console.log("Buyer", buyer);
 
   if (name === undefined || name === "") {
     console.error("NFT name is undefined");
@@ -76,11 +77,11 @@ export async function buyNFT(params) {
   }
 
   console.time("prepared data");
-  console.log("contractAddress", contractAddress);
+  if (DEBUG) console.log("contractAddress", contractAddress);
 
   const address = PublicKey.fromBase58(params.address);
   const net = await initBlockchain(chain);
-  console.log("network id", Mina.getNetworkId());
+  if (DEBUG) console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(buyer);
 
   console.timeEnd("prepared data");
@@ -134,7 +135,7 @@ export async function buyNFT(params) {
 
   const serializedTransaction = serializeTransaction(tx);
   const transaction = tx.toJSON();
-  console.log("Transaction", tx.toPretty());
+  if (DEBUG) console.log("Transaction", tx.toPretty());
   const payload = {
     transaction,
     onlySign: true,
@@ -148,11 +149,11 @@ export async function buyNFT(params) {
   await showText("Transaction prepared", "green");
   await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
-  console.log("Transaction result", txResult);
+  if (DEBUG) console.log("Transaction result", txResult);
   console.time("sent transaction");
   const signedData = txResult?.signedData;
   if (signedData === undefined) {
-    console.log("No signed data");
+    if (DEBUG) console.log("No signed data");
     await showText("No user signature received", "red");
     await showPending(undefined);
     return {
@@ -172,7 +173,7 @@ export async function buyNFT(params) {
     chain,
   });
   console.timeEnd("sent transaction");
-  console.log("Sent transaction, jobId", jobId);
+  if (DEBUG) console.log("Sent transaction, jobId", jobId);
   if (jobId === undefined) {
     console.error("JobId is undefined");
     return {

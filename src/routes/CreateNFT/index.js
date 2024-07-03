@@ -113,7 +113,7 @@ const Mint = () => {
   useEffect(() => {
     async function nameChanged() {
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
-      console.log("name", name);
+      if (DEBUG) console.log("name", name);
       if (name.length < 3) {
         setPrice("Name");
         setNameAvailable(false);
@@ -138,7 +138,7 @@ const Mint = () => {
 
       if (validateName(name)) {
         const status = await lookupName(name);
-        console.log("status", status);
+        if (DEBUG) console.log("status", status);
         if (status.success === false) {
           setPrice("Name");
           console.error("Error in name lookup", status);
@@ -199,7 +199,7 @@ const Mint = () => {
   };
 
   const onValuesChange = async (values) => {
-    //if (DEBUG) console.log("onValuesChange", values);
+    //if (DEBUG) if(DEBUG) console.log("onValuesChange", values);
     let newToken = token;
 
     if (values.description !== undefined)
@@ -230,7 +230,7 @@ const Mint = () => {
 
     if (values.chain !== undefined) {
       newToken.chain = values.chain;
-      console.log("chain", values.chain);
+      if (DEBUG) console.log("chain", values.chain);
     }
 
     if (values.mainimage !== undefined) {
@@ -275,7 +275,7 @@ const Mint = () => {
     setMinting(true);
     try {
       const newAddress = await minaLogin();
-      console.log("newAddress", newAddress);
+      if (DEBUG) console.log("newAddress", newAddress);
       dispatch(updateAddress(newAddress));
       if (newAddress === "" || newAddress === undefined) return;
       const owner = newAddress;
@@ -323,7 +323,7 @@ const Mint = () => {
         libraries: libraries ?? loadLibraries(),
       });
       const jobId = mintResult.jobId;
-      console.log("Mint result", mintResult);
+      if (DEBUG) console.log("Mint result", mintResult);
       if (
         mintResult?.success === true &&
         jobId !== undefined &&
@@ -371,7 +371,7 @@ const Mint = () => {
         return;
       }
       const txResult = await waitForTransaction(jobId);
-      console.log("Final mint result", txResult);
+      if (DEBUG) console.log("Final mint result", txResult);
       if (
         txResult.success &&
         txResult.hash !== undefined &&
@@ -419,7 +419,7 @@ const Mint = () => {
 
       setLoading(false);
     } catch (error) {
-      console.log("Mint error", error);
+      if (DEBUG) console.log("Mint error", error);
       showText(
         `Error minting NFT: ${error?.message ?? error ?? "error C759"}`,
         "red"
@@ -596,7 +596,7 @@ const Mint = () => {
                       Proof of NFT{" "}
                       <PlusOutlined
                         onClick={() => {
-                          console.log("Add key", keys);
+                          if (DEBUG) console.log("Add key", keys);
                           setKeys((prev) => [
                             ...prev,
                             { key: "", value: "", isPrivate: true },

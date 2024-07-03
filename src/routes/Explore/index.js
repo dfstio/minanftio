@@ -34,7 +34,6 @@ const App = (props) => {
 
   function onCloseFunction() {
     setVisible(!visible);
-    console.log("OnClose");
   }
 
   return (

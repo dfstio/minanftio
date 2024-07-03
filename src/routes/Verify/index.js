@@ -1,302 +1,345 @@
-import React from "react";
-import { Button, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { updateAddress, updatePublicKey } from "../../appRedux/actions";
-import { minaLogin } from "../../blockchain/mina";
-import { PrivateKey, Poseidon, PublicKey } from "o1js";
+/* eslint-disable react/jsx-no-target-blank */
+import React, { useState, useEffect } from "react";
 import {
-  MinaNFT,
-  MapData,
-  MinaNFTNameService,
-  accountBalanceMina,
-  makeString,
-  api,
-} from "minanft";
-
+  Button,
+  message,
+  Row,
+  Col,
+  Form,
+  Input,
+  Radio,
+  Card,
+  Upload,
+  Select,
+  Table,
+  Timeline,
+} from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import IntlMessages from "util/IntlMessages";
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  InboxOutlined,
+} from "@ant-design/icons";
 
 import logger from "../../serverless/logger";
-import { minaInit } from "../../blockchain/init";
+import { verify, waitForProof } from "../../nft/verify";
+import { getJSON } from "../../blockchain/file";
+import fileSaver from "file-saver";
+import { sleep } from "../../blockchain/mina";
+import { loadLibraries } from "../../nft/libraries";
 
-const logm = logger.info.child({ winstonModule: "Verify" });
-const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT, REACT_APP_JWT } = process.env;
+const logm = logger.info.child({ winstonModule: "Corporate" });
+const { REACT_APP_DEBUG } = process.env;
+
+const { TextArea } = Input;
+const Dragger = Upload.Dragger;
+
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+
+const columns = [
+  {
+    title: "Key",
+    dataIndex: "key",
+    key: "key",
+  },
+  {
+    title: "Value",
+    dataIndex: "value",
+    key: "value",
+  },
+];
 
 const Verify = () => {
-  const address = useSelector(({ blockchain }) => blockchain.address);
-  const publicKey = useSelector(({ blockchain }) => blockchain.publicKey);
-  const balance = useSelector(({ blockchain }) => blockchain.balance);
-  const virtuosoBalance = useSelector(
-    ({ blockchain }) => blockchain.virtuosoBalance
-  );
-  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [counter, setCounter] = useState(0);
+  const [name, setName] = useState("");
+  const [fileName, setFileName] = useState(undefined);
+  const [nftAddress, setNftAddress] = useState("");
+  const [json, setJson] = useState(undefined);
+  const [table, setTable] = useState([]);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [timeline, setTimeline] = useState([]);
+  const [pending, setPending] = useState(undefined);
+  const [proving, setProving] = useState(false);
+  const [libraries, setLibraries] = useState(loadLibraries());
 
-  const log = logm.child({ winstonComponent: "Verify" });
+  const log = logm.child({ winstonComponent: "ProveAttributes" });
 
-  let vb = "$0";
-  let showWithdaw = false;
-  if (virtuosoBalance !== undefined) {
-    const vb1 = virtuosoBalance / 100;
-    vb = " $" + vb1.toString();
-    if (vb1 > 100) showWithdaw = true;
+  function prepareTable(token) {
+    return token.keys ?? [];
   }
 
-  let pb = " is not registered";
-  if (publicKey !== undefined && publicKey !== "") pb = " is " + publicKey;
+  const checkCanCreate = () => {
+    let newButtonDisabled = false;
+    if (newButtonDisabled !== buttonDisabled)
+      setButtonDisabled(newButtonDisabled);
+  };
 
-  async function register() {
-    log.info("Register clicked", { address, wf: "register" });
+  const beforeUpload = (file) => {
+    return false;
+  };
 
-    if (address !== undefined && address !== "") {
-      log.profile(`Registered public key of address ${address}`);
-      const key = "RegisterPublicKey";
-      message.loading({
-        content: `Please provide public key in Metamask and confirm transaction`,
-        key,
-        duration: 60,
-      });
-
-      /*
-      const result = await virtuosoRegisterPublicKey(address);
-      if (result.publicKey !== "" && result.hash !== "") {
-        dispatch(updatePublicKey(result.publicKey));
-        message.success({
-          content: `Public key ${result.publicKey} is written to blockchain with transaction ${result.hash}`,
-          key,
-          duration: 10,
-        });
-      } else
-        message.error({
-          content: `Public key is not provided or written to blockchain`,
-          key,
-          duration: 10,
-        });
-      log.profile(`Registered public key of address ${address}`, {
-        address,
-        result,
-        wf: "register",
-      });
-      */
+  const onValuesChange = async (values) => {
+    if (DEBUG) if (DEBUG) console.log("onValuesChange", values);
+    if (values.json !== undefined) {
+      const json = await getJSON(values.json.file);
+      if (json !== undefined) {
+        if (json.name !== undefined) setName(json.name);
+        if (json.address !== undefined) setNftAddress(json.address);
+        setJson(json);
+        setFileName(values.json.file.name);
+        const table = prepareTable(json);
+        if (DEBUG) console.log("table", table);
+        setTable(table);
+      }
     }
-  }
+    setCounter(counter + 1);
+    checkCanCreate();
+  };
 
-  async function test() {
-    //logger.meta.address = address;
-    log.info("Test error clicked", { address, wf: "testerror" });
-    try {
-      throw new Error({ message: "errortest" });
-    } catch (error) {
-      // return error
-      log.error("catch", { error });
-    }
-  }
-
-  async function mintNFTapi() {
-    if (address === undefined || address === "") {
-      console.error("Address is undefined");
-      return;
-    }
-    const includeFiles = false;
-    const pinataJWT = REACT_APP_PINATA_JWT;
-    await minaInit();
-
-    const name = "@test_" + makeString(10);
-    const ownerPublicKey = PublicKey.fromBase58(address);
-    const nftPrivateKey = PrivateKey.random();
-    const nftPublicKey = nftPrivateKey.toPublicKey();
-    const owner = Poseidon.hash(ownerPublicKey.toFields());
-
-    const nft = new MinaNFT({ name, owner });
-    nft.updateText({
-      key: `description`,
-      text: "This is my long description of the NFT. Can be of any length, supports markdown.",
+  const showText = async (text, color) => {
+    setTimeline((prev) => {
+      const newTimeline = prev;
+      newTimeline.push({ text, color });
+      return newTimeline;
     });
-    nft.update({ key: `twitter`, value: `@builder` });
-    nft.update({ key: `secret`, value: `mysecretvalue`, isPrivate: true });
-    if (includeFiles)
-      await nft.updateImage({
-        filename: "./images/image.jpg",
-        pinataJWT,
-      });
-    /*
-    await nft.updateFile({
-      key: "sea",
-      filename: "./images/sea.png",
-      pinataJWT,
-    });
-    */
-    const map = new MapData();
-    map.update({ key: `level2-1`, value: `value21` });
-    map.update({ key: `level2-2`, value: `value22` });
-    map.updateText({
-      key: `level2-3`,
-      text: `This is text on level 2. Can be very long`,
-    });
-    /*
-    await map.updateFile({
-      key: "woman",
-      filename: "./images/woman.png",
-      pinataJWT,
-    });
-    */
-    const mapLevel3 = new MapData();
-    mapLevel3.update({ key: `level3-1`, value: `value31` });
-    mapLevel3.update({ key: `level3-2`, value: `value32`, isPrivate: true });
-    mapLevel3.update({ key: `level3-3`, value: `value33` });
-    map.updateMap({ key: `level2-4`, map: mapLevel3 });
-    nft.updateMap({ key: `level 2 and 3 data`, map });
-    const data = nft.toJSON({
-      increaseVersion: false,
-      includePrivateData: true,
-    });
-    console.log("data", data);
-    const minanft = new api(REACT_APP_JWT);
-    const reserved = await minanft.reserveName({
-      name,
-      publicKey: nftPublicKey.toBase58(),
-    });
-    console.log("Reserved:", reserved);
+  };
 
-    const uri = nft.toJSON({
-      increaseVersion: true,
-      includePrivateData: false,
-    });
+  const showPending = async (text) => {
+    setPending(text);
+  };
 
-    const result = await minanft.mint({
-      uri,
-      signature: reserved.signature,
-      privateKey: nftPrivateKey.toBase58(),
-    });
-    console.log("mint result", result);
-    const jobId = result.jobId;
-    if (jobId === undefined) {
-      console.error("JobId is undefined");
-      return;
-    }
-
-    const txData = await minanft.waitForJobResult({ jobId });
-    console.log("txData", txData);
-  }
-
-  async function mintNFTLocal() {
-    const DEPLOYER = "";
-    const NAMES_ORACLE_SK = "";
-    const PINATA_JWT = "";
-    const keys = await MinaNFT.minaInit("local");
-    const deployer = keys
-      ? keys[0].privateKey
-      : PrivateKey.fromBase58(DEPLOYER);
-    const oraclePrivateKey = keys
-      ? PrivateKey.random()
-      : PrivateKey.fromBase58(NAMES_ORACLE_SK);
-    //const nameServiceAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE);
-
-    const ownerPrivateKey = PrivateKey.random();
-    const ownerPublicKey = ownerPrivateKey.toPublicKey();
-    const owner = Poseidon.hash(ownerPublicKey.toFields());
-    const pinataJWT = PINATA_JWT;
-
-    console.log(
-      `Deployer balance: ${await accountBalanceMina(deployer.toPublicKey())}`
+  async function verifyButton() {
+    if (DEBUG) console.log("Verify button clicked");
+    const o1jsInfo = (
+      <span>
+        Loading{" "}
+        <a href={"https://docs.minaprotocol.com/zkapps/o1js"} target="_blank">
+          o1js
+        </a>{" "}
+        library...
+      </span>
     );
+    await showPending(o1jsInfo);
+    setProving(true);
+    setLoading(true);
+    await sleep(500);
+    if (DEBUG) console.log("rowSelection", selectedRowKeys);
+    if (DEBUG) console.log("table", table);
 
-    const nft = new MinaNFT({ name: `@test` + makeString(10) });
-    nft.updateText({
-      key: `description`,
-      text: "This is my long description of the NFT. Can be of any length, supports markdown.",
-    });
-    nft.update({ key: `twitter`, value: `@builder` });
-    nft.update({ key: `secret`, value: `mysecretvalue`, isPrivate: true });
+    try {
+      const jobResult = await verify(
+        json,
+        selectedRowKeys,
+        libraries,
+        showText,
+        showPending
+      );
+      if (DEBUG) console.log("Verify job result", jobResult);
+      const jobId = jobResult?.jobId;
+      if (jobResult?.success === true && jobId !== undefined) {
+        await showText("Cloud proof verification job started", "green");
+        const jobInfo = (
+          <span>
+            Verifying Proof of NFT, cloud proof verification job id: {jobId}
+          </span>
+        );
 
-    /*
-    await nft.updateImage({
-      filename: "./images/navigator.jpg",
-      pinataJWT,
-    });
-  
-    const map = new MapData();
-    map.update({ key: `level2-1`, value: `value21` });
-    map.update({ key: `level2-2`, value: `value22` });
-    map.updateText({
-      key: `level2-3`,
-      text: `This is text on level 2. Can be very long`,
-    });
-  
-    await map.updateFile({
-      key: "woman",
-      filename: "./images/woman.png",
-      pinataJWT,
-    });
-  
-    
-  
-    const mapLevel3 = new MapData();
-    mapLevel3.update({ key: `level3-1`, value: `value31` });
-    mapLevel3.update({ key: `level3-2`, value: `value32`, isPrivate: true });
-    mapLevel3.update({ key: `level3-3`, value: `value33` });
-    map.updateMap({ key: `level2-4`, map: mapLevel3 });
-    nft.updateMap({ key: `level 2 and 3 data`, map });
-    */
+        setPending(jobInfo);
+      } else {
+        if (jobResult?.error === "NFT on-chain state does not match proof data")
+          await showText(`Proof verification result: proof is invalid`, "red");
+        else
+          await showText("Error staring cloud proof verification job", "red");
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+      const result = await waitForProof(jobId, json, selectedRowKeys, table);
+      if (
+        result?.success === true &&
+        result?.verificationResult !== undefined
+      ) {
+        if (result?.verificationResult === "true")
+          await showText(
+            `Proof successfully verified, the verification result: proof is valid`,
+            "green"
+          );
+        else
+          await showText(
+            `Proof verification result: proof is invalid: ${result?.verificationResult}`,
+            "red"
+          );
+        setPending(undefined);
+      } else {
+        await showText("Error: cannot verify proof", "red");
+        setPending(undefined);
+      }
 
-    console.log(`json:`, JSON.stringify(nft.toJSON(), null, 2));
-    console.log("Compiling...");
-    await MinaNFT.compile();
-
-    const nameService = new MinaNFTNameService({ oraclePrivateKey });
-    let tx = await nameService.deploy(deployer);
-    if (tx === undefined) {
-      throw new Error("Deploy failed");
+      setLoading(false);
+    } catch (error) {
+      if (DEBUG) console.log("Proof verification error", error);
+      await showText("Error: cannot verify proof", "red");
+      setPending(undefined);
     }
-    await MinaNFT.wait(tx);
 
-    /*
-    const nameService = new MinaNFTNameService({
-      oraclePrivateKey,
-      address: nameServiceAddress,
-    });
-    
-    */
-    tx = await nft.mint({
-      deployer,
-      owner,
-      pinataJWT,
-      nameService,
-    });
-    if (tx === undefined) {
-      throw new Error("Mint failed");
-    }
-    console.log("Waiting for transaction to be included in a block...");
-    console.time("Transaction included in a block");
-    await MinaNFT.wait(tx);
-    console.timeEnd("Transaction included in a block");
+    setLoading(false);
   }
 
-  async function connect() {
-    log.info("Connect clicked", { address, wf: "connect" });
-
-    const newAddress = await minaLogin();
-    console.log("newAddress", newAddress);
-    dispatch(updateAddress(newAddress));
-
-    await mintNFTapi();
-  }
+  const onFinish = async (values) => {
+    if (DEBUG) console.log("onFinish", values);
+  };
 
   return (
-    <div>
-      <h2 className="title gx-mb-4">
-        <IntlMessages id="sidebar.verify" />
-      </h2>
-      <div className="gx-d-flex justify-content-center">
-        <h4>
-          You can verify any private file that was sealed to the Mina blockchain
-          in the Mina NFT post
-        </h4>
+    <>
+      <div className="gx-main-content">
+        <Row>
+          <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+            <Card
+              className="gx-card"
+              key="billingCard"
+              title="Verify the Proof of NFT"
+            >
+              <Form
+                form={form}
+                key="billingForm"
+                labelCol={{
+                  span: 24,
+                }}
+                wrapperCol={{
+                  span: 24,
+                }}
+                layout="horizontal"
+                initialValues={{ auth: "" }}
+                onFinish={onFinish}
+                onValuesChange={onValuesChange}
+              >
+                <div>
+                  <Row>
+                    <Col xxl={8} xl={8} lg={8} md={24} sm={24} xs={24}>
+                      <Form.Item
+                        name="json"
+                        rules={[
+                          {
+                            required: true,
+                            message:
+                              "Please upload the JSON file with the proof here",
+                          },
+                        ]}
+                      >
+                        <Dragger
+                          name="jsondata"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="application/json"
+                          showUploadList={false}
+                          multiple={false}
+                          maxCount={1}
+                          beforeUpload={beforeUpload}
+                        >
+                          {fileName && <span>{fileName} </span>}
+                          {!fileName && (
+                            <span>
+                              Click or drag the JSON file
+                              <br />
+                              with the proof
+                              <br />
+                              to this area
+                            </span>
+                          )}
+                        </Dragger>
+                        {/*
+                        <Upload
+                          name="jsondata"
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          accept="application/json"
+                          showUploadList={true}
+                          multiple={false}
+                          maxCount={1}
+                          beforeUpload={beforeUpload}
+                        >
+                          {" "}
+                          <div>
+                            <PlusOutlined />
+                            <div className="ant-upload-text">JSON file</div>
+                          </div>
+                        </Upload>
+                        */}
+                      </Form.Item>
+                    </Col>
+                    <Col xxl={16} xl={16} lg={16} md={24} sm={24} xs={24}>
+                      <Form.Item hidden={name === ""}>
+                        NFT name: {name}
+                        <br />
+                        <br />
+                        NFT address: {nftAddress}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  {json && !proving && (
+                    <Row>
+                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                        <Form.Item>
+                          <Table dataSource={table} columns={columns} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  )}
+                  {proving && (
+                    <Row>
+                      <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
+                        <Form.Item
+                          name="info"
+                          className="currency-sell-form_last-form-item"
+                          hidden={
+                            timeline.length === 0 && pending === undefined
+                          }
+                        >
+                          <Timeline
+                            pending={pending}
+                            reverse={false}
+                            hidden={
+                              timeline.length === 0 && pending === undefined
+                            }
+                          >
+                            {timeline.map((item, index) => (
+                              <Timeline.Item
+                                color={item.color}
+                                key={"timelineVerify" + index}
+                              >
+                                {item.text}
+                              </Timeline.Item>
+                            ))}
+                          </Timeline>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  )}
+
+                  <Row>
+                    <Form.Item>
+                      <Button
+                        type="primary"
+                        disabled={!json}
+                        loading={loading}
+                        onClick={verifyButton}
+                        key="verifyButton"
+                      >
+                        Verify Proof
+                      </Button>
+                    </Form.Item>
+                  </Row>
+                </div>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
       </div>
-      <div className="gx-d-flex justify-content-center">
-        <Button type="primary" onClick={connect}>
-          Connect
-        </Button>
-      </div>
-    </div>
+    </>
   );
 };
 

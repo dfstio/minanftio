@@ -1,13 +1,14 @@
 import { loadFromIPFS } from "../blockchain/ipfs";
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 export async function getRollupNFT(rollupId) {
-  console.log("getRollupNFT", rollupId);
+  if (DEBUG) console.log("getRollupNFT", rollupId);
   if (typeof rollupId !== "string") {
-    console.log("getRollupNFT", "Invalid rollupId");
+    if (DEBUG) console.log("getRollupNFT", "Invalid rollupId");
     return undefined;
   }
   if (rollupId[0] !== "i") {
-    console.log("getRollupNFT", "Invalid rollupId format");
+    if (DEBUG) console.log("getRollupNFT", "Invalid rollupId format");
     return undefined;
   }
   const nft = await loadFromIPFS(rollupId.slice(1));

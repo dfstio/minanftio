@@ -199,7 +199,8 @@ export async function waitForTransaction(jobId) {
     });
     if (DEBUG) console.log(`jobResult api call result:`, answer);
     result = answer.result;
-    if (result !== undefined) console.log(`jobResult result:`, result);
+    if (result !== undefined)
+      if (DEBUG) console.log(`jobResult result:`, result);
   }
   if (answer.jobStatus === "failed") {
     return { success: false, error: result };

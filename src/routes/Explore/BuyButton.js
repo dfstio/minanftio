@@ -61,7 +61,7 @@ const BuyButton = ({ item }) => {
         return;
       }
       setReload(true);
-      console.log("SellButton sellResult", buyResult);
+      if (DEBUG) console.log("SellButton sellResult", buyResult);
       const jobId = buyResult.jobId;
       await showText("Cloud proving job started", "green");
       const jobInfo = (
@@ -77,7 +77,7 @@ const BuyButton = ({ item }) => {
 
       setPending(jobInfo);
       const txResult = await waitForTransaction(jobId);
-      console.log("BuyButton tx sellResult", txResult);
+      if (DEBUG) console.log("BuyButton tx sellResult", txResult);
       if (
         txResult.success &&
         txResult.hash !== undefined &&
@@ -141,7 +141,7 @@ const BuyButton = ({ item }) => {
       </Button>
       <Modal
         title={title}
-        visible={visible}
+        open={visible}
         confirmLoading={loading}
         onCancel={handleCancel}
         footer={null}

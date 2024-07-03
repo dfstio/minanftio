@@ -5,6 +5,7 @@ import { sendMintTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
 import { reserveName } from "./name";
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 /*
 export interface ProofOfNFT {
@@ -32,7 +33,7 @@ export async function mintNFT(
 }*/
 ) {
   console.time("ready to sign");
-  console.log("Mint NFT", params);
+  if (DEBUG) console.log("Mint NFT", params);
 
   const {
     name,
@@ -189,12 +190,12 @@ export async function mintNFT(
 
   console.time("prepared data");
 
-  console.log("contractAddress", contractAddress);
+  if (DEBUG) console.log("contractAddress", contractAddress);
 
   const nftPrivateKey = PrivateKey.random();
   const address = nftPrivateKey.toPublicKey();
   const net = await initBlockchain(chain);
-  console.log("network id", Mina.getNetworkId());
+  if (DEBUG) console.log("network id", Mina.getNetworkId());
   const sender = PublicKey.fromBase58(owner);
 
   const nft = new RollupNFT({
@@ -222,13 +223,13 @@ export async function mintNFT(
   console.time("calculated sha3_512");
   const sha3_512 = await calculateSHA512(image);
   console.timeEnd("calculated sha3_512");
-  console.log("image sha3_512", sha3_512);
+  if (DEBUG) console.log("image sha3_512", sha3_512);
 
   console.time("reserved name");
   const reserved = await reservedPromise;
   console.timeEnd("reserved name");
 
-  console.log("Reserved", reserved);
+  if (DEBUG) console.log("Reserved", reserved);
   if (
     reserved === undefined ||
     reserved.isReserved !== true ||
@@ -273,7 +274,7 @@ export async function mintNFT(
   await showPending(
     "Getting the NFT contract data from the Mina blockchain..."
   );
-  console.log("image ipfs", ipfs);
+  if (DEBUG) console.log("image ipfs", ipfs);
 
   const imageData = new FileData({
     fileRoot: Field(0),
@@ -328,7 +329,7 @@ export async function mintNFT(
     null,
     2
   );
-  console.log("json", json);
+  if (DEBUG) console.log("json", json);
   const verificationKey = {
     hash: Field.fromJSON(VERIFICATION_KEY_V2_JSON[chain].hash),
     data: VERIFICATION_KEY_V2_JSON[chain].data,
@@ -370,7 +371,7 @@ export class MintParams extends Struct({
   tx.sign([nftPrivateKey]);
   const serializedTransaction = serializeTransaction(tx);
   const transaction = tx.toJSON();
-  console.log("Transaction", tx.toPretty());
+  if (DEBUG) console.log("Transaction", tx.toPretty());
   const payload = {
     transaction,
     onlySign: true,
@@ -384,11 +385,11 @@ export class MintParams extends Struct({
   await showText("Mint transaction is prepared", "green");
   await showPending("Please sign the transaction...");
   const txResult = await window.mina?.sendTransaction(payload);
-  console.log("Transaction result", txResult);
+  if (DEBUG) console.log("Transaction result", txResult);
   console.time("sent transaction");
   const signedData = txResult?.signedData;
   if (signedData === undefined) {
-    console.log("No signed data");
+    if (DEBUG) console.log("No signed data");
     await showText("No user signature received", "red");
     await showPending(undefined);
     return {
@@ -407,7 +408,7 @@ export class MintParams extends Struct({
     chain,
   });
   console.timeEnd("sent transaction");
-  console.log("Sent transaction, jobId", jobId);
+  if (DEBUG) console.log("Sent transaction, jobId", jobId);
   if (jobId === undefined) {
     console.error("JobId is undefined");
     return {

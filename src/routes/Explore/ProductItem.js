@@ -18,7 +18,7 @@ const ProductItem = ({ item }) => {
   const [canSell, setCanSell] = useState(
     address?.toUpperCase() === item?.owner?.toUpperCase()
   );
-  console.log("Item: ", item);
+  if (DEBUG) console.log("Item: ", item);
   const imageUrl = storageUrlFromURL(item.image);
   const tokenPath = "@" + item.name;
 

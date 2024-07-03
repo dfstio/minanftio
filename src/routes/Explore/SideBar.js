@@ -57,13 +57,13 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
   const [disabled, setDisabled] = useState(true);
   //const [visible, setVisible] = useState(false);
 
-  async function onChange(e) {
+  function onChange(e) {
     if (address !== "") {
       setDisabled(false);
       if (e.target.checked === true) {
         const filterStr = `owner:${address} AND (status:pending OR status:minted)`;
         setFilter(filterStr);
-        console.log("On change", e.target.checked, filterStr);
+        //console.log("On change", e.target.checked, filterStr);
       } else {
         const filterStr = defaultFilter;
         setFilter(filterStr);
@@ -75,7 +75,7 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
   }
 
   useEffect(() => {
-    async function addressChanged() {
+    function addressChanged() {
       setFilter(defaultFilter);
       if (address !== "") {
         setDisabled(false);

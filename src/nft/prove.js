@@ -1,10 +1,11 @@
 import { chainId } from "../blockchain/explorer";
 const { REACT_APP_MINANFT_JWT } = process.env;
+const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 let minanft = undefined;
 
 export async function prove(json, keys, libraries, showText, showPending) {
-  console.log("prove start", keys, json);
+  if (DEBUG) console.log("prove start", keys, json);
   const JWT = REACT_APP_MINANFT_JWT;
   if (JWT === undefined || JWT === "") {
     console.error("JWT is undefined");
@@ -48,15 +49,15 @@ export async function prove(json, keys, libraries, showText, showPending) {
 
   await nft.loadMetadata(JSON.stringify(json));
   const loadedJson = nft.toJSON();
-  console.log(`loadedJson:`, JSON.stringify(loadedJson, null, 2));
+  if (DEBUG) console.log(`loadedJson:`, JSON.stringify(loadedJson, null, 2));
 
   const redactedNFT = new RedactedMinaNFT(nft);
   for (const key of keys) {
-    console.log(`key:`, key);
+    if (DEBUG) console.log(`key:`, key);
     redactedNFT.copyMetadata(key);
   }
   const transactions = await redactedNFT.prepareProofData();
-  console.log("transactions", transactions.length);
+  if (DEBUG) console.log("transactions", transactions.length);
   await showText("Proof data prepared", "green");
   await showPending("Starting cloud proving job...");
   const result = await minanft.proof({
@@ -67,7 +68,7 @@ export async function prove(json, keys, libraries, showText, showPending) {
     args: [],
   });
 
-  console.log("proof job result", result);
+  if (DEBUG) console.log("proof job result", result);
 
   const jobId = result.jobId;
   if (jobId === undefined) {
@@ -99,7 +100,7 @@ export function prepareTable(token) {
 
   function iterateProperties(properties, level = 0) {
     for (const key in properties) {
-      console.log(`key:`, key, properties[key]);
+      if (DEBUG) console.log(`key:`, key, properties[key]);
 
       switch (properties[key].kind) {
         case "string":
@@ -143,7 +144,7 @@ export async function waitForProof(jobId, json, selectedRowKeys, table) {
   }
   //const minanft = new api(JWT);
   const txData = await minanft.waitForJobResult({ jobId });
-  console.log("Job result", txData);
+  if (DEBUG) console.log("Job result", txData);
   if (txData?.result?.result === undefined || txData.result?.result === "") {
     console.error("txData is undefined");
     return {
@@ -161,7 +162,7 @@ export async function waitForProof(jobId, json, selectedRowKeys, table) {
     proof: JSON.parse(txData.result.result),
   };
 
-  console.log("proof", proof);
+  if (DEBUG) console.log("proof", proof);
 
   return {
     success: true,
