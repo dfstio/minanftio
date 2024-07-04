@@ -81,14 +81,11 @@ const HorizontalDefault = () => {
               ""
             )}
           */}
-            <Link
-              to="/"
-              className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
-            >
+            <Link to="/" className="gx-pointer gx-mr-xs-5 gx-logo">
               <img
                 alt=""
                 src="/assets/images/minanft-big-logo.png"
-                style={{ height: "32px" }}
+                style={{ height: isMobile ? "20px" : "32px" }}
               />
             </Link>
             <div
@@ -107,33 +104,29 @@ const HorizontalDefault = () => {
               <Link
                 to="/explore"
                 className="gx-menu-list"
-                style={{ paddingRight: "40px" }}
+                style={{ paddingRight: isMobile ? "15px" : "40px" }}
               >
                 <IntlMessages id="sidebar.avatars" />
               </Link>
               <Link
                 to="/create"
                 className="gx-menu-list"
-                style={{ paddingRight: "40px" }}
+                style={{ paddingRight: isMobile ? "15px" : "40px" }}
               >
                 <IntlMessages id="sidebar.create" />
               </Link>
               <Link
                 to="/prove"
                 className="gx-menu-list"
-                style={{ paddingRight: "40px" }}
+                style={{ paddingRight: isMobile ? "15px" : "40px" }}
               >
                 <IntlMessages id="sidebar.prove" />
               </Link>
-              <Link
-                to="/verify"
-                className="gx-menu-list"
-                style={{ paddingRight: "40px" }}
-              >
+              <Link to="/verify" className="gx-menu-list">
                 <IntlMessages id="sidebar.verify" />
               </Link>
             </div>
-            <AuroWallet />
+            <AuroWallet style={{ paddingLeft: isMobile ? "10px" : "50px" }} />
             {/*}
             <Popover
               overlayClassName="gx-popover-horizantal"
