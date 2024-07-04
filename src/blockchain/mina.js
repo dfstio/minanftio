@@ -130,8 +130,9 @@ export async function minaLogin(openlink = true) {
         address = account[0];
     } else {
       if (openlink) {
-        const linkURL =
-          "https://chrome.google.com/webstore/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae";
+        const linkURL = isMobile
+          ? "https://apps.apple.com/app/auro-wallet/id1574034920"
+          : "https://chrome.google.com/webstore/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae";
         window.open(linkURL);
       }
     }
