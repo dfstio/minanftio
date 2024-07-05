@@ -159,6 +159,7 @@ export async function mintNFT(
     fetchMinaAccount,
     serializeFields,
     MintParams,
+    accountBalanceMina,
   } = lib.minanft;
   const contractAddress = MINANFT_NAME_SERVICE_V2;
   if (contractAddress === undefined) {
@@ -185,7 +186,9 @@ export async function mintNFT(
       library
     </span>
   );
+
   await showText(o1jsInfoDone, "green");
+
   await showPending("Reserving NFT name...");
 
   console.time("prepared data");
@@ -194,9 +197,10 @@ export async function mintNFT(
 
   const nftPrivateKey = PrivateKey.random();
   const address = nftPrivateKey.toPublicKey();
+  const sender = PublicKey.fromBase58(owner);
   const net = await initBlockchain(chain);
   if (DEBUG) console.log("network id", Mina.getNetworkId());
-  const sender = PublicKey.fromBase58(owner);
+  const balance = await accountBalanceMina(sender);
 
   const nft = new RollupNFT({
     name,
@@ -255,6 +259,21 @@ export async function mintNFT(
   }
 
   await showText(`NFT name @${name} is reserved`, "green");
+  const fee = Number((await MinaNFT.fee()).toBigInt());
+  const requiredBalance =
+    Number(reserved.price.price) + 1 + fee / 1_000_000_000;
+  if (requiredBalance > balance) {
+    await showText(
+      `Insufficient balance of the sender: ${balance} MINA. Required: ${requiredBalance} MINA`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: `Insufficient balance of the sender: ${balance} MINA. Required: ${requiredBalance} MINA`,
+    };
+  }
+
   await showPending("Uploading the image to IPFS...");
 
   const signature = Signature.fromBase58(reserved.signature);
@@ -292,7 +311,7 @@ export async function mintNFT(
 
   const zkAppAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE_V2);
   const zkApp = new NameContractV2(zkAppAddress);
-  const fee = Number((await MinaNFT.fee()).toBigInt());
+
   const memo = ("mint NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
