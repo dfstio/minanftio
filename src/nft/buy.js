@@ -46,6 +46,7 @@ export async function buyNFT(params) {
     MINANFT_NAME_SERVICE_V2,
     fetchMinaAccount,
     serializeFields,
+    accountBalanceMina,
   } = await import("minanft");
 
   const o1jsInfoDone = (
@@ -109,6 +110,19 @@ export async function buyNFT(params) {
     return {
       success: false,
       error: "Account not found",
+    };
+  }
+  const requiredBalance = (Number(price) + fee) / 1_000_000_000;
+  const balance = await accountBalanceMina(sender);
+  if (requiredBalance > balance) {
+    await showText(
+      `Insufficient balance of the sender: ${balance} MINA. Required: ${requiredBalance} MINA`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: `Insufficient balance of the sender: ${balance} MINA. Required: ${requiredBalance} MINA`,
     };
   }
   await showText(
