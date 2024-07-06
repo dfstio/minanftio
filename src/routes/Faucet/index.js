@@ -35,7 +35,7 @@ const Faucet = () => {
   const [counter, setCounter] = useState(0);
   const [verificationResult, setVerificationResult] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [chain, setChain] = useState("zeko");
+  const [chain, setChain] = useState("devnet");
 
   const log = logm.child({ winstonComponent: "Faucet" });
 
@@ -75,13 +75,17 @@ const Faucet = () => {
       });
       const hashResult = await faucet(publicKey, chain);
       if (hashResult.isCalculated === true) {
-        setVerificationResult(hashResult.hash);
+        //setVerificationResult(hashResult.hash);
         message.success({
           content: `Transaction sent: ${hashResult.hash}`,
           key,
           duration: 240,
         });
-        setVerificationResult(explorerTransaction(chain) + hashResult.hash);
+        setVerificationResult(
+          (chain === "devnet"
+            ? "https://minascan.io/devnet/tx/"
+            : "https://zekoscan.io/devnet/tx/") + hashResult.hash
+        );
       } else {
         console.error("faucetResult", hashResult);
         message.error({
@@ -145,8 +149,8 @@ const Faucet = () => {
                         ]}
                       >
                         <RadioGroup>
-                          <RadioButton value="zeko">Zeko</RadioButton>
                           <RadioButton value="devnet">Devnet</RadioButton>
+                          <RadioButton value="zeko">Zeko</RadioButton>
                         </RadioGroup>
                       </Form.Item>
                       <Form.Item
