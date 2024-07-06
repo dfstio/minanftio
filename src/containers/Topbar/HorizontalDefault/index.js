@@ -19,6 +19,8 @@ import { TAB_SIZE } from "../../../constants/ThemeSetting";
 import AuroWallet from "../../../blockchain/account";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
 
+const isTestnet = process.env.REACT_APP_CHAIN_ID === "mina:testnet";
+
 const { Header } = Layout;
 const Option = Select.Option;
 const menu = (
@@ -122,9 +124,23 @@ const HorizontalDefault = () => {
               >
                 <IntlMessages id="sidebar.prove" />
               </Link>
-              <Link to="/verify" className="gx-menu-list">
-                <IntlMessages id="sidebar.verify" />
-              </Link>
+              {!isTestnet && (
+                <Link to="/verify" className="gx-menu-list"></Link>
+              )}
+              {isTestnet && (
+                <Link
+                  to="/verify"
+                  className="gx-menu-list"
+                  style={{ paddingRight: isMobile ? "15px" : "40px" }}
+                >
+                  <IntlMessages id="sidebar.verify" />
+                </Link>
+              )}
+              {isTestnet && (
+                <Link to="/faucet" className="gx-menu-list">
+                  Faucet
+                </Link>
+              )}
             </div>
             <AuroWallet style={{ paddingLeft: isMobile ? "10px" : "50px" }} />
             {/*}
