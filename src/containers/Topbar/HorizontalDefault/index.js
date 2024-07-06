@@ -125,7 +125,9 @@ const HorizontalDefault = () => {
                 <IntlMessages id="sidebar.prove" />
               </Link>
               {!isTestnet && (
-                <Link to="/verify" className="gx-menu-list"></Link>
+                <Link to="/verify" className="gx-menu-list">
+                  <IntlMessages id="sidebar.verify" />
+                </Link>
               )}
               {isTestnet && (
                 <Link
