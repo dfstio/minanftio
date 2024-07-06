@@ -131,7 +131,7 @@ const Faucet = () => {
                   span: 24,
                 }}
                 layout="horizontal"
-                initialValues={{ publicKey: "", chain: "zeko" }}
+                initialValues={{ publicKey: "", chain: "devnet" }}
                 onFinish={onFinish}
                 onValuesChange={onValuesChange}
               >
