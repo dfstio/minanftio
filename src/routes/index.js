@@ -34,6 +34,10 @@ const App = ({ match }) => (
         path={`${match.url}rollup/tx/:txId`}
         component={asyncComponent(() => import("./Tx"))}
       />
+      <Route
+        path={`${match.url}faucet`}
+        component={asyncComponent(() => import("./Faucet"))}
+      />
       {/*
       <Route
         path={`${match.url}create/post`}
@@ -56,10 +60,7 @@ const App = ({ match }) => (
         path={`${match.url}verify/onchain`}
         component={asyncComponent(() => import("./VerifyAttributesOnChain"))}
       />
-      <Route
-        path={`${match.url}faucet`}
-        component={asyncComponent(() => import("./Faucet"))}
-      />
+
       <Route
         path={`${match.url}sign`}
         component={asyncComponent(() => import("./Sign"))}

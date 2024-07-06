@@ -5,7 +5,7 @@ export async function faucet(address, chain = "devnet") {
     return { isCalculated: false, hash: "", reason: "address is undefined" };
   try {
     const response = await axios.post(process.env.REACT_APP_HASH_URL, {
-      auth: process.env.REACT_APP_BOTAPIAUTH,
+      auth: process.env.REACT_APP_HASH_AUTH,
       publicKey: address,
       faucet: "true",
       chain,
