@@ -281,6 +281,15 @@ const Mint = () => {
       const owner = newAddress;
 
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
+      if (
+        token.collection === "MINAMIE" &&
+        owner !== "B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y"
+      ) {
+        await showText("You are not allowed to mint in this collection", "red");
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
       /*
       export async function mintNFT(
         params
