@@ -7,8 +7,7 @@ const {
   WINSTON_KEY,
   WINSTON_NAME,
   WINSTON_REGION,
-  MINANFT_BRANCH,
-  CHAIN_ID,
+  WINSTON_CHAIN_ID,
 } = process.env;
 
 function formatWinstonTime(ms) {
@@ -38,8 +37,7 @@ exports.handler = async (event, context) => {
       body.winstonFrontendMeta &&
       body.winstonFrontendMeta.startTime &&
       Date.now() - body.winstonFrontendMeta.startTime;
-    body.winstonBranch = MINANFT_BRANCH;
-    body.winstonChainId = CHAIN_ID;
+    body.winstonChainId = WINSTON_CHAIN_ID;
     body.winstonLevel = "info";
     body.winstonRepo = "frontend";
     body.winstonHost = event.headers.host;
@@ -52,7 +50,7 @@ exports.handler = async (event, context) => {
     const cloudwatchConfig = {
       level: "info",
       logGroupName: WINSTON_NAME,
-      logStreamName: `${MINANFT_BRANCH}-${CHAIN_ID}`,
+      logStreamName: WINSTON_CHAIN_ID,
       awsOptions: {
         credentials: {
           accessKeyId: WINSTON_ID,
