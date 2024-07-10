@@ -74,6 +74,10 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
     }
   }
 
+  const transformItems = (items) => {
+    return items.filter((item) => item.count > 1);
+  };
+
   useEffect(() => {
     function addressChanged() {
       setFilter(defaultFilter);
@@ -143,6 +147,7 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
               attribute="collection"
               operator="or"
               limit={15}
+              transformItems={transformItems}
               searchable
               searchableIsAlwaysActive={false}
             />
