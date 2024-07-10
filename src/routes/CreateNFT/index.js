@@ -285,7 +285,23 @@ const Mint = () => {
         token.collection === "MINAMIE" &&
         owner !== "B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y"
       ) {
-        await showText("You are not allowed to mint in this collection", "red");
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y can mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
+      if (
+        token.collection === "MINASCHOOL" &&
+        owner !== "B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b"
+      ) {
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b can mint",
+          "red"
+        );
         setPending(undefined);
         setLoading(false);
         return;
