@@ -195,7 +195,7 @@ const Mint = () => {
     });
     if (color === "red") {
       const data = {
-        text: text?.toString ? text.toString() : text,
+        text,
         name: nameField,
         address,
         wf: "showText",

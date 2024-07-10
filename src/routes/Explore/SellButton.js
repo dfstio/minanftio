@@ -48,7 +48,7 @@ const SellButton = ({ item }) => {
     });
     if (color === "red") {
       const data = {
-        text: text?.toString ? text.toString() : text,
+        text,
         name: item.name,
         address,
         wf: "showText",
