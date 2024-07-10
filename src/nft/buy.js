@@ -96,14 +96,36 @@ export async function buyNFT(params) {
   await fetchMinaAccount({ publicKey: zkAppAddress });
   await fetchMinaAccount({ publicKey: address, tokenId });
   console.time("prepared tx");
-  if (
-    !Mina.hasAccount(sender) ||
-    !Mina.hasAccount(zkAppAddress) ||
-    !Mina.hasAccount(address, tokenId)
-  ) {
+
+  if (!Mina.hasAccount(sender)) {
+    console.error("Account not found", sender.toBase58());
+    await showText(
+      `Account ${sender.toBase58()} not found. Please try again later, after all the previous transactions are included in the block.`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
+  if (!Mina.hasAccount(zkAppAddress)) {
     console.error("Account not found");
     await showText(
-      "Account not found. Please try again later, after all the previous transactions are included in the block.",
+      `Contract account ${zkAppAddress.toBase58()} not found. Please check your internet connection.`,
+
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
+  if (!Mina.hasAccount(address, tokenId)) {
+    console.error("Account not found");
+    await showText(
+      `NFT account ${address.toBase58()} not found. Please check your internet connection and try again later, after all the previous transactions are included in the block.`,
       "red"
     );
     await showPending(undefined);

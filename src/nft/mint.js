@@ -315,10 +315,10 @@ export async function mintNFT(
   const memo = ("mint NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
   await fetchMinaAccount({ publicKey: zkAppAddress });
-  if (!Mina.hasAccount(sender) || !Mina.hasAccount(zkAppAddress)) {
-    console.error("Account not found");
+  if (!Mina.hasAccount(sender)) {
+    console.error("Account not found", sender.toBase58());
     await showText(
-      "Account not found. Please try again later, after all the previous transactions are included in the block.",
+      `Account ${sender.toBase58()} not found. Please try again later, after all the previous transactions are included in the block.`,
       "red"
     );
     await showPending(undefined);
@@ -327,6 +327,20 @@ export async function mintNFT(
       error: "Account not found",
     };
   }
+  if (!Mina.hasAccount(zkAppAddress)) {
+    console.error("Account not found");
+    await showText(
+      `Contract account ${zkAppAddress.toBase58()} not found. Please check your internet connection.`,
+
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
+
   await showText(
     "Successfully fetched the NFT contract state from the Mina blockchain",
     "green"
