@@ -109,7 +109,7 @@ const Verify = () => {
     });
     if (color === "red") {
       const data = {
-        text: text?.toString ? text.toString() : text,
+        text,
         name: json?.name,
         address: json?.address,
         wf: "showText",
