@@ -7,6 +7,11 @@ import { buyNFT } from "../../nft/buy";
 import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
+import logger from "../../serverless/logger";
+const log = logger.info.child({
+  winstonModule: "Explore",
+  winstonComponent: "BuyButton",
+});
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -28,6 +33,15 @@ const BuyButton = ({ item }) => {
       newTimeline.push({ text, color });
       return newTimeline;
     });
+    if (color === "red") {
+      const data = {
+        text: text?.toString ? text.toString() : text,
+        name: item.name,
+        wf: "showText",
+      };
+      console.error("Buy error", data);
+      log.error("Buy error", data);
+    }
   };
 
   const showPending = async (text) => {

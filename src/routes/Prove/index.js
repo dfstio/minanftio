@@ -22,15 +22,17 @@ import {
   InboxOutlined,
 } from "@ant-design/icons";
 
-import logger from "../../serverless/logger";
 import { prepareTable, prove, waitForProof, getKeys } from "../../nft/prove";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { sleep } from "../../blockchain/mina";
 import { loadLibraries } from "../../nft/libraries";
-import { set } from "nprogress";
+import logger from "../../serverless/logger";
+const log = logger.info.child({
+  winstonModule: "Prove",
+  winstonComponent: "Prove",
+});
 
-const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
@@ -72,8 +74,6 @@ const Prove = () => {
   const [pending, setPending] = useState(undefined);
   const [proving, setProving] = useState(false);
   const [libraries, setLibraries] = useState(loadLibraries());
-
-  const log = logm.child({ winstonComponent: "ProveAttributes" });
 
   const onSelectChange = (newSelectedRowKeys) => {
     if (DEBUG) console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -119,6 +119,16 @@ const Prove = () => {
       newTimeline.push({ text, color });
       return newTimeline;
     });
+    if (color === "red") {
+      const data = {
+        text: text?.toString ? text.toString() : text,
+        name: json?.name,
+        address: json?.address,
+        wf: "showText",
+      };
+      console.error("Prove error", data);
+      log.error("Prove error", data);
+    }
   };
 
   const showPending = async (text) => {

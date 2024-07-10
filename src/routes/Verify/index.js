@@ -22,14 +22,17 @@ import {
   InboxOutlined,
 } from "@ant-design/icons";
 
-import logger from "../../serverless/logger";
 import { verify, waitForProof } from "../../nft/verify";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { sleep } from "../../blockchain/mina";
 import { loadLibraries } from "../../nft/libraries";
+import logger from "../../serverless/logger";
+const log = logger.info.child({
+  winstonModule: "Verify",
+  winstonComponent: "Verify",
+});
 
-const logm = logger.info.child({ winstonModule: "Corporate" });
 const { REACT_APP_DEBUG } = process.env;
 
 const { TextArea } = Input;
@@ -65,8 +68,6 @@ const Verify = () => {
   const [pending, setPending] = useState(undefined);
   const [proving, setProving] = useState(false);
   const [libraries, setLibraries] = useState(loadLibraries());
-
-  const log = logm.child({ winstonComponent: "ProveAttributes" });
 
   function prepareTable(token) {
     return token.keys ?? [];
@@ -106,6 +107,16 @@ const Verify = () => {
       newTimeline.push({ text, color });
       return newTimeline;
     });
+    if (color === "red") {
+      const data = {
+        text: text?.toString ? text.toString() : text,
+        name: json?.name,
+        address: json?.address,
+        wf: "showText",
+      };
+      console.error("Verify error", data);
+      log.error("Verify error", data);
+    }
   };
 
   const showPending = async (text) => {
