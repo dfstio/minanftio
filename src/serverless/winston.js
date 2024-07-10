@@ -10,7 +10,7 @@ const {
   WINSTON_KEY,
   WINSTON_NAME,
   WINSTON_REGION,
-  REACT_APP_CHAIN_ID,
+  WINSTON_CHAIN_ID,
 } = process.env;
 
 var meta = {
@@ -55,7 +55,7 @@ const winstonFormat = format((info, opts) => {
 const cloudwatchConfig = {
   level: "info",
   logGroupName: WINSTON_NAME,
-  logStreamName: REACT_APP_CHAIN_ID,
+  logStreamName: WINSTON_CHAIN_ID,
   awsOptions: {
     credentials: {
       accessKeyId: WINSTON_ID,
@@ -103,7 +103,7 @@ const debug = new winston.createLogger({
     winstonFormat()
   ),
   defaultMeta: {
-    winstonChainId: REACT_APP_CHAIN_ID,
+    winstonChainId: WINSTON_CHAIN_ID,
     winstonLevel: "debug",
     winstonRepo: "functions",
     winstonFunctionsMeta: meta,
@@ -121,7 +121,7 @@ const info = new winston.createLogger({
     winstonFormat()
   ),
   defaultMeta: {
-    winstonChainId: REACT_APP_CHAIN_ID,
+    winstonChainId: WINSTON_CHAIN_ID,
     winstonLevel: "info",
     winstonRepo: "functions",
     winstonFunctionsMeta: meta,
