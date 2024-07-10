@@ -3,10 +3,18 @@ import Transport from "winston-transport";
 import api from "./api";
 
 const { v4: uuidv4 } = require("uuid");
-const { REACT_APP_DEBUG } = process.env;
+const { REACT_APP_DEBUG, REACT_APP_CHAIN_ID, REACT_APP_CONTRACT_ADDRESS } =
+  process.env;
+
 const { combine, timestamp, label, printf } = winston.format;
 
-var meta = { id: uuidv4(), type: "frontend", startTime: Date.now() };
+var meta = {
+  id: uuidv4(),
+  type: "frontend",
+  startTime: Date.now(),
+  chain: REACT_APP_CHAIN_ID,
+  contract: REACT_APP_CONTRACT_ADDRESS,
+};
 
 const myFormat = printf(({ level, message, winstonModule, wf, timestamp }) => {
   return `${timestamp} ${level} [${winstonModule}:${wf}]: ${message}`;

@@ -34,7 +34,6 @@ import { nftPrice } from "../../nft/pricing";
 import { lookupName } from "../../nft/name";
 import { reservedNames } from "../../nft/reservednames";
 
-import logger from "../../serverless/logger";
 import {
   footerText,
   footerAgreement,
@@ -43,9 +42,11 @@ import {
   footerEmail,
   accountingEmail,
 } from "../../util/config";
-const logm = logger.info.child({
-  winstonModule: "Mint",
-  winstonComponent: "Custom",
+
+import logger from "../../serverless/logger";
+const log = logger.info.child({
+  winstonModule: "Create",
+  winstonComponent: "Mint",
 });
 const { REACT_APP_PINATA_JWT } = process.env;
 const { TextArea } = Input;
@@ -192,6 +193,16 @@ const Mint = () => {
       newTimeline.push({ text, color });
       return newTimeline;
     });
+    if (color === "red") {
+      const data = {
+        text: text?.toString ? text.toString() : text,
+        name: nameField,
+        address,
+        wf: "showText",
+      };
+      console.error("Mint error", data);
+      log.error("Mint error", data);
+    }
   };
 
   const showPending = async (text) => {
