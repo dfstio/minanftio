@@ -71,8 +71,16 @@ const SellButton = ({ item }) => {
     checkOkButton();
   }, [price]);
 
-  const handleOk = async () => {
-    setPending("Preparing sale transaction...");
+  const sell = async () => {
+    await handleButton(price);
+  };
+
+  const delist = async () => {
+    await handleButton(0);
+  };
+
+  const handleButton = async (price) => {
+    setPending("Preparing transaction...");
     setLoading(true);
     try {
       const newAddress = await minaLogin();
@@ -182,7 +190,6 @@ const SellButton = ({ item }) => {
       <Modal
         title={title}
         open={visible}
-        onOk={handleOk}
         confirmLoading={loading}
         onCancel={handleCancel}
         footer={null}
@@ -242,12 +249,22 @@ const SellButton = ({ item }) => {
           <Form.Item name="sell">
             <Button
               type="primary"
-              onClick={handleOk}
+              onClick={sell}
               disabled={okDisabled}
               loading={loading}
             >
               Sell
             </Button>
+            {item.price !== "0" && (
+              <Button
+                type="primary"
+                onClick={delist}
+                disabled={okDisabled}
+                loading={loading}
+              >
+                Delist
+              </Button>
+            )}
           </Form.Item>
           <Form.Item
             name="info"
