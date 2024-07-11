@@ -101,7 +101,9 @@ export async function sellNFT(params) {
   const zkApp = new NameContractV2(zkAppAddress);
   const tokenId = zkApp.deriveTokenId();
   const fee = Number((await MinaNFT.fee()).toBigInt());
-  const memo = ("sell NFT @" + name).substring(0, 30);
+  const memo = (
+    (Number(price) === 0 ? "delist NFT @" : "sell NFT @") + name
+  ).substring(0, 30);
   if (DEBUG) console.log("memo", memo);
   if (DEBUG) console.log("sender", sender.toBase58());
   if (DEBUG) console.log("zkAppAddress", zkAppAddress.toBase58());

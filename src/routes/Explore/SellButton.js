@@ -9,6 +9,7 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import logger from "../../serverless/logger";
+import { set } from "nprogress";
 const log = logger.info.child({
   winstonModule: "Explore",
   winstonComponent: "SellButton",
@@ -21,6 +22,7 @@ const SellButton = ({ item }) => {
 
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [delisting, setDelisting] = useState(false);
   const [title, setTitle] = useState("Sell NFT @" + item.name);
   const [price, setPrice] = useState(100);
   const [okDisabled, setOkDisabled] = useState(true);
@@ -71,9 +73,19 @@ const SellButton = ({ item }) => {
     checkOkButton();
   }, [price]);
 
-  const handleOk = async () => {
-    setPending("Preparing sale transaction...");
-    setLoading(true);
+  const sell = async () => {
+    await handleButton(price);
+  };
+
+  const delist = async () => {
+    await handleButton(0);
+  };
+
+  const handleButton = async (price) => {
+    setPending("Preparing transaction...");
+    if (price === 0) setDelisting(true);
+    else setLoading(true);
+
     try {
       const newAddress = await minaLogin();
       dispatch(updateAddress(newAddress));
@@ -161,6 +173,7 @@ const SellButton = ({ item }) => {
       showText(error?.message ? error.message : error, "red");
       setPending(undefined);
       setLoading(false);
+      setDelisting(false);
     }
   };
 
@@ -182,7 +195,6 @@ const SellButton = ({ item }) => {
       <Modal
         title={title}
         open={visible}
-        onOk={handleOk}
         confirmLoading={loading}
         onCancel={handleCancel}
         footer={null}
@@ -242,12 +254,22 @@ const SellButton = ({ item }) => {
           <Form.Item name="sell">
             <Button
               type="primary"
-              onClick={handleOk}
+              onClick={sell}
               disabled={okDisabled}
               loading={loading}
             >
               Sell
             </Button>
+            {item.price !== "0" && (
+              <Button
+                type="primary"
+                onClick={delist}
+                disabled={okDisabled}
+                loading={delisting}
+              >
+                Delist
+              </Button>
+            )}
           </Form.Item>
           <Form.Item
             name="info"
