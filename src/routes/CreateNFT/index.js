@@ -317,6 +317,20 @@ const Mint = () => {
         setLoading(false);
         return;
       }
+
+      if (
+        token.collection === "Chinese Zodiac" &&
+        owner !== "B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC"
+      ) {
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC can mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
       /*
       export async function mintNFT(
         params
