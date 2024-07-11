@@ -9,6 +9,7 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import logger from "../../serverless/logger";
+import { set } from "nprogress";
 const log = logger.info.child({
   winstonModule: "Explore",
   winstonComponent: "SellButton",
@@ -21,6 +22,7 @@ const SellButton = ({ item }) => {
 
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [delisting, setDelisting] = useState(false);
   const [title, setTitle] = useState("Sell NFT @" + item.name);
   const [price, setPrice] = useState(100);
   const [okDisabled, setOkDisabled] = useState(true);
@@ -81,7 +83,9 @@ const SellButton = ({ item }) => {
 
   const handleButton = async (price) => {
     setPending("Preparing transaction...");
-    setLoading(true);
+    if (price === 0) setDelisting(true);
+    else setLoading(true);
+
     try {
       const newAddress = await minaLogin();
       dispatch(updateAddress(newAddress));
@@ -169,6 +173,7 @@ const SellButton = ({ item }) => {
       showText(error?.message ? error.message : error, "red");
       setPending(undefined);
       setLoading(false);
+      setDelisting(false);
     }
   };
 
@@ -260,7 +265,7 @@ const SellButton = ({ item }) => {
                 type="primary"
                 onClick={delist}
                 disabled={okDisabled}
-                loading={loading}
+                loading={delisting}
               >
                 Delist
               </Button>
