@@ -289,10 +289,12 @@ const Mint = () => {
   };
 
   const mint = async () => {
+    if (loading) return;
     setLoading(true);
     setTimeline([]);
     setPending("Preparing mint transaction...");
     setMinting(true);
+
     try {
       const newAddress = await minaLogin();
       if (DEBUG) console.log("newAddress", newAddress);
@@ -466,6 +468,7 @@ const Mint = () => {
         );
         await showText(txInfo, "green");
         setPending(undefined);
+        setMintDisabled(true);
       } else {
         await showText(
           `Error minting NFT token: ${txResult?.hash ?? ""} ${
