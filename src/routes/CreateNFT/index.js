@@ -44,6 +44,7 @@ import {
 } from "../../util/config";
 
 import logger from "../../serverless/logger";
+import { add } from "winston";
 const log = logger.info.child({
   winstonModule: "Create",
   winstonComponent: "Mint",
@@ -146,8 +147,13 @@ const Mint = () => {
           return;
         }
         if (status.found === true) {
-          setPrice("This name is already registered");
-          setNameAvailable(false);
+          if (status?.publicKey?.toLowerCase() === address?.toLowerCase()) {
+            setPrice("This name is reserved for you");
+            setNameAvailable(true);
+          } else {
+            setPrice("This name is already registered");
+            setNameAvailable(false);
+          }
           return;
         } else {
           const priceObject = nftPrice(name);
