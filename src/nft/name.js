@@ -63,7 +63,10 @@ export async function lookupName(name, owner) {
           contract: contract,
         };
       } else {
-        const nft = await getNFT(name);
+        if (DEBUG) console.log("lookupName", name, publicKey, chain, contract);
+        const nft = name
+          ? await getNFT(name[0] === "@" ? name.slice(1) : name)
+          : undefined;
         const alreadyMinted =
           nft && nft.status && nft.status !== "failed" ? true : false;
         return {
