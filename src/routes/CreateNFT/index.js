@@ -147,7 +147,7 @@ const Mint = () => {
           return;
         }
         if (status.found === true) {
-          if (status?.publicKey?.toLowerCase() === address?.toLowerCase()) {
+          if (status?.address?.toLowerCase() === address?.toLowerCase()) {
             setPrice("This name is reserved for you");
             setNameAvailable(true);
           } else {
