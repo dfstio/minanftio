@@ -42,6 +42,7 @@ export async function lookupName(name, owner) {
   contract?: string;
 }>
 */
+  if (DEBUG) console.log("lookupName 1", name, owner);
   const result = await apiHub("lookupName", {
     transactions: [],
     developer: "@dfst",
@@ -51,7 +52,7 @@ export async function lookupName(name, owner) {
   });
   try {
     const data = result.data;
-    const { found, name, publicKey, chain, contract } = data;
+    const { found, publicKey, chain, contract } = data;
     if (found === true) {
       if (owner && publicKey !== owner) {
         return {
@@ -63,7 +64,8 @@ export async function lookupName(name, owner) {
           contract: contract,
         };
       } else {
-        if (DEBUG) console.log("lookupName", name, publicKey, chain, contract);
+        if (DEBUG)
+          console.log("lookupName 2", name, publicKey, chain, contract);
         const nft = name
           ? await getNFT(name[0] === "@" ? name.slice(1) : name)
           : undefined;
