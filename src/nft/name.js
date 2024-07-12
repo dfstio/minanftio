@@ -1,10 +1,37 @@
 import axios from "axios";
+import algoliasearch from "algoliasearch";
+import { chainId } from "../blockchain/explorer";
+
+const {
+  REACT_APP_ALGOLIA_KEY,
+  REACT_APP_ALGOLIA_PROJECT,
+  REACT_APP_ALGOLIA_INDEX,
+  REACT_APP_CONTRACT_ADDRESS,
+} = process.env;
+const searchClient = algoliasearch(
+  REACT_APP_ALGOLIA_PROJECT,
+  REACT_APP_ALGOLIA_KEY
+);
+const searchIndex = searchClient.initIndex(REACT_APP_ALGOLIA_INDEX);
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+
+async function getNFT(name) {
+  let objectID = chainId() + "." + REACT_APP_CONTRACT_ADDRESS + "." + name;
+  if (DEBUG) console.log("getNFT Token objectID", objectID);
+  try {
+    let nft = await searchIndex.getObject(objectID);
+    if (DEBUG) console.log("NFT");
+    return nft;
+  } catch (error) {
+    return undefined;
+  }
+}
+
 /**
  * Gets the address (publicKey) of the NFT using serverless api call
  * @param name The name of the NFT
  */
-export async function lookupName(name) {
+export async function lookupName(name, owner) {
   /* Promise<{
   success: boolean;
   error?: string;
@@ -25,22 +52,38 @@ export async function lookupName(name) {
   try {
     const data = result.data;
     const { found, name, publicKey, chain, contract } = data;
-    if (found === true)
-      return {
-        success: result.success,
-        error: result.error,
-        address: publicKey,
-        found: found,
-        chain: chain,
-        contract: contract,
-      };
-    else
+    if (found === true) {
+      if (owner && publicKey !== owner) {
+        return {
+          success: result.success,
+          error: result.error,
+          address: publicKey,
+          found: found,
+          chain: chain,
+          contract: contract,
+        };
+      } else {
+        const nft = await getNFT(name);
+        const alreadyMinted =
+          nft && nft.status && nft.status !== "failed" ? true : false;
+        return {
+          success: result.success,
+          error: result.error,
+          address: publicKey,
+          found: found,
+          chain: chain,
+          contract: contract,
+          alreadyMinted,
+        };
+      }
+    } else {
       return {
         success: result.success,
         error: result.error,
         reason: "not found",
         found: found,
       };
+    }
   } catch (error) {
     return {
       success: result.success,

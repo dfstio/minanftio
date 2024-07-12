@@ -108,7 +108,7 @@ const Mint = () => {
   function warm() {
     if (hot) return;
     setHot(true);
-    lookupName("test");
+    lookupName("test", address);
     if (libraries === undefined) setLibraries(loadLibraries());
   }
 
@@ -139,7 +139,7 @@ const Mint = () => {
       }
 
       if (validateName(name)) {
-        const status = await lookupName(name);
+        const status = await lookupName(name, address);
         if (DEBUG) console.log("status", status);
         if (status.success === false) {
           setPrice("Name");
@@ -154,6 +154,11 @@ const Mint = () => {
           setNameAvailable(false);
           return;
         } else {
+          if (status.alreadyMinted) {
+            setPrice("This NFT is already minted");
+            setNameAvailable(false);
+            return;
+          }
           const priceObject = nftPrice(name);
           if (priceObject === "This name is reserved.") {
             setPrice("This name is reserved.");
