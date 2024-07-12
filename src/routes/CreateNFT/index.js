@@ -146,14 +146,12 @@ const Mint = () => {
           console.error("Error in name lookup", status);
           return;
         }
-        if (status.found === true) {
-          if (status?.address?.toLowerCase() === address?.toLowerCase()) {
-            setPrice("This name is reserved for you");
-            setNameAvailable(true);
-          } else {
-            setPrice("This name is already registered");
-            setNameAvailable(false);
-          }
+        if (
+          status.found === true &&
+          status?.address?.toLowerCase() !== address?.toLowerCase()
+        ) {
+          setPrice("This name is already registered");
+          setNameAvailable(false);
           return;
         } else {
           const priceObject = nftPrice(name);
