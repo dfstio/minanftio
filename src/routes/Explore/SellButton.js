@@ -114,7 +114,7 @@ const SellButton = ({ item }) => {
       const jobInfo = (
         <span>
           Proving transaction, cloud prove job id:{" "}
-          <a href={"https://minarollupscan.com/"} target="_blank">
+          <a href={"https://zkcloudworker.com/job/" + jobId} target="_blank">
             {jobId}
           </a>
           <br />
