@@ -440,7 +440,7 @@ const MintPrivate = () => {
         const jobInfo = (
           <span>
             Proving transaction, cloud prove job id:{" "}
-            <a href={"https://minarollupscan.com/"} target="_blank">
+            <a href={"https://zkcloudworker.com/job/" + jobId} target="_blank">
               {jobId}
             </a>
             <br />
@@ -481,7 +481,7 @@ const MintPrivate = () => {
         const jobInfo = (
           <span>
             Sucessfully proved transaction, cloud prove job id:{" "}
-            <a href={"https://minarollupscan.com/"} target="_blank">
+            <a href={"https://zkcloudworker.com/job/" + jobId} target="_blank">
               {jobId}
             </a>
             <br />
