@@ -201,6 +201,7 @@ const Prove = () => {
         );
 
         await showText(proofInfo, "green");
+        log.info("Prove is successful", { name });
         setPending(undefined);
       } else {
         await showText("Error: cannot create proof", "red");

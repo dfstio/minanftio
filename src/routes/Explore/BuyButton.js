@@ -120,6 +120,7 @@ const BuyButton = ({ item }) => {
           </span>
         );
         await showText(txInfo, "green");
+        log.info("Buy is successful", { name: item.name, hash: txResult.hash });
         setPending(undefined);
       } else {
         const txError = (
