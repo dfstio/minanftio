@@ -101,12 +101,19 @@ export async function getFieldsSignature(message) {
 
 export async function minaLogin(openlink = true) {
   let address = "";
-  const log = logm.child({ openlink, wf: "minaLogin" });
+  const log = logger.info.child({
+    winstonModule: "Mina",
+    winstonComponent: "login",
+  });
   log.debug("called: ", { mina: window.mina });
   if (DEBUG) console.log("mina login start");
 
   try {
-    if (window.mina !== undefined) {
+    if (
+      window.mina !== undefined &&
+      window.mina?.requestNetwork !== undefined &&
+      window.mina?.requestAccounts !== undefined
+    ) {
       let network = await window.mina
         ?.requestNetwork()
         .catch((err) => console.log(err));
@@ -114,7 +121,10 @@ export async function minaLogin(openlink = true) {
       if (network?.networkID !== REACT_APP_CHAIN_ID) {
         const switchNetwork = await window.mina
           .switchChain({ networkID: REACT_APP_CHAIN_ID })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.error(err);
+            log.error("Cannot switch network", { text: err });
+          });
         if (DEBUG) console.log("mina login switch network", switchNetwork);
         network = await window.mina
           .requestNetwork()
@@ -139,9 +149,9 @@ export async function minaLogin(openlink = true) {
 
     log.debug(`minaLogin: connected with address ${address}`, { address });
   } catch (error) {
-    log.error("catch", error);
+    log.error("mina login catch", error);
   }
-  console.log("mina login", address);
+  if (DEBUG) console.log("mina login address", address);
   return address;
 }
 
