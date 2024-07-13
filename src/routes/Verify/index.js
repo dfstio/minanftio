@@ -174,12 +174,13 @@ const Verify = () => {
         result?.success === true &&
         result?.verificationResult !== undefined
       ) {
-        if (result?.verificationResult === "true")
+        if (result?.verificationResult === "true") {
           await showText(
             `Proof successfully verified, the verification result: proof is valid`,
             "green"
           );
-        else
+          log.info("Verify is successful", { name });
+        } else
           await showText(
             `Proof verification result: proof is invalid: ${result?.verificationResult}`,
             "red"
