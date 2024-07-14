@@ -1,6 +1,14 @@
 import { serializeTransaction } from "./transaction";
 import { sendSellTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
+import { getNonce } from "../../nft/nonce";
+import logger from "../../serverless/logger";
+const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const log = logger.info.child({
+  winstonModule: "SellButton",
+  winstonComponent: "sell function",
+});
+
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 export async function sellNFT(params) {
@@ -149,6 +157,9 @@ export async function sellNFT(params) {
       error: "Account not found",
     };
   }
+  const blockberryNoncePromise = changeNonce
+    ? getNonce(sender.toBase58())
+    : undefined;
   const requiredBalance = 1 + fee / 1_000_000_000;
   const balance = await accountBalanceMina(sender);
   if (requiredBalance > balance) {
@@ -167,6 +178,7 @@ export async function sellNFT(params) {
     "green"
   );
   await showPending("Preparing transaction...");
+
   /*
   const nft = new NFTContractV2({ address, tokenId });
   const nftOwner = nft.owner.get();
@@ -190,7 +202,13 @@ export async function sellNFT(params) {
     price: UInt64.from(price),
   });
 
-  const tx = await Mina.transaction({ sender, fee, memo }, async () => {
+  const senderNonce = Number(Mina.getAccount(sender).nonce.toBigint());
+  const blockberryNonce = changeNonce ? await blockberryNoncePromise : 0;
+  const nonce = Math.max(senderNonce, blockberryNonce + 1);
+  if (nonce > senderNonce)
+    log.info(`Nonce changed from ${senderNonce} to ${nonce}`);
+
+  const tx = await Mina.transaction({ sender, fee, memo, nonce }, async () => {
     await zkApp.sell(sellParams);
   });
 
