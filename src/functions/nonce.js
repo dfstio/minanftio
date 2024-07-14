@@ -1,7 +1,7 @@
 const { BLOCKBERRY_API } = process.env;
 
 exports.handler = async (event, context) => {
-  console.log("event", event.body);
+  //console.log("event", event.body);
   // check for POST
   if (event.httpMethod !== "POST") {
     return {
@@ -80,7 +80,7 @@ async function getZkAppTxsFromBlockberry(account) {
       options
     );
     const result = await response.json();
-    console.log("zkAppTxs", result);
+    //console.log("zkAppTxs", result);
     return result;
   } catch (err) {
     console.error(err);
@@ -105,7 +105,7 @@ async function getPaymentTxsFromBlockberry(account) {
       options
     );
     const result = await response.json();
-    console.log("paymentTxs", result);
+    //console.log("paymentTxs", result);
     return result;
   } catch (err) {
     console.error(err);
