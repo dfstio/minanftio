@@ -206,7 +206,9 @@ export async function sellNFT(params) {
   const blockberryNonce = changeNonce ? await blockberryNoncePromise : 0;
   const nonce = Math.max(senderNonce, blockberryNonce + 1);
   if (nonce > senderNonce)
-    log.info(`Nonce changed from ${senderNonce} to ${nonce}`);
+    log.info(
+      `Nonce changed from ${senderNonce} to ${nonce} for ${sender.toBase58()} for NFT ${name}`
+    );
 
   const tx = await Mina.transaction({ sender, fee, memo, nonce }, async () => {
     await zkApp.sell(sellParams);

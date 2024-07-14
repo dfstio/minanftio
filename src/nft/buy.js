@@ -1,6 +1,13 @@
 import { serializeTransaction } from "./transaction";
 import { sendBuyTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
+import { getNonce } from "./nonce";
+import logger from "../serverless/logger";
+const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const log = logger.info.child({
+  winstonModule: "BuyButton",
+  winstonComponent: "buy function",
+});
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
 export async function buyNFT(params) {
@@ -134,6 +141,9 @@ export async function buyNFT(params) {
       error: "Account not found",
     };
   }
+  const blockberryNoncePromise = changeNonce
+    ? getNonce(sender.toBase58())
+    : undefined;
   const requiredBalance = (Number(price) + fee) / 1_000_000_000;
   const balance = await accountBalanceMina(sender);
   if (requiredBalance > balance) {
@@ -165,7 +175,15 @@ export async function buyNFT(params) {
     price: UInt64.from(price),
   });
 
-  const tx = await Mina.transaction({ sender, fee, memo }, async () => {
+  const senderNonce = Number(Mina.getAccount(sender).nonce.toBigint());
+  const blockberryNonce = changeNonce ? await blockberryNoncePromise : 0;
+  const nonce = Math.max(senderNonce, blockberryNonce + 1);
+  if (nonce > senderNonce)
+    log.info(
+      `Nonce changed from ${senderNonce} to ${nonce} for ${sender.toBase58()} for NFT ${name}`
+    );
+
+  const tx = await Mina.transaction({ sender, fee, memo, nonce }, async () => {
     await zkApp.buy(buyParams);
   });
 
