@@ -2,7 +2,7 @@ import { serializeTransaction } from "./transaction";
 import { sendSellTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
 import { getNonce } from "./nonce";
-import logger from "../../serverless/logger";
+import logger from "../serverless/logger";
 const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 const log = logger.info.child({
   winstonModule: "SellButton",
