@@ -9,6 +9,15 @@ const winston = (info) => {
   });
 };
 
+const nonce = (account) => {
+  return fetch("/api/nonce", {
+    body: JSON.stringify({ account }),
+    method: "POST",
+  }).then((response) => {
+    return response.json();
+  });
+};
+
 const storage = () => {
   //if(DEBUG) console.log("storage api: ", info);
   return fetch("/api/storage", {
@@ -22,4 +31,5 @@ const storage = () => {
 export default {
   winston: winston,
   storage: storage,
+  nonce: nonce,
 };

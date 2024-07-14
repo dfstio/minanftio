@@ -9,7 +9,7 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import logger from "../../serverless/logger";
-import { set } from "nprogress";
+
 const log = logger.info.child({
   winstonModule: "Explore",
   winstonComponent: "SellButton",
