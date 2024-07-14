@@ -467,7 +467,11 @@ const Mint = () => {
           </span>
         );
         await showText(txInfo, "green");
-        log.info("Mint is successful", { url: linkURL, hash: txResult.hash });
+        log.info("Mint is successful", {
+          url: linkURL,
+          hash: txResult.hash,
+          name,
+        });
         setPending(undefined);
         setMintDisabled(true);
       } else {
