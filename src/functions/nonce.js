@@ -1,6 +1,7 @@
 const { BLOCKBERRY_API } = process.env;
 
 exports.handler = async (event, context) => {
+  console.log("event", event);
   // check for POST
   if (event.httpMethod !== "POST") {
     return {
@@ -38,7 +39,7 @@ exports.handler = async (event, context) => {
         }),
       };
     }
-
+    console.log("account", account);
     const zkAppTxs = getZkAppTxsFromBlockberry(account);
     const paymentTxs = getPaymentTxsFromBlockberry(account);
 
