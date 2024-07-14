@@ -9,7 +9,8 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import logger from "../../serverless/logger";
-import { set } from "nprogress";
+import { getNonce } from "../../nft/nonce";
+
 const log = logger.info.child({
   winstonModule: "Explore",
   winstonComponent: "SellButton",
@@ -33,13 +34,16 @@ const SellButton = ({ item }) => {
   const address = useSelector(({ blockchain }) => blockchain.address);
   const dispatch = useDispatch();
 
-  const showModal = () => {
+  const showModal = async () => {
     setTimeline([]);
     setPending(undefined);
     setLoading(false);
     setReload(false);
     setVisible(true);
     setLibraries(loadLibraries());
+    console.log("SellButton showModal", address);
+    const nonce = await getNonce(address);
+    console.log("SellButton showModal nonce", nonce);
   };
 
   const showText = async (text, color) => {
