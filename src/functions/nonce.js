@@ -45,6 +45,7 @@ exports.handler = async (event, context) => {
     const zkNonce = (await zkAppTxs)?.data[0]?.nonce ?? 0;
     const paymentNonce = (await paymentTxs)?.data[0]?.nonce ?? 0;
     const nonce = Math.max(zkNonce, paymentNonce);
+    console.log("nonce", { zkNonce, paymentNonce, nonce });
 
     return {
       statusCode: 200,
@@ -78,6 +79,7 @@ async function getZkAppTxsFromBlockberry(account) {
       options
     );
     const result = await response.json();
+    console.log("zkAppTxs", result);
     return result;
   } catch (err) {
     console.error(err);
@@ -102,6 +104,7 @@ async function getPaymentTxsFromBlockberry(account) {
       options
     );
     const result = await response.json();
+    console.log("paymentTxs", result);
     return result;
   } catch (err) {
     console.error(err);
