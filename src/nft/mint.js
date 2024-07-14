@@ -4,6 +4,13 @@ import { serializeTransaction } from "./transaction";
 import { sendMintTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
 import { reserveName } from "./name";
+import { getNonce } from "./nonce";
+import logger from "../serverless/logger";
+const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const log = logger.info.child({
+  winstonModule: "Mint",
+  winstonComponent: "mint function",
+});
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
@@ -200,6 +207,7 @@ export async function mintNFT(
   const sender = PublicKey.fromBase58(owner);
   const net = await initBlockchain(chain);
   if (DEBUG) console.log("network id", Mina.getNetworkId());
+
   const balance = await accountBalanceMina(sender);
 
   const nft = new RollupNFT({
@@ -260,6 +268,9 @@ export async function mintNFT(
 
   await showText(`NFT name @${name} is reserved`, "green");
   const fee = Number((await MinaNFT.fee()).toBigInt());
+  const blockberryNoncePromise = changeNonce
+    ? getNonce(sender.toBase58())
+    : undefined;
   const requiredBalance =
     Number(reserved.price.price) + 1 + fee / 1_000_000_000;
   if (requiredBalance > balance) {
@@ -396,7 +407,15 @@ export class MintParams extends Struct({
     },
     expiry,
   };
-  const tx = await Mina.transaction({ sender, fee, memo }, async () => {
+
+  const senderNonce = Number(Mina.getAccount(sender).nonce.toBigint());
+  const blockberryNonce = changeNonce ? await blockberryNoncePromise : 0;
+  const nonce = Math.max(senderNonce, blockberryNonce + 1);
+  if (nonce > senderNonce)
+    log.info(
+      `Nonce changed from ${senderNonce} to ${nonce} for ${sender.toBase58()} for NFT ${name}`
+    );
+  const tx = await Mina.transaction({ sender, fee, memo, nonce }, async () => {
     //AccountUpdate.fundNewAccount(sender);
     await zkApp.mint(mintParams);
   });
