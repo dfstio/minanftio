@@ -1,7 +1,7 @@
 const { BLOCKBERRY_API } = process.env;
 
 exports.handler = async (event, context) => {
-  console.log("event", event);
+  console.log("event", event.body);
   // check for POST
   if (event.httpMethod !== "POST") {
     return {
