@@ -43,8 +43,8 @@ exports.handler = async (event, context) => {
     const zkAppTxs = getZkAppTxsFromBlockberry(account);
     const paymentTxs = getPaymentTxsFromBlockberry(account);
 
-    const zkNonce = (await zkAppTxs)?.data[0]?.nonce ?? 0;
-    const paymentNonce = (await paymentTxs)?.data[0]?.nonce ?? 0;
+    const zkNonce = (await zkAppTxs)?.data[0]?.nonce ?? -1;
+    const paymentNonce = (await paymentTxs)?.data[0]?.nonce ?? -1;
     const nonce = Math.max(zkNonce, paymentNonce);
     console.log("nonce", { zkNonce, paymentNonce, nonce });
 
