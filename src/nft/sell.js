@@ -203,7 +203,7 @@ export async function sellNFT(params) {
   });
 
   const senderNonce = Number(Mina.getAccount(sender).nonce.toBigint());
-  const blockberryNonce = changeNonce ? await blockberryNoncePromise : 0;
+  const blockberryNonce = changeNonce ? await blockberryNoncePromise : -1;
   const nonce = Math.max(senderNonce, blockberryNonce + 1);
   if (nonce > senderNonce)
     log.info(

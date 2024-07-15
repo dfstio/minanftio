@@ -5,12 +5,12 @@ export async function getNonce(account) {
     const result = await api.nonce(account);
     console.log("getNonce", result);
     if (result?.success === false) {
-      return 0;
+      return -1;
     } else {
-      return result?.nonce ?? 0;
+      return result?.nonce ?? -1;
     }
   } catch (error) {
     console.error(`Error`, error);
-    return 0;
+    return -1;
   }
 }
