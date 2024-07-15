@@ -780,7 +780,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                     marginLeft: "15px",
                   }}
                 >
-                  <img src={image} alt={name} crossOrigin="anonymous" />
+                  <img src={image} alt={item.image} crossOrigin="anonymous" />
                 </div>
               </Col>
               <Col xl={16} lg={16} md={24} sm={24} xs={24}>
