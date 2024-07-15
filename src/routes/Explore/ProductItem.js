@@ -26,7 +26,7 @@ const ProductItem = ({ item }) => {
     <div className="gx-product-item gx-product-vertical">
       <a href={tokenPath}>
         <div className="gx-product-image">
-          <img src={`${imageUrl}`} alt="" crossOrigin="anonymous" />
+          <img src={imageUrl} alt={item.image} crossOrigin="anonymous" />
         </div>
       </a>
       <div className="gx-product-body">
