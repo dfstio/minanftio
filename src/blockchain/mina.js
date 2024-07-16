@@ -112,8 +112,10 @@ export async function minaLogin(openlink = true) {
     if (
       window.mina !== undefined &&
       window.mina?.requestNetwork !== undefined &&
-      window.mina?.requestAccounts !== undefined
+      window.mina?.requestAccounts !== undefined &&
+      window.mina?.switchChain !== undefined
     ) {
+      const account = await window.mina.requestAccounts();
       let network = await window.mina
         ?.requestNetwork()
         .catch((err) => console.log(err));
@@ -132,18 +134,21 @@ export async function minaLogin(openlink = true) {
       }
       if (DEBUG) console.log("mina login network", network);
 
-      const account = await window.mina.requestAccounts();
       log.debug("account", { account, network });
       if (DEBUG) console.log("mina login account", account, network);
 
       if (account.length > 0 && network?.networkID === REACT_APP_CHAIN_ID)
         address = account[0];
+      else log.error("mina login account error", { account, network });
     } else {
       if (openlink) {
         const linkURL = isMobile
           ? "https://apps.apple.com/app/auro-wallet/id1574034920"
           : "https://chrome.google.com/webstore/detail/auro-wallet/cnmamaachppnkjgnildpdmkaakejnhae";
         window.open(linkURL);
+        log.info(`mina login: open link, mobile: ${isMobile}`);
+      } else {
+        log.error("mina login: wallet not installed, skipping");
       }
     }
 
