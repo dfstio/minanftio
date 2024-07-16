@@ -3,6 +3,7 @@ import { sendSellTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
 import { getNonce } from "./nonce";
 import logger from "../serverless/logger";
+import { NFTContractV2 } from "minanft";
 const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 const log = logger.info.child({
   winstonModule: "SellButton",
@@ -108,6 +109,7 @@ export async function sellNFT(params) {
   const zkAppAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE_V2);
   const zkApp = new NameContractV2(zkAppAddress);
   const tokenId = zkApp.deriveTokenId();
+  const nftApp = new NFTContractV2(address, tokenId);
   const fee = Number((await MinaNFT.fee()).toBigInt());
   const memo = (
     (Number(price) === 0 ? "delist NFT @" : "sell NFT @") + name
@@ -155,6 +157,33 @@ export async function sellNFT(params) {
     return {
       success: false,
       error: "Account not found",
+    };
+  }
+
+  const nftOwner = nftApp.owner.get();
+
+  if (nftOwner === undefined) {
+    console.error("NFT Account not found");
+    await showText(
+      `NFT account ${address.toBase58()} not found, cannot check the owner data. Please check your internet connection and try again later, after all the previous transactions are included in the block.`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
+  if (nftOwner.toBase58() !== sender.toBase58()) {
+    console.error("NFT owner does not match the sender");
+    await showText(
+      `NFT owner address ${nftOwner.toBase58()} does not match your address ${sender.toBase58()}. Please try again later, after all the previous transactions are included in the block.`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Owner does not match the sender",
     };
   }
   const blockberryNoncePromise = changeNonce
