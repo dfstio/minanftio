@@ -33,6 +33,7 @@ export function storageUrlFromURL(url) {
     console.error("Empty fullUrl");
     return "";
   }
+  /*
   if (
     url ===
     "https://gateway.pinata.cloud/ipfs/bafybeidt3j3jmsh5oyhzbr6ylpn3xjbrs2xrigmpyppe4s7xqu77srdyai"
@@ -40,6 +41,7 @@ export function storageUrlFromURL(url) {
     console.error("handling special case for pinata gateway");
     return url;
   }
+    */
   if (url.includes("https://gateway.pinata.cloud/ipfs/")) {
     return (
       cacheSmallUrl +
