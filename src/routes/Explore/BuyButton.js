@@ -72,6 +72,7 @@ const BuyButton = ({ item }) => {
       if (buyResult.success === false || buyResult.jobId === undefined) {
         showText("Error: " + buyResult.error ?? "", "red");
         setPending(undefined);
+        setLoading(false);
         return;
       }
       setReload(true);

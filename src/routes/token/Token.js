@@ -831,13 +831,16 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   ) : (
                     <div className="gx-product-price">{item.vrtTokenId}</div>
                   )}
-                  {descriptionMarkdown === "" ? (
+                  {/*descriptionMarkdown === "" ? (
                     <div className="gx-mt-4" style={{ whiteSpace: "pre-wrap" }}>
                       {description}
                     </div>
                   ) : (
                     <Markdown>{descriptionMarkdown}</Markdown>
-                  )}
+                  )*/}
+
+                  <Markdown>{description}</Markdown>
+
                   <Strings strings={strings} markdown={false} />
                   <Strings strings={texts} markdown={true} />
                   <Attachments attachments={attachments} />

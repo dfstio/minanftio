@@ -9,6 +9,7 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import logger from "../../serverless/logger";
+import { set } from "nprogress";
 
 const log = logger.info.child({
   winstonModule: "Explore",
@@ -105,6 +106,7 @@ const SellButton = ({ item }) => {
       if (sellResult.success === false || sellResult.jobId === undefined) {
         showText("Error: " + sellResult.error ?? "", "red");
         setPending(undefined);
+        setLoading(false);
         return;
       }
       setReload(true);
