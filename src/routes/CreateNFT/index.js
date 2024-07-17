@@ -45,6 +45,7 @@ import {
 
 import logger from "../../serverless/logger";
 import { add } from "winston";
+import { set } from "nprogress";
 const log = logger.info.child({
   winstonModule: "Create",
   winstonComponent: "Mint",
@@ -191,7 +192,7 @@ const Mint = () => {
 
   useEffect(() => {
     async function checkCanMint() {
-      setMintDisabled(nameAvailable && image ? false : true);
+      setMintDisabled(nameAvailable && image !== undefined ? false : true);
     }
     checkCanMint();
   }, [nameAvailable, image]);
@@ -299,7 +300,13 @@ const Mint = () => {
       const newAddress = await minaLogin();
       if (DEBUG) console.log("newAddress", newAddress);
       dispatch(updateAddress(newAddress));
-      if (newAddress === "" || newAddress === undefined) return;
+      if (newAddress === "" || newAddress === undefined) {
+        await showText("Please connect the wallet first", "red");
+        setPending(undefined);
+        setLoading(false);
+        setMintDisabled(false);
+        return;
+      }
       const owner = newAddress;
 
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
