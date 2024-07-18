@@ -173,7 +173,7 @@ export async function buyNFT(params) {
       error: "Account not found",
     };
   }
-  const nftPrice = NFTparams.unpack(nftData.get());
+  const nftPrice = NFTparams.unpack(nftData);
 
   if (nftPrice === undefined) {
     console.error("NFT Account not found");
