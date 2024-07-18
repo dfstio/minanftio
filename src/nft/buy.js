@@ -48,7 +48,9 @@ export async function buyNFT(params) {
   const {
     MinaNFT,
     NameContractV2,
+    NFTContractV2,
     BuyParams,
+    NFTparams,
     initBlockchain,
     MINANFT_NAME_SERVICE_V2,
     fetchMinaAccount,
@@ -97,6 +99,7 @@ export async function buyNFT(params) {
   const zkAppAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE_V2);
   const zkApp = new NameContractV2(zkAppAddress);
   const tokenId = zkApp.deriveTokenId();
+  const nftApp = new NFTContractV2(address, tokenId);
   const fee = Number((await MinaNFT.fee()).toBigInt());
   const memo = ("buy NFT @" + name).substring(0, 30);
   await fetchMinaAccount({ publicKey: sender });
@@ -155,6 +158,46 @@ export async function buyNFT(params) {
     return {
       success: false,
       error: `Insufficient balance of the sender: ${balance} MINA. Required: ${requiredBalance} MINA`,
+    };
+  }
+  const nftData = nftApp.data.get();
+  if (nftData === undefined) {
+    console.error("NFT Account not found");
+    await showText(
+      `NFT account ${address.toBase58()} not found, cannot check the price data. Please check your internet connection and try again later, after all the previous transactions are included in the block.`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
+  const nftPrice = NFTparams.unpack(nftData);
+
+  if (nftPrice === undefined) {
+    console.error("NFT Account not found");
+    await showText(
+      `NFT account ${address.toBase58()} not found, cannot check the price data. Please try again later, after all the previous transactions are included in the block.`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
+    };
+  }
+
+  if (Number(nftPrice.price.toBigInt()) !== Number(price)) {
+    console.error("NFT price do not match");
+    await showText(
+      `NFT account ${address.toBase58()} price data is not updated yet in the blockchain. Please try again later, after all the previous transactions are included in the block.`,
+      "red"
+    );
+    await showPending(undefined);
+    return {
+      success: false,
+      error: "Account not found",
     };
   }
   await showText(

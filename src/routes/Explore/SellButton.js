@@ -83,6 +83,7 @@ const SellButton = ({ item }) => {
   };
 
   const handleButton = async (price) => {
+    if (loading || delisting) return;
     setPending("Preparing transaction...");
     if (price === 0) setDelisting(true);
     else setLoading(true);
@@ -107,6 +108,7 @@ const SellButton = ({ item }) => {
         showText("Error: " + sellResult.error ?? "", "red");
         setPending(undefined);
         setLoading(false);
+        setDelisting(false);
         return;
       }
       setReload(true);
@@ -174,6 +176,7 @@ const SellButton = ({ item }) => {
         setPending(undefined);
       }
       setLoading(false);
+      setDelisting(false);
     } catch (error) {
       console.error("SellButton error", error);
       showText(error?.message ? error.message : error, "red");
