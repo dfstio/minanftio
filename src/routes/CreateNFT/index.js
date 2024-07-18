@@ -91,8 +91,9 @@ const Mint = () => {
   ]);
   const [nameField, setNameField] = useState("");
   const [nameAvailable, setNameAvailable] = useState(false);
+  const [validateStatus, setValidateStatus] = useState("validating");
+  const [help, setHelp] = useState("");
   const [hot, setHot] = useState(false);
-  const [price, setPrice] = useState("Name");
   const [collection, setCollection] = useState("Collection");
   const [showLink, setShowLink] = useState(false);
   const [counter, setCounter] = useState(0);
@@ -118,15 +119,17 @@ const Mint = () => {
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
       if (DEBUG) console.log("name", name);
       if (name.length < 3) {
-        setPrice("Name");
+        setHelp("Name must be at least 3 characters long");
         setNameAvailable(false);
+        setValidateStatus("warning");
         warm();
         return;
       }
       if (
         reservedNames.includes(name.toLowerCase().substring(0, 30)) === true
       ) {
-        setPrice("This name is reserved");
+        setHelp("This name is reserved");
+        setValidateStatus("error");
         setNameAvailable(false);
         warm();
         return;
@@ -143,7 +146,8 @@ const Mint = () => {
         const status = await lookupName(name, address);
         if (DEBUG) console.log("status", status);
         if (status.success === false) {
-          setPrice("Name");
+          setHelp("Error in name lookup");
+          setValidateStatus("error");
           console.error("Error in name lookup", status);
           return;
         }
@@ -151,39 +155,45 @@ const Mint = () => {
           status.found === true &&
           status?.address?.toLowerCase() !== address?.toLowerCase()
         ) {
-          setPrice("This name is already registered");
+          setHelp("This name is already registered");
           setNameAvailable(false);
+          setValidateStatus("error");
           return;
         } else {
           if (status.alreadyMinted) {
-            setPrice("This NFT is already minted");
+            setHelp("This NFT is already minted");
             setNameAvailable(false);
+            setValidateStatus("error");
             return;
           }
           const priceObject = nftPrice(name);
           if (priceObject === "This name is reserved.") {
-            setPrice("This name is reserved.");
+            setHelp("This name is reserved.");
             setNameAvailable(false);
+            setValidateStatus("error");
           } else if (priceObject !== undefined) {
-            setPrice(
+            setHelp(
               "This name is available: " +
                 priceObject.price +
                 " " +
                 priceObject.currency
             );
             setNameAvailable(true);
+            setValidateStatus("success");
           } else {
             console.error("Invalid price object", priceObject);
-            setPrice("Name");
+            setHelp("Invalid price object while checking the name");
             setNameAvailable(true);
+            setValidateStatus("error");
           }
           return;
         }
       } else {
-        setPrice(
+        setHelp(
           "Invalid name, must contains only letters, spaces and digits, starts with letter, be less than 30 chars"
         );
         setNameAvailable(false);
+        setValidateStatus("error");
         warm();
       }
     }
@@ -313,10 +323,10 @@ const Mint = () => {
 
       if (
         token.collection === "Mad Malinois" &&
-        owner !== "B62qk82dMmyP6ZwHPB8Bef3abwhZ5VakixTA7HUDGQwm2nS8wSQ9Keh"
+        owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
       ) {
         await showText(
-          "You are not allowed to mint in this collection. Only B62qk82dMmyP6ZwHPB8Bef3abwhZ5VakixTA7HUDGQwm2nS8wSQ9Keh can mint",
+          "You are not allowed to mint in this collection. Only B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1 can mint",
           "red"
         );
         setPending(undefined);
@@ -595,7 +605,9 @@ const Mint = () => {
             {!minting && (
               <Col xxl={14} xl={14} lg={14} md={16} sm={24} xs={24}>
                 <Form.Item
-                  label={price}
+                  label="Name"
+                  validateStatus={validateStatus}
+                  help={help}
                   name="name"
                   placeholder="Please name your NFT"
                   rules={[
