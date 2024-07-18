@@ -323,10 +323,10 @@ const Mint = () => {
 
       if (
         token.collection === "Mad Malinois" &&
-        owner !== "B62qk82dMmyP6ZwHPB8Bef3abwhZ5VakixTA7HUDGQwm2nS8wSQ9Keh"
+        owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
       ) {
         await showText(
-          "You are not allowed to mint in this collection. Only B62qk82dMmyP6ZwHPB8Bef3abwhZ5VakixTA7HUDGQwm2nS8wSQ9Keh can mint",
+          "You are not allowed to mint in this collection. Only B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1 can mint",
           "red"
         );
         setPending(undefined);
