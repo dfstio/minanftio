@@ -135,7 +135,7 @@ const Mint = () => {
       function validateName(value) {
         if (value.length > 30) return false;
         if (value.length <= 2) return true;
-        const regExp = /^[a-zA-Z]\w+$/g;
+        const regExp = /^[a-zA-Z][\w\s]+$/g;
         return regExp.test(value.substring(1));
       }
 
