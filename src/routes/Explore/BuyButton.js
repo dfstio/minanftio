@@ -49,6 +49,7 @@ const BuyButton = ({ item }) => {
   };
 
   const showModal = async () => {
+    if (loading) return;
     setTimeline([]);
     setPending("Preparing buy transaction...");
     setLoading(true);
@@ -152,7 +153,7 @@ const BuyButton = ({ item }) => {
 
   return (
     <div>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={showModal} loading={loading}>
         Buy
       </Button>
       <Modal
