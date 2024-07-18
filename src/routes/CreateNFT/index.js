@@ -181,7 +181,7 @@ const Mint = () => {
         }
       } else {
         setPrice(
-          "Invalid name, must contains only letters and digits, starts with letter, be less than 30 chars"
+          "Invalid name, must contains only letters, spaces and digits, starts with letter, be less than 30 chars"
         );
         setNameAvailable(false);
         warm();
