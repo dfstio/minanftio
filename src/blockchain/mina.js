@@ -102,6 +102,8 @@ export async function getFieldsSignature(message) {
 
 export async function minaLogin(openlink = true) {
   let address = "";
+  let logAccount = "";
+  let logNetwork = "";
   const log = logger.info.child({
     winstonModule: "Mina",
     winstonComponent: "login",
@@ -118,21 +120,18 @@ export async function minaLogin(openlink = true) {
       window.mina?.switchChain !== undefined
     ) {
       const account = await window.mina.requestAccounts();
-      let network = await window.mina
-        ?.requestNetwork()
-        .catch((err) => console.log(err));
+      logAccount = account;
+      let network = await window.mina?.requestNetwork();
+      logNetwork = network;
       if (DEBUG) console.log("mina login network", network);
       if (network?.networkID !== REACT_APP_CHAIN_ID) {
-        const switchNetwork = await window.mina
-          .switchChain({ networkID: REACT_APP_CHAIN_ID })
-          .catch((err) => {
-            console.error(err);
-            log.error("Cannot switch network", { text: err });
-          });
+        const switchNetwork = await window.mina.switchChain({
+          networkID: REACT_APP_CHAIN_ID,
+        });
+
         if (DEBUG) console.log("mina login switch network", switchNetwork);
-        network = await window.mina
-          .requestNetwork()
-          .catch((err) => console.log(err));
+        network = await window.mina.requestNetwork();
+        logNetwork = network;
       }
       if (DEBUG) console.log("mina login network", network);
 
@@ -141,7 +140,15 @@ export async function minaLogin(openlink = true) {
 
       if (account.length > 0 && network?.networkID === REACT_APP_CHAIN_ID)
         address = account[0];
-      else log.error("mina login account error", { account, network });
+      else {
+        console.error("mina login account error", { account, network });
+        log.error("mina login account error", { account, network });
+        message.error({
+          content: `Please use the last Auro Wallet version, connect your wallet and switch to the correct network`,
+          key: "minaLogin",
+          duration: 60,
+        });
+      }
     } else {
       if (openlink) {
         const linkURL = isMobile
@@ -157,7 +164,7 @@ export async function minaLogin(openlink = true) {
     log.debug(`minaLogin: connected with address ${address}`, { address });
   } catch (error) {
     console.error("mina login catch", error);
-    log.error("mina login catch", error);
+    log.error("mina login catch", { error, logAccount, logNetwork });
     message.error({
       content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
       key: "minaLogin",
