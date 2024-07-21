@@ -8,8 +8,8 @@ import { loadLibraries } from "../../nft/libraries";
 import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
+import { isMobile } from "react-device-detect";
 import logger from "../../serverless/logger";
-import { set } from "nprogress";
 
 const log = logger.info.child({
   winstonModule: "Explore",
@@ -17,6 +17,8 @@ const log = logger.info.child({
 });
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+const noMobileTxs =
+  isMobile && process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 
 const SellButton = ({ item }) => {
   //class SellButton extends React.Component {
@@ -87,6 +89,17 @@ const SellButton = ({ item }) => {
     setPending("Preparing transaction...");
     if (price === 0) setDelisting(true);
     else setLoading(true);
+
+    if (noMobileTxs) {
+      await showText(
+        "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      setDelisting(false);
+      return;
+    }
 
     try {
       const newAddress = await minaLogin();
@@ -159,6 +172,7 @@ const SellButton = ({ item }) => {
         await showText(txInfo, "green");
         log.info("Sell is successful", {
           name: item.name,
+          price,
           hash: txResult.hash,
         });
         setPending(undefined);

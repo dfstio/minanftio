@@ -7,6 +7,7 @@ import { buyNFT } from "../../nft/buy";
 import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
+import { isMobile } from "react-device-detect";
 import logger from "../../serverless/logger";
 const log = logger.info.child({
   winstonModule: "Explore",
@@ -14,6 +15,8 @@ const log = logger.info.child({
 });
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+const noMobileTxs =
+  isMobile && process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 
 const BuyButton = ({ item }) => {
   //class SellButton extends React.Component {
@@ -55,6 +58,16 @@ const BuyButton = ({ item }) => {
     setLoading(true);
     setReload(false);
     setVisible(true);
+
+    if (noMobileTxs) {
+      await showText(
+        "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      return;
+    }
     try {
       const newAddress = await minaLogin();
       dispatch(updateAddress(newAddress));
@@ -122,7 +135,11 @@ const BuyButton = ({ item }) => {
           </span>
         );
         await showText(txInfo, "green");
-        log.info("Buy is successful", { name: item.name, hash: txResult.hash });
+        log.info("Buy is successful", {
+          name: item.name,
+          price: Number(item.price) / 1_000_000_000,
+          hash: txResult.hash,
+        });
         setPending(undefined);
       } else {
         const txError = (
