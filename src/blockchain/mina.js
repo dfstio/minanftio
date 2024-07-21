@@ -2,6 +2,7 @@ import { message } from "antd";
 import { isMobile } from "react-device-detect";
 //import { chainId } from "./explorer";
 import logger from "../serverless/logger";
+
 const logm = logger.debug.child({ winstonModule: "mina" });
 
 const { REACT_APP_CHAIN_ID } = process.env;
@@ -155,7 +156,13 @@ export async function minaLogin(openlink = true) {
 
     log.debug(`minaLogin: connected with address ${address}`, { address });
   } catch (error) {
+    console.error("mina login catch", error);
     log.error("mina login catch", error);
+    message.error({
+      content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
+      key: "minaLogin",
+      duration: 60,
+    });
   }
   if (DEBUG) console.log("mina login address", address);
   return address;
