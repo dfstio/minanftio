@@ -311,7 +311,7 @@ const Mint = () => {
 
     if (noMobileTxs) {
       await showText(
-        "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. Stay tuned! At the moment, please use desktop Chrome browser with Auro Wallet extension",
         "red"
       );
       setPending(undefined);
