@@ -104,6 +104,7 @@ export async function minaLogin(openlink = true) {
   const log = logger.info.child({
     winstonModule: "Mina",
     winstonComponent: "login",
+    isMobile,
   });
   log.debug("called: ", { mina: window.mina });
   if (DEBUG) console.log("mina login start");
