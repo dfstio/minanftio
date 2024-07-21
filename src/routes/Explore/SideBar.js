@@ -17,7 +17,7 @@ import IntlMessages from "../../util/IntlMessages";
 import Header from "./Header";
 //import { hash } from "../../blockchain/hash";
 
-const defaultFilter = `status:pending OR status:minted`;
+const defaultFilter = `status:pending OR status:applied`;
 
 const { Sider } = Layout;
 
@@ -61,7 +61,7 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
     if (address !== "") {
       setDisabled(false);
       if (e.target.checked === true) {
-        const filterStr = `owner:${address} AND (status:pending OR status:minted)`;
+        const filterStr = `owner:${address} AND (status:pending OR status:applied)`;
         setFilter(filterStr);
         //console.log("On change", e.target.checked, filterStr);
       } else {
