@@ -30,6 +30,18 @@ exports.handler = async (event, context) => {
 
   try {
     // parse form data
+    let ipAddress = "";
+
+    // Try different headers to get the IP address
+    if (event.headers["x-forwarded-for"]) {
+      ipAddress = event.headers["x-forwarded-for"].split(",")[0].trim();
+    } else if (event.headers["x-real-ip"]) {
+      ipAddress = event.headers["x-real-ip"];
+    } else if (event.requestContext && event.requestContext.identity) {
+      ipAddress = event.requestContext.identity.sourceIp;
+    } else {
+      ipAddress = event.headers["x-bb-ip"] || "IP not found";
+    }
 
     let body = JSON.parse(event.body);
     logger.initMeta();
@@ -41,7 +53,7 @@ exports.handler = async (event, context) => {
     body.winstonLevel = "info";
     body.winstonRepo = "frontend";
     body.winstonHost = event.headers.host;
-    body.winstonIP = event.headers["x-bb-ip"];
+    body.winstonIP = ipAddress ?? "IP not found";
     body.winstonUserAgent = event.headers["user-agent"];
     body.winstonBrowser = event.headers["sec-ch-ua"];
     body.winstonTimer = wTimer;
