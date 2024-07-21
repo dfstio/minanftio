@@ -104,13 +104,17 @@ export async function minaLogin(openlink = true) {
   let address = "";
   let logAccount = "";
   let logNetwork = "";
-  const log = logger.info.child({
+  const logOptions = {
     winstonModule: "Mina",
     winstonComponent: "login",
     isMobile,
-  });
+    networkID: window.mina?.chainInfo?.networkID,
+    isAuro: window.mina?.isAuro,
+  };
+  const log = logger.info.child(logOptions);
+
   log.debug("called: ", { mina: window.mina });
-  if (DEBUG) console.log("mina login start");
+  if (DEBUG) console.log("mina login start", { mina: window.mina, logOptions });
 
   try {
     if (
@@ -164,7 +168,12 @@ export async function minaLogin(openlink = true) {
     log.debug(`minaLogin: connected with address ${address}`, { address });
   } catch (error) {
     console.error("mina login catch", error);
-    log.error("mina login catch", { error, logAccount, logNetwork });
+    log.error("mina login catch", {
+      text: error,
+      logAccount,
+      logNetwork,
+      networkID: window.mina?.chainInfo?.networkID,
+    });
     message.error({
       content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
       key: "minaLogin",
