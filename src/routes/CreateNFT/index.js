@@ -33,6 +33,7 @@ import { minaLogin } from "../../blockchain/mina";
 import { nftPrice } from "../../nft/pricing";
 import { lookupName } from "../../nft/name";
 import { reservedNames } from "../../nft/reservednames";
+import { isMobile } from "react-device-detect";
 
 import {
   footerText,
@@ -56,6 +57,8 @@ const { Option } = Select;
 const Dragger = Upload.Dragger;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const noMobileTxs =
+  isMobile && process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 
 const startToken = {
   name: "",
@@ -306,6 +309,17 @@ const Mint = () => {
     setPending("Preparing mint transaction...");
     setMinting(true);
 
+    if (noMobileTxs) {
+      await showText(
+        "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      setMintDisabled(true);
+      return;
+    }
+
     try {
       const newAddress = await minaLogin();
       if (DEBUG) console.log("newAddress", newAddress);
@@ -366,6 +380,19 @@ const Mint = () => {
       ) {
         await showText(
           "You are not allowed to mint in this collection. Only B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC can mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
+      if (
+        token.collection === "Mr. Bird NFT" &&
+        owner !== "B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF"
+      ) {
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF can mint",
           "red"
         );
         setPending(undefined);
