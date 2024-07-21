@@ -28,6 +28,8 @@ exports.handler = async (event, context) => {
     };
   }
 
+  console.log("Winston: started", event);
+
   try {
     // parse form data
     let ipAddress = "";
