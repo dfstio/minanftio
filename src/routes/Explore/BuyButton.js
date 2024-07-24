@@ -79,7 +79,7 @@ const BuyButton = ({ item }) => {
       if (item.status === "pending" && item.hash !== undefined) {
         const pendingTxInfo = (
           <span>
-            There are pending transactions for this NFT:{" "}
+            There is a pending transaction for this NFT:{" "}
             <a href={explorerTransaction() + item.hash} target="_blank">
               {item.hash}
             </a>
