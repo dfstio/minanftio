@@ -36,11 +36,12 @@ const BuyButton = ({ item }) => {
       newTimeline.push({ text, color });
       return newTimeline;
     });
-    if (color === "red") {
+    if (color === "red" || color === "yellow") {
       const data = {
         text,
         name: item.name,
         wf: "showText",
+        color,
       };
       console.error("Buy error", data);
       log.error("Buy error", data);
@@ -74,6 +75,20 @@ const BuyButton = ({ item }) => {
       if (newAddress === "" || newAddress === undefined) {
         setVisible(false);
         return;
+      }
+      if (item.status === "pending" && item.hash !== undefined) {
+        const pendingTxInfo = (
+          <span>
+            There are pending transactions for this NFT:{" "}
+            <a href={explorerTransaction() + item.hash} target="_blank">
+              {item.hash}
+            </a>
+            <br />
+            It is recommended to wait for the previous transactions to be
+            included in the block.
+          </span>
+        );
+        await showText(pendingTxInfo, "yellow");
       }
       let buyResult = await buyNFT({
         name: item.name,
