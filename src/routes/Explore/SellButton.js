@@ -165,7 +165,7 @@ const SellButton = ({ item }) => {
       ) {
         const jobInfo = (
           <span>
-            Sucessfully proved transaction, cloud prove job id:{" "}
+            Successfully proved transaction, cloud prove job id:{" "}
             <a href={"https://zkcloudworker.com/job/" + jobId} target="_blank">
               {jobId}
             </a>

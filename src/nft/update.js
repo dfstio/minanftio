@@ -1,23 +1,35 @@
 import { serializeTransaction } from "./transaction";
-import { sendSellTransaction } from "./send";
+import { sendUpdateTransaction } from "./send";
 import { chainId } from "../blockchain/explorer";
 import { getNonce } from "./nonce";
 import logger from "../serverless/logger";
 import { NFTContractV2 } from "minanft";
 const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 const log = logger.info.child({
-  winstonModule: "SellButton",
-  winstonComponent: "sell function",
+  winstonModule: "UpdateButton",
+  winstonComponent: "update function",
 });
 
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
 
-export async function sellNFT(params) {
+export async function updateNFT(params) {
   console.time("ready to sign");
-  if (DEBUG) console.log("Sell NFT", params);
+  if (DEBUG) console.log("Update NFT", params);
 
   try {
-    const { price, owner, name, showText, showPending, libraries } = params;
+    const {
+      keys,
+      uri,
+      owner,
+      name,
+      showText,
+      showPending,
+      libraries,
+      updateCode,
+      developer,
+      repo,
+      pinataJWT,
+    } = params;
 
     const chain = chainId();
 
@@ -35,6 +47,22 @@ export async function sellNFT(params) {
       return {
         success: false,
         error: "NFT name is undefined",
+      };
+    }
+
+    if (uri === undefined || uri === "") {
+      console.error("NFT json is undefined");
+      return {
+        success: false,
+        error: "NFT json is undefined",
+      };
+    }
+
+    if (keys === undefined || keys.length === 0) {
+      console.error("No keys to add");
+      return {
+        success: false,
+        error: "No keys to add",
       };
     }
 
@@ -62,7 +90,10 @@ export async function sellNFT(params) {
     const {
       MinaNFT,
       NameContractV2,
-      SellParams,
+      RollupNFT,
+      UpdateParams,
+      NFTparams,
+      MetadataParams,
       initBlockchain,
       MINANFT_NAME_SERVICE_V2,
       fetchMinaAccount,
@@ -97,6 +128,14 @@ export async function sellNFT(params) {
       };
     }
 
+    if (pinataJWT === undefined) {
+      console.error("Pinata JWT is undefined");
+      return {
+        success: false,
+        error: "Pinata JWT is undefined",
+      };
+    }
+
     console.time("prepared data");
     if (DEBUG) console.log("contractAddress", contractAddress);
 
@@ -112,9 +151,7 @@ export async function sellNFT(params) {
     const tokenId = zkApp.deriveTokenId();
     const nftApp = new NFTContractV2(address, tokenId);
     const fee = Number((await MinaNFT.fee()).toBigInt());
-    const memo = (
-      (Number(price) === 0 ? "delist NFT @" : "sell NFT @") + name
-    ).substring(0, 30);
+    const memo = ("update NFT @" + name).substring(0, 30);
     if (DEBUG) console.log("memo", memo);
     if (DEBUG) console.log("sender", sender.toBase58());
     if (DEBUG) console.log("zkAppAddress", zkAppAddress.toBase58());
@@ -187,6 +224,40 @@ export async function sellNFT(params) {
         error: "Owner does not match the sender",
       };
     }
+    const nft = new RollupNFT({
+      name,
+      address,
+      external_url: net.network.explorerAccountUrl + address.toBase58(),
+    });
+    await nft.loadMetadata(JSON.stringify(uri));
+    const initialMetadata = nft.metadataRoot;
+    const stateInitialMetadata = nftApp.metadataParams.get().metadata;
+    const nftData = nftApp.data.get();
+    const nftParams = NFTparams.unpack(nftData);
+    const version = Number(nftParams.version.toBigint()) + 1;
+
+    if (
+      initialMetadata.data.toJSON() !== stateInitialMetadata.data.toJSON() ||
+      initialMetadata.kind.toJSON() !== stateInitialMetadata.kind.toJSON()
+    ) {
+      console.error("Metadata mismatch");
+      await showText(
+        `NFT metadata on the blockchain state does not match the metadata from the json file. Please try again later, after all the previous transactions are included in the block and make sure that you use right json file.`,
+        "red"
+      );
+      await showPending(undefined);
+      return {
+        success: false,
+        error:
+          "NFT metadata on the blockchain state does not match the metadata from the json file",
+      };
+    }
+    for (const item of keys) {
+      const { key, value, isPrivate } = item;
+      nft.update({ key, value, isPrivate });
+    }
+    const commitPromise = nft.prepareCommitData({ pinataJWT });
+
     const blockberryNoncePromise = changeNonce
       ? getNonce(sender.toBase58())
       : undefined;
@@ -209,21 +280,19 @@ export async function sellNFT(params) {
     );
     await showPending("Preparing transaction...");
 
-    /*
-  const nft = new NFTContractV2({ address, tokenId });
-  const nftOwner = nft.owner.get();
-  if(DEBUG) console.log("nftOwner", nftOwner);
-  await sleep(5000);
-  if(DEBUG) console.log("x", nftOwner.x);
-  if(DEBUG) console.log("x1", nftOwner.x.toJSON());
-  //if(DEBUG) console.log("NFT owner", nftOwner.toBase58());
-  */
     console.time("prepared tx");
 
-    const sellParams = new SellParams({
-      address,
-      price: UInt64.from(price),
-    });
+    /*
+      export class MetadataParams extends Struct({
+          metadata: Metadata,
+          storage: Storage,
+        }) {}
+
+        export class UpdateParams extends Struct({
+          address: PublicKey,
+          metadataParams: MetadataParams,
+        }) {}
+    */
 
     const senderNonce = Number(Mina.getAccount(sender).nonce.toBigint());
     const blockberryNonce = changeNonce ? await blockberryNoncePromise : -1;
@@ -233,10 +302,30 @@ export async function sellNFT(params) {
         `Nonce changed from ${senderNonce} to ${nonce} for ${sender.toBase58()} for NFT ${name}`
       );
 
+    await commitPromise;
+
+    if (nft.storage === undefined) throw new Error("Storage is undefined");
+    if (nft.metadataRoot === undefined)
+      throw new Error("Metadata is undefined");
+    const json = JSON.stringify(
+      nft.toJSON({
+        includePrivateData: true,
+      }),
+      null,
+      2
+    );
+
+    const updateParams = new UpdateParams({
+      address,
+      metadataParams: {
+        metadata: nft.metadataRoot,
+        storage: nft.storage,
+      },
+    });
     const tx = await Mina.transaction(
       { sender, fee, memo, nonce },
       async () => {
-        await zkApp.sell(sellParams);
+        await zkApp.update(updateParams);
       }
     );
 
@@ -270,14 +359,19 @@ export async function sellNFT(params) {
     }
     await showText("User signature received", "green");
     await showPending("Starting cloud proving job...");
+    return {
+      success: false,
+      error: `test`,
+    };
 
-    const jobId = await sendSellTransaction({
+    const jobId = await sendUpdateTransaction({
       name,
       serializedTransaction,
       signedData,
-      sellParams: serializeFields(SellParams.toFields(sellParams)),
+      updateParams: serializeFields(UpdateParams.toFields(updateParams)),
       contractAddress,
       chain,
+      updateCode,
     });
     console.timeEnd("sent transaction");
     if (DEBUG) console.log("Sent transaction, jobId", jobId);
@@ -292,13 +386,14 @@ export async function sellNFT(params) {
     return {
       success: true,
       jobId,
+      version,
     };
   } catch (error) {
-    log.error("catch in sell NFT", { error, params });
-    console.error("sell NFT error", error);
+    log.error("catch in update NFT", { error, params });
+    console.error("update NFT error", error);
     return {
       success: false,
-      error: error?.message ?? "Error while selling NFT",
+      error: error?.message ?? "Error while updating  NFT",
     };
   }
 }

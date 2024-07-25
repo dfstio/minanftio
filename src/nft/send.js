@@ -121,6 +121,66 @@ export async function sendSellTransaction(
   return jobId;
 }
 
+export async function sendUpdateTransaction(
+  params
+  /* {
+  serializedTransaction: string,
+  signedData: string,
+  mintParams: string,
+  contractAddress: string,
+}*/
+) /*: Promise<{ isSent: boolean, hash: string }> */ {
+  const {
+    serializedTransaction,
+    signedData,
+    contractAddress,
+    updateParams,
+    chain,
+    name,
+    updateCode,
+  } = params;
+  if (DEBUG)
+    console.log("sendSellTransaction", {
+      name,
+      serializedTransaction,
+      signedData,
+      contractAddress,
+      updateParams,
+      chain,
+      updateCode,
+    });
+
+  let args = JSON.stringify({
+    contractAddress,
+  });
+
+  const transaction = JSON.stringify(
+    {
+      serializedTransaction,
+      signedData,
+      updateParams,
+      name,
+      updateCode,
+    },
+    null,
+    2
+  );
+
+  let answer = await zkCloudWorkerRequest({
+    command: "execute",
+    transactions: [transaction],
+    task: "update",
+    args,
+    metadata: `update NFT @${name}`,
+    mode: "async",
+  });
+
+  if (DEBUG) console.log(`zkCloudWorker answer:`, answer);
+  const jobId = answer?.jobId;
+  if (DEBUG) console.log(`jobId:`, jobId);
+  return jobId;
+}
+
 export async function sendBuyTransaction(
   params
   /* {
