@@ -359,10 +359,6 @@ export async function updateNFT(params) {
     }
     await showText("User signature received", "green");
     await showPending("Starting cloud proving job...");
-    return {
-      success: false,
-      error: `test`,
-    };
 
     const jobId = await sendUpdateTransaction({
       name,
@@ -386,6 +382,7 @@ export async function updateNFT(params) {
     return {
       success: true,
       jobId,
+      json,
       version,
     };
   } catch (error) {
