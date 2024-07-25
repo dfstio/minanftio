@@ -45,8 +45,6 @@ import {
 } from "../../util/config";
 
 import logger from "../../serverless/logger";
-import { add } from "winston";
-import { set } from "nprogress";
 const log = logger.info.child({
   winstonModule: "Create",
   winstonComponent: "Mint",
@@ -499,7 +497,7 @@ const Mint = () => {
       ) {
         const jobInfo = (
           <span>
-            Sucessfully proved transaction, cloud prove job id:{" "}
+            Successfully proved transaction, cloud prove job id:{" "}
             <a href={"https://zkcloudworker.com/job/" + jobId} target="_blank">
               {jobId}
             </a>

@@ -51,12 +51,13 @@ const SellButton = ({ item }) => {
       newTimeline.push({ text, color });
       return newTimeline;
     });
-    if (color === "red") {
+    if (color === "red" || color === "yellow") {
       const data = {
         text,
         name: item.name,
         address,
         wf: "showText",
+        color,
       };
       console.error("Sell error", data);
       log.error("Sell error", data);
@@ -108,6 +109,20 @@ const SellButton = ({ item }) => {
         setVisible(false);
         return;
       }
+      if (item.status === "pending" && item.hash !== undefined) {
+        const pendingTxInfo = (
+          <span>
+            There is a pending transaction for this NFT:{" "}
+            <a href={explorerTransaction() + item.hash} target="_blank">
+              {item.hash}
+            </a>
+            <br />
+            It is recommended to wait for the previous transactions to be
+            included in the block.
+          </span>
+        );
+        await showText(pendingTxInfo, "yellow");
+      }
       let sellResult = await sellNFT({
         name: item.name,
         price: Number(price) * 1_000_000_000,
@@ -150,7 +165,7 @@ const SellButton = ({ item }) => {
       ) {
         const jobInfo = (
           <span>
-            Sucessfully proved transaction, cloud prove job id:{" "}
+            Successfully proved transaction, cloud prove job id:{" "}
             <a href={"https://zkcloudworker.com/job/" + jobId} target="_blank">
               {jobId}
             </a>
