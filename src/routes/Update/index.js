@@ -34,8 +34,8 @@ import fileSaver from "file-saver";
 import { sleep } from "../../blockchain/mina";
 import logger from "../../serverless/logger";
 const log = logger.info.child({
-  winstonModule: "Prove",
-  winstonComponent: "Prove",
+  winstonModule: "Update",
+  winstonComponent: "Update",
 });
 
 const { REACT_APP_DEBUG, REACT_APP_PINATA_JWT } = process.env;
