@@ -138,8 +138,7 @@ export async function transferNFT(params) {
     const tokenId = zkApp.deriveTokenId();
     const nftApp = new NFTContractV2(address, tokenId);
     const fee = Number((await MinaNFT.fee()).toBigInt());
-    const memo = ("transfer NFT @" + name).substring(0, 30);
-    if (DEBUG) console.log("memo", memo);
+
     if (DEBUG) console.log("sender", sender.toBase58());
     if (DEBUG) console.log("zkAppAddress", zkAppAddress.toBase58());
     if (DEBUG) console.log("address", address.toBase58());
@@ -200,6 +199,8 @@ export async function transferNFT(params) {
 
     const nftOwner = nftApp.owner.get();
     const name = Encoding.stringFromFields([nftApp.name.get()]);
+    const memo = ("transfer NFT @" + name).substring(0, 30);
+    if (DEBUG) console.log("memo", memo);
 
     if (nftOwner === undefined) {
       console.error("NFT Account not found");
