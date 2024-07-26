@@ -230,11 +230,7 @@ const Transfer = () => {
       <div className="gx-main-content">
         <Row>
           <Col xxl={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              className="gx-card"
-              key="billingCard"
-              title="Update NFT Metadata"
-            >
+            <Card className="gx-card" key="billingCard" title="Transfer NFT">
               <Form
                 form={form}
                 key="updateForm"

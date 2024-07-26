@@ -111,7 +111,7 @@ export async function transferNFT(params) {
     }
 
     try {
-      const nftAddress = PublicKey.fromBase58(address);
+      const nftAddress = PublicKey.fromBase58(params.address);
     } catch (error) {
       console.error("Invalid NFT address", newOwner);
       await showText("Invalid NFT address", "red");
