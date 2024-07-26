@@ -239,7 +239,7 @@ const Update = () => {
       } else {
         console.error("Error updating NFT token: ", updateResult);
         showText(
-          `Error minting NFT: ${updateResult?.error ?? ""} ${
+          `Error updating NFT: ${updateResult?.error ?? ""} ${
             updateResult?.reason ?? ""
           }`,
           "red"
