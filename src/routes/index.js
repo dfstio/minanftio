@@ -27,6 +27,10 @@ const App = ({ match }) => (
         component={asyncComponent(() => import("./Update"))}
       />
       <Route
+        path={`${match.url}transfer`}
+        component={asyncComponent(() => import("./Transfer"))}
+      />
+      <Route
         path={`${match.url}@:tokenId`}
         component={asyncComponent(() => import("./token"))}
       />
