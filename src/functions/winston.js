@@ -61,6 +61,9 @@ exports.handler = async (event, context) => {
     body.winstonTimer = wTimer;
     body.winstonTimerText = formatWinstonTime(wTimer);
     body.winstonMessageTime = new Date().toISOString().replace(/T/, " ");
+    body.winstonReferer = event.headers["Referer"];
+    body.winstonOrigin = event.headers["Origin"];
+    body.winstonCountry = event.headers["X-Country"];
     const cloudwatchConfig = {
       level: "info",
       logGroupName: WINSTON_NAME,
