@@ -123,7 +123,20 @@ export async function minaLogin(openlink = true) {
       window.mina?.requestAccounts !== undefined &&
       window.mina?.switchChain !== undefined
     ) {
-      const account = await window.mina.requestAccounts();
+      let account;
+      try {
+        account = await window.mina.requestAccounts();
+      } catch (error) {
+        console.error("mina login requestAccounts catch", error);
+        log.error("mina login requestAccounts catch", {
+          text: error,
+          account,
+          logAccount,
+          logNetwork,
+          networkID: window.mina?.chainInfo?.networkID,
+        });
+        return "";
+      }
       logAccount = account;
       let network = await window.mina?.requestNetwork();
       logNetwork = network;
