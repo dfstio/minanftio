@@ -135,19 +135,82 @@ export async function minaLogin(openlink = true) {
           logNetwork,
           networkID: window.mina?.chainInfo?.networkID,
         });
+        message.error({
+          content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
+          key: "requestAccounts",
+          duration: 60,
+        });
         return "";
       }
       logAccount = account;
-      let network = await window.mina?.requestNetwork();
+      let network;
+      try {
+        network = await window.mina?.requestNetwork();
+      } catch (error) {
+        console.error("mina login requestNetwork catch", error);
+        log.error("mina login requestNetwork catch", {
+          text: error,
+          account,
+          network,
+          logAccount,
+          logNetwork,
+          networkID: window.mina?.chainInfo?.networkID,
+        });
+        message.error({
+          content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
+          key: "requestNetwork",
+          duration: 60,
+        });
+        return "";
+      }
       logNetwork = network;
       if (DEBUG) console.log("mina login network", network);
       if (network?.networkID !== REACT_APP_CHAIN_ID) {
-        const switchNetwork = await window.mina.switchChain({
-          networkID: REACT_APP_CHAIN_ID,
-        });
+        let switchNetwork;
+        try {
+          switchNetwork = await window.mina.switchChain({
+            networkID: REACT_APP_CHAIN_ID,
+          });
+        } catch (error) {
+          console.error("mina login switchChain catch", error);
+          log.error("mina login switchChain catch", {
+            text: error,
+            account,
+            network,
+            switchNetwork,
+            logAccount,
+            logNetwork,
+            networkID: window.mina?.chainInfo?.networkID,
+          });
+          message.error({
+            content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
+            key: "switchChain",
+            duration: 60,
+          });
+          return "";
+        }
 
         if (DEBUG) console.log("mina login switch network", switchNetwork);
-        network = await window.mina.requestNetwork();
+        try {
+          network = await window.mina.requestNetwork();
+        } catch (error) {
+          console.error("mina login requestNetwork 2 catch", error);
+          log.error("mina login requestNetwork 2 catch", {
+            text: error,
+            account,
+            network,
+            switchNetwork,
+            logAccount,
+            logNetwork,
+            networkID: window.mina?.chainInfo?.networkID,
+          });
+          message.error({
+            content: `Auro Wallet error: ${error?.message ?? error ?? ""}`,
+            key: "requestNetwork 2",
+            duration: 60,
+          });
+          return "";
+        }
         logNetwork = network;
       }
       if (DEBUG) console.log("mina login network", network);
@@ -159,12 +222,19 @@ export async function minaLogin(openlink = true) {
         address = account[0];
       else {
         console.error("mina login account error", { account, network });
-        log.error("mina login account error", { account, network });
+        log.error("mina login account error", {
+          account,
+          network,
+          logAccount,
+          logNetwork,
+        });
+
         message.error({
           content: `Please use the last Auro Wallet version, connect your wallet and switch to the correct network`,
-          key: "minaLogin",
+          key: "minaLogin error",
           duration: 60,
         });
+        return "";
       }
     } else {
       if (openlink) {
