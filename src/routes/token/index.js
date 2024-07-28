@@ -45,7 +45,9 @@ const Token = ({ match }) => {
         try {
           let newItem = await searchIndex.getObject(objectID);
           if (DEBUG) console.log("Token item received", newItem);
-          setItem(newItem);
+          if (newItem.status === "applied" || newItem.status === "pending")
+            setItem(newItem);
+          else setMessageText("Token not found");
         } catch (error) {
           console.log("Token item not received", error);
           setMessageText("Token not found");
