@@ -40,11 +40,22 @@ exports.handler = async (event, context) => {
       };
     }
     console.log("account", account);
-    const zkAppTxs = getZkAppTxsFromBlockberry(account);
+    const zkAppTxsPromise = getZkAppTxsFromBlockberry(account);
     const paymentTxs = getPaymentTxsFromBlockberry(account);
 
-    const zkNonce = (await zkAppTxs)?.data[0]?.nonce ?? -1;
     const paymentNonce = (await paymentTxs)?.data[0]?.nonce ?? -1;
+    let zkNonce = -1;
+    let found = false;
+    const zkAppTxs = await zkAppTxsPromise;
+    const size = zkAppTxs?.data?.length ?? 0;
+    let i = 0;
+    while (!found && i < size) {
+      if (zkAppTxs?.data[i]?.proverAddress === account) {
+        zkNonce = zkAppTxs?.data[i]?.nonce;
+        found = true;
+      }
+      i++;
+    }
     const nonce = Math.max(zkNonce, paymentNonce);
     console.log("nonce", { zkNonce, paymentNonce, nonce });
 
@@ -76,7 +87,7 @@ async function getZkAppTxsFromBlockberry(account) {
   };
   try {
     const response = await fetch(
-      `https://api.blockberry.one/mina-mainnet/v1/zkapps/accounts/${account}/txs?size=1&orderBy=DESC&sortBy=AGE`,
+      `https://api.blockberry.one/mina-mainnet/v1/zkapps/accounts/${account}/txs?size=10&orderBy=DESC&sortBy=AGE`,
       options
     );
     const result = await response.json();
