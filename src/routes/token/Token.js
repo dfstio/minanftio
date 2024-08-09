@@ -18,6 +18,7 @@ import Markdown from "markdown-to-jsx";
 import fileSaver from "file-saver";
 import { prepareMetadata } from "./metadata";
 import { storageUrl, storageUrlFromURL } from "../../blockchain/storage";
+import { explorerTransaction } from "../../blockchain/explorer";
 //import '../../styles/token/audio-player.less';
 
 var QRCode = require("qrcode.react");
@@ -599,6 +600,7 @@ const TokenItem = ({ item, small = false, preview = false }) => {
   const [descriptionMarkdown, setDescriptionMarkdown] = useState("");
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
+  const [pendingTx, setPendingTx] = useState(undefined);
   const [firstRun, setFirstRun] = useState(true);
   const [counter, setCounter] = useState(0);
   const [checkout, setCheckout] = useState("");
@@ -617,6 +619,17 @@ const TokenItem = ({ item, small = false, preview = false }) => {
         console.log("firstRun", item);
         setName(item.name);
         setDescription(item.description);
+        if (item.status === "pending" && item.hash !== undefined) {
+          const pendingTxInfo = (
+            <span>
+              Pending transaction for this NFT:{" "}
+              <a href={explorerTransaction() + item.hash} target="_blank">
+                {item.hash}
+              </a>
+            </span>
+          );
+          setPendingTx(pendingTxInfo);
+        }
         if (item.markdown !== undefined) setDescriptionMarkdown(item.markdown);
         setOnSale(item.price && item.price > 0 ? true : false);
         setImage(storageUrlFromURL(item.image));
@@ -814,14 +827,14 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                       </span>
                     )}
                   </div>
-                  <div className="gx-mb-3">
+
+                  <div className="gx">
                     Address:{" "}
                     <a href={item.external_url} target="_blank">
                       {" "}
                       {item.address}{" "}
                     </a>
                   </div>
-
                   {onSale ? (
                     <div className="gx-product-price">
                       <span style={{ float: "right" }}>
@@ -831,6 +844,16 @@ const TokenItem = ({ item, small = false, preview = false }) => {
                   ) : (
                     <div className="gx-product-price">{item.vrtTokenId}</div>
                   )}
+                  <div className="gx-mb-3">
+                    Owner:{" "}
+                    <a href={item.external_url} target="_blank">
+                      {" "}
+                      {item.owner}{" "}
+                    </a>
+                  </div>
+
+                  {pendingTx && <div className="gx-mb-3">{pendingTx}</div>}
+
                   {/*descriptionMarkdown === "" ? (
                     <div className="gx-mt-4" style={{ whiteSpace: "pre-wrap" }}>
                       {description}
