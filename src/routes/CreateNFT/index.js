@@ -334,7 +334,7 @@ const Mint = () => {
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
 
       if (
-        token.collection === "Mad Malinois" &&
+        token.collection?.toLowerCase() === "mad malinois" &&
         owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
       ) {
         await showText(
@@ -347,7 +347,20 @@ const Mint = () => {
       }
 
       if (
-        token.collection === "MINAMIE" &&
+        token.collection?.toLowerCase() === "tileville" &&
+        owner !== "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
+      ) {
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV can mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
+      if (
+        token.collection?.toUpperCase() === "MINAMIE" &&
         owner !== "B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y"
       ) {
         await showText(
@@ -360,7 +373,7 @@ const Mint = () => {
       }
 
       if (
-        token.collection === "MINASCHOOL" &&
+        token.collection?.toUpperCase() === "MINASCHOOL" &&
         owner !== "B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b"
       ) {
         await showText(
@@ -373,7 +386,7 @@ const Mint = () => {
       }
 
       if (
-        token.collection === "Chinese Zodiac" &&
+        token.collection?.toLowerCase() === "chinese zodiac" &&
         owner !== "B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC"
       ) {
         await showText(
@@ -386,7 +399,7 @@ const Mint = () => {
       }
 
       if (
-        token.collection === "Mr. Bird NFT" &&
+        token.collection?.toLowerCase() === "mr. bird nft" &&
         owner !== "B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF"
       ) {
         await showText(
