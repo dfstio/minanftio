@@ -399,6 +399,19 @@ const Mint = () => {
       }
 
       if (
+        token.collection?.toLowerCase() === "MinaPunks".toLowerCase() &&
+        owner !== "B62qk5dwfhsf2ZL5nbSTCh9nztK6KxK6oGjy4LpDPZFvBWWtsS2krht"
+      ) {
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qk5dwfhsf2ZL5nbSTCh9nztK6KxK6oGjy4LpDPZFvBWWtsS2krht can mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
+      if (
         token.collection?.toLowerCase() === "mr. bird nft" &&
         owner !== "B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF"
       ) {
