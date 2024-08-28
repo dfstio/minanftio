@@ -34,6 +34,7 @@ import { nftPrice } from "../../nft/pricing";
 import { lookupName } from "../../nft/name";
 import { reservedNames } from "../../nft/reservednames";
 import { isMobile } from "react-device-detect";
+import { checkGeo } from "../../nft/geo";
 
 import {
   footerText,
@@ -310,6 +311,17 @@ const Mint = () => {
     if (noMobileTxs) {
       await showText(
         "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. Stay tuned! At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      setMintDisabled(true);
+      return;
+    }
+
+    if (await checkGeo()) {
+      await showText(
+        "The MinaNFT is not available in the United States",
         "red"
       );
       setPending(undefined);

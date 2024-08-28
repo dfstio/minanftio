@@ -8,6 +8,7 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import { isMobile } from "react-device-detect";
+import { checkGeo } from "../../nft/geo";
 import logger from "../../serverless/logger";
 const log = logger.info.child({
   winstonModule: "Explore",
@@ -63,6 +64,15 @@ const BuyButton = ({ item }) => {
     if (noMobileTxs) {
       await showText(
         "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. Stay tuned! At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      return;
+    }
+    if (await checkGeo()) {
+      await showText(
+        "The MinaNFT is not available in the United States",
         "red"
       );
       setPending(undefined);
