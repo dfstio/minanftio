@@ -9,6 +9,7 @@ import { waitForTransaction } from "../../nft/send";
 import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import { isMobile } from "react-device-detect";
+import { checkGeo } from "../../nft/geo";
 import logger from "../../serverless/logger";
 
 const log = logger.info.child({
@@ -99,6 +100,16 @@ const SellButton = ({ item }) => {
       setPending(undefined);
       setLoading(false);
       setDelisting(false);
+      return;
+    }
+
+    if (await checkGeo()) {
+      await showText(
+        "The MinaNFT is not available in the United States",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
       return;
     }
 

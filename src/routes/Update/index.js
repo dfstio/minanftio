@@ -32,6 +32,7 @@ import { explorerTransaction } from "../../blockchain/explorer";
 import { getJSON } from "../../blockchain/file";
 import fileSaver from "file-saver";
 import { sleep } from "../../blockchain/mina";
+import { checkGeo } from "../../nft/geo";
 import logger from "../../serverless/logger";
 const log = logger.info.child({
   winstonModule: "Update",
@@ -149,6 +150,15 @@ const Update = () => {
 
   async function updateButton() {
     if (DEBUG) console.log("Update button clicked");
+    if (await checkGeo()) {
+      await showText(
+        "The MinaNFT is not available in the United States",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      return;
+    }
     const o1jsInfo = (
       <span>
         Loading{" "}

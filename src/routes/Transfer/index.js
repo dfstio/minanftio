@@ -30,6 +30,7 @@ import { minaLogin } from "../../blockchain/mina";
 import { explorerTransaction } from "../../blockchain/explorer";
 import { getJSON } from "../../blockchain/file";
 import { sleep } from "../../blockchain/mina";
+import { checkGeo } from "../../nft/geo";
 import logger from "../../serverless/logger";
 const log = logger.info.child({
   winstonModule: "Transfer",
@@ -91,6 +92,17 @@ const Transfer = () => {
 
   async function transferButton() {
     if (DEBUG) console.log("Transfer button clicked");
+
+    if (await checkGeo()) {
+      await showText(
+        "The MinaNFT is not available in the United States",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      return;
+    }
+
     const o1jsInfo = (
       <span>
         Loading{" "}

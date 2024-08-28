@@ -7,7 +7,6 @@ export async function checkGeo() {
     if (!response.ok) return undefined;
     const result = await response.json();
     const isUS = result?.country === "US";
-    console.log("IPINFO", isUS, result);
     return isUS;
   } catch (error) {
     return undefined;
