@@ -1,16 +1,15 @@
-import geoip from "geoip-country";
-
-export async function checkGeo(ip) {
+export async function checkGeo() {
   try {
-    const response = await fetch("https://api.ipify.org?format=json");
+    const token = process.env.REACT_APP_IPINFO_TOKEN;
+    if (token === undefined)
+      throw new Error("REACT_APP_IPINFO_TOKEN is not defined");
+    const response = await fetch(`https://ipinfo.io?token=${token}`);
     if (!response.ok) return undefined;
-    const data = await response.json();
-    const geo = geoip.lookup(data.ip);
-    if (geo?.country === "US") {
-      return true;
-    } else return false;
+    const result = await response.json();
+    const isUS = result?.country === "US";
+    console.log("IPINFO", isUS, result);
+    return isUS;
   } catch (error) {
-    console.error(`checkGeo Error`, error);
     return undefined;
   }
 }
