@@ -17,6 +17,8 @@ import {
   footerEmail,
   footerTwitter,
   footerTwitterLink,
+  footerDiscord,
+  footerDiscordLink,
   footerDocs,
   footerDocsLink,
   footerGitHub,
@@ -151,6 +153,15 @@ const MainApp = () => {
                     style={{ fontSize: "14px" }}
                   >
                     {footerTwitter}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={footerDiscordLink}
+                    target="_blank"
+                    style={{ fontSize: "14px" }}
+                  >
+                    {footerDiscord}
                   </a>
                 </li>
                 <li>
