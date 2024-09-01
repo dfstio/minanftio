@@ -7,6 +7,8 @@ module.exports = {
   footerAgreementLink: `https://minanft.io/agreement/terms.pdf`,
   footerTwitter: ` Twitter `,
   footerTwitterLink: `https://twitter.com/minanft_io`,
+  footerDiscord: ` Discord `,
+  footerDiscordLink: `https://discord.gg/rKew4uUt`,
   footerDocs: ` Docs `,
   footerDocsLink: `https://docs.minanft.io`,
   footerGitHub: ` GitHub `,
