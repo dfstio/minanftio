@@ -58,6 +58,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const noMobileTxs =
   isMobile && process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const MINA_LIMIT = 500;
 
 const startToken = {
   name: "",
@@ -307,10 +308,27 @@ const Mint = () => {
     setTimeline([]);
     setPending("Preparing mint transaction...");
     setMinting(true);
+    const price =
+      token.sellPrice && token.sellPrice !== ""
+        ? parseFloat(token.sellPrice)
+        : 0;
 
     if (noMobileTxs) {
       await showText(
         "zkApp transactions on the mobile devices will be supported in the next versions of the Auro Wallet. Stay tuned! At the moment, please use desktop Chrome browser with Auro Wallet extension",
+        "red"
+      );
+      setPending(undefined);
+      setLoading(false);
+      setMintDisabled(true);
+      return;
+    }
+
+    if (price > MINA_LIMIT) {
+      await showText(
+        "Maximum price allowed for the NFT on this form is " +
+          MINA_LIMIT +
+          " MINA. Please contact support@minanft.io to mint NFT with higher price",
         "red"
       );
       setPending(undefined);
@@ -464,10 +482,12 @@ const Mint = () => {
         image: token.main.image,
         collection: token.collection,
         description: token.description,
-        price:
+        price,
+        /*
           token.sellPrice && token.sellPrice !== ""
             ? parseFloat(token.sellPrice)
             : 0,
+        */
         keys: checkedKeys,
         developer: "DFST",
         repo: "minanft_io",

@@ -6,7 +6,7 @@ import { chainId } from "../blockchain/explorer";
 import { reserveName } from "./name";
 import { getNonce } from "./nonce";
 import logger from "../serverless/logger";
-const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const changeNonce = true; // process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 const log = logger.info.child({
   winstonModule: "Mint",
   winstonComponent: "mint function",

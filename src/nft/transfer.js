@@ -5,7 +5,7 @@ import { getNonce } from "./nonce";
 import logger from "../serverless/logger";
 import { NFTContractV2 } from "minanft";
 import { Encoding } from "o1js";
-const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const changeNonce = true; //process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 const log = logger.info.child({
   winstonModule: "TransferButton",
   winstonComponent: "transfer function",
