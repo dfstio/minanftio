@@ -1,4 +1,6 @@
 const { BLOCKBERRY_API } = process.env;
+const chain =
+  process.env.REACT_APP_CHAIN_ID === "mina:mainnet" ? "mainnet" : "devnet";
 
 exports.handler = async (event, context) => {
   //console.log("event", event.body);
@@ -87,14 +89,28 @@ async function getZkAppTxsFromBlockberry(account) {
   };
   try {
     const response = await fetch(
-      `https://api.blockberry.one/mina-mainnet/v1/zkapps/accounts/${account}/txs?size=10&orderBy=DESC&sortBy=AGE`,
+      `https://api.blockberry.one/mina-${chain}/v1/zkapps/accounts/${account}/txs?size=10&orderBy=DESC&sortBy=AGE`,
       options
     );
+    if (!response.ok) {
+      console.error(
+        "Cannot fetch zkApp txs for account:",
+        account,
+        chain,
+        response.statusText
+      );
+      return undefined;
+    }
     const result = await response.json();
     //console.log("zkAppTxs", result);
     return result;
   } catch (err) {
-    console.error(err);
+    console.error(
+      "Cannot fetch zkApp txs for account - catch:",
+      account,
+      chain,
+      err
+    );
     return undefined;
   }
 }
@@ -110,16 +126,30 @@ async function getPaymentTxsFromBlockberry(account) {
 
   try {
     const response = await fetch(
-      "https://api.blockberry.one/mina-mainnet/v1/accounts/" +
+      `https://api.blockberry.one/mina-${chain}/v1/accounts/` +
         account +
         "/txs?page=0&size=1&orderBy=DESC&sortBy=AGE&direction=OUT",
       options
     );
+    if (!response.ok) {
+      console.error(
+        "Cannot fetch payment txs for account:",
+        account,
+        chain,
+        response.statusText
+      );
+      return undefined;
+    }
     const result = await response.json();
     //console.log("paymentTxs", result);
     return result;
   } catch (err) {
-    console.error(err);
+    console.error(
+      "Cannot fetch payment txs for account - catch:",
+      account,
+      chain,
+      err
+    );
     return undefined;
   }
 }

@@ -4,7 +4,7 @@ import { chainId } from "../blockchain/explorer";
 import { getNonce } from "./nonce";
 import logger from "../serverless/logger";
 import { NFTContractV2 } from "minanft";
-const changeNonce = process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
+const changeNonce = true; //process.env.REACT_APP_CHAIN_ID === "mina:mainnet";
 const log = logger.info.child({
   winstonModule: "SellButton",
   winstonComponent: "sell function",
