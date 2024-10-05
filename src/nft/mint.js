@@ -310,7 +310,9 @@ export async function mintNFT(
     }
     if (MOBILE_TEST) await showText("Updated NFT 7", "green");
     console.time("uploaded image");
-    const ipfs = await ipfsPromise;
+    const ipfs = MOBILE_TEST
+      ? "bafkreic4qbfqgxrrpnybsf7pf34ohjtsywohsmehyx4gc6kccrjgfwcwom"
+      : await ipfsPromise;
     console.timeEnd("uploaded image");
     if (MOBILE_TEST) await showText("Updated NFT 8", "green");
     await showText(`Image is uploaded to the IPFS`, "green");
