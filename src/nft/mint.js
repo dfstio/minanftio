@@ -314,6 +314,13 @@ export async function mintNFT(
       ? "bafkreic4qbfqgxrrpnybsf7pf34ohjtsywohsmehyx4gc6kccrjgfwcwom"
       : await ipfsPromise;
     console.timeEnd("uploaded image");
+    if (!ipfs) {
+      console.error("IPFS hash is undefined");
+      return {
+        success: false,
+        error: "Failed to upload image to IPFS",
+      };
+    }
     if (MOBILE_TEST) await showText("Updated NFT 8", "green");
     await showText(`Image is uploaded to the IPFS`, "green");
     await showPending(
