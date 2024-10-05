@@ -238,7 +238,10 @@ export async function mintNFT(
     if (MOBILE_TEST) await showText("Updated NFT 2", "green");
 
     console.time("calculated sha3_512");
-    const sha3_512 = await calculateSHA512(image);
+    if (MOBILE_TEST) await showText("Updated NFT 3a", "green");
+    const sha3_512 = MOBILE_TEST
+      ? "+43muDrdGMrzbijqWYjNMI+IhPSKIqSOKFZxoV0omPI2+3fqZi9MI6KUbwSR2vEC6JgY1z8AJwtM0hccDDCVdw=="
+      : await calculateSHA512(image);
     if (MOBILE_TEST) await showText("Updated NFT 3", "green");
     console.timeEnd("calculated sha3_512");
     if (DEBUG) console.log("image sha3_512", sha3_512);
