@@ -13,6 +13,7 @@ const log = logger.info.child({
 });
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+const MOBILE_TEST = true;
 
 /*
 export interface ProofOfNFT {
@@ -207,6 +208,7 @@ export async function mintNFT(
     const sender = PublicKey.fromBase58(owner);
     const net = await initBlockchain(chain);
     if (DEBUG) console.log("network id", Mina.getNetworkId());
+    if (MOBILE_TEST) await showText("Calculated keys", "green");
 
     const balance = await accountBalanceMina(sender);
 
@@ -215,11 +217,13 @@ export async function mintNFT(
       address,
       external_url: net.network.explorerAccountUrl + address.toBase58(),
     });
+    if (MOBILE_TEST) await showText("Created NFT", "green");
 
     console.timeEnd("prepared data");
 
     if (collection !== undefined && collection !== "")
       nft.update({ key: `collection`, value: collection });
+    if (MOBILE_TEST) await showText("Updated NFT", "green");
 
     if (description !== undefined && description !== "")
       nft.updateText({
@@ -231,14 +235,17 @@ export async function mintNFT(
       const { key, value, isPrivate } = item;
       nft.update({ key, value, isPrivate });
     }
+    if (MOBILE_TEST) await showText("Updated NFT 2", "green");
 
     console.time("calculated sha3_512");
     const sha3_512 = await calculateSHA512(image);
+    if (MOBILE_TEST) await showText("Updated NFT 3", "green");
     console.timeEnd("calculated sha3_512");
     if (DEBUG) console.log("image sha3_512", sha3_512);
 
     console.time("reserved name");
     const reserved = await reservedPromise;
+    if (MOBILE_TEST) await showText("Updated NFT 4", "green");
     console.timeEnd("reserved name");
 
     if (DEBUG) console.log("Reserved", reserved);
