@@ -13,7 +13,7 @@ const log = logger.info.child({
 });
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
-const MOBILE_TEST = true;
+const MOBILE_TEST = false;
 
 /*
 export interface ProofOfNFT {
