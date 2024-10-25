@@ -13,6 +13,7 @@ const log = logger.info.child({
 });
 const { REACT_APP_CONTRACT_ADDRESS } = process.env;
 const DEBUG = "true" === process.env.REACT_APP_DEBUG;
+const MOBILE_TEST = false;
 
 /*
 export interface ProofOfNFT {
@@ -207,6 +208,7 @@ export async function mintNFT(
     const sender = PublicKey.fromBase58(owner);
     const net = await initBlockchain(chain);
     if (DEBUG) console.log("network id", Mina.getNetworkId());
+    if (MOBILE_TEST) await showText("Calculated keys", "green");
 
     const balance = await accountBalanceMina(sender);
 
@@ -215,11 +217,13 @@ export async function mintNFT(
       address,
       external_url: net.network.explorerAccountUrl + address.toBase58(),
     });
+    if (MOBILE_TEST) await showText("Created NFT", "green");
 
     console.timeEnd("prepared data");
 
     if (collection !== undefined && collection !== "")
       nft.update({ key: `collection`, value: collection });
+    if (MOBILE_TEST) await showText("Updated NFT", "green");
 
     if (description !== undefined && description !== "")
       nft.updateText({
@@ -231,14 +235,20 @@ export async function mintNFT(
       const { key, value, isPrivate } = item;
       nft.update({ key, value, isPrivate });
     }
+    if (MOBILE_TEST) await showText("Updated NFT 2", "green");
 
     console.time("calculated sha3_512");
-    const sha3_512 = await calculateSHA512(image);
+    if (MOBILE_TEST) await showText("Updated NFT 3a", "green");
+    const sha3_512 = MOBILE_TEST
+      ? "+43muDrdGMrzbijqWYjNMI+IhPSKIqSOKFZxoV0omPI2+3fqZi9MI6KUbwSR2vEC6JgY1z8AJwtM0hccDDCVdw=="
+      : await calculateSHA512(image);
+    if (MOBILE_TEST) await showText("Updated NFT 3", "green");
     console.timeEnd("calculated sha3_512");
     if (DEBUG) console.log("image sha3_512", sha3_512);
 
     console.time("reserved name");
     const reserved = await reservedPromise;
+    if (MOBILE_TEST) await showText("Updated NFT 4", "green");
     console.timeEnd("reserved name");
 
     if (DEBUG) console.log("Reserved", reserved);
@@ -267,6 +277,7 @@ export async function mintNFT(
     }
 
     await showText(`NFT name @${name} is reserved`, "green");
+    if (MOBILE_TEST) await showText("Updated NFT 5", "green");
     const fee = Number((await MinaNFT.fee()).toBigInt());
     const blockberryNoncePromise = changeNonce
       ? getNonce(sender.toBase58())
@@ -286,6 +297,7 @@ export async function mintNFT(
     }
 
     await showPending("Uploading the image to IPFS...");
+    if (MOBILE_TEST) await showText("Updated NFT 6", "green");
 
     const signature = Signature.fromBase58(reserved.signature);
     const expiry = UInt32.from(reserved.expiry);
@@ -296,15 +308,27 @@ export async function mintNFT(
         error: "Signature is undefined",
       };
     }
-
+    if (MOBILE_TEST) await showText("Updated NFT 7", "green");
     console.time("uploaded image");
-    const ipfs = await ipfsPromise;
+    const ipfs = MOBILE_TEST
+      ? "bafkreic4qbfqgxrrpnybsf7pf34ohjtsywohsmehyx4gc6kccrjgfwcwom"
+      : await ipfsPromise;
     console.timeEnd("uploaded image");
+    if (!ipfs) {
+      console.error("IPFS hash is undefined");
+      return {
+        success: false,
+        error: "Failed to upload image to IPFS",
+      };
+    }
+    if (MOBILE_TEST) await showText("Updated NFT 8", "green");
     await showText(`Image is uploaded to the IPFS`, "green");
     await showPending(
       "Getting the NFT contract data from the Mina blockchain..."
     );
+    if (MOBILE_TEST) await showText("Updated NFT 9", "green");
     if (DEBUG) console.log("image ipfs", ipfs);
+    if (MOBILE_TEST) await showText(`Image IPFS: ${ipfs}`, "green");
 
     const imageData = new FileData({
       fileRoot: Field(0),
@@ -315,11 +339,12 @@ export async function mintNFT(
       sha3_512,
       storage: `i:${ipfs}`,
     });
-
+    if (MOBILE_TEST) await showText("Updated NFT 10", "green");
     nft.updateFileData({ key: `image`, type: "image", data: imageData });
+    if (MOBILE_TEST) await showText("Updated NFT 11", "green");
 
     const commitPromise = nft.prepareCommitData({ pinataJWT });
-
+    if (MOBILE_TEST) await showText("Updated NFT 12", "green");
     const zkAppAddress = PublicKey.fromBase58(MINANFT_NAME_SERVICE_V2);
     const zkApp = new NameContractV2(zkAppAddress);
 
