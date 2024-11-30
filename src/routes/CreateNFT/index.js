@@ -363,6 +363,16 @@ const Mint = () => {
 
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
 
+      if (token.collection?.toLowerCase() === "minaty") {
+        await showText(
+          "You are not allowed to mint in this collection. Visit @MinatyAPC on Twitter to mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
       if (
         token.collection?.toLowerCase() === "mad malinois" &&
         owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
