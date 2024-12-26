@@ -400,6 +400,19 @@ const Mint = () => {
       }
 
       if (
+        token.collection?.toLowerCase() === "zkgod" &&
+        owner !== "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
+      ) {
+        await showText(
+          "You are not allowed to mint in this collection. Only B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV can mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return;
+      }
+
+      if (
         token.collection?.toUpperCase() === "MINAMIE" &&
         owner !== "B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y"
       ) {
