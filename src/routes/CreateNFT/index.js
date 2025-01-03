@@ -348,6 +348,183 @@ const Mint = () => {
       return;
     }
 
+    async function checkCollection(collection, name, owner) {
+      if (collection?.toLowerCase() === "minaty") {
+        await showText(
+          "You are not allowed to mint in this collection. Visit @MinatyAPC on Twitter to mint",
+          "red"
+        );
+        setPending(undefined);
+        setLoading(false);
+        return false;
+      }
+
+      if (collection?.toLowerCase() === "mad malinois") {
+        if (
+          owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1 can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return false;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toLowerCase() === "minarocks") {
+        if (
+          owner !== "B62qpX55hjcivKqxECEeXkh3TpqkYt4n9N5tFEyAwc5Nb1sTLRF6ixb"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qpX55hjcivKqxECEeXkh3TpqkYt4n9N5tFEyAwc5Nb1sTLRF6ixb can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else return true;
+      }
+
+      if (collection?.toLowerCase() === "tileville") {
+        if (
+          owner !== "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toLowerCase() === "zkgod") {
+        if (
+          owner !== "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toUpperCase() === "MINAMIE") {
+        if (
+          owner !== "B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toUpperCase() === "MINASCHOOL") {
+        if (
+          owner !== "B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toLowerCase() === "chinese zodiac") {
+        if (
+          owner !== "B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toLowerCase() === "MinaPunks".toLowerCase()) {
+        if (
+          owner !== "B62qk5dwfhsf2ZL5nbSTCh9nztK6KxK6oGjy4LpDPZFvBWWtsS2krht"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qk5dwfhsf2ZL5nbSTCh9nztK6KxK6oGjy4LpDPZFvBWWtsS2krht can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      if (collection?.toLowerCase() === "mr. bird nft") {
+        if (
+          owner !== "B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF"
+        ) {
+          await showText(
+            "You are not allowed to mint in this collection. Only B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF can mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return;
+        } else {
+          return true;
+        }
+      }
+
+      const names = [
+        "minaty",
+        "mad malinois",
+        "tileville",
+        "zkgod",
+        "minamie",
+        "minaschool",
+        "chinese zodiac",
+        "minapunks",
+        "mr. bird nft",
+        "socialcap",
+        "minarocks",
+      ];
+      for (const item of names) {
+        if (collection.toLowerCase().includes(item)) {
+          return false;
+        }
+        if (name.toLowerCase().includes(item)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     try {
       const newAddress = await minaLogin();
       if (DEBUG) console.log("newAddress", newAddress);
@@ -363,115 +540,8 @@ const Mint = () => {
 
       const name = nameField[0] === "@" ? nameField.slice(1) : nameField;
 
-      if (token.collection?.toLowerCase() === "minaty") {
-        await showText(
-          "You are not allowed to mint in this collection. Visit @MinatyAPC on Twitter to mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toLowerCase() === "mad malinois" &&
-        owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1 can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toLowerCase() === "tileville" &&
-        owner !== "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toLowerCase() === "zkgod" &&
-        owner !== "B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qqhL8xfHBpCUTk1Lco2Sq8HitFsDDNJraQG9qCtWwyvxcPADn4EV can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toUpperCase() === "MINAMIE" &&
-        owner !== "B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qpv3ry6VG9XU7Lyz6hFr44h33RtQo8wsAf4fr1DdhwxiLvU8ZN4y can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toUpperCase() === "MINASCHOOL" &&
-        owner !== "B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qkygUsibu8sk4y3EaiRM4g5irBdyxzcX6K1QfRTBCqkJWXhikX7b can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toLowerCase() === "chinese zodiac" &&
-        owner !== "B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qoMYozsrSWZErrmcmQXZn14HNEba7zBLrc9GU34NSP7sUbBnZ6MC can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toLowerCase() === "MinaPunks".toLowerCase() &&
-        owner !== "B62qk5dwfhsf2ZL5nbSTCh9nztK6KxK6oGjy4LpDPZFvBWWtsS2krht"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qk5dwfhsf2ZL5nbSTCh9nztK6KxK6oGjy4LpDPZFvBWWtsS2krht can mint",
-          "red"
-        );
-        setPending(undefined);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        token.collection?.toLowerCase() === "mr. bird nft" &&
-        owner !== "B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF"
-      ) {
-        await showText(
-          "You are not allowed to mint in this collection. Only B62qjfdH7rsiSb8p8yxLKBwCjUuBqgu36bVjjaAqTPm7aNGN42AWPkF can mint",
-          "red"
-        );
+      if ((await checkCollection(token.collection, name, owner)) === false) {
+        await showText("You are not allowed to mint in this collection", "red");
         setPending(undefined);
         setLoading(false);
         return;
