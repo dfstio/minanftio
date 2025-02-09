@@ -19,7 +19,7 @@ import { TAB_SIZE } from "../../../constants/ThemeSetting";
 import AuroWallet from "../../../blockchain/account";
 import { isMobile, isDesktop, isChrome } from "react-device-detect";
 
-const isTestnet = process.env.REACT_APP_CHAIN_ID === "mina:testnet";
+const isTestnet = process.env.REACT_APP_CHAIN_ID === "mina:devnet";
 
 const { Header } = Layout;
 const Option = Select.Option;
