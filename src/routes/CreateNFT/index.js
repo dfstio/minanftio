@@ -524,6 +524,7 @@ const Mint = () => {
         "socialcap",
         "minarocks",
         "zeko",
+        "zek0",
         "dfst",
       ];
       for (const item of names) {
