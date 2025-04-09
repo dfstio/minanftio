@@ -359,6 +359,16 @@ const Mint = () => {
         return false;
       }
 
+      if (collection?.toLowerCase().includes("zeko")) {
+          await showText(
+            "You are not allowed to mint in this collection. Please contact Zeko team to get the permission to mint",
+            "red"
+          );
+          setPending(undefined);
+          setLoading(false);
+          return false;
+      }
+
       if (collection?.toLowerCase() === "mad malinois") {
         if (
           owner !== "B62qmApAnT1tuUxhtbafkzVXdLp76qvT17GLfGdWCoe3rRWdftE2zm1"
@@ -513,6 +523,8 @@ const Mint = () => {
         "mr. bird nft",
         "socialcap",
         "minarocks",
+        "zeko",
+        "dfst",
       ];
       for (const item of names) {
         if (collection.toLowerCase().includes(item)) {
