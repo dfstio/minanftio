@@ -55,40 +55,72 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
 
   //const [filter, setFilter] = useState(`(uri.visibility:public OR onSale:true) AND chainId:${chainId} AND contract:${REACT_APP_CONTRACT_ADDRESS}`);
   const [disabled, setDisabled] = useState(true);
+  const [onSale, setOnSale] = useState(false);
+  const [myNFTs, setMyNFTs] = useState(false);
   //const [visible, setVisible] = useState(false);
 
-  function onChange(e) {
-    if (address !== "") {
+  useEffect(() => {
+    let filter = defaultFilter;
+    if( address ) {
       setDisabled(false);
-      if (e.target.checked === true) {
-        const filterStr = `owner:${address} AND (status:pending OR status:applied)`;
-        setFilter(filterStr);
-        //console.log("On change", e.target.checked, filterStr);
-      } else {
-        const filterStr = defaultFilter;
-        setFilter(filterStr);
+    if (onSale && myNFTs) {
+      filter = `owner:${address} AND (status:pending OR status:applied) AND NOT price:'0'`;
+    } else if (onSale) {
+      filter = `(status:pending OR status:applied) AND (NOT price:'0')`;
+    } else if (myNFTs) {
+      filter = `owner:${address} AND (status:pending OR status:applied)`;
       }
     } else {
       setDisabled(true);
-      setFilter(defaultFilter);
+      setMyNFTs(false);
+      if( onSale ) {
+        filter = `(status:pending OR status:applied) AND NOT price:"0"`;
+      }
+      else {
+        filter = defaultFilter;
+      }
     }
+    //console.log("filter", filter);
+    setFilter(filter);
+  }, [onSale, myNFTs, address]);
+
+  // function onChange(e) {
+  //   if (address !== "") {
+  //     setDisabled(false);
+  //     if (e.target.checked === true) {
+  //       const filterStr = `owner:${address} AND (status:pending OR status:applied)`;
+  //       setFilter(filterStr);
+  //       //console.log("On change", e.target.checked, filterStr);
+  //     } else {
+  //       const filterStr = defaultFilter;
+  //       setFilter(filterStr);
+  //     }
+  //   } else {
+  //     setDisabled(true);
+  //     setFilter(defaultFilter);
+  //   }
+  // }
+
+  function onChangeMyNFTs(e) {
+      if (e.target.checked === true) {
+        setMyNFTs(true);
+      } else {
+        setMyNFTs(false);
+      }
+  }
+
+  function onChangeOnSale(e) {
+      if (e.target.checked === true) {
+        setOnSale(true);
+      } else {
+        setOnSale(false);
+      }
   }
 
   const transformItems = (items) => {
     return items.filter((item) => item.count > 1);
   };
 
-  useEffect(() => {
-    function addressChanged() {
-      setFilter(defaultFilter);
-      if (address !== "") {
-        setDisabled(false);
-      } else {
-        setDisabled(true);
-      }
-    }
-    addressChanged();
-  }, [address]);
 
   return (
     <Sider className="gx-algolia-sidebar">
@@ -114,7 +146,18 @@ const Sidebar = (onCloseFunction, searchState, searchResult) => {
 
           <div className="gx-algolia-refinementList">
             <Checkbox
-              onChange={onChange}
+              key="onSale"
+              onChange={onChangeOnSale}
+              style={{ marginBottom: "5px" }}
+            >
+              On sale
+            </Checkbox>
+          </div>
+
+          <div className="gx-algolia-refinementList">
+            <Checkbox
+              key="myNFTs"
+              onChange={onChangeMyNFTs}
               disabled={disabled}
               style={{ marginBottom: "20px" }}
             >
