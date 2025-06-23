@@ -13,7 +13,7 @@
     "web3",
     "zero knowledge"
   ],
-  "version": "2.9.0",
+  "version": "2.9.1",
   "author": "dfst.io",
   "license": "Apache-2.0",
   "dependencies": {
