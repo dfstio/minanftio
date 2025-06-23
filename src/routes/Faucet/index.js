@@ -84,7 +84,7 @@ const Faucet = () => {
         setVerificationResult(
           (chain === "devnet"
             ? "https://minascan.io/devnet/tx/"
-            : "https://zekoscan.io/devnet/tx/") + hashResult.hash
+            : "https://zekoscan.io/testnet/tx/") + hashResult.hash
         );
       } else {
         console.error("faucetResult", hashResult);
