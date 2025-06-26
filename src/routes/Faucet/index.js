@@ -84,7 +84,9 @@ const Faucet = () => {
         setVerificationResult(
           (chain === "devnet"
             ? "https://minascan.io/devnet/tx/"
-            : "https://zekoscan.io/testnet/tx/") + hashResult.hash
+            : chain === 'zeko' ?
+            "https://zekoscan.io/testnet/tx/"
+            : "Alphanet transaction hash:") + hashResult.hash
         );
       } else {
         console.error("faucetResult", hashResult);
@@ -151,6 +153,7 @@ const Faucet = () => {
                         <RadioGroup>
                           <RadioButton value="devnet">Devnet</RadioButton>
                           <RadioButton value="zeko">Zeko</RadioButton>
+                          <RadioButton value="alphanet">Zeko Alphanet</RadioButton>
                         </RadioGroup>
                       </Form.Item>
                       <Form.Item
