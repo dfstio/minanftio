@@ -151,8 +151,8 @@ const Faucet = () => {
                         ]}
                       >
                         <RadioGroup>
-                          <RadioButton value="devnet">Devnet</RadioButton>
-                          <RadioButton value="zeko">Zeko</RadioButton>
+                          <RadioButton value="devnet">Mina Devnet</RadioButton>
+                          <RadioButton value="zeko">Zeko Devnet</RadioButton>
                           <RadioButton value="alphanet">Zeko Alphanet</RadioButton>
                         </RadioGroup>
                       </Form.Item>
